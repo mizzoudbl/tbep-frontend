@@ -1,4 +1,13 @@
+import useBundlerAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    dangerouslyAllowSVG: true,
+  }
+};
 
-export default nextConfig;
+const withBundleAnalyzer = useBundlerAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withBundleAnalyzer(nextConfig);
