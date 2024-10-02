@@ -1,26 +1,15 @@
 'use client';
 
+import PopUpTable from '@/components/PopUpTable';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables } from '@/lib/interface';
-import NotFound from '@/public/not-found.svg';
 import { useLazyQuery } from '@apollo/client';
 import { Loader } from 'lucide-react';
-import Image from 'next/image';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
@@ -81,25 +70,25 @@ export default function Home() {
     setFormData({ ...formData, [key]: val });
   };
 
-  const handleFileRead = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileRead = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        if (e.target?.result) {
-          if (geneIDs.length < 2) {
-            toast.error('Please enter at least 2 genes', {
-              cancel: { label: 'Close', onClick() {} },
-              position: 'top-center',
-              richColors: true,
-            });
-          } else {
-            setFormData({ ...formData, seedGenes: e.target.result as string });
-          }
-        }
-      };
-      reader.readAsText(file);
+    if (file?.type !== 'text/plain') {
+      toast.error('Invalid file type', {
+        cancel: { label: 'Close', onClick() {} },
+        position: 'top-center',
+        richColors: true,
+      });
+      return;
+    }
+    const text = await file?.text();
+    if (text) {
+      setFormData({ ...formData, seedGenes: text });
+    } else {
+      toast.error('Error reading file', {
+        cancel: { label: 'Close', onClick() {} },
+        position: 'top-center',
+        richColors: true,
+      });
     }
   };
 
@@ -125,7 +114,7 @@ export default function Home() {
 
   return (
     <>
-      <div className='mx-auto rounded-lg shadow-md p-6'>
+      <div className='mx-auto rounded-lg shadow-md p-6 min-h-[70vh]'>
         <h2 className='text-2xl font-semibold mb-6'>Search by Multiple Proteins</h2>
         <form onSubmit={handleSubmit}>
           <div className='space-y-4'>
@@ -195,6 +184,7 @@ FIG4`,
               <Input
                 id='seedFile'
                 type='file'
+                accept='.txt'
                 className='border-2 hover:border-dashed cursor-pointer'
                 onChange={handleFileRead}
               />
@@ -265,106 +255,7 @@ FIG4`,
                 {loading && <Loader className='animate-spin mr-2' size={20} />} Submit
               </Button>
             </center>
-            <Dialog open={tableOpen}>
-              <DialogContent className='max-w-4xl w-11/12 max-h-[90vh] min-h-[60vh] flex flex-col' iconClose={false}>
-                <DialogTitle>Results Preview</DialogTitle>
-                <DialogDescription className='flex-grow overflow-y-scroll'>
-                  <Tabs defaultValue='found'>
-                    <TabsList className='grid w-full grid-cols-2'>
-                      <TabsTrigger value='found'>Found</TabsTrigger>
-                      <TabsTrigger
-                        value='not-found'
-                        className={`${data?.getGenes.length !== geneIDs.length && 'text-red-500 underline font-semibold'}`}
-                      >
-                        Not-Found
-                      </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value='found'>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className='font-bold'>S. No.</TableHead>
-                            <TableHead className='font-bold'>ENSG ID</TableHead>
-                            <TableHead className='font-bold'>Gene Name</TableHead>
-                            <TableHead className='font-bold'>Description</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {data?.getGenes.map((gene, index) => (
-                            <TableRow key={gene.ID}>
-                              <TableCell className=''>{index + 1}</TableCell>
-                              <TableCell className='underline hover:text-teal-900 cursor-pointer'>
-                                <a
-                                  className='flex gap-1'
-                                  target='_blank'
-                                  rel='noreferrer'
-                                  href={`https://www.ensembl.org/Human/Search/Results?q=${gene.ID}`}
-                                >
-                                  {gene.ID}
-                                </a>
-                              </TableCell>
-                              <TableCell className='underline hover:text-teal-900 cursor-pointer'>
-                                <a
-                                  className='flex gap-1'
-                                  target='_blank'
-                                  rel='noreferrer'
-                                  href={`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${gene.hgnc_gene_id}`}
-                                >
-                                  {gene.Gene_name}
-                                </a>
-                              </TableCell>
-                              <TableCell className=''>{gene.Description}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                      {data?.getGenes.length === 0 && (
-                        <center className='grid place-items-center h-[30vh]'>
-                          <Image src={NotFound} alt='No data found' />
-                        </center>
-                      )}
-                    </TabsContent>
-                    <TabsContent value='not-found'>
-                      {/* Write only those geneIDs which are not present in data.getGenes and present in geneIDs */}
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className='font-bold'>S. No.</TableHead>
-                            <TableHead className='font-bold'>ENSG ID/Gene Name</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {geneIDs.map(
-                            (gene, index) =>
-                              !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene) && (
-                                <TableRow key={gene}>
-                                  <TableCell className=''>{index + 1}</TableCell>
-                                  <TableCell>{gene}</TableCell>
-                                </TableRow>
-                              ),
-                          )}
-                        </TableBody>
-                      </Table>
-                      {data?.getGenes.length === geneIDs.length && (
-                        <center className='grid place-items-center h-[30vh]'>
-                          <Image src={NotFound} alt='No data found' />
-                        </center>
-                      )}
-                    </TabsContent>
-                  </Tabs>
-                </DialogDescription>
-                <DialogFooter className='gap-2 w-full'>
-                  <Button onClick={handleGenerateGraph} className='bg-teal-600 hover:bg-teal-700'>
-                    Submit
-                  </Button>
-                  <DialogClose asChild>
-                    <Button disabled={loading} type='button' variant={'secondary'} onClick={() => setTableOpen(false)}>
-                      Close
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <PopUpTable setTableOpen={setTableOpen} tableOpen={tableOpen} handleGenerateGraph={handleGenerateGraph} data={data} geneIDs={geneIDs}/>
           </div>
         </form>
       </div>

@@ -33,9 +33,9 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ApolloWrapper>
-          <NextTopLoader showSpinner={false} color='red' />
+          <NextTopLoader showSpinner={false} color='teal' />
           <ViewTransitions>
-            <div className='min-h-screen'>
+            <div className='min-h-screen flex flex-col justify-between'>
               <Navbar />
               <div className='container mx-auto p-4'>{children}</div>
               <Footer />
