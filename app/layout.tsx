@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { ApolloWrapper } from '@/lib/apolloWrapper';
 import { ViewTransitions } from 'next-view-transitions';
 import NextTopLoader from 'nextjs-toploader';
@@ -35,11 +34,7 @@ export default function RootLayout({
         <ApolloWrapper>
           <NextTopLoader showSpinner={false} color='teal' />
           <ViewTransitions>
-            <div className='min-h-screen flex flex-col justify-between'>
-              <Navbar />
-              <div className='container mx-auto p-4'>{children}</div>
-              <Footer />
-            </div>
+            <TooltipProvider>{children}</TooltipProvider>
           </ViewTransitions>
           <Toaster />
         </ApolloWrapper>

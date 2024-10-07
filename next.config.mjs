@@ -1,8 +1,15 @@
 import useBundlerAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    dangerouslyAllowSVG: true,
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js'
+        }
+      }
+    }
   }
 };
 

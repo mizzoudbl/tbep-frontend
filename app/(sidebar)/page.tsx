@@ -6,8 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { diseaseMap } from '@/lib/data';
+import { interactionType } from '@/lib/data/interactionType';
 import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables } from '@/lib/interface';
+import { distinct } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { Loader } from 'lucide-react';
 import React, { type ChangeEvent } from 'react';
@@ -52,7 +55,7 @@ export default function Home() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { seedGenes } = formData;
-    const geneIDs = Array.from(new Set(seedGenes.split(/,|\n/).map(gene => gene.trim())));
+    const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim()));
     if (geneIDs.length < 2)
       toast.error('Please enter at least 2 genes', {
         cancel: { label: 'Close', onClick() {} },
@@ -100,7 +103,7 @@ export default function Home() {
     localStorage.setItem(
       'graphConfig',
       JSON.stringify({
-        geneIDs,
+        geneIDs: data?.getGenes.map(gene => gene.ID),
         diseaseMap: formData.diseaseMap,
         order: formData.order,
         interactionType: formData.interactionType,
@@ -114,7 +117,7 @@ export default function Home() {
 
   return (
     <>
-      <div className='mx-auto rounded-lg shadow-md p-6 min-h-[70vh]'>
+      <div className='mx-auto rounded-lg shadow-md p-4 min-h-[70vh]'>
         <h2 className='text-2xl font-semibold mb-6'>Search by Multiple Proteins</h2>
         <form onSubmit={handleSubmit}>
           <div className='space-y-4'>
@@ -197,10 +200,11 @@ FIG4`,
                     <SelectValue placeholder='Select disease map' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='PSP'>PSP</SelectItem>
-                    <SelectItem value='ALS'>ALS</SelectItem>
-                    <SelectItem value='FTD'>FTD</SelectItem>
-                    <SelectItem value='OI'>OI</SelectItem>
+                    {diseaseMap.map(({ value, label }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -228,10 +232,11 @@ FIG4`,
                     <SelectValue placeholder='Select interaction type' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='PPI'>PPI</SelectItem>
-                    <SelectItem value='FUN_PPI'>FunPPI</SelectItem>
-                    <SelectItem value='BIKG'>BIKG</SelectItem>
-                    <SelectItem value='ComPPLete'>ComPPLete</SelectItem>
+                    {interactionType.map(({ value, label }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -255,7 +260,13 @@ FIG4`,
                 {loading && <Loader className='animate-spin mr-2' size={20} />} Submit
               </Button>
             </center>
-            <PopUpTable setTableOpen={setTableOpen} tableOpen={tableOpen} handleGenerateGraph={handleGenerateGraph} data={data} geneIDs={geneIDs}/>
+            <PopUpTable
+              setTableOpen={setTableOpen}
+              tableOpen={tableOpen}
+              handleGenerateGraph={handleGenerateGraph}
+              data={data}
+              geneIDs={geneIDs}
+            />
           </div>
         </form>
       </div>

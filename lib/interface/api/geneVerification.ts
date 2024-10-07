@@ -1,9 +1,9 @@
-import { Gene } from "../Gene";
+import type { Gene } from '../Gene';
 
 export interface GeneVerificationData {
-    getGenes: Gene[];
+  getGenes: Gene[];
 }
 
 export interface GeneVerificationVariables {
-    geneIDs: string[];
+  geneIDs: string[];
 }

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GENE_VERIFICATION_QUERY = gql`
   query GeneVerification($geneIDs: [String!]!) {
@@ -30,16 +30,12 @@ export const GENE_GRAPH_QUERY = (disease: string) => gql`
         ID
         Description
         Gene_name
-        common
-        ${disease}
       }
       links {
         gene1 {
-          ID
           index
         }
         gene2 {
-          ID
           index
         }
         score

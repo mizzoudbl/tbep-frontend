@@ -7,7 +7,17 @@
     "defaultBranch": "main"
   },
   "files": {
-    "include": ["app/**/*.js", "app/**/*.ts", "app/**/*.jsx", "app/**/*.tsx"],
+    "include": [
+      "app/**/*.js",
+      "app/**/*.ts",
+      "app/**/*.jsx",
+      "app/**/*.tsx",
+      "components/**/*.js",
+      "components/**/*.ts",
+      "components/**/*.jsx",
+      "components/**/*.tsx",
+      "lib/**/*.ts"
+    ],
     "ignore": ["**/*.min.js", "**/dist/**"]
   },
   "formatter": {
