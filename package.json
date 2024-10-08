@@ -1,5 +1,5 @@
 {
-  "name": "drug-target-platform",
+  "name": "drug-target-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -68,7 +68,6 @@
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@commitlint/cz-commitlint": "^19.5.0",
-    "@next/bundle-analyzer": "^14.2.13",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",

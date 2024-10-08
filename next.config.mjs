@@ -1,6 +1,6 @@
-import useBundlerAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   experimental: {
     turbo: {
       rules: {
@@ -13,8 +13,4 @@ const nextConfig = {
   }
 };
 
-const withBundleAnalyzer = useBundlerAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
-
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;
