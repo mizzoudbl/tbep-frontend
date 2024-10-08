@@ -5,8 +5,4 @@ export interface LeftSideBarProps {
   setSelectedRadioColor: React.Dispatch<React.SetStateAction<string | undefined>>;
   selectedRadioSize: string | undefined;
   setSelectedRadioSize: React.Dispatch<React.SetStateAction<string | undefined>>;
-  handleInputChange: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setValue: React.Dispatch<React.SetStateAction<number>>,
-  ) => void;
 }

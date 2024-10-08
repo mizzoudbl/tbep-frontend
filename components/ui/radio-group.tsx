@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckIcon } from '@radix-ui/react-icons';
+import { CheckIcon } from 'lucide-react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import * as React from 'react';
 

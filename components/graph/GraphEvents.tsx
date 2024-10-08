@@ -1,51 +1,22 @@
 'use client';
 
-import { useRegisterEvents, useSigma } from '@react-sigma/core';
+import { useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
 import { useState, useEffect, useRef } from 'react';
-import { EdgeTooltip } from './EdgeTooltip';
-import { NodeTooltip } from './NodeTooltip';
-import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
+import type { EdgeAttributes, NodeAttributes, TrieElement } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import TrieSearch from 'trie-search';
+import { EdgeDisplayData } from 'sigma/types';
 
-export function GraphEvents() {
+export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boolean }) {
   const registerEvents = useRegisterEvents();
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
-  // const [hoveredNode, setHoveredNode] = useState<{node: NodeAttributes; x: number; y: number} | null>(null);
-  // const [hoveredEdge, setHoveredEdge] = useState<{edge: EdgeAttributes; x: number; y: number} | null>(null);
-  // const container = sigma.getContainer();
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   useEffect(() => {
     registerEvents({
-      // enterNode: (e) => {
-      //   const node = sigma.getGraph().getNodeAttributes(e.node);
-      //   const graphPos = sigma.graphToViewport({x: node.x, y: node.y});
-      //   const x = graphPos.x * container.offsetWidth;
-      //   const y = graphPos.y * container.offsetHeight;
-      //   setHoveredNode({node, x , y});
-      //   setHoveredEdge(null);
-      // },
-      // leaveNode: () => {
-      //   setHoveredNode(null);
-      // },
-      // enterEdge: (e) => {
-      //   const edge = sigma.getGraph().getEdgeAttributes(e.edge);
-      //   const edgeExtremities = sigma.getGraph().extremities(e.edge);
-      //   const sourceNode = sigma.getGraph().getNodeAttributes(edgeExtremities[0]);
-      //   const targetNode = sigma.getGraph().getNodeAttributes(edgeExtremities[1]);
-      //   const graphPos = sigma.graphToViewport({
-      //     x: (sourceNode.x + targetNode.x) / 2,
-      //     y: (sourceNode.y + targetNode.y) / 2,
-      //   });
-      //   const x = graphPos.x * container.offsetWidth;
-      //   const y = graphPos.y * container.offsetHeight;
-      //   setHoveredEdge({edge, x, y});
-      //   setHoveredNode(null);
-      // },
-      // leaveEdge: () => {
-      //   setHoveredEdge(null);
-      // },
+      /* Node Hover Program */
+      enterNode: event => setHoveredNode(event.node),
+      leaveNode: () => setHoveredNode(null),
 
       /* Drag'n'Drop Program */
       downNode: e => {
@@ -79,30 +50,68 @@ export function GraphEvents() {
     });
   }, [registerEvents, sigma, draggedNode]);
 
+  const setSettings = useSetSettings();
+  const defaultNodeSize = useStore(state => state.defaultNodeSize);
+
+  useEffect(() => {
+    setSettings({
+      nodeReducer(node, data) {
+        const graph = sigma.getGraph();
+        const newData: typeof data = { ...data, size: data.size || defaultNodeSize, highlighted: data.highlighted || false };
+        if (!disableHoverEffect && hoveredNode) {
+          if (node === hoveredNode || graph.neighbors(hoveredNode).includes(node)) {
+            newData.highlighted = true;
+          } else {
+            newData.color = '#E2E2E2';
+            newData.highlighted = false;
+          }
+        }
+        return newData;
+      },
+      edgeReducer(edge, data) {
+        const graph = sigma.getGraph();
+        const newData = { ...data };
+        if (!disableHoverEffect && hoveredNode) {
+          if (!graph.extremities(edge).includes(hoveredNode)) {
+            newData.color = '#ccc';
+          } else {
+            newData.color = 'blue';
+          }
+        }
+        return newData;
+      },
+    });
+  }, [defaultNodeSize, hoveredNode, setSettings, sigma, disableHoverEffect]);
+
   const searchNodeQuery = useStore(state => state.nodeSearchQuery);
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
+
   const highlightedNodesRef = useRef(new Set<string>());
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const geneNames = new Set(
       searchNodeQuery
         .split(/[\n,]/)
         .map(s => s.trim())
-        .filter(s => s.length > 0 && sigma.getGraph().hasNode(s))
+        .filter(s => s.length > 0 && sigma.getGraph().hasNode(s)),
     );
-    console.log(geneNames);
-    
-    
     const previousHighlightedNodes = highlightedNodesRef.current;
     for (const node of previousHighlightedNodes) {
       if (geneNames.has(node)) continue;
       sigma.getGraph().removeNodeAttribute(node, 'highlighted');
+      sigma.getGraph().setNodeAttribute(node, 'color', defaultNodeColor);
     }
     for (const node of geneNames) {
       if (previousHighlightedNodes.has(node)) continue;
       sigma.getGraph().setNodeAttribute(node, 'highlighted', true);
+      sigma.getGraph().setNodeAttribute(node, 'color', 'blue');
     }
     highlightedNodesRef.current = geneNames;
-  }, [searchNodeQuery, sigma]);
+  }, [searchNodeQuery]);
+
+
+
 
   return null;
 }

@@ -12,7 +12,6 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
   const [selectedRadioColor, setSelectedRadioColor] = React.useState<string | undefined>(undefined);
   const [selectedRadioSize, setSelectedRadioSize] = React.useState<string | undefined>(undefined);
-  const [sliderValue2, setSliderValue2] = React.useState(30);
 
   React.useEffect(() => {
     const event = async (event: globalThis.KeyboardEvent) => {
@@ -26,20 +25,6 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
       window.removeEventListener('keydown', event);
     };
   }, [leftSidebar, rightSidebar]);
-
-  const handleSliderChange = (value: number[], setter: React.Dispatch<React.SetStateAction<number>>) => {
-    setter(value[0]);
-  };
-
-  const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<number>>,
-  ) => {
-    const value = Number.parseInt(event.target.value);
-    if (!Number.isNaN(value) && value >= 0 && value <= 100) {
-      setter(value);
-    }
-  };
 
   return (
     <>
@@ -63,7 +48,6 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
                   setSelectedRadioColor={setSelectedRadioColor}
                   selectedRadioSize={selectedRadioSize}
                   setSelectedRadioSize={setSelectedRadioSize}
-                  handleInputChange={handleInputChange}
                 />
               </ResizablePanel>
               <ResizableHandle withHandle />
@@ -76,12 +60,7 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
             <>
               <ResizableHandle withHandle />
               <ResizablePanel defaultSize={16} minSize={16}>
-                <RightSideBar
-                  sliderValue2={sliderValue2}
-                  setSliderValue2={setSliderValue2}
-                  handleSliderChange={handleSliderChange}
-                  handleInputChange={handleInputChange}
-                />
+                <RightSideBar />
               </ResizablePanel>
             </>
           )}

@@ -4,9 +4,8 @@ import React from 'react';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import dynamic from 'next/dynamic';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { EdgeArrowProgram, NodePointProgram } from 'sigma/rendering';
-import { NodeAttributes, EdgeAttributes } from '@/lib/interface';
-import { Attributes } from 'graphology-types';
+import ChatWindow from '@/components/ChatWindow';
+import { useStore } from '@/lib/store';
 
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {
   loading: () => (
@@ -25,33 +24,27 @@ export default function NetworkPage({
 }: {
   searchParams: Record<string, string>;
 }) {
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
+
   return (
-    <SigmaContainer
-      className='w-full h-full'
-      settings={{
-        renderEdgeLabels: true,
-        autoCenter: true,
-        autoRescale: true,
-        defaultNodeType: 'circle',
-        zoomToSizeRatioFunction(ratio) {
-          return ratio;
-        },
-        defaultNodeColor: '#999',
-        defaultEdgeColor: '#ccc',
-        nodeReducer(node, data) {
-          return {
-            size: 5,
-            color: '#999',
-            ...data,
-          };
-        },
-        edgeReducer(edge, data) {
-          return {
-            color: '#ccc',
-            size: (data.score ?? 0) * 0.75,
-          };
-        },
-      }}
-    />
+    <>
+      <SigmaContainer
+        className='w-full h-screen'
+        settings={{
+          autoCenter: true,
+          autoRescale: true,
+          defaultNodeType: 'circle',
+          zoomToSizeRatioFunction(ratio) {
+            return ratio * 2;
+          },
+          defaultNodeColor: defaultNodeColor,
+          defaultEdgeColor: 'gray',
+          zIndex: true,
+          labelRenderedSizeThreshold: 7.5,
+          labelDensity: 0.2
+        }}
+      />
+      <ChatWindow/>
+    </>
   );
 }

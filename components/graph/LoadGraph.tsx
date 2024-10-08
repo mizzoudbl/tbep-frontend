@@ -1,6 +1,7 @@
 'use client';
 
-import data from '@/lib/data/sample-graph.json';
+/******** only for testing with sample graph **************/
+// import data from '@/lib/data/sample-graph.json';
 import { useLoadGraph } from '@react-sigma/core';
 import React from 'react';
 import Graph from 'graphology';
@@ -8,6 +9,8 @@ import type { EdgeAttributes, GeneGraphData, GeneGraphVariables, NodeAttributes 
 import { useQuery } from '@apollo/client';
 import { GENE_GRAPH_QUERY } from '@/lib/gql';
 import type { SerializedGraph } from 'graphology-types';
+import { circular } from 'graphology-layout';
+import { useStore } from '@/lib/store';
 
 export function LoadGraph() {
   const loadGraph = useLoadGraph();
@@ -21,9 +24,9 @@ export function LoadGraph() {
     },
   });
 
-  React.useEffect(() => {
-    console.log(variable);
+  const setGraph = useStore(state => state.setGraph);
 
+  React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({ multi: true, type: 'directed', allowSelfLoops: true });
     if (error) {
       console.error(error);
@@ -39,8 +42,6 @@ export function LoadGraph() {
             label: gene.Gene_name,
             ID: gene.ID,
             description: gene.Description,
-            x: Math.random(),
-            y: Math.random(),
           },
         })),
         edges: links.map(link => ({
@@ -49,14 +50,16 @@ export function LoadGraph() {
           target: genes[link.gene2.index].ID,
           attributes: {
             score: link.score,
+            label: link.score.toString(),
           },
         })),
       };
+      setGraph(transformedData);
       graph.import(transformedData);
-
+      circular.assign(graph);
       loadGraph(graph);
     }
-  }, [loadGraph, data, loading, variable,error]);
+  }, [loadGraph, data, loading, error, setGraph]);
 
   return null;
 }
