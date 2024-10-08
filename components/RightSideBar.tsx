@@ -1,14 +1,15 @@
 'use client';
 
+import { useStore } from '@/lib/store';
+import { useEffect } from 'react';
+import { Button } from './ui/button';
+import { ColorPicker } from './ui/color-picker';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { ScrollArea } from './ui/scroll-area';
 import { Slider } from './ui/slider';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { useStore } from '@/lib/store';
-import { Button } from './ui/button';
 import { Switch } from './ui/switch';
-import { ColorPicker } from './ui/color-picker';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export default function RightSideBar() {
   const { start, stop } = useStore(state => state.fa2Worker);

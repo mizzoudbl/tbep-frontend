@@ -1,9 +1,9 @@
 'use client';
 
-import { useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
-import { useState, useEffect, useRef } from 'react';
 import type { EdgeAttributes, NodeAttributes, TrieElement } from '@/lib/interface';
 import { useStore } from '@/lib/store';
+import { useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
+import { useEffect, useRef, useState } from 'react';
 import { EdgeDisplayData } from 'sigma/types';
 
 export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boolean }) {
@@ -52,12 +52,18 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
 
   const setSettings = useSetSettings();
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
 
   useEffect(() => {
     setSettings({
       nodeReducer(node, data) {
         const graph = sigma.getGraph();
-        const newData: typeof data = { ...data, size: data.size || defaultNodeSize, highlighted: data.highlighted || false };
+        const newData: typeof data = {
+          ...data,
+          color: data.color || defaultNodeColor,
+          size: data.size || defaultNodeSize,
+          highlighted: data.highlighted || false,
+        };
         if (!disableHoverEffect && hoveredNode) {
           if (node === hoveredNode || graph.neighbors(hoveredNode).includes(node)) {
             newData.highlighted = true;
@@ -81,11 +87,9 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
         return newData;
       },
     });
-  }, [defaultNodeSize, hoveredNode, setSettings, sigma, disableHoverEffect]);
+  }, [defaultNodeColor, defaultNodeSize, hoveredNode, setSettings, sigma, disableHoverEffect]);
 
   const searchNodeQuery = useStore(state => state.nodeSearchQuery);
-  const defaultNodeColor = useStore(state => state.defaultNodeColor);
-
   const highlightedNodesRef = useRef(new Set<string>());
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -109,9 +113,6 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
     }
     highlightedNodesRef.current = geneNames;
   }, [searchNodeQuery]);
-
-
-
 
   return null;
 }

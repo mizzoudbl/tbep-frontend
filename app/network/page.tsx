@@ -2,10 +2,10 @@
 
 import React from 'react';
 import '@react-sigma/core/lib/react-sigma.min.css';
-import dynamic from 'next/dynamic';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import ChatWindow from '@/components/ChatWindow';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useStore } from '@/lib/store';
+import dynamic from 'next/dynamic';
 
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {
   loading: () => (
@@ -41,10 +41,11 @@ export default function NetworkPage({
           defaultEdgeColor: 'gray',
           zIndex: true,
           labelRenderedSizeThreshold: 7.5,
-          labelDensity: 0.2
+          labelDensity: 0.2,
+          renderEdgeLabels: true,
         }}
       />
-      <ChatWindow/>
+      <ChatWindow />
     </>
   );
 }

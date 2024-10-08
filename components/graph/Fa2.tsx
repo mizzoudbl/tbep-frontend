@@ -8,8 +8,6 @@ import { useEffect } from 'react';
 export function Fa2() {
   const settings = useStore(state => state.fa2Settings);
   const setFa2Worker = useStore(state => state.setFa2Worker);
-  const setSettings = useStore(state => state.setFa2Settings);
-  const sigma = useSigma();
 
   const { start, stop, kill } = useWorkerLayoutForceAtlas2({
     // Name of the edge attribute for score

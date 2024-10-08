@@ -12,7 +12,7 @@ export default function TutorialVideoPage() {
         <div className='aspect-w-16 aspect-h-9'>
           {/* biome-ignore lint/a11y/useMediaCaption: no captions available */}
           <video width={700} controls preload='metadata'>
-            <source src='/video/Intro_of_tool.mp4' type='video/mp4' />
+            <source src='video/Intro_of_tool.mp4' type='video/mp4' />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -27,7 +27,7 @@ export default function TutorialVideoPage() {
         <div className='aspect-w-16 aspect-h-9'>
           {/* biome-ignore lint/a11y/useMediaCaption: no captions available */}
           <video width={470} controls preload='metadata'>
-            <source src='/video/Network_analysis.mp4' type='video/mp4' />
+            <source src='video/Network_analysis.mp4' type='video/mp4' />
             Your browser does not support the video tag.
           </video>
         </div>

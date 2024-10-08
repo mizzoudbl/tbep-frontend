@@ -1,16 +1,16 @@
 'use client';
 
+import { GENE_GRAPH_QUERY } from '@/lib/gql';
+import type { EdgeAttributes, GeneGraphData, GeneGraphVariables, NodeAttributes } from '@/lib/interface';
+import { useStore } from '@/lib/store';
+import { useQuery } from '@apollo/client';
 /******** only for testing with sample graph **************/
 // import data from '@/lib/data/sample-graph.json';
 import { useLoadGraph } from '@react-sigma/core';
-import React from 'react';
 import Graph from 'graphology';
-import type { EdgeAttributes, GeneGraphData, GeneGraphVariables, NodeAttributes } from '@/lib/interface';
-import { useQuery } from '@apollo/client';
-import { GENE_GRAPH_QUERY } from '@/lib/gql';
-import type { SerializedGraph } from 'graphology-types';
 import { circular } from 'graphology-layout';
-import { useStore } from '@/lib/store';
+import type { SerializedGraph } from 'graphology-types';
+import React from 'react';
 
 export function LoadGraph() {
   const loadGraph = useLoadGraph();
@@ -27,7 +27,7 @@ export function LoadGraph() {
   const setGraph = useStore(state => state.setGraph);
 
   React.useEffect(() => {
-    const graph = new Graph<NodeAttributes, EdgeAttributes>({ multi: true, type: 'directed', allowSelfLoops: true });
+    const graph = new Graph<NodeAttributes, EdgeAttributes>({ multi: true, type: 'directed' });
     if (error) {
       console.error(error);
       alert('Error loading graph');

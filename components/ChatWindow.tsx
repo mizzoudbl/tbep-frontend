@@ -1,17 +1,17 @@
 'use client';
 
-import React from 'react';
-import { Skeleton } from './ui/skeleton';
-import { Textarea } from './ui/textarea';
-import { AnimatePresence, motion, type PanInfo, useDragControls } from 'framer-motion';
 import { TypingAnimation } from '@/lib/hooks';
-import { Trash2, ChevronDown, Send, MessageCircle, GripHorizontal } from 'lucide-react';
 import type { Message } from '@/lib/interface';
+import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
+import { ChevronDown, GripHorizontal, MessageCircle, Send, Trash2 } from 'lucide-react';
+import React from 'react';
 import Reactmarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {} from 'remark-gfm';
-import { Markdown } from './Markdown';
 import { toast } from 'sonner';
+import { Markdown } from './Markdown';
+import { Skeleton } from './ui/skeleton';
+import { Textarea } from './ui/textarea';
 
 export default function ChatWindow() {
   const [messages, setMessages] = React.useState<Message[]>([]);
@@ -36,10 +36,10 @@ export default function ChatWindow() {
 
     const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
       method: 'POST',
-      body: JSON.stringify({ question: inputValue}),
+      body: JSON.stringify({ question: inputValue }),
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     });
     if (!response.ok) {
       toast.error('Failed to fetch response from LLM');
@@ -100,7 +100,7 @@ export default function ChatWindow() {
                   <GripHorizontal className='w-4 h-4 text-gray-400' />
                 </motion.div>
                 <div className='flex justify-between items-center p-4 bg-gray-100 border-b'>
-                  <h2 className='text-lg font-semibold'>Chat</h2>
+                  <h2 className='text-lg font-semibold'>Chat with LLM</h2>
                   <div className='flex items-center space-x-8'>
                     <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
                       <Trash2 className='w-5 h-5' />
