@@ -7,6 +7,6 @@ export * from './NodeSizeProps';
 export * from './graph';
 
 export interface Message {
-    text: string
-    sender: 'user' | 'llm'
+  text: string;
+  sender: 'user' | 'llm';
 }

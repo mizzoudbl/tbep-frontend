@@ -1,8 +1,7 @@
 export * from './LoadGraph';
-export * from './NodeTooltip';
-export * from './EdgeTooltip';
 export * from './GraphEvents';
 export * from './SigmaContainer';
+export * from './Fa2';
 
 export interface GraphologyWorkerLayout {
   stop: () => void;

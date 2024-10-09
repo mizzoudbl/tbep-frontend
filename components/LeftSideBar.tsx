@@ -1,7 +1,8 @@
 'use client';
 
 import { diseaseMap } from '@/lib/data';
-import type { LeftSideBarProps } from '@/lib/interface';
+import type { GraphStore } from '@/lib/interface';
+import { useStore } from '@/lib/store';
 import React from 'react';
 import { Combobox } from './ComboBox';
 import FileSheet from './FileSheet';
@@ -10,14 +11,8 @@ import NodeSize from './NodeSize';
 import { Label } from './ui/label';
 import { ScrollArea } from './ui/scroll-area';
 import { Textarea } from './ui/textarea';
-import { useStore } from '@/lib/store';
 
-export default function LeftSideBar({
-  selectedRadioColor,
-  setSelectedRadioColor,
-  selectedRadioSize,
-  setSelectedRadioSize,
-}: LeftSideBarProps) {
+export default function LeftSideBar() {
   const nodeSearchQuery = useStore(state => state.nodeSearchQuery);
   const setNodeSearchQuery = useStore(state => state.setNodeSearchQuery);
 
@@ -28,9 +23,9 @@ export default function LeftSideBar({
           <Label className='font-bold mb-2'>Disease Map</Label>
           <Combobox data={diseaseMap} className='w-full' />
         </div>
-        <NodeColor selectedRadioColor={selectedRadioColor} setSelectedRadioColor={setSelectedRadioColor} />
+        <NodeColor />
       </div>
-      <NodeSize selectedRadioSize={selectedRadioSize} setSelectedRadioSize={setSelectedRadioSize} />
+      <NodeSize />
       <div className='mt-auto'>
         <div className='flex flex-col space-y-2 mb-2'>
           <div>

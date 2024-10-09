@@ -1,7 +1,7 @@
 'use client';
 
 import { nodeColor } from '@/lib/data';
-import type { NodeColorProps } from '@/lib/interface';
+import { useStore } from '@/lib/store';
 import { ChevronDown, ChevronUp, Info } from 'lucide-react';
 import React from 'react';
 import { Combobox } from './ComboBox';
@@ -11,8 +11,13 @@ import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
-export default function NodeColor({ selectedRadioColor, setSelectedRadioColor }: NodeColorProps) {
+export default function NodeColor() {
   const [open, setOpen] = React.useState(true);
+  const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
+
+  const handleSelectedRadioButton = (value: string) => {
+    useStore.setState({ selectedRadioNodeColor: value });
+  };
 
   return (
     <Collapsible className='my-2 border p-2 rounded shadow' open={open}>
@@ -21,7 +26,7 @@ export default function NodeColor({ selectedRadioColor, setSelectedRadioColor }:
         {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </Button>
       <CollapsibleContent className='mt-2'>
-        <RadioGroup value={selectedRadioColor} onValueChange={value => setSelectedRadioColor(value)}>
+        <RadioGroup value={selectedRadioNodeColor} onValueChange={handleSelectedRadioButton}>
           {nodeColor.map(({ label, tooltipContent }) => (
             <Tooltip key={label}>
               <TooltipTrigger asChild>
@@ -41,10 +46,10 @@ export default function NodeColor({ selectedRadioColor, setSelectedRadioColor }:
             </Tooltip>
           ))}
         </RadioGroup>
-        {selectedRadioColor && (
+        {selectedRadioNodeColor !== 'None' && (
           <div className='mt-2'>
             {/* Data fetching and input remaining */}
-            <Combobox data={[]} className='w-40' />
+            <Combobox data={[]} className='w-full' />
           </div>
         )}
       </CollapsibleContent>

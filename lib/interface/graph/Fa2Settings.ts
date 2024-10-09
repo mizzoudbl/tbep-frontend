@@ -1,5 +1,5 @@
 export interface Fa2Settings {
-    gravity: number;
-    scalingRatio: number;
-    edgeWeightInfluence: number;
+  gravity: number;
+  scalingRatio: number;
+  edgeWeightInfluence: number;
 }

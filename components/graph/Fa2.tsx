@@ -1,7 +1,6 @@
 'use client';
 
 import { useStore } from '@/lib/store';
-import { useSigma } from '@react-sigma/core';
 import { useWorkerLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
 import { useEffect } from 'react';
 
@@ -19,9 +18,16 @@ export function Fa2() {
       barnesHutOptimize: true,
       // for using Noack’s LinLog model
       linLogMode: true,
+      strongGravityMode: true,
       ...settings,
     },
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    start();
+    setTimeout(() => stop(), 2000);
+  }, [settings, start, stop]);
 
   useEffect(() => {
     start();

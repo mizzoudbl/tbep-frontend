@@ -1,7 +1,7 @@
 'use client';
 
 import { nodeSize } from '@/lib/data';
-import type { NodeSizeProps } from '@/lib/interface';
+import { useStore } from '@/lib/store';
 import { ChevronDown, ChevronUp, Info } from 'lucide-react';
 import React from 'react';
 import { Combobox } from './ComboBox';
@@ -11,8 +11,14 @@ import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
-export default function NodeSize({ selectedRadioSize, setSelectedRadioSize }: NodeSizeProps) {
+export default function NodeSize() {
   const [open, setOpen] = React.useState(true);
+
+  const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
+
+  const handleSelectedRadioButton = (value: string) => {
+    useStore.setState({ selectedRadioNodeSize: value });
+  };
 
   return (
     <Collapsible className='border p-2 rounded shadow' open={open}>
@@ -21,7 +27,7 @@ export default function NodeSize({ selectedRadioSize, setSelectedRadioSize }: No
         {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </Button>
       <CollapsibleContent className='mt-2'>
-        <RadioGroup value={selectedRadioSize} onValueChange={value => setSelectedRadioSize(value)}>
+        <RadioGroup value={selectedRadioNodeSize} onValueChange={handleSelectedRadioButton}>
           {nodeSize.map(({ label, tooltipContent }) => (
             <Tooltip key={label}>
               <TooltipTrigger asChild>
@@ -41,10 +47,10 @@ export default function NodeSize({ selectedRadioSize, setSelectedRadioSize }: No
             </Tooltip>
           ))}
         </RadioGroup>
-        {selectedRadioSize && (
+        {selectedRadioNodeSize !== 'None' && (
           <div className='mt-2'>
             {/* Data fetching and input remaining */}
-            <Combobox data={[]} className='w-40' />
+            <Combobox data={[]} className='w-full' />
           </div>
         )}
       </CollapsibleContent>

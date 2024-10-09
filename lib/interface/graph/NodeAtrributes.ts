@@ -7,5 +7,7 @@ export interface NodeAttributes extends Attributes {
   color?: string;
   label?: string;
   ID?: string;
-  Description?: string;
+  description?: string;
+  hidden?: boolean;
+  highlighted?: boolean;
 }

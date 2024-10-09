@@ -1,5 +1,6 @@
 'use client';
 
+import type { GraphStore } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { useEffect } from 'react';
 import { Button } from './ui/button';
@@ -19,9 +20,12 @@ export default function RightSideBar() {
   const totalEdges = useStore(state => state.graph.edges?.length ?? 0);
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
+  const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
+  const defaultLabelRenderedSizeThreshold = useStore(state => state.defaultLabelRenderedSizeThreshold);
 
-  const handleNodeSizeChange = (value: number) => {
-    useStore.setState({ defaultNodeSize: value });
+  const handleDefaultChange = (value: number | string, key: keyof GraphStore) => {
+    if (typeof key !== 'string') return;
+    useStore.setState({ [key]: value });
   };
 
   const handleGraphAnimation = (checked: boolean) => {
@@ -167,7 +171,7 @@ export default function RightSideBar() {
                   max={50}
                   step={1}
                   value={[defaultNodeSize]}
-                  onValueChange={value => handleNodeSizeChange(value?.[0])}
+                  onValueChange={value => handleDefaultChange(value?.[0], 'defaultNodeSize')}
                 />
               </div>
               <TooltipContent>
@@ -181,7 +185,41 @@ export default function RightSideBar() {
               max={50}
               step={1}
               value={defaultNodeSize}
-              onChange={e => handleNodeSizeChange(Number.parseInt(e.target.value))}
+              onChange={e => handleDefaultChange(Number.parseInt(e.target.value), 'defaultNodeSize')}
+            />
+          </div>
+          <div className='flex space-x-2 items-center'>
+            <Tooltip>
+              <div className='flex flex-col space-y-2 w-full'>
+                <TooltipTrigger asChild>
+                  <Label htmlFor='defaultLabelRenderedSizeThreshold' className='text-xs'>
+                    Node Label Threshold
+                  </Label>
+                </TooltipTrigger>
+                <Slider
+                  id='defaultLabelRenderedSizeThreshold'
+                  className='w-full'
+                  min={0.1}
+                  max={10}
+                  step={0.1}
+                  value={[defaultLabelRenderedSizeThreshold]}
+                  onValueChange={value => handleDefaultChange(value?.[0], 'defaultLabelRenderedSizeThreshold')}
+                />
+              </div>
+              <TooltipContent>
+                <p>Change till how far node label should be visible</p>
+              </TooltipContent>
+            </Tooltip>
+            <Input
+              type='number'
+              className='w-14 h-8 text-xs'
+              min={0.1}
+              max={10}
+              step={0.1}
+              value={defaultLabelRenderedSizeThreshold}
+              onChange={e =>
+                handleDefaultChange(Number.parseFloat(e.target.value), 'defaultLabelRenderedSizeThreshold')
+              }
             />
           </div>
           <div className='flex'>
@@ -199,6 +237,21 @@ export default function RightSideBar() {
               </TooltipContent>
             </Tooltip>
           </div>
+          <div className='flex'>
+            <Tooltip>
+              <div className='flex flex-col space-y-2 w-full'>
+                <TooltipTrigger asChild>
+                  <Label htmlFor='defaultEdgeColor' className='text-xs'>
+                    Edge Color
+                  </Label>
+                </TooltipTrigger>
+                <ColorPicker color={defaultEdgeColor} className='w-full' />
+              </div>
+              <TooltipContent>
+                <p>Change the color of the nodes in the network</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
       </div>
       <div className='mb-4 border p-2 rounded-md'>
@@ -207,6 +260,9 @@ export default function RightSideBar() {
           <span>Total Nodes: {totalNodes}</span>
           <span>Total Edges: {totalEdges}</span>
         </div>
+      </div>
+      <div className='mb-4 border p-2 rounded-md'>
+        <p className='text-xs font-bold mb-2'>Legends</p>
       </div>
     </ScrollArea>
   );

@@ -10,8 +10,6 @@ import React, { type ChangeEvent, type KeyboardEvent } from 'react';
 export default function NetworkLayout({ children }: { children: React.ReactNode }) {
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
-  const [selectedRadioColor, setSelectedRadioColor] = React.useState<string | undefined>(undefined);
-  const [selectedRadioSize, setSelectedRadioSize] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
     const event = async (event: globalThis.KeyboardEvent) => {
@@ -43,17 +41,12 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
           {leftSidebar && (
             <>
               <ResizablePanel defaultSize={16} minSize={16}>
-                <LeftSideBar
-                  selectedRadioColor={selectedRadioColor}
-                  setSelectedRadioColor={setSelectedRadioColor}
-                  selectedRadioSize={selectedRadioSize}
-                  setSelectedRadioSize={setSelectedRadioSize}
-                />
+                <LeftSideBar />
               </ResizablePanel>
               <ResizableHandle withHandle />
             </>
           )}
-          <ResizablePanel defaultSize={75} className='flex-1 bg-white'>
+          <ResizablePanel defaultSize={68} className='flex-1 bg-white'>
             {children}
           </ResizablePanel>
           {rightSidebar && (

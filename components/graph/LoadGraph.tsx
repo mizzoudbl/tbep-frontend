@@ -11,6 +11,7 @@ import Graph from 'graphology';
 import { circular } from 'graphology-layout';
 import type { SerializedGraph } from 'graphology-types';
 import React from 'react';
+import { LoadingSpinner } from '../ui/loading-spinner';
 
 export function LoadGraph() {
   const loadGraph = useLoadGraph();
@@ -27,7 +28,10 @@ export function LoadGraph() {
   const setGraph = useStore(state => state.setGraph);
 
   React.useEffect(() => {
-    const graph = new Graph<NodeAttributes, EdgeAttributes>({ multi: true, type: 'directed' });
+    const graph = new Graph<NodeAttributes, EdgeAttributes>({
+      multi: true,
+      type: 'directed',
+    });
     if (error) {
       console.error(error);
       alert('Error loading graph');
@@ -36,7 +40,7 @@ export function LoadGraph() {
     if (!loading && data) {
       const { genes, links } = data.getGeneInteractions;
       const transformedData: Partial<SerializedGraph<NodeAttributes, EdgeAttributes>> = {
-        nodes: genes.map((gene, index) => ({
+        nodes: genes.map(gene => ({
           key: gene.ID,
           attributes: {
             label: gene.Gene_name,
@@ -61,5 +65,16 @@ export function LoadGraph() {
     }
   }, [loadGraph, data, loading, error, setGraph]);
 
-  return null;
+  return (
+    <>
+      {loading ? (
+        <div className='w-full h-full grid place-items-center'>
+          <div className='flex flex-col items-center'>
+            <LoadingSpinner size={24} />
+            Loading...
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
 }

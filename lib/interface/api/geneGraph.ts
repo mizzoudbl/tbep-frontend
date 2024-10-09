@@ -1,4 +1,4 @@
-import type { Gene } from "../Gene";
+import type { Gene } from '../Gene';
 
 export interface GeneGraphVariables {
   geneIDs: string[];
@@ -8,16 +8,16 @@ export interface GeneGraphVariables {
 }
 
 export interface GeneGraphData {
-	getGeneInteractions: {
-		genes: Gene[];
-		links: {
-			gene1: {
-				index: number;
-			};
-			gene2: {
-				index: number;
-			};
-			score: number;
-		}[];
-	};
+  getGeneInteractions: {
+    genes: Gene[];
+    links: {
+      gene1: {
+        index: number;
+      };
+      gene2: {
+        index: number;
+      };
+      score: number;
+    }[];
+  };
 }

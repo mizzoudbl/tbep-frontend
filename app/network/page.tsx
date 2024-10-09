@@ -3,6 +3,7 @@
 import React from 'react';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import ChatWindow from '@/components/ChatWindow';
+import { drawHover } from '@/components/graph/canvas-hover';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useStore } from '@/lib/store';
 import dynamic from 'next/dynamic';
@@ -24,25 +25,18 @@ export default function NetworkPage({
 }: {
   searchParams: Record<string, string>;
 }) {
-  const defaultNodeColor = useStore(state => state.defaultNodeColor);
-
   return (
     <>
       <SigmaContainer
         className='w-full h-screen'
         settings={{
-          autoCenter: true,
-          autoRescale: true,
-          defaultNodeType: 'circle',
-          zoomToSizeRatioFunction(ratio) {
-            return ratio * 2;
-          },
-          defaultNodeColor: defaultNodeColor,
+          enableEdgeEvents: true,
           defaultEdgeColor: 'gray',
           zIndex: true,
-          labelRenderedSizeThreshold: 7.5,
+          labelRenderedSizeThreshold: 0.75,
           labelDensity: 0.2,
           renderEdgeLabels: true,
+          defaultDrawNodeHover: drawHover,
         }}
       />
       <ChatWindow />
