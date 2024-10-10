@@ -112,30 +112,4 @@ export class Trie<E = string> {
 
     return current.isEndOfKey;
   }
-
-  delete(key: string): void {
-    this.#delete(this.#root, key, 0);
-  }
-
-  #delete(node: TrieNode<E>, key: string, depth: number): void {
-    if (depth === key.length) {
-      if (node.isEndOfKey) {
-        node.isEndOfKey = false;
-        node.value = null;
-      }
-      return;
-    }
-
-    const char = key.charAt(depth);
-    const child = node.children.get(char);
-    if (!child) {
-      return;
-    }
-
-    this.#delete(child, key, depth + 1);
-
-    if (child.children.size === 0 && !child.isEndOfKey) {
-      node.children.delete(char);
-    }
-  }
 }

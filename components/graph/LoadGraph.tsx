@@ -11,12 +11,12 @@ import Graph from 'graphology';
 import { circular } from 'graphology-layout';
 import type { SerializedGraph } from 'graphology-types';
 import React from 'react';
-import { LoadingSpinner } from '../ui/loading-spinner';
+import { Spinner } from '../ui/spinner';
 
 export function LoadGraph() {
   const loadGraph = useLoadGraph();
   const variable = JSON.parse(localStorage.getItem('graphConfig') || '{}');
-  const { data, loading, error } = useQuery<GeneGraphData, GeneGraphVariables>(GENE_GRAPH_QUERY('ALS'), {
+  const { data, loading, error } = useQuery<GeneGraphData, GeneGraphVariables>(GENE_GRAPH_QUERY, {
     variables: {
       geneIDs: variable.geneIDs as string[],
       interactionType: variable.interactionType as string,
@@ -24,8 +24,6 @@ export function LoadGraph() {
       order: Number.parseInt(variable.order),
     },
   });
-
-  const setGraph = useStore(state => state.setGraph);
 
   React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
@@ -58,19 +56,22 @@ export function LoadGraph() {
           },
         })),
       };
-      setGraph(transformedData);
+      useStore.setState({
+        totalNodes: transformedData.nodes?.length || 0,
+        totalEdges: transformedData.edges?.length || 0,
+      });
       graph.import(transformedData);
       circular.assign(graph);
       loadGraph(graph);
     }
-  }, [loadGraph, data, loading, error, setGraph]);
+  }, [loadGraph, data, loading, error]);
 
   return (
     <>
       {loading ? (
         <div className='w-full h-full grid place-items-center'>
           <div className='flex flex-col items-center'>
-            <LoadingSpinner size={24} />
+            <Spinner size={'medium'} />
             Loading...
           </div>
         </div>

@@ -4,7 +4,7 @@ import type { GraphStore } from './interface';
 export const useStore = create<GraphStore>(set => ({
   nodeSearchQuery: '',
   setNodeSearchQuery: val => set({ nodeSearchQuery: val }),
-  fa2Worker: {
+  forceWorker: {
     start() {
       throw new Error('GraphologyWorkerLayout not initialized');
     },
@@ -15,20 +15,22 @@ export const useStore = create<GraphStore>(set => ({
       throw new Error('GraphologyWorkerLayout not initialized');
     },
   },
-  setFa2Worker: val => set({ fa2Worker: val }),
   defaultNodeColor: 'blue',
-  setFa2Settings: settings => set({ fa2Settings: settings }),
-  fa2Settings: {
-    edgeWeightInfluence: 1,
-    gravity: 0.1,
-    scalingRatio: 1,
+  // Select defaultValue best for viewing the graph
+  forceSettings: {
+    repulsion: 10,
+    attraction: 10,
+    gravity: 10,
+    damping: 10,
+    speed: 10,
   },
-  graph: {},
-  setGraph: graph => set({ graph }),
-  defaultNodeSize: 10,
-  defaultLabelRenderedSizeThreshold: 0.75,
+  defaultNodeSize: 5,
+  defaultLabelRenderedSizeThreshold: 3,
   defaultEdgeColor: 'red',
   selectedNodes: [],
   selectedRadioNodeColor: 'None',
   selectedRadioNodeSize: 'None',
+  showEdgeLabel: true,
+  totalNodes: 0,
+  totalEdges: 0,
 }));

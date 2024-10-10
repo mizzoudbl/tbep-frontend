@@ -1,28 +1,45 @@
 'use client';
 
-import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
+import type { EdgeAttributes, NodeAttributes, SelectionBox } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { Trie } from '@/lib/trie';
-import { useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
-import React, { useEffect, useRef, useState } from 'react';
+import { useCamera, useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
 
-export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boolean }) {
+export function GraphEvents() {
   const registerEvents = useRegisterEvents();
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [rightClickNode, setRightClickNode] = useState<string | null>(null);
+  const [_selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const hiddenNodes = useRef(new Array<string>());
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectionBox, setSelectionBox] = useState<SelectionBox | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const handleSelectedNodes = useCallback(
+    (_selectedNodes: string[]) => {
+      const graph = sigma.getGraph();
+      const temp = _selectedNodes.map(node => ({
+        Gene_Name: graph.getNodeAttribute(node, 'label') as string,
+        ID: node,
+        Description: graph.getNodeAttribute(node, 'description') as string,
+      }));
+      useStore.setState({ selectedNodes: temp });
+    },
+    [sigma],
+  );
 
   const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
 
   useEffect(() => {
     const event = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === 'z') {
-        const graph = sigma.getGraph();
         const node = hiddenNodes.current.pop();
         if (node) {
-          graph.removeNodeAttribute(node, 'hidden');
+          sigma.getGraph().removeNodeAttribute(node, 'hidden');
         }
       }
     };
@@ -30,55 +47,135 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
     return () => window.removeEventListener('keydown', event);
   }, [sigma]);
 
+  const handleMouseDown = useCallback(
+    (e: MouseEvent) => {
+      if (canvasRef.current) canvasRef.current.style.cursor = 'crosshair';
+      setIsSelecting(true);
+      const mousePosition = sigma.viewportToGraph({
+        x: e.offsetX,
+        y: e.offsetY,
+      });
+
+      setSelectionBox({
+        startX: mousePosition.x,
+        startY: mousePosition.y,
+        endX: mousePosition.x,
+        endY: mousePosition.y,
+      });
+    },
+    [sigma],
+  );
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (isSelecting && selectionBox) {
+        const mousePosition = sigma.viewportToGraph({
+          x: e.offsetX,
+          y: e.offsetY,
+        });
+        setSelectionBox({
+          ...selectionBox,
+          endX: mousePosition.x,
+          endY: mousePosition.y,
+        });
+
+        // Draw selection rectangle
+        if (!canvasRef.current) return;
+        drawSelectionBox(sigma, canvasRef.current, {
+          ...selectionBox,
+          endX: mousePosition.x,
+          endY: mousePosition.y,
+        });
+
+        // Find nodes within selection
+        const selectedNodes = findNodesInSelection(sigma.getGraph(), {
+          ...selectionBox,
+          endX: mousePosition.x,
+          endY: mousePosition.y,
+        });
+        setSelectedNodes(selectedNodes);
+      }
+    },
+    [sigma, isSelecting, selectionBox],
+  );
+
+  const handleMouseUp = useCallback(() => {
+    if (isSelecting) {
+      setIsSelecting(false);
+      setSelectionBox(null);
+
+      // Clear the selection rectangle
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.style.cursor = 'default';
+      const ctx = canvas.getContext('2d');
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      sigma.refresh();
+      handleSelectedNodes(_selectedNodes);
+    }
+  }, [sigma, handleSelectedNodes, isSelecting, _selectedNodes]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (!canvasRef.current) canvasRef.current = sigma.getCanvases().mouse;
+    const graph = sigma.getGraph();
     registerEvents({
+      /* Hide Node Program on Ctrl + Click */
       clickNode: e => {
         if (e.event.original.ctrlKey) {
           hiddenNodes.current.push(e.node);
-          sigma.getGraph().setNodeAttribute(e.node, 'hidden', true);
+          graph.setNodeAttribute(e.node, 'hidden', true);
         }
       },
+      /* Highlight Neighbour program */
       rightClickNode: e => {
         e.event.original.preventDefault();
         e.preventSigmaDefault();
         if (e.node === rightClickNode) {
-          sigma.getGraph().setNodeAttribute(e.node, 'highlighted', false);
-          sigma.getGraph().forEachNeighbor(rightClickNode, (_, attributes) => {
+          graph.setNodeAttribute(e.node, 'highlighted', false);
+          graph.forEachNeighbor(rightClickNode, (_, attributes) => {
             attributes.highlighted = false;
           });
           setRightClickNode(null);
         } else {
-          sigma.getGraph().forEachNeighbor(e.node, (_, attributes) => {
+          graph.forEachNeighbor(e.node, (_, attributes) => {
             attributes.highlighted = true;
           });
-          sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true);
+          graph.setNodeAttribute(e.node, 'highlighted', true);
           setRightClickNode(e.node);
         }
       },
+
       /* Node Hover Program */
       enterNode: e => setHoveredNode(e.node),
       leaveNode: () => setHoveredNode(null),
       enterEdge: e => {
-        sigma.getGraph().setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
-        sigma.getGraph().setEdgeAttribute(e.edge, 'forceLabel', true);
+        graph.setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
+        graph.setEdgeAttribute(e.edge, 'forceLabel', true);
       },
       leaveEdge: e => {
-        sigma.getGraph().removeEdgeAttribute(e.edge, 'color');
-        sigma.getGraph().removeEdgeAttribute(e.edge, 'forceLabel');
+        graph.removeEdgeAttribute(e.edge, 'color');
+        graph.removeEdgeAttribute(e.edge, 'forceLabel');
       },
       /* Drag'n'Drop Program */
       downNode: e => {
+        if (isSelecting) return;
         setDraggedNode(e.node);
-        sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true);
+        graph.setNodeAttribute(e.node, 'highlighted', true);
       },
+
+      /* Node Selection Program also starts */
       // On mouse move, if the drag mode is enabled, we change the position of the draggedNode
       mousemovebody: e => {
-        if (!draggedNode) return;
-        // Get new position of node
-        const pos = sigma.viewportToGraph(e);
-        sigma.getGraph().setNodeAttribute(draggedNode, 'x', pos.x);
-        sigma.getGraph().setNodeAttribute(draggedNode, 'y', pos.y);
-
+        if (!isSelecting && !draggedNode) return;
+        if (isSelecting) {
+          handleMouseMove(e.original);
+        } else if (draggedNode) {
+          const pos = sigma.viewportToGraph(e);
+          // Get new position of node
+          graph.setNodeAttribute(draggedNode, 'x', pos.x);
+          graph.setNodeAttribute(draggedNode, 'y', pos.y);
+        }
         // Prevent sigma to move camera:
         e.preventSigmaDefault();
         e.original.preventDefault();
@@ -88,20 +185,39 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
       mouseup: () => {
         if (draggedNode) {
           setDraggedNode(null);
-          sigma.getGraph().removeNodeAttribute(draggedNode, 'highlighted');
+          graph.removeNodeAttribute(draggedNode, 'highlighted');
+        } else {
+          handleMouseUp();
         }
       },
       // Disable the autoscale at the first down interaction
-      mousedown: () => {
+      mousedown: e => {
+        if (e.original.shiftKey) handleMouseDown(e.original);
+        else {
+          for (const node of _selectedNodes) {
+            graph.setNodeAttribute(node, 'type', 'circle');
+          }
+          handleSelectedNodes([]);
+        }
         if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
       },
     });
-  }, [registerEvents, rightClickNode, sigma, draggedNode, defaultEdgeColor]);
+  }, [
+    registerEvents,
+    rightClickNode,
+    sigma,
+    draggedNode,
+    defaultEdgeColor,
+    handleMouseUp,
+    handleMouseDown,
+    handleMouseMove,
+  ]);
 
   const setSettings = useSetSettings();
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultLabelRenderedSizeThreshold = useStore(state => state.defaultLabelRenderedSizeThreshold);
+  const showEdgeLabel = useStore(state => state.showEdgeLabel);
 
   useEffect(() => {
     setSettings({
@@ -111,20 +227,25 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
 
   useEffect(() => {
     setSettings({
+      renderEdgeLabels: showEdgeLabel,
+    });
+  }, [showEdgeLabel, setSettings]);
+
+  useEffect(() => {
+    setSettings({
       defaultNodeColor,
     });
   }, [defaultNodeColor, setSettings]);
 
   useEffect(() => {
+    const graph = sigma.getGraph();
     setSettings({
       nodeReducer(node, data) {
-        const graph = sigma.getGraph();
         const newData: typeof data = {
           ...data,
           size: data.size || defaultNodeSize,
-          highlighted: data.highlighted || false,
         };
-        if (!disableHoverEffect && hoveredNode) {
+        if (hoveredNode) {
           if (
             node === hoveredNode
             // || graph.neighbors(hoveredNode).includes(node)
@@ -138,9 +259,8 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
         return newData;
       },
       edgeReducer(edge, data) {
-        const graph = sigma.getGraph();
         const newData: Record<string, string | number> = { ...data, size: data.size || 2 };
-        if (!disableHoverEffect && hoveredNode) {
+        if (hoveredNode) {
           if (!graph.extremities(edge).includes(hoveredNode)) {
             newData.color = '#ccc';
           } else {
@@ -150,34 +270,36 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
         return newData;
       },
     });
-  }, [defaultNodeSize, defaultEdgeColor, hoveredNode, setSettings, sigma, disableHoverEffect]);
+  }, [defaultNodeSize, defaultEdgeColor, hoveredNode, setSettings, sigma]);
 
   const searchNodeQuery = useStore(state => state.nodeSearchQuery);
   const highlightedNodesRef = useRef(new Set<string>());
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
-  const graph = useStore(state => state.graph);
 
   useEffect(() => {
-    if (!graph) return;
-    const nodeArr = graph.nodes?.map(node => ({
-      key: node.attributes?.label,
-      value: node.key,
-    })) as { key: string; value: string }[];
-    if (!Array.isArray(nodeArr)) return;
-    trieRef.current = Trie.fromArray(nodeArr, 'key');
-  }, [graph]);
+    setTimeout(() => {
+      const nodeArr = sigma.getGraph().mapNodes((node, attributes) => ({
+        key: attributes.label,
+        value: node,
+      })) as { key: string; value: string }[];
+      if (!Array.isArray(nodeArr)) return;
+      trieRef.current = Trie.fromArray(nodeArr, 'key');
+    }, 5000);
+  }, [sigma]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  const { gotoNode } = useCamera();
+
   useEffect(() => {
+    const graph = sigma.getGraph();
     if (trieRef.current.size === 0) return;
     const geneNames = new Set(
       searchNodeQuery
+        .toUpperCase()
         .split(/[\n,]/)
         .map(s => s.trim())
         .filter(s => s.length > 0)
         .map(s => trieRef.current.get(s)?.value || s),
     ) as Set<string>;
-    const graph = sigma.getGraph();
 
     const previousHighlightedNodes = highlightedNodesRef.current;
     for (const node of previousHighlightedNodes) {
@@ -185,14 +307,16 @@ export function GraphEvents({ disableHoverEffect }: { disableHoverEffect?: boole
       graph.removeNodeAttribute(node, 'highlighted');
       graph.setNodeAttribute(node, 'color', defaultNodeColor);
     }
+    let count = 0;
     for (const node of geneNames) {
       if (previousHighlightedNodes.has(node) || !graph.hasNode(node) || graph.getNodeAttribute(node, 'hidden') === true)
         continue;
       graph.setNodeAttribute(node, 'highlighted', true);
       graph.setNodeAttribute(node, 'color', 'blue');
+      if (++count === geneNames.size) gotoNode(node, { duration: 100 });
     }
     highlightedNodesRef.current = geneNames;
-  }, [searchNodeQuery]);
+  }, [searchNodeQuery, defaultNodeColor, gotoNode, sigma]);
 
   return null;
 }

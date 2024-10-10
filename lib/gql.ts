@@ -11,7 +11,7 @@ export const GENE_VERIFICATION_QUERY = gql`
   }
 `;
 
-export const GENE_GRAPH_QUERY = (disease: string) => gql`
+export const GENE_GRAPH_QUERY = gql`
   query GeneGraph(
     $geneIDs: [String!]!
     $minScore: Float!

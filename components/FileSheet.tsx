@@ -1,20 +1,5 @@
 'use client';
 
-import React, { type ChangeEvent } from 'react';
-import { Upload, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetFooter,
-} from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,10 +11,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { formatBytes, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
+import { Trash2, Upload } from 'lucide-react';
+import React, { type ChangeEvent } from 'react';
+import { toast } from 'sonner';
 
 export default function FileSheet() {
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
@@ -127,7 +127,7 @@ export default function FileSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size='sm' className='text-xs'>
+        <Button size='sm' className='text-xs' onClick={() => console.log('uploading')}>
           <Upload className='h-3 w-3 mr-1' />
           Upload Files
         </Button>

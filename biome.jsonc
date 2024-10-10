@@ -19,7 +19,7 @@
       "lib/**/*.ts",
       "lib/**/*.tsx"
     ],
-    "ignore": ["**/*.min.js", "**/dist/**"]
+    "ignore": ["**/*.min.js", "**/dist/**", "**/build/**", "**/node_modules/**"]
   },
   "formatter": {
     "enabled": true,

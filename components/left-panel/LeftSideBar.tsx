@@ -1,23 +1,21 @@
 'use client';
 
 import { diseaseMap } from '@/lib/data';
-import type { GraphStore } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import React from 'react';
-import { Combobox } from './ComboBox';
-import FileSheet from './FileSheet';
-import NodeColor from './NodeColor';
-import NodeSize from './NodeSize';
-import { Label } from './ui/label';
-import { ScrollArea } from './ui/scroll-area';
-import { Textarea } from './ui/textarea';
+import { NodeColor, NodeSize } from '.';
+import { Combobox } from '../ComboBox';
+import FileSheet from '../FileSheet';
+import { Label } from '../ui/label';
+import { ScrollArea } from '../ui/scroll-area';
+import { Textarea } from '../ui/textarea';
 
-export default function LeftSideBar() {
+export function LeftSideBar() {
   const nodeSearchQuery = useStore(state => state.nodeSearchQuery);
   const setNodeSearchQuery = useStore(state => state.setNodeSearchQuery);
 
   return (
-    <ScrollArea className='border-r px-2 flex flex-col'>
+    <ScrollArea className='border-r p-2 flex flex-col'>
       <div>
         <div className='flex flex-col'>
           <Label className='font-bold mb-2'>Disease Map</Label>

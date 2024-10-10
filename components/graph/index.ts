@@ -1,7 +1,7 @@
 export * from './LoadGraph';
 export * from './GraphEvents';
 export * from './SigmaContainer';
-export * from './Fa2';
+export * from './ForceLayout';
 
 export interface GraphologyWorkerLayout {
   stop: () => void;

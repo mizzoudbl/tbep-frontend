@@ -7,6 +7,12 @@ const TEXT_COLOR = '#000000';
 /**
  * This function draw in the input canvas 2D context a rectangle.
  * It only deals with tracing the path, and does not fill or stroke.
+ * @param ctx - The canvas 2D context in which the rectangle will be drawn.
+ * @param x - The x coordinate of the top-left corner of the rectangle.
+ * @param y - The y coordinate of the top-left corner of the rectangle.
+ * @param width - The width of the rectangle.
+ * @param height - The height of the rectangle.
+ * @param radius - The radius of the rectangle's corners.
  */
 function drawRoundRect(
   ctx: CanvasRenderingContext2D,
@@ -31,12 +37,15 @@ function drawRoundRect(
 
 /**
  * Custom hover renderer
+ * @param context - The canvas 2D context in which the hover will be drawn.
+ * @param data - The node data to be displayed in the hover.
+ * @param settings - The settings for the hover.
  */
 export function drawHover(
   context: CanvasRenderingContext2D,
   data: PlainObject,
   settings: Settings<NodeAttributes, EdgeAttributes>,
-) {
+): void {
   const size = settings.labelSize;
   const font = settings.labelFont;
   const weight = settings.labelWeight;
@@ -82,11 +91,9 @@ export function drawHover(
   context.font = `${weight} ${size}px ${font}`;
   context.fillText(geneName, data.x + data.size + 3, data.y + size / 3);
 
-  if (geneID) {
-    context.fillStyle = TEXT_COLOR;
-    context.font = `${weight} ${subLabelSize}px ${font}`;
-    context.fillText(geneID, data.x + data.size + 3, data.y - (2 * size) / 3 - 2);
-  }
+  context.fillStyle = TEXT_COLOR;
+  context.font = `${weight} ${subLabelSize}px ${font}`;
+  context.fillText(geneID, data.x + data.size + 3, data.y - (2 * size) / 3 - 2);
 
   context.fillStyle = data.color;
   context.font = `${weight} ${subLabelSize}px ${font}`;

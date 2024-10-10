@@ -1,7 +1,5 @@
 import type { PopUpTableProps } from '@/lib/interface';
-import NotFound from '@/public/image/not-found.svg';
 import { Download } from 'lucide-react';
-import Image from 'next/image';
 import { Button } from './ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from './ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';

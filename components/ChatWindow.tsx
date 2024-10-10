@@ -78,8 +78,8 @@ export default function ChatWindow() {
 
   return (
     <>
-      <div className='absolute bottom-0 left-0 right-0 p-4'>
-        <form onSubmit={handleSubmit} className='max-w-sm md:max-w-2xl mx-auto'>
+      <div className='absolute bottom-0 left-[15%] right-[15%] p-4'>
+        <form onSubmit={handleSubmit} className='max-w-sm md:max-w-2xl xl:max-w-3xl mx-auto'>
           <AnimatePresence>
             {isChatOpen && (
               <motion.div

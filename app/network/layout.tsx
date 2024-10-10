@@ -1,11 +1,11 @@
 'use client';
 
-import LeftSideBar from '@/components/LeftSideBar';
-import RightSideBar from '@/components/RightSideBar';
+import { LeftSideBar } from '@/components/left-panel';
+import { RightSideBar } from '@/components/right-panel';
 import { Button } from '@/components/ui/button';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { type ChangeEvent, type KeyboardEvent } from 'react';
+import React from 'react';
 
 export default function NetworkLayout({ children }: { children: React.ReactNode }) {
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);

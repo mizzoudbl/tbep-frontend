@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from 'clsx';
+import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,4 +34,8 @@ export function formatBytes(bytes: number | string, decimals = 2) {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   const i = Math.floor(Math.log(+bytes) / Math.log(k));
   return `${Number.parseFloat((+bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
+}
+
+export function toCapitalise(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
