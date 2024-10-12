@@ -1,13 +1,8 @@
-import { Download, HelpCircle, Info, Menu, MessageCircle } from 'lucide-react';
+import { links } from '@/lib/data';
+import { Menu } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { Button, buttonVariants } from './ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export default function Navbar() {
   return (
@@ -17,21 +12,15 @@ export default function Navbar() {
           <h1 className='text-2xl font-bold'>Target Discovery Platform</h1>
         </Link>
         <nav className='hidden md:flex space-x-4'>
-          <Link href={'/help'} className={buttonVariants({ variant: 'ghost', className: 'hover:bg-teal-700' })}>
-            Help
-          </Link>
-          <Link href={'/about'} className={buttonVariants({ variant: 'ghost', className: 'hover:bg-teal-700' })}>
-            About
-          </Link>
-          <Link href={'/faq'} className={buttonVariants({ variant: 'ghost', className: 'hover:bg-teal-700' })}>
-            FAQ
-          </Link>
-          <Link href={'/contact'} className={buttonVariants({ variant: 'ghost', className: 'hover:bg-teal-700' })}>
-            Contact
-          </Link>
-          <Link href={'/download'} className={buttonVariants({ variant: 'ghost', className: 'hover:bg-teal-700' })}>
-            Download
-          </Link>
+          {links.map(link => (
+            <Link
+              key={link.text}
+              href={link.href}
+              className={buttonVariants({ variant: 'ghost', className: 'hover:bg-teal-700' })}
+            >
+              {link.text}
+            </Link>
+          ))}
         </nav>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -41,40 +30,14 @@ export default function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className='w-56 text-black text-lg' align='end'>
-            <Link href={'/help'}>
-              <DropdownMenuItem>
-                <HelpCircle className='mr-2 h-4 w-4' />
-                <span>Help</span>
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <Link href={'/about'}>
-              <DropdownMenuItem>
-                <Info className='mr-2 h-4 w-4' />
-                <span>About</span>
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <Link href={'/faq'}>
-              <DropdownMenuItem>
-                <MessageCircle className='mr-2 h-4 w-4' />
-                <span>FAQ</span>
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <Link href={'/contact'}>
-              <DropdownMenuItem>
-                <MessageCircle className='mr-2 h-4 w-4' />
-                <span>Contact</span>
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <Link href={'/download'}>
-              <DropdownMenuItem>
-                <Download className='mr-2 h-4 w-4' />
-                <span>Download</span>
-              </DropdownMenuItem>
-            </Link>
+            {links.map(link => (
+              <Link key={link.text} href={link.href}>
+                <DropdownMenuItem>
+                  {link.icon}
+                  <span>{link.text}</span>
+                </DropdownMenuItem>
+              </Link>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

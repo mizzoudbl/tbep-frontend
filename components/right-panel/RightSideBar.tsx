@@ -1,9 +1,9 @@
 'use client';
 
-import type { GraphStore } from '@/lib/interface';
+import type { ForceSettings, GraphStore, RadialAnalysisSetting } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { Legend, NetworkInfo, NetworkStyle } from '.';
+import { Legend, NetworkInfo, NetworkStyle, RadialAnalysis } from '.';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
@@ -19,9 +19,11 @@ export function RightSideBar() {
   const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
   const defaultLabelRenderedSizeThreshold = useStore(state => state.defaultLabelRenderedSizeThreshold);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
+  const radialAnalysis = useStore(state => state.radialAnalysis);
+  const minScore: number = useStore.getInitialState().radialAnalysis.edgeWeightCutOff;
+  // const minScore: number = JSON.parse(localStorage.getItem('graphConfig') || '{}').minScore || 0;
 
   const handleDefaultChange = (value: number | string, key: keyof GraphStore) => {
-    if (typeof key !== 'string') return;
     useStore.setState({ [key]: value });
   };
 
@@ -29,17 +31,14 @@ export function RightSideBar() {
     checked ? start() : stop();
   };
 
-  const handleSliderChange = (value: number[], key: string) => {
-    useStore.setState({ forceSettings: { ...forceSettings, [key]: value[0] } });
+  const updateForceSetting = (value: number[] | string, key: keyof ForceSettings) => {
+    useStore.setState({
+      forceSettings: { ...forceSettings, [key]: typeof value === 'string' ? Number.parseFloat(value) : value[0] },
+    });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
-    useStore.setState({
-      forceSettings: {
-        ...forceSettings,
-        [key]: Number.parseFloat(e.target.value),
-      },
-    });
+  const updateRadialAnalysis = (value: number, key: keyof RadialAnalysisSetting) => {
+    useStore.setState({ radialAnalysis: { ...radialAnalysis, [key]: value } });
   };
 
   const handleCheckBox = (checked: CheckedState, key: keyof GraphStore) => {
@@ -48,8 +47,8 @@ export function RightSideBar() {
   };
 
   return (
-    <ScrollArea className='border-l p-2 text-xs flex flex-col'>
-      <div className='mb-4 border p-2 rounded-md'>
+    <ScrollArea className='border-l p-2 text-xs flex flex-col h-[98vh]'>
+      <div className='mb-2 border p-2 rounded shadow'>
         <p className='font-bold mb-2'>Network Layout</p>
         <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-2'>
@@ -73,7 +72,7 @@ export function RightSideBar() {
                   max={10}
                   step={0.1}
                   value={[forceSettings.gravity]}
-                  onValueChange={value => handleSliderChange(value, 'gravity')}
+                  onValueChange={value => updateForceSetting(value, 'gravity')}
                 />
               </div>
               <TooltipContent>
@@ -83,29 +82,29 @@ export function RightSideBar() {
             <Input
               type='number'
               className='w-16 h-8'
-              min={0.1}
-              max={10}
-              step={0.1}
+              min={1}
+              max={50}
+              step={1}
               value={forceSettings.gravity}
-              onChange={e => handleInputChange(e, 'gravity')}
+              onChange={e => updateForceSetting(e.target.value, 'gravity')}
             />
           </div>
           <div className='flex space-x-2 items-center'>
             <Tooltip>
               <div className='flex flex-col space-y-2 w-full'>
                 <TooltipTrigger asChild>
-                  <Label htmlFor='scalingRatio' className='text-xs font-semibold'>
+                  <Label htmlFor='repulsion' className='text-xs font-semibold'>
                     Repulsion (0-10)
                   </Label>
                 </TooltipTrigger>
                 <Slider
-                  id='scalingRatio'
+                  id='repulsion'
                   className='w-full'
                   min={0}
                   max={50}
                   step={1}
                   value={[forceSettings.repulsion]}
-                  onValueChange={value => handleSliderChange(value, 'scalingRatio')}
+                  onValueChange={value => updateForceSetting(value, 'repulsion')}
                 />
               </div>
               <TooltipContent>
@@ -119,25 +118,25 @@ export function RightSideBar() {
               max={50}
               step={1}
               value={forceSettings.repulsion}
-              onChange={e => handleInputChange(e, 'scalingRatio')}
+              onChange={e => updateForceSetting(e.target.value, 'repulsion')}
             />
           </div>
           <div className='flex space-x-2 items-center'>
             <Tooltip>
               <div className='flex flex-col space-y-2 w-full'>
                 <TooltipTrigger asChild>
-                  <Label htmlFor='edgeWeightInfluence' className='text-xs font-semibold'>
+                  <Label htmlFor='attraction' className='text-xs font-semibold'>
                     Attraction (0-10)
                   </Label>
                 </TooltipTrigger>
                 <Slider
-                  id='edgeWeightInfluence'
+                  id='attraction'
                   className='w-full'
                   min={0}
                   max={10}
                   step={0.1}
                   value={[forceSettings.attraction]}
-                  onValueChange={value => handleSliderChange(value, 'edgeWeightInfluence')}
+                  onValueChange={value => updateForceSetting(value, 'attraction')}
                 />
               </div>
               <TooltipContent>
@@ -147,11 +146,11 @@ export function RightSideBar() {
             <Input
               type='number'
               className='w-16 h-8'
-              min={0}
-              max={2}
-              step={0.1}
+              min={1}
+              max={50}
+              step={1}
               value={forceSettings.attraction}
-              onChange={e => handleInputChange(e, 'edgeWeightInfluence')}
+              onChange={e => updateForceSetting(e.target.value, 'attraction')}
             />
           </div>
         </div>
@@ -165,6 +164,7 @@ export function RightSideBar() {
         handleDefaultChange={handleDefaultChange}
         handleCheckBox={handleCheckBox}
       />
+      <RadialAnalysis value={radialAnalysis} onChange={updateRadialAnalysis} minScore={minScore} />
       <NetworkInfo />
       <Legend />
     </ScrollArea>

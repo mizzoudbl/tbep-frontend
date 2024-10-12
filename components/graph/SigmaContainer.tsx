@@ -8,10 +8,10 @@ import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import type { Sigma } from 'sigma';
 import { NodeCircleProgram } from 'sigma/rendering';
-import { ForceLayout, GraphEvents, LoadGraph } from '.';
+import { ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch } from '.';
 
 export type SigmaContainerProps = _SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes> &
-  React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null>;
+  React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null> & { fileName?: string };
 
 export function SigmaContainer(props: SigmaContainerProps) {
   return (
@@ -31,9 +31,11 @@ export function SigmaContainer(props: SigmaContainerProps) {
         },
       }}
     >
-      <LoadGraph />
+      <LoadGraph fileName={props.fileName} />
       <GraphEvents />
       <ForceLayout />
+      <NodeSearch />
+      <GraphAnalysis />
       <ControlsContainer position='bottom-right'>
         <ZoomControl labels={{ zoomIn: 'PLUS', zoomOut: 'MINUS', reset: 'RESET' }}>
           <ZoomIn />

@@ -65,6 +65,16 @@ export default function Home() {
     else {
       setGeneIDs(geneIDs);
       await fetchData({ variables: { geneIDs } });
+      if (error) {
+        console.error(error);
+        toast.error('Error fetching data', {
+          cancel: { label: 'Close', onClick() {} },
+          position: 'top-center',
+          richColors: true,
+          description: 'Server not available,Please try again later',
+        });
+        return;
+      }
       setTableOpen(true);
     }
   };
@@ -112,8 +122,6 @@ export default function Home() {
     );
     window.open('/network', '_blank', 'noopener,noreferrer');
   };
-
-  if (error) alert('Error fetching data');
 
   return (
     <>

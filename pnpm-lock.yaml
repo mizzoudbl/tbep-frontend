@@ -65,6 +65,9 @@ importers:
       '@react-sigma/layout-forceatlas2':
         specifier: ^4.0.3
         version: 4.0.3(graphology-layout-forceatlas2@0.10.1(graphology-types@0.24.7))(graphology@0.25.4(graphology-types@0.24.7))(react@18.3.1)(sigma@3.0.0-beta.32(graphology-types@0.24.7))
+      '@sigma/export-image':
+        specifier: 3.0.0-beta.1
+        version: 3.0.0-beta.1(sigma@3.0.0-beta.32(graphology-types@0.24.7))
       '@sigma/node-border':
         specifier: 3.0.0-beta.7
         version: 3.0.0-beta.7(sigma@3.0.0-beta.32(graphology-types@0.24.7))
@@ -107,6 +110,9 @@ importers:
       nextjs-toploader:
         specifier: ^3.6.15
         version: 3.6.15(next@14.2.13(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.4.1
       react:
         specifier: ^18
         version: 18.3.1
@@ -162,6 +168,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.16.10
+      '@types/papaparse':
+        specifier: ^5.3.14
+        version: 5.3.14
       '@types/react':
         specifier: ^18
         version: 18.3.10
@@ -1915,6 +1924,11 @@ packages:
     peerDependencies:
       graphology-layout-forceatlas2: ^0.10.1
 
+  '@sigma/export-image@3.0.0-beta.1':
+    resolution: {integrity: sha512-ku2n6WFDCX6XZF9by8Nq1paljCKfNJ4CkLvnUJVnxE0vowlAatUXB7HAPrCw5tvoLdmrMRredDNJ15MmcKFWPA==}
+    peerDependencies:
+      sigma: '>=3.0.0-beta.10'
+
   '@sigma/node-border@3.0.0-beta.7':
     resolution: {integrity: sha512-M4ivn9H5BNMZudeQJ63Kfngu4Uwn0QM3qXZeWjDKp/X6c1Bsf44furMf2EmMbBmGYvYS5ummi03CQ33lh//DeQ==}
     peerDependencies:
@@ -2042,6 +2056,9 @@ packages:
 
   '@types/node@20.16.10':
     resolution: {integrity: sha512-vQUKgWTjEIRFCvK6CyriPH3MZYiYlNy0fKiEYHWbcoWLEgs4opurGGKlebrTLqdSMIbXImH6XExNiIyNUv3WpA==}
+
+  '@types/papaparse@5.3.14':
+    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
 
   '@types/prop-types@15.7.13':
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
@@ -2594,6 +2611,9 @@ packages:
   figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
+
+  file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
 
   fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
@@ -3345,6 +3365,9 @@ packages:
 
   pandemonium@2.4.1:
     resolution: {integrity: sha512-wRqjisUyiUfXowgm7MFH2rwJzKIr20rca5FsHXCMNm1W5YPP1hCtrZfgmQ62kP7OZ7Xt+cR858aB28lu5NX55g==}
+
+  papaparse@5.4.1:
+    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -5998,6 +6021,11 @@ snapshots:
       - react
       - sigma
 
+  '@sigma/export-image@3.0.0-beta.1(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
+    dependencies:
+      file-saver: 2.0.5
+      sigma: 3.0.0-beta.32(graphology-types@0.24.7)
+
   '@sigma/node-border@3.0.0-beta.7(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
     dependencies:
       sigma: 3.0.0-beta.32(graphology-types@0.24.7)
@@ -6139,6 +6167,10 @@ snapshots:
   '@types/node@20.16.10':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/papaparse@5.3.14':
+    dependencies:
+      '@types/node': 20.16.10
 
   '@types/prop-types@15.7.13': {}
 
@@ -6688,6 +6720,8 @@ snapshots:
   figures@3.2.0:
     dependencies:
       escape-string-regexp: 1.0.5
+
+  file-saver@2.0.5: {}
 
   fill-range@7.1.1:
     dependencies:
@@ -7643,6 +7677,8 @@ snapshots:
   pandemonium@2.4.1:
     dependencies:
       mnemonist: 0.39.8
+
+  papaparse@5.4.1: {}
 
   parent-module@1.0.1:
     dependencies:

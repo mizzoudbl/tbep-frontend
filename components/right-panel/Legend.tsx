@@ -1,7 +1,16 @@
+import { ChevronsUpDown } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+
 export function Legend() {
   return (
-    <div className='mb-4 border p-2 rounded-md'>
-      <p className='font-bold mb-2'>Legends</p>
-    </div>
+    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
+      <CollapsibleTrigger asChild>
+        <div className='flex items-center justify-between w-full'>
+          <p className='font-bold cursor-pointer hover:underline'>Legends</p>
+          <ChevronsUpDown size={20} />
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className='flex flex-col gap-2'></CollapsibleContent>
+    </Collapsible>
   );
 }

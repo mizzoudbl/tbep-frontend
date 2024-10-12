@@ -3,15 +3,21 @@
 import { LeftSideBar } from '@/components/left-panel';
 import { RightSideBar } from '@/components/right-panel';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { useStore } from '@/lib/store';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 
-export default function NetworkLayout({ children }: { children: React.ReactNode }) {
+export default function NetworkLayoutPage({ children }: { children: React.ReactNode }) {
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
+  const projectTitle = useStore(state => state.projectTitle);
+  const searchParams = useSearchParams();
 
   React.useEffect(() => {
+    useStore.setState({ projectTitle: searchParams.get('file') ?? 'Untitled' });
     const event = async (event: globalThis.KeyboardEvent) => {
       if (event.altKey) {
         if (event.key === 'l') setLeftSidebar(!leftSidebar);
@@ -22,7 +28,7 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
     return () => {
       window.removeEventListener('keydown', event);
     };
-  }, [leftSidebar, rightSidebar]);
+  }, [leftSidebar, rightSidebar, searchParams]);
 
   return (
     <>
@@ -31,7 +37,11 @@ export default function NetworkLayout({ children }: { children: React.ReactNode 
           <Button variant='ghost' size='icon' onClick={() => setLeftSidebar(!leftSidebar)}>
             {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
           </Button>
-          <div className='text-xs font-semibold'>Drug Target Discovery</div>
+          <Input
+            className='text-sm font-semibold max-w-fit'
+            value={projectTitle}
+            onChange={e => useStore.setState({ projectTitle: e.target.value })}
+          />
           <Button variant='ghost' size='icon' onClick={() => setRightSidebar(!rightSidebar)}>
             {rightSidebar ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
           </Button>

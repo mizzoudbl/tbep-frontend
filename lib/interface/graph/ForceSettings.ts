@@ -4,27 +4,18 @@
  */
 export interface ForceSettings {
   /**
-   * Strength of the repulsion force
+   * Strength of the repulsion force between each pair of nodes
    */
   repulsion: number;
 
   /**
-   * Strength of the attraction force
+   * Strength of the attraction force between each pair of connected noes
+   *
    */
   attraction: number;
 
   /**
-   * Strength of the gravity force
+   * Strength of the gravity force that pulls nodes towards the center of the graph
    */
   gravity: number;
-
-  /**
-   * Strength of the damping force
-   */
-  damping: number;
-
-  /**
-   * Strength of the speed force
-   */
-  speed: number;
 }

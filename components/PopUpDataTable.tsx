@@ -1,5 +1,6 @@
-import type { PopUpDataTableProps } from '@/lib/interface';
-import { Download } from 'lucide-react';
+import type { PopUpDataTableProps, SelectedNodeProperty } from '@/lib/interface';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Download } from 'lucide-react';
 import { Button } from './ui/button';
 import { DataTable } from './ui/data-table';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
@@ -23,25 +24,46 @@ export default function PopUpDataTable({ data, open = false, setOpen }: PopUpDat
   /**
    * Columns for the data table
    */
-  const columns = [
+  const columns: ColumnDef<SelectedNodeProperty>[] = [
     {
       accessorKey: 'Gene_Name',
-      header: 'Gene Name',
+      header({ column }) {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Gene Name
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
     {
       accessorKey: 'ID',
-      header: 'ENSG ID',
+      header(props) {
+        return (
+          <Button variant='ghost' onClick={() => props.column.toggleSorting(props.column.getIsSorted() === 'asc')}>
+            ENSG ID
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
     {
       accessorKey: 'Description',
-      header: 'Description',
+      header(props) {
+        return (
+          <Button variant='ghost' onClick={() => props.column.toggleSorting(props.column.getIsSorted() === 'asc')}>
+            Description
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
   ];
 
   return (
     <Dialog open={open}>
       <DialogContent className='max-w-4xl w-11/12 max-h-[90vh] min-h-[60vh] flex flex-col'>
-        <DialogTitle>Results Preview</DialogTitle>
+        <DialogTitle>Results Preview [Genes: {data.length}]</DialogTitle>
         <div className='flex-grow overflow-y-scroll'>
           {/* Data Table for viewing and filtering */}
           <DataTable data={data} columns={columns} filterColumnName='Gene_Name' />

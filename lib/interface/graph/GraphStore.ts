@@ -1,4 +1,5 @@
 import type { GraphologyWorkerLayout } from '@/components/graph';
+import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
 
@@ -7,6 +8,11 @@ import type { ForceSettings } from './ForceSettings';
  * @interface GraphStore
  */
 export interface GraphStore {
+  /**
+   * Project Title for file saving
+   */
+  projectTitle: string;
+
   /**
    * Node textarea tearch query value
    */
@@ -72,4 +78,19 @@ export interface GraphStore {
    * Total number of edges in the graph
    */
   totalEdges: number;
+
+  /**
+   * Radial Analysis settings
+   */
+  radialAnalysis: RadialAnalysisSetting;
+
+  /**
+   * Graph Export format
+   */
+  exportFormat: 'jpeg' | 'png' | 'json' | null;
+
+  /**
+   * ENSG IDs of all the nodes in Graph
+   */
+  geneIDs: string[];
 }

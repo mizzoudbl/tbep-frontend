@@ -2,26 +2,25 @@
 
 import { useStore } from '@/lib/store';
 import { useWorkerLayoutForce } from '@react-sigma/layout-force';
-import { useWorkerLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
 import { useEffect } from 'react';
 
 export function ForceLayout() {
   const settings = useStore(state => state.forceSettings);
 
-  const { start, stop, kill } = useWorkerLayoutForce({
-    // Name of the edge attribute for score
-    // getEdgeWeight: 'score',
+  const { start, stop, kill, isRunning } = useWorkerLayoutForce({
     settings: {
-      /* TODO: Select defaultValue which are not to be controlled by user */
-      ...settings,
+      attraction: 0.0001,
+      gravity: 0.00001,
+      inertia: 0.95,
+      repulsion: 0.001,
     },
   });
 
   useEffect(() => {
     useStore.setState({ forceWorker: { start, stop, kill } });
-    return () => {
-      kill();
-    };
+    // return () => {
+    //   kill();
+    // };
   }, [start, stop, kill]);
 
   return null;

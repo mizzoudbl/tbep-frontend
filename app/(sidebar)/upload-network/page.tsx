@@ -151,7 +151,13 @@ export default function UploadFile() {
       />
       <div className='mt-6'>
         <h3 className='text-lg font-semibold mb-2'>File Format</h3>
-        <Image src={uploadFileFormatImage.src} alt='CSV file format example' className='w-full max-w-3xl mx-auto' />
+        <Image
+          src={'/image/uploadFormat.png'}
+          width={400}
+          height={400}
+          alt='CSV file format example'
+          className='w-full max-w-3xl mx-auto'
+        />
       </div>
     </div>
   );

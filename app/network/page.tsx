@@ -6,6 +6,7 @@ import ChatWindow from '@/components/ChatWindow';
 import { drawHover } from '@/components/graph/canvas-hover';
 import { Spinner } from '@/components/ui/spinner';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {
   loading: () => (
@@ -19,14 +20,12 @@ const SigmaContainer = dynamic(() => import('@/components/graph').then(module =>
   ssr: false,
 });
 
-export default function NetworkPage({
-  searchParams,
-}: {
-  searchParams: Record<string, string>;
-}) {
+export default function NetworkPage() {
+  const searchParams = useSearchParams();
   return (
     <>
       <SigmaContainer
+        fileName={searchParams.get('file') ?? undefined}
         className='w-full h-screen'
         settings={{
           enableEdgeEvents: true,

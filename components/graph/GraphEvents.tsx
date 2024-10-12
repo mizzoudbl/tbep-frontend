@@ -2,8 +2,8 @@
 
 import type { EdgeAttributes, NodeAttributes, SelectionBox } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import { Trie } from '@/lib/trie';
-import { useCamera, useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
+import { useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
+import { downloadAsImage } from '@sigma/export-image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
 
@@ -12,9 +12,7 @@ export function GraphEvents() {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const [rightClickNode, setRightClickNode] = useState<string | null>(null);
   const [_selectedNodes, setSelectedNodes] = useState<string[]>([]);
-  const hiddenNodes = useRef(new Array<string>());
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionBox, setSelectionBox] = useState<SelectionBox | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -33,19 +31,6 @@ export function GraphEvents() {
   );
 
   const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
-
-  useEffect(() => {
-    const event = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'z') {
-        const node = hiddenNodes.current.pop();
-        if (node) {
-          sigma.getGraph().removeNodeAttribute(node, 'hidden');
-        }
-      }
-    };
-    window.addEventListener('keydown', event);
-    return () => window.removeEventListener('keydown', event);
-  }, [sigma]);
 
   const handleMouseDown = useCallback(
     (e: MouseEvent) => {
@@ -100,52 +85,23 @@ export function GraphEvents() {
   );
 
   const handleMouseUp = useCallback(() => {
-    if (isSelecting) {
-      setIsSelecting(false);
-      setSelectionBox(null);
+    setIsSelecting(false);
+    setSelectionBox(null);
 
-      // Clear the selection rectangle
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      canvas.style.cursor = 'default';
-      const ctx = canvas.getContext('2d');
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      sigma.refresh();
-      handleSelectedNodes(_selectedNodes);
-    }
-  }, [sigma, handleSelectedNodes, isSelecting, _selectedNodes]);
+    // Clear the selection rectangle
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.style.cursor = 'default';
+    const ctx = canvas.getContext('2d');
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    handleSelectedNodes(_selectedNodes);
+  }, [handleSelectedNodes, _selectedNodes]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!canvasRef.current) canvasRef.current = sigma.getCanvases().mouse;
     const graph = sigma.getGraph();
     registerEvents({
-      /* Hide Node Program on Ctrl + Click */
-      clickNode: e => {
-        if (e.event.original.ctrlKey) {
-          hiddenNodes.current.push(e.node);
-          graph.setNodeAttribute(e.node, 'hidden', true);
-        }
-      },
-      /* Highlight Neighbour program */
-      rightClickNode: e => {
-        e.event.original.preventDefault();
-        e.preventSigmaDefault();
-        if (e.node === rightClickNode) {
-          graph.setNodeAttribute(e.node, 'highlighted', false);
-          graph.forEachNeighbor(rightClickNode, (_, attributes) => {
-            attributes.highlighted = false;
-          });
-          setRightClickNode(null);
-        } else {
-          graph.forEachNeighbor(e.node, (_, attributes) => {
-            attributes.highlighted = true;
-          });
-          graph.setNodeAttribute(e.node, 'highlighted', true);
-          setRightClickNode(e.node);
-        }
-      },
-
       /* Node Hover Program */
       enterNode: e => setHoveredNode(e.node),
       leaveNode: () => setHoveredNode(null),
@@ -185,8 +141,7 @@ export function GraphEvents() {
       mouseup: () => {
         if (draggedNode) {
           setDraggedNode(null);
-          graph.removeNodeAttribute(draggedNode, 'highlighted');
-        } else {
+        } else if (isSelecting) {
           handleMouseUp();
         }
       },
@@ -197,21 +152,13 @@ export function GraphEvents() {
           for (const node of _selectedNodes) {
             graph.setNodeAttribute(node, 'type', 'circle');
           }
+          setSelectedNodes([]);
           handleSelectedNodes([]);
         }
         if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
       },
     });
-  }, [
-    registerEvents,
-    rightClickNode,
-    sigma,
-    draggedNode,
-    defaultEdgeColor,
-    handleMouseUp,
-    handleMouseDown,
-    handleMouseMove,
-  ]);
+  }, [registerEvents, sigma, draggedNode, defaultEdgeColor, handleMouseUp, handleMouseDown, handleMouseMove]);
 
   const setSettings = useSetSettings();
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
@@ -241,82 +188,59 @@ export function GraphEvents() {
     const graph = sigma.getGraph();
     setSettings({
       nodeReducer(node, data) {
-        const newData: typeof data = {
-          ...data,
-          size: data.size || defaultNodeSize,
-        };
+        if (!data.x) data.x = Math.random() * 1000;
+        if (!data.y) data.y = Math.random() * 1000;
+        if (!data.size) data.size = defaultNodeSize;
         if (hoveredNode) {
           if (
             node === hoveredNode
             // || graph.neighbors(hoveredNode).includes(node)
           ) {
-            newData.highlighted = true;
+            data.highlighted = true;
           } else if (!graph.neighbors(hoveredNode).includes(node)) {
-            newData.color = '#E2E2E2';
-            newData.highlighted = false;
+            data.color = '#E2E2E2';
+            data.highlighted = false;
           }
         }
-        return newData;
+        return data;
       },
       edgeReducer(edge, data) {
-        const newData: Record<string, string | number> = { ...data, size: data.size || 2 };
         if (hoveredNode) {
           if (!graph.extremities(edge).includes(hoveredNode)) {
-            newData.color = '#ccc';
+            data.color = '#ccc';
           } else {
-            newData.color = defaultEdgeColor;
+            data.color = defaultEdgeColor;
           }
         }
-        return newData;
+        return data;
       },
     });
-  }, [defaultNodeSize, defaultEdgeColor, hoveredNode, setSettings, sigma]);
+  }, [defaultEdgeColor, defaultNodeSize, hoveredNode, setSettings, sigma]);
 
-  const searchNodeQuery = useStore(state => state.nodeSearchQuery);
-  const highlightedNodesRef = useRef(new Set<string>());
-  const trieRef = useRef(new Trie<{ key: string; value: string }>());
+  const exportFormat = useStore(state => state.exportFormat);
+  const projectTitle = useStore(state => state.projectTitle);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    setTimeout(() => {
-      const nodeArr = sigma.getGraph().mapNodes((node, attributes) => ({
-        key: attributes.label,
-        value: node,
-      })) as { key: string; value: string }[];
-      if (!Array.isArray(nodeArr)) return;
-      trieRef.current = Trie.fromArray(nodeArr, 'key');
-    }, 5000);
-  }, [sigma]);
-
-  const { gotoNode } = useCamera();
-
-  useEffect(() => {
-    const graph = sigma.getGraph();
-    if (trieRef.current.size === 0) return;
-    const geneNames = new Set(
-      searchNodeQuery
-        .toUpperCase()
-        .split(/[\n,]/)
-        .map(s => s.trim())
-        .filter(s => s.length > 0)
-        .map(s => trieRef.current.get(s)?.value || s),
-    ) as Set<string>;
-
-    const previousHighlightedNodes = highlightedNodesRef.current;
-    for (const node of previousHighlightedNodes) {
-      if (geneNames.has(node) || !graph.hasNode(node)) continue;
-      graph.removeNodeAttribute(node, 'highlighted');
-      graph.setNodeAttribute(node, 'color', defaultNodeColor);
+    if (!exportFormat || !sigma) return;
+    if (exportFormat === 'json') {
+      const serializedGraph = sigma.getGraph().export();
+      const json = JSON.stringify(serializedGraph, null, 2);
+      const element = document.createElement('a');
+      const file = new Blob([json], { type: 'application/json' });
+      element.href = URL.createObjectURL(file);
+      element.download = projectTitle;
+      document.body.appendChild(element);
+      element.click();
+      URL.revokeObjectURL(element.href);
+      element.remove();
+      return;
     }
-    let count = 0;
-    for (const node of geneNames) {
-      if (previousHighlightedNodes.has(node) || !graph.hasNode(node) || graph.getNodeAttribute(node, 'hidden') === true)
-        continue;
-      graph.setNodeAttribute(node, 'highlighted', true);
-      graph.setNodeAttribute(node, 'color', 'blue');
-      if (++count === geneNames.size) gotoNode(node, { duration: 100 });
-    }
-    highlightedNodesRef.current = geneNames;
-  }, [searchNodeQuery, defaultNodeColor, gotoNode, sigma]);
+    downloadAsImage(sigma, {
+      format: exportFormat,
+      fileName: 'graph_export',
+    });
+  }, [exportFormat]);
 
   return null;
 }

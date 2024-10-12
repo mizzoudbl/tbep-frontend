@@ -127,7 +127,7 @@ export default function FileSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size='sm' className='text-xs' onClick={() => console.log('uploading')}>
+        <Button size='sm' className='text-xs'>
           <Upload className='h-3 w-3 mr-1' />
           Upload Files
         </Button>

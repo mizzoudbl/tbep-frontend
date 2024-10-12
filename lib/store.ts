@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { GraphStore } from './interface';
 
 export const useStore = create<GraphStore>(set => ({
+  projectTitle: 'Untitled',
   nodeSearchQuery: '',
   setNodeSearchQuery: val => set({ nodeSearchQuery: val }),
   forceWorker: {
@@ -18,11 +19,9 @@ export const useStore = create<GraphStore>(set => ({
   defaultNodeColor: 'blue',
   // Select defaultValue best for viewing the graph
   forceSettings: {
-    repulsion: 10,
-    attraction: 10,
+    repulsion: -5,
+    attraction: 1,
     gravity: 10,
-    damping: 10,
-    speed: 10,
   },
   defaultNodeSize: 5,
   defaultLabelRenderedSizeThreshold: 3,
@@ -33,4 +32,11 @@ export const useStore = create<GraphStore>(set => ({
   showEdgeLabel: true,
   totalNodes: 0,
   totalEdges: 0,
+  radialAnalysis: {
+    edgeWeightCutOff: 0.4,
+    nodeDegreeCutOff: 0,
+    hubGeneEdgeCount: 0,
+  },
+  exportFormat: null,
+  geneIDs: [],
 }));

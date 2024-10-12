@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { GraphStore } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Paintbrush } from 'lucide-react';
@@ -11,18 +11,20 @@ import React from 'react';
 
 export function ColorPicker({
   color,
+  property,
   className,
 }: {
   color: string;
+  property: keyof GraphStore;
   className?: string;
 }) {
   const solids = ['black', '#ff75c3', '#ffa647', '#ffe83f', '#9fff5b', '#70e2ff', '#cd93ff', 'red', 'blue'];
 
-  const handleNodeColorChange = (e: React.KeyboardEvent<HTMLInputElement> | string) => {
+  const handleNodeColorChange = (e: React.KeyboardEvent<HTMLInputElement> | string, key: keyof GraphStore) => {
     if (typeof e === 'string') {
-      useStore.setState({ defaultNodeColor: e });
+      useStore.setState({ [key]: e });
     } else if (e.key === 'Enter') {
-      useStore.setState({ defaultNodeColor: e.currentTarget.value });
+      useStore.setState({ [key]: e.currentTarget.value });
     }
   };
 
@@ -53,7 +55,7 @@ export function ColorPicker({
             <div
               key={s}
               style={{ background: s }}
-              onClick={e => handleNodeColorChange(s)}
+              onClick={e => handleNodeColorChange(s, property)}
               className='rounded-md h-6 w-6 cursor-pointer hover:scale-105'
             />
           ))}
@@ -64,7 +66,7 @@ export function ColorPicker({
           value={inputValue}
           className='col-span-2 h-8 mt-4'
           onChange={e => setInputValue(e.target.value)}
-          onKeyDown={e => handleNodeColorChange(e)}
+          onKeyDown={e => handleNodeColorChange(e, property)}
         />
       </PopoverContent>
     </Popover>
