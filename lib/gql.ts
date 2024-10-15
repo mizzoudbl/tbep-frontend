@@ -45,11 +45,9 @@ export const GENE_GRAPH_QUERY = gql`
 `;
 
 export const GENE_UNIVERSAL_QUERY = (disease: string) => gql`
-  query GeneVerification($geneIDs: [String!]!) {
+  query GeneUniversalData($geneIDs: [String!]!) {
     getGenes(input: { geneIDs: $geneIDs }) {
       ID
-      Gene_name
-      Description
       common
       ${disease}
     }

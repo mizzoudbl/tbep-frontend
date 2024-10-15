@@ -1,18 +1,3 @@
-export const diseaseMap = [
-  {
-    value: 'PSP',
-    label: 'PSP',
-  },
-  {
-    value: 'ALS',
-    label: 'ALS',
-  },
-  {
-    value: 'FTD',
-    label: 'FTD',
-  },
-  {
-    value: 'OI',
-    label: 'OI',
-  },
-];
+export const diseaseMap = ['PSP', 'ALS', 'FTD', 'OI'] as const;
+
+export type DiseaseType = (typeof diseaseMap)[number];

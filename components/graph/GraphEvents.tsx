@@ -117,7 +117,6 @@ export function GraphEvents() {
       downNode: e => {
         if (isSelecting) return;
         setDraggedNode(e.node);
-        graph.setNodeAttribute(e.node, 'highlighted', true);
       },
 
       /* Node Selection Program also starts */
@@ -185,6 +184,15 @@ export function GraphEvents() {
   }, [defaultNodeColor, setSettings]);
 
   useEffect(() => {
+    if (!sigma) return;
+    sigma.getGraph().updateEachNodeAttributes((node, attr) => {
+      attr.size = defaultNodeSize;
+      return attr;
+    });
+  }, [defaultNodeSize, sigma]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
     const graph = sigma.getGraph();
     setSettings({
       nodeReducer(node, data) {
@@ -215,7 +223,7 @@ export function GraphEvents() {
         return data;
       },
     });
-  }, [defaultEdgeColor, defaultNodeSize, hoveredNode, setSettings, sigma]);
+  }, [defaultEdgeColor, hoveredNode, setSettings, sigma]);
 
   const exportFormat = useStore(state => state.exportFormat);
   const projectTitle = useStore(state => state.projectTitle);
@@ -238,7 +246,8 @@ export function GraphEvents() {
     }
     downloadAsImage(sigma, {
       format: exportFormat,
-      fileName: 'graph_export',
+      fileName: projectTitle,
+      backgroundColor: 'white',
     });
   }, [exportFormat]);
 

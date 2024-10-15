@@ -19,6 +19,7 @@ export function RightSideBar() {
   const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
   const defaultLabelRenderedSizeThreshold = useStore(state => state.defaultLabelRenderedSizeThreshold);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
+  const showEdgeColor = useStore(state => state.showEdgeColor);
   const radialAnalysis = useStore(state => state.radialAnalysis);
   const minScore: number = useStore.getInitialState().radialAnalysis.edgeWeightCutOff;
   // const minScore: number = JSON.parse(localStorage.getItem('graphConfig') || '{}').minScore || 0;
@@ -161,6 +162,7 @@ export function RightSideBar() {
         defaultEdgeColor={defaultEdgeColor}
         defaultLabelRenderedSizeThreshold={defaultLabelRenderedSizeThreshold}
         showEdgeLabel={showEdgeLabel}
+        showEdgeColor={showEdgeColor}
         handleDefaultChange={handleDefaultChange}
         handleCheckBox={handleCheckBox}
       />

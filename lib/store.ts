@@ -5,6 +5,7 @@ export const useStore = create<GraphStore>(set => ({
   projectTitle: 'Untitled',
   nodeSearchQuery: '',
   setNodeSearchQuery: val => set({ nodeSearchQuery: val }),
+  nodeSuggestions: [],
   forceWorker: {
     start() {
       throw new Error('GraphologyWorkerLayout not initialized');
@@ -30,6 +31,7 @@ export const useStore = create<GraphStore>(set => ({
   selectedRadioNodeColor: 'None',
   selectedRadioNodeSize: 'None',
   showEdgeLabel: true,
+  showEdgeColor: false,
   totalNodes: 0,
   totalEdges: 0,
   radialAnalysis: {
@@ -39,4 +41,31 @@ export const useStore = create<GraphStore>(set => ({
   },
   exportFormat: null,
   geneIDs: [],
+  diseaseName: 'ALS',
+  universalData: null,
+  initialUniversalData: null,
+  radioOptions: {
+    None: [],
+    logFC: [],
+    GDA: [],
+    Genetics: [],
+    Pathways: [],
+    Druggability: [],
+    TE: [],
+    Database: [],
+    Custom: [],
+  },
+  initialRadioOptions: {
+    None: [],
+    logFC: [],
+    GDA: [],
+    Genetics: [],
+    Pathways: [],
+    Druggability: [],
+    TE: [],
+    Database: [],
+    Custom: [],
+  },
+  selectedNodeSizeProperty: '',
+  selectedNodeColorProperty: '',
 }));

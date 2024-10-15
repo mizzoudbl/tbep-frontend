@@ -1,5 +1,5 @@
-import { nodeSize } from '@/lib/data';
-import type { RadioProps } from '@/lib/interface';
+import { type NodeSizeType, nodeSize } from '@/lib/data';
+import { useStore } from '@/lib/store';
 import { ChevronsUpDown, Info } from 'lucide-react';
 import React from 'react';
 import { Combobox } from '../ComboBox';
@@ -8,7 +8,11 @@ import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function NodeSize({ radioValue, onChange }: RadioProps) {
+export function NodeSize() {
+  const radioValue = useStore(state => state.selectedRadioNodeSize);
+  const radioOptions = useStore(state => state.radioOptions);
+  const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
+
   return (
     <Collapsible defaultOpen className='border p-2 rounded shadow'>
       <CollapsibleTrigger asChild>
@@ -18,7 +22,10 @@ export function NodeSize({ radioValue, onChange }: RadioProps) {
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className='mt-2'>
-        <RadioGroup value={radioValue} onValueChange={value => onChange(value, 'selectedRadioNodeSize')}>
+        <RadioGroup
+          value={radioValue}
+          onValueChange={value => useStore.setState({ selectedRadioNodeSize: value as NodeSizeType })}
+        >
           {nodeSize.map(({ label, tooltipContent }) => (
             <Tooltip key={label}>
               <TooltipTrigger asChild>
@@ -41,7 +48,15 @@ export function NodeSize({ radioValue, onChange }: RadioProps) {
         {radioValue !== 'None' && (
           <div className='mt-2'>
             {/* Data fetching and input remaining */}
-            <Combobox data={[]} className='w-full' />
+            <Combobox
+              key={radioValue}
+              data={radioOptions[radioValue]}
+              className='w-full'
+              value={selectedNodeSizeProperty}
+              onChange={value => {
+                useStore.setState({ selectedNodeSizeProperty: value });
+              }}
+            />
           </div>
         )}
       </CollapsibleContent>

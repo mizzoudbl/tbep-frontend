@@ -112,4 +112,58 @@ export class Trie<E = string> {
 
     return current.isEndOfKey;
   }
+
+  search(prefix: string): E[] {
+    let current = this.#root;
+    for (const char of prefix) {
+      if (!current.children.has(char)) {
+        return [];
+      }
+      const temp = current.children.get(char);
+      if (temp) current = temp;
+    }
+    return this.#collectAll(current, prefix);
+  }
+
+  #collectAll(node: TrieNode<E>, prefix: string): E[] {
+    const result: E[] = [];
+    if (node.isEndOfKey) {
+      result.push(node.value as E);
+    }
+
+    for (const [char, child] of node.children) {
+      result.push(...this.#collectAll(child, prefix + char));
+    }
+
+    return result;
+  }
+
+  remove(key: string): void {
+    this.#remove(this.#root, key, 0);
+  }
+
+  #remove(node: TrieNode<E>, key: string, depth: number): boolean {
+    if (depth === key.length) {
+      if (!node.isEndOfKey) {
+        return false;
+      }
+      node.isEndOfKey = false;
+      node.value = null;
+      return node.children.size === 0;
+    }
+
+    const char = key[depth];
+    const child = node.children.get(char);
+    if (!child) {
+      return false;
+    }
+
+    const canDelete = this.#remove(child, key, depth + 1);
+    if (canDelete) {
+      node.children.delete(char);
+      return node.children.size === 0;
+    }
+
+    return false;
+  }
 }

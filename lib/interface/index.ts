@@ -3,7 +3,6 @@ export * from './graph';
 export * from './PopUpTableProps';
 export * from './PopUpDataTableProps';
 export * from './RadialAnalysisProps';
-export * from './RadioProps';
 export * from './SelectedNodeProperty';
 
 /**

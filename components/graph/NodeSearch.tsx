@@ -54,5 +54,13 @@ export function NodeSearch() {
     highlightedNodesRef.current = geneNames;
   }, [searchNodeQuery, defaultNodeColor, gotoNode, sigma]);
 
+  useEffect(() => {
+    if (trieRef.current.size === 0) return;
+    const prefix = searchNodeQuery.split(/[\n,]/).pop()?.trim() || '';
+    if (prefix.length === 0) return;
+    const suggestions = trieRef.current.search(prefix.toUpperCase()).map(s => s.key);
+    useStore.setState({ nodeSuggestions: suggestions });
+  }, [searchNodeQuery]);
+
   return null;
 }

@@ -15,4 +15,6 @@ export const interactionType = [
     value: 'ComPPLete',
     label: 'ComPPLete',
   },
-];
+] as const;
+
+export type GeneInteractionType = (typeof interactionType)[number]['value'];

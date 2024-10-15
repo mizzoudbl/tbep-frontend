@@ -36,14 +36,12 @@ Components Used:
 - [textarea](./textarea.tsx)
 - [tooltip](./tooltip.tsx)
 
-
 ## shadcn-ui expansions
 
 > [https://shadcnui-expansions.typeart.cc/](https://shadcnui-expansions.typeart.cc/docs)
 
 Components Used:
 
-- [multiple-selector](./multiple-selector.tsx)
 - [spinner](./spinner.tsx)
 
 ## shadcn-ui Gradient

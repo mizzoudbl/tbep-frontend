@@ -28,11 +28,13 @@ export const nodeColor = [
     tooltipContent: 'Tissue-specific expression from GTEX and HPA',
   },
   {
-    label: 'Databases',
+    label: 'Database',
     tooltipContent: 'Membership in various databases',
   },
   {
     label: 'Custom',
     tooltipContent: 'Custom informations',
   },
-];
+] as const;
+
+export type NodeColorType = (typeof nodeColor)[number]['label'];

@@ -4,3 +4,4 @@ export * from './GraphStore';
 export * from './ForceSettings';
 export * from './SelectionBox';
 export * from './RadialAnalysisSetting';
+export * from './GraphConfigForm';

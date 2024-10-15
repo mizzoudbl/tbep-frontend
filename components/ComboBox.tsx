@@ -6,11 +6,29 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import type { DiseaseType } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
-export function Combobox({ data, className }: { data: { value: string; label: string }[]; className: string }) {
+export function Combobox<D, T>({
+  data,
+  value,
+  onChange,
+  className,
+}: {
+  data: readonly (string | { value?: string; label?: string })[];
+  value: T;
+  onChange: (value: T) => void;
+  className?: string;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+
+  const handleFind = React.useCallback(
+    (value: T) => {
+      const item = data.find(item => (typeof item === 'string' ? item : item.value) === value);
+      return typeof item === 'string' ? item : item?.label;
+    },
+    [data],
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -21,7 +39,7 @@ export function Combobox({ data, className }: { data: { value: string; label: st
           aria-expanded={open}
           className={cn('w-[200px] justify-between text-wrap break-words h-8', className)}
         >
-          {value ? data.find(framework => framework.value === value)?.label : 'Select...'}
+          {value ? handleFind(value) : 'Select...'}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -31,17 +49,22 @@ export function Combobox({ data, className }: { data: { value: string; label: st
           <CommandList>
             <CommandEmpty>No Result Found.</CommandEmpty>
             <CommandGroup>
-              {data.map(item => (
+              {data?.map(item => (
                 <CommandItem
-                  key={item.value}
-                  value={item.value}
+                  key={typeof item === 'string' ? item : item.value}
+                  value={typeof item === 'string' ? item : item.value}
                   onSelect={currentValue => {
-                    setValue(currentValue === value ? '' : currentValue);
+                    onChange(currentValue as T);
                     setOpen(false);
                   }}
                 >
-                  <Check className={cn('mr-2 h-4 w-4', value === item.value ? 'opacity-100' : 'opacity-0')} />
-                  {item.label}
+                  <Check
+                    className={cn(
+                      'mr-2 h-4 w-4',
+                      value === (typeof item === 'string' ? item : item.value) ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                  {typeof item === 'string' ? item : item.label}
                 </CommandItem>
               ))}
             </CommandGroup>

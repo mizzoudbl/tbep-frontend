@@ -1,5 +1,7 @@
 'use client';
 
+/******** only for testing with sample graph **************/
+// import { data as response } from '@/lib/data/sample-graph.json';
 import { GENE_GRAPH_QUERY, GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type {
   EdgeAttributes,
@@ -13,18 +15,19 @@ import type { Gene } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { openDB } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
-/******** only for testing with sample graph **************/
-// import { data } from '@/lib/data/sample-graph.json';
 import { useLoadGraph } from '@react-sigma/core';
 import Graph from 'graphology';
 import { circlepack } from 'graphology-layout';
 import type { SerializedGraph } from 'graphology-types';
-import { parse } from 'papaparse';
+import { useSearchParams } from 'next/navigation';
+import Papa from 'papaparse';
 import React from 'react';
 import { toast } from 'sonner';
 import { Spinner } from '../ui/spinner';
 
-export function LoadGraph({ fileName }: { fileName?: string }) {
+export function LoadGraph() {
+  const searchParams = useSearchParams();
+
   const loadGraph = useLoadGraph();
   const variable = JSON.parse(localStorage.getItem('graphConfig') || '{}');
   const [fetchData, { data: response, loading, error }] = useLazyQuery<GeneGraphData, GeneGraphVariables>(
@@ -47,6 +50,7 @@ export function LoadGraph({ fileName }: { fileName?: string }) {
       multi: true,
       type: 'directed',
     });
+    const fileName = searchParams.get('file');
     (async () => {
       if (fileName) {
         const fileType = fileName.split('.').pop();
@@ -72,7 +76,7 @@ export function LoadGraph({ fileName }: { fileName?: string }) {
             fileData = JSON.parse(fileText);
             fields = Object.keys(fileData?.[0] as object);
           } else {
-            const parsedResult = parse(fileText, { header: true, skipEmptyLines: true });
+            const parsedResult = Papa.parse(fileText, { header: true, skipEmptyLines: true });
             fileData = parsedResult.data as Array<Record<string, string | number>>;
             fields = parsedResult.meta.fields || [];
           }
@@ -112,7 +116,9 @@ export function LoadGraph({ fileName }: { fileName?: string }) {
             return;
           }
           if (!result) return;
+          const geneNameToID = new Map<string, string>();
           for (const gene of result.data?.getGenes as Gene[]) {
+            if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             graph.addNode(gene.ID, {
               label: gene.Gene_name,
               ID: gene.ID,
@@ -120,15 +126,13 @@ export function LoadGraph({ fileName }: { fileName?: string }) {
             });
           }
           for (const gene of fileData) {
-            graph.mergeEdgeWithKey(
-              `${gene[fields?.[0]]}-${gene[fields?.[1]]}`,
-              gene[fields?.[0]] as string,
-              gene[fields?.[1]] as string,
-              {
-                score: gene[fields?.[2]] as number,
-                label: gene[fields?.[2]].toString(),
-              },
-            );
+            const source = geneNameToID.get(gene[fields?.[0]] as string);
+            const target = geneNameToID.get(gene[fields?.[1]] as string);
+            if (!source || !target) continue;
+            graph.mergeEdgeWithKey(`${source}-${target}`, source, target, {
+              score: gene[fields?.[2]] as number,
+              label: gene[fields?.[2]].toString(),
+            });
           }
           circlepack.assign(graph);
           loadGraph(graph);

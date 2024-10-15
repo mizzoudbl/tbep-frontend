@@ -6,12 +6,13 @@ import { ControlsContainer, FullScreenControl, ZoomControl } from '@react-sigma/
 import { createNodeBorderProgram } from '@sigma/node-border';
 import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
+import { Suspense } from 'react';
 import type { Sigma } from 'sigma';
 import { NodeCircleProgram } from 'sigma/rendering';
-import { ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch } from '.';
+import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch, SizeAnalysis } from '.';
 
 export type SigmaContainerProps = _SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes> &
-  React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null> & { fileName?: string };
+  React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null>;
 
 export function SigmaContainer(props: SigmaContainerProps) {
   return (
@@ -31,10 +32,14 @@ export function SigmaContainer(props: SigmaContainerProps) {
         },
       }}
     >
-      <LoadGraph fileName={props.fileName} />
+      <Suspense>
+        <LoadGraph />
+      </Suspense>
       <GraphEvents />
       <ForceLayout />
       <NodeSearch />
+      <ColorAnalysis />
+      <SizeAnalysis />
       <GraphAnalysis />
       <ControlsContainer position='bottom-right'>
         <ZoomControl labels={{ zoomIn: 'PLUS', zoomOut: 'MINUS', reset: 'RESET' }}>

@@ -13,6 +13,7 @@ export function NetworkStyle({
   defaultNodeSize,
   defaultLabelRenderedSizeThreshold,
   showEdgeLabel,
+  showEdgeColor,
   defaultNodeColor,
   defaultEdgeColor,
   handleDefaultChange,
@@ -21,6 +22,7 @@ export function NetworkStyle({
   defaultNodeSize: number;
   defaultLabelRenderedSizeThreshold: number;
   showEdgeLabel: boolean;
+  showEdgeColor: boolean;
   defaultNodeColor: string;
   defaultEdgeColor: string;
   handleDefaultChange: (value: number | string, key: keyof GraphStore) => void;
@@ -109,6 +111,16 @@ export function NetworkStyle({
             />
             <Label htmlFor='showEdgeLabel' className='text-xs font-semibold'>
               Show Edge Label
+            </Label>
+          </div>
+          <div className='flex items-center gap-2'>
+            <Checkbox
+              id='showEdgeColor'
+              checked={showEdgeColor}
+              onCheckedChange={checked => handleCheckBox(checked, 'showEdgeColor')}
+            />
+            <Label htmlFor='showEdgeColor' className='text-xs font-semibold'>
+              Show Edge Color
             </Label>
           </div>
         </div>

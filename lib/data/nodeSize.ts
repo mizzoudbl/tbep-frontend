@@ -23,4 +23,6 @@ export const nodeSize = [
     label: 'TE',
     tooltipContent: 'Tissue-specific expression from GTEX and HPA',
   },
-];
+] as const;
+
+export type NodeSizeType = (typeof nodeSize)[number]['label'];

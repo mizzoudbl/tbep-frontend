@@ -1,4 +1,5 @@
 import type { GraphologyWorkerLayout } from '@/components/graph';
+import { type DiseaseType, type NodeColorType, type NodeSizeType, diseaseMap } from '@/lib/data';
 import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
@@ -18,6 +19,11 @@ export interface GraphStore {
    */
   nodeSearchQuery: string;
   setNodeSearchQuery: (nodeSearchQuery: string) => void;
+
+  /**
+   * Node suggestions
+   */
+  nodeSuggestions: string[];
 
   /**
    * Force Layout worker
@@ -58,16 +64,22 @@ export interface GraphStore {
   /**
    * Selected radio button option for Node Color of graph
    */
-  selectedRadioNodeColor: string;
+  selectedRadioNodeColor: NodeColorType;
 
   /**
    * Selected radio button option for Node Size of graph
    */
-  selectedRadioNodeSize: string;
+  selectedRadioNodeSize: NodeSizeType;
+
   /**
    * Whether to show the edge label or not
    */
   showEdgeLabel: boolean;
+
+  /**
+   * Whether to show the edge label or not
+   */
+  showEdgeColor: boolean;
 
   /**
    * Total number of nodes in the graph
@@ -93,4 +105,88 @@ export interface GraphStore {
    * ENSG IDs of all the nodes in Graph
    */
   geneIDs: string[];
+
+  /**
+   * Disease Name
+   */
+  diseaseName: DiseaseType;
+
+  /**
+   * Universal Data of all the diseases to be mapped on left sidebar
+   */
+  universalData: UniversalData | null;
+
+  /**
+   * Initial Copy of Universal data
+   */
+  initialUniversalData: UniversalData | null;
+
+  /**
+   * Options for radio buttons
+   */
+  radioOptions: RadioOptions;
+
+  /**
+   * Initial Copy of Radio Options
+   */
+  initialRadioOptions: RadioOptions;
+
+  /**
+   * Selected Node Size Property
+   */
+  selectedNodeSizeProperty: string;
+
+  /**
+   * Selected Node Color Property
+   */
+  selectedNodeColorProperty: string;
 }
+
+export type RadioOptions = Record<NodeColorType | NodeSizeType, Array<string>>;
+
+/**
+ * Universal Data of all the diseases to be mapped on left sidebar
+ * It contains:
+ * - ENSG ID of the gene
+ *    - DiseaseType/`common(Pathways, Druggability)
+ *    - DiseaseType/`ALS`
+ */
+export type UniversalData = {
+  [key: string]: {
+    common: {
+      Pathways: Record<string, string>;
+      Druggability: Record<string, string>;
+      TE: Record<string, string>;
+      Database: Record<string, string>;
+      Custom: Record<string, string>;
+    };
+    ALS?: {
+      logFC: Record<string, string>;
+      GDA: Record<string, string>;
+      Genetics: Record<string, string>;
+      TE: Record<string, string>;
+      Database: Record<string, string>;
+    };
+    PSP?: {
+      logFC: Record<string, string>;
+      GDA: Record<string, string>;
+      Genetics: Record<string, string>;
+      TE: Record<string, string>;
+      Database: Record<string, string>;
+    };
+    FTD?: {
+      logFC: Record<string, string>;
+      GDA: Record<string, string>;
+      Genetics: Record<string, string>;
+      TE: Record<string, string>;
+      Database: Record<string, string>;
+    };
+    OI?: {
+      logFC: Record<string, string>;
+      GDA: Record<string, string>;
+      Genetics: Record<string, string>;
+      TE: Record<string, string>;
+      Database: Record<string, string>;
+    };
+  };
+};

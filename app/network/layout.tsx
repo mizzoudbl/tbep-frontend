@@ -1,5 +1,6 @@
 'use client';
 
+import { Export } from '@/components/Export';
 import { LeftSideBar } from '@/components/left-panel';
 import { RightSideBar } from '@/components/right-panel';
 import { Button } from '@/components/ui/button';
@@ -8,16 +9,32 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { useStore } from '@/lib/store';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { Suspense, useEffect } from 'react';
+
+const FileName = () => {
+  const searchParams = useSearchParams();
+  const projectTitle = useStore(state => state.projectTitle);
+
+  useEffect(() => {
+    const fileName = searchParams.get('file') ?? 'Untitled';
+    useStore.setState({ projectTitle: fileName });
+  }, [searchParams]);
+
+  return (
+    <Input
+      className='text-sm font-semibold max-w-fit'
+      value={projectTitle}
+      onChange={e => useStore.setState({ projectTitle: e.target.value })}
+    />
+  );
+};
 
 export default function NetworkLayoutPage({ children }: { children: React.ReactNode }) {
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
   const projectTitle = useStore(state => state.projectTitle);
-  const searchParams = useSearchParams();
 
   React.useEffect(() => {
-    useStore.setState({ projectTitle: searchParams.get('file') ?? 'Untitled' });
     const event = async (event: globalThis.KeyboardEvent) => {
       if (event.altKey) {
         if (event.key === 'l') setLeftSidebar(!leftSidebar);
@@ -28,7 +45,7 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
     return () => {
       window.removeEventListener('keydown', event);
     };
-  }, [leftSidebar, rightSidebar, searchParams]);
+  }, [leftSidebar, rightSidebar]);
 
   return (
     <>
@@ -37,11 +54,20 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
           <Button variant='ghost' size='icon' onClick={() => setLeftSidebar(!leftSidebar)}>
             {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
           </Button>
-          <Input
-            className='text-sm font-semibold max-w-fit'
-            value={projectTitle}
-            onChange={e => useStore.setState({ projectTitle: e.target.value })}
-          />
+          <div className='flex gap-2'>
+            <Suspense
+              fallback={
+                <Input
+                  className='text-sm font-semibold max-w-fit'
+                  value={projectTitle}
+                  onChange={e => useStore.setState({ projectTitle: e.target.value })}
+                />
+              }
+            >
+              <FileName />
+            </Suspense>
+            <Export />
+          </div>
           <Button variant='ghost' size='icon' onClick={() => setRightSidebar(!rightSidebar)}>
             {rightSidebar ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
           </Button>
