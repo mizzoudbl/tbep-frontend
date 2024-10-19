@@ -53,7 +53,7 @@ export function RightSideBar() {
             <Label htmlFor='network-animation-control' className='text-xs font-semibold'>
               Animation
             </Label>
-            <Switch id='network-animation-control' defaultChecked onCheckedChange={handleGraphAnimation} />
+            <Switch id='network-animation-control' onCheckedChange={handleGraphAnimation} />
           </div>
           <NetworkLayout forceSettings={forceSettings} updateForceSetting={updateForceSetting} />
         </div>

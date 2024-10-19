@@ -13,7 +13,7 @@ export function NetworkLayout({
 }) {
   return (
     <>
-      <div className='flex space-x-2 items-center'>
+      {/* <div className='flex space-x-2 items-center'>
         <Tooltip>
           <div className='flex flex-col space-y-2 w-full'>
             <TooltipTrigger asChild>
@@ -140,6 +140,9 @@ export function NetworkLayout({
           value={forceSettings.collideRadius}
           onChange={e => updateForceSetting(e.target.value, 'collideRadius')}
         />
+      </div> */}
+      <div className='flex justify-center text-bold text-destructive'>
+        More features will be coming soon to cotnrol the layout of the graph
       </div>
     </>
   );
