@@ -44,11 +44,11 @@ export const GENE_GRAPH_QUERY = gql`
   }
 `;
 
-export const GENE_UNIVERSAL_QUERY = (disease: string) => gql`
+export const GENE_UNIVERSAL_QUERY = (disease: string, common = true) => gql`
   query GeneUniversalData($geneIDs: [String!]!) {
     getGenes(input: { geneIDs: $geneIDs }) {
       ID
-      common
+      ${common ? 'common' : ''}
       ${disease}
     }
   }

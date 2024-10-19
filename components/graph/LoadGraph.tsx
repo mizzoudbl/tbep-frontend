@@ -47,7 +47,6 @@ export function LoadGraph() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
-      multi: true,
       type: 'directed',
     });
     const fileName = searchParams.get('file');

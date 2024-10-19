@@ -25,4 +25,9 @@ export interface EdgeAttributes extends Attributes {
    * label of the edge visible on the graph
    * */
   forceLabel?: boolean;
+
+  /**
+   * boolean whether the edge is hidden
+   */
+  hidden?: boolean;
 }

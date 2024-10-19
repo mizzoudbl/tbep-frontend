@@ -1,6 +1,8 @@
 'use client';
 
+import NodeGradientProgram from '@/lib/NodeGradientProgram';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
+import { useStore } from '@/lib/store';
 import { SigmaContainer as _SigmaContainer, type SigmaContainerProps as _SigmaContainerProps } from '@react-sigma/core';
 import { ControlsContainer, FullScreenControl, ZoomControl } from '@react-sigma/core';
 import { createNodeBorderProgram } from '@sigma/node-border';
@@ -8,13 +10,14 @@ import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import { Suspense } from 'react';
 import type { Sigma } from 'sigma';
-import { NodeCircleProgram } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch, SizeAnalysis } from '.';
 
 export type SigmaContainerProps = _SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes> &
   React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null>;
 
 export function SigmaContainer(props: SigmaContainerProps) {
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
+
   return (
     <_SigmaContainer
       ref={props.ref}
@@ -22,7 +25,7 @@ export function SigmaContainer(props: SigmaContainerProps) {
       settings={{
         ...props.settings,
         nodeProgramClasses: {
-          circle: NodeCircleProgram,
+          circle: NodeGradientProgram,
           border: createNodeBorderProgram({
             borders: [
               { size: { attribute: 'borderSize', defaultValue: 0.5 }, color: { attribute: 'borderColor' } },
@@ -30,6 +33,9 @@ export function SigmaContainer(props: SigmaContainerProps) {
             ],
           }),
         },
+        defaultNodeColor,
+        labelSize: 10,
+        labelDensity: 0.1,
       }}
     >
       <Suspense>

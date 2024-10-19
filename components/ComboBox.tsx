@@ -39,7 +39,7 @@ export function Combobox<D, T>({
           aria-expanded={open}
           className={cn('w-[200px] justify-between text-wrap break-words h-8', className)}
         >
-          {value ? handleFind(value) : 'Select...'}
+          <span className='truncate'>{value ? handleFind(value) : 'Select...'}</span>
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>

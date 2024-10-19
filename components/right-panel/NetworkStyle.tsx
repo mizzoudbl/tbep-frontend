@@ -127,7 +127,7 @@ export function NetworkStyle({
         <hr />
         <div className='flex flex-col xl:flex-row gap-2'>
           <Tooltip>
-            <div className='flex flex-col space-y-1 w-full'>
+            <div className='flex flex-col space-y-1 w-1/2'>
               <TooltipTrigger asChild>
                 <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
                   Node Color
@@ -140,7 +140,7 @@ export function NetworkStyle({
             </TooltipContent>
           </Tooltip>
           <Tooltip>
-            <div className='flex flex-col space-y-1 w-full'>
+            <div className='flex flex-col space-y-1 w-1/2'>
               <TooltipTrigger asChild>
                 <Label htmlFor='defaultEdgeColor' className='text-xs font-semibold'>
                   Edge Color

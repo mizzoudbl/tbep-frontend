@@ -165,19 +165,14 @@ export default function FileSheet() {
             for (const prop in row) {
               if (prop === IDHeaderName) continue;
               if (/^logFC_/i.test(prop)) {
-                // biome-ignore lint/style/noNonNullAssertion: <explanation>
                 universalData[row[IDHeaderName]][diseaseName]!.logFC[prop.replace(/^logFC_/i, '')] = row[prop];
               } else if (/^GDA_/i.test(prop)) {
-                // biome-ignore lint/style/noNonNullAssertion: <explanation>
                 universalData[row[IDHeaderName]][diseaseName]!.GDA[prop.replace(/^GDA_/i, '')] = row[prop];
               } else if (/^GWAS_/i.test(prop)) {
-                // biome-ignore lint/style/noNonNullAssertion: <explanation>
                 universalData[row[IDHeaderName]][diseaseName]!.Genetics[prop.replace(/^GWAS_/i, '')] = row[prop];
               } else if (/^TE_/i.test(prop)) {
-                // biome-ignore lint/style/noNonNullAssertion: <explanation>
                 universalData[row[IDHeaderName]][diseaseName]!.TE[prop.replace(/^TE_/i, '')] = row[prop];
               } else if (/^database_/i.test(prop)) {
-                // biome-ignore lint/style/noNonNullAssertion: <explanation>
                 universalData[row[IDHeaderName]][diseaseName]!.Database[prop.replace(/^database_/i, '')] = row[prop];
               } else if (/^pathway_/i.test(prop)) {
                 universalData[row[IDHeaderName]].common.Pathways[prop.replace(/^pathway_/i, '')] = row[prop];

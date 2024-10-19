@@ -1,26 +1,31 @@
 'use client';
 
-import { type DiseaseType, diseaseMap } from '@/lib/data';
+import { type DiseaseType, diseaseMap, diseaseTooltip } from '@/lib/data';
 import { GENE_UNIVERSAL_QUERY } from '@/lib/gql';
 import type { Gene, GeneUniversalData, GeneUniversalDataVariables, RadioOptions, UniversalData } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { useLazyQuery } from '@apollo/client';
-import React, { useEffect } from 'react';
+import { Info } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
 import { NodeColor, NodeSize } from '.';
 import { Combobox } from '../ComboBox';
 import FileSheet from '../FileSheet';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { GeneSearch } from './GeneSearch';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
   const geneIDs = useStore(state => state.geneIDs);
-  const prevUniversalData = useStore(state => state.universalData);
+  const bringCommon = useRef<boolean>(true);
 
-  const [fetchData] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY(diseaseName), {
-    returnPartialData: true,
-  });
+  const [fetchData] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
+    GENE_UNIVERSAL_QUERY(diseaseName, bringCommon.current ?? true),
+    {
+      returnPartialData: true,
+    },
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Fetchdata dependency is redundant
   useEffect(() => {
@@ -32,7 +37,6 @@ export function LeftSideBar() {
     })
       .then(val => {
         if (!val.data?.getGenes) return;
-
         const radioOptions: RadioOptions = {
           None: [],
           logFC: [],
@@ -48,7 +52,7 @@ export function LeftSideBar() {
         for (const key in gene) {
           // using case insensitive regexp filter keys starting with pathway_ and extract the rest of the string
           if (key === 'ID') continue;
-          if (key === 'common') {
+          if (key === 'common' && bringCommon.current) {
             for (const prop in gene.common) {
               if (/^pathway_/i.test(prop)) {
                 radioOptions.Pathways.push(prop.replace(/^pathway_/i, ''));
@@ -68,10 +72,6 @@ export function LeftSideBar() {
                 radioOptions.GDA.push(prop.replace(/^GDA_/i, ''));
               } else if (/^GWAS_/i.test(prop)) {
                 radioOptions.Genetics.push(prop.replace(/^GWAS_/i, ''));
-              } else if (/^TE_/i.test(prop)) {
-                radioOptions.TE.push(prop.replace(/^TE_/i, ''));
-              } else if (/^database_/i.test(prop)) {
-                radioOptions.Database.push(prop.replace(/^database_/i, ''));
               }
             }
           }
@@ -112,20 +112,11 @@ export function LeftSideBar() {
           }
           for (const key in gene[diseaseName]) {
             if (/^logFC_/i.test(key)) {
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
               universalData[gene.ID][diseaseName]!.logFC[key.replace(/^logFC_/i, '')] = gene[diseaseName][key];
             } else if (/^GDA_/i.test(key)) {
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
               universalData[gene.ID][diseaseName]!.GDA[key.replace(/^GDA_/i, '')] = gene[diseaseName][key];
             } else if (/^GWAS_/i.test(key)) {
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
               universalData[gene.ID][diseaseName]!.Genetics[key.replace(/^GWAS_/i, '')] = gene[diseaseName][key];
-            } else if (/^TE_/i.test(key)) {
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
-              universalData[gene.ID][diseaseName]!.TE[key.replace(/^TE_/i, '')] = gene[diseaseName][key];
-            } else if (/^database_/i.test(key)) {
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
-              universalData[gene.ID][diseaseName]!.Database[key.replace(/^database_/i, '')] = gene[diseaseName][key];
             }
           }
         }
@@ -134,6 +125,7 @@ export function LeftSideBar() {
           initialRadioOptions: JSON.parse(JSON.stringify(radioOptions)),
         });
         useStore.setState({ universalData, radioOptions }, false);
+        if (bringCommon.current) bringCommon.current = false;
       })
       .catch(err => {
         console.error(err);
@@ -145,12 +137,20 @@ export function LeftSideBar() {
       <div>
         <div className='flex flex-col'>
           <Label className='font-bold mb-2'>Disease Map</Label>
-          <Combobox
-            value={diseaseName}
-            onChange={value => useStore.setState({ diseaseName: value as DiseaseType })}
-            data={diseaseMap}
-            className='w-full'
-          />
+          <div className='flex items-center gap-2'>
+            <Combobox
+              value={diseaseName}
+              onChange={value => useStore.setState({ diseaseName: value as DiseaseType })}
+              data={diseaseMap}
+              className='w-full'
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info size={20} />
+              </TooltipTrigger>
+              <TooltipContent>{diseaseTooltip[diseaseName]}</TooltipContent>
+            </Tooltip>
+          </div>
         </div>
         <NodeColor />
       </div>

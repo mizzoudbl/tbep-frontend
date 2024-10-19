@@ -34,7 +34,6 @@ export default function Home() {
 
   React.useEffect(() => {
     setHistory(JSON.parse(localStorage.getItem('history') ?? '[]'));
-    console.log(localStorage.getItem('history'));
 
     const escapeListener = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -130,12 +129,12 @@ export default function Home() {
       }),
     );
     const newHistory = [
-      ...history,
       {
         title: `Graph: ${history.length + 1}`,
         geneIDs: seedGenes,
         ...formData,
       },
+      ...history,
     ];
     setHistory(newHistory);
     localStorage.setItem('history', JSON.stringify(newHistory));
@@ -173,11 +172,11 @@ export default function Home() {
                           setFormData({
                             ...formData,
                             seedGenes: `ENSG00000122359
-            ENSG00000100823
-            ENSG00000214944
-            ENSG00000172995
-            ENSG00000147894
-            ENSG00000162063`,
+ENSG00000100823
+ENSG00000214944
+ENSG00000172995
+ENSG00000147894
+ENSG00000162063`,
                           });
                         }}
                       >
@@ -190,11 +189,11 @@ export default function Home() {
                           setFormData({
                             ...formData,
                             seedGenes: `DCTN1
-            DNAJC7
-            ERBB4
-            ERLIN1
-            EWSR1
-            FIG4`,
+DNAJC7
+ERBB4
+ERLIN1
+EWSR1
+FIG4`,
                           });
                         }}
                       >
@@ -300,7 +299,7 @@ export default function Home() {
             </form>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={25}>
+          <ResizablePanel className='h-[60vh]' defaultSize={25} minSize={15}>
             <History history={history} setHistory={setHistory} setFormData={setFormData} />
           </ResizablePanel>
         </ResizablePanelGroup>

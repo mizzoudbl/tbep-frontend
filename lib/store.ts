@@ -13,19 +13,17 @@ export const useStore = create<GraphStore>(set => ({
     stop() {
       throw new Error('GraphologyWorkerLayout not initialized');
     },
-    kill() {
-      throw new Error('GraphologyWorkerLayout not initialized');
-    },
   },
   defaultNodeColor: 'blue',
   // Select defaultValue best for viewing the graph
   forceSettings: {
-    repulsion: -5,
-    attraction: 1,
-    gravity: 10,
+    chargeStrength: 100,
+    linkDistance: 20,
+    collideForce: 1,
+    collideRadius: 10,
   },
   defaultNodeSize: 5,
-  defaultLabelRenderedSizeThreshold: 3,
+  defaultLabelRenderedSizeThreshold: 1,
   defaultEdgeColor: 'red',
   selectedNodes: [],
   selectedRadioNodeColor: 'None',

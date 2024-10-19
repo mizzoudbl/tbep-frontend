@@ -46,7 +46,7 @@ export function drawHover(
   data: PlainObject,
   settings: Settings<NodeAttributes, EdgeAttributes>,
 ): void {
-  const size = settings.labelSize;
+  const size = 14;
   const font = settings.labelFont;
   const weight = settings.labelWeight;
   const subLabelSize = size - 2;

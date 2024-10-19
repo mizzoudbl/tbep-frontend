@@ -35,7 +35,17 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "noParameterAssign": "off",
+        "noCommaOperator": "off",
+        "useSingleVarDeclarator": "off",
+        "useShorthandAssign": "off",
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noAssignInExpressions": "off"
+      }
     },
     "ignore": ["**/node_modules/**"]
   },

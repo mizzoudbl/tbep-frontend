@@ -13,29 +13,39 @@ export function GraphAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    graph.forEachEdge((edge, attr, source, target) => {
+    // graph.forEachEdge((edge, attr, source, target) => {
+    //   if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
+    //     droppedEdge.current.add({
+    //       key: edge,
+    //       source: source,
+    //       target: target,
+    //       attributes: attr,
+    //     });
+    //     graph.dropEdge(edge);
+    //   }
+    // });
+    // for (const edge of droppedEdge.current) {
+    //   if (
+    //     graph.hasNode(edge.source) &&
+    //     graph.hasNode(edge.target) &&
+    //     edge.attributes?.score &&
+    //     edge.attributes.score >= radialAnalysis.edgeWeightCutOff
+    //   ) {
+    //     graph.mergeEdgeWithKey(edge.key, edge.source, edge.target, edge.attributes);
+    //     droppedEdge.current.delete(edge);
+    //   }
+    // }
+    let edgeCount = graph.size;
+    graph.updateEachEdgeAttributes((edge, attr) => {
       if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
-        droppedEdge.current.add({
-          key: edge,
-          source: source,
-          target: target,
-          attributes: attr,
-        });
-        graph.dropEdge(edge);
+        attr.hidden = true;
+        edgeCount--;
+      } else {
+        attr.hidden = false;
       }
+      return attr;
     });
-    for (const edge of droppedEdge.current) {
-      if (
-        graph.hasNode(edge.source) &&
-        graph.hasNode(edge.target) &&
-        edge.attributes?.score &&
-        edge.attributes.score >= radialAnalysis.edgeWeightCutOff
-      ) {
-        graph.mergeEdgeWithKey(edge.key, edge.source, edge.target, edge.attributes);
-        droppedEdge.current.delete(edge);
-      }
-    }
-    useStore.setState({ totalEdges: graph.size });
+    useStore.setState({ totalEdges: edgeCount });
   }, [radialAnalysis.edgeWeightCutOff]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -44,7 +54,7 @@ export function GraphAnalysis() {
     let edgeCount = graph.size;
     graph.updateEachNodeAttributes((node, attr) => {
       const degree = graph.degree(node);
-      if (degree < radialAnalysis.nodeDegreeCutOff) {
+      if (degree < radialAnalysis.nodeDegreeCutOff * 2) {
         attr.hidden = true;
         nodeCount--;
         edgeCount -= degree;
@@ -53,15 +63,15 @@ export function GraphAnalysis() {
       }
       return attr;
     });
-    useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
+    useStore.setState({ totalNodes: nodeCount, totalEdges: Math.max(edgeCount, 0) });
   }, [radialAnalysis.nodeDegreeCutOff]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (radialAnalysis.hubGeneEdgeCount <= 1) return;
+    if (radialAnalysis.hubGeneEdgeCount < 1) return;
     graph.updateEachNodeAttributes((node, attr) => {
       const degree = graph.degree(node);
-      if (degree >= radialAnalysis.hubGeneEdgeCount) {
+      if (degree >= radialAnalysis.hubGeneEdgeCount * 2) {
         attr.type = 'border';
       } else {
         attr.type = 'circle';

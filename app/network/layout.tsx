@@ -1,5 +1,6 @@
 'use client';
 
+import ChatWindow from '@/components/ChatWindow';
 import { Export } from '@/components/Export';
 import { LeftSideBar } from '@/components/left-panel';
 import { RightSideBar } from '@/components/right-panel';
@@ -82,8 +83,9 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
               <ResizableHandle withHandle />
             </>
           )}
-          <ResizablePanel defaultSize={68} className='flex-1 bg-white'>
-            {children}
+          <ResizablePanel defaultSize={68} className='bg-white h-screen'>
+            <div className='bg-white h-[87%]'>{children}</div>
+            <ChatWindow />
           </ResizablePanel>
           {rightSidebar && (
             <>

@@ -108,10 +108,16 @@ export function GraphEvents() {
       enterEdge: e => {
         graph.setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
         graph.setEdgeAttribute(e.edge, 'forceLabel', true);
+        for (const node of graph.extremities(e.edge)) {
+          graph.setNodeAttribute(node, 'highlighted', true);
+        }
       },
       leaveEdge: e => {
         graph.removeEdgeAttribute(e.edge, 'color');
         graph.removeEdgeAttribute(e.edge, 'forceLabel');
+        for (const node of graph.extremities(e.edge)) {
+          graph.setNodeAttribute(node, 'highlighted', false);
+        }
       },
       /* Drag'n'Drop Program */
       downNode: e => {
@@ -178,10 +184,12 @@ export function GraphEvents() {
   }, [showEdgeLabel, setSettings]);
 
   useEffect(() => {
-    setSettings({
-      defaultNodeColor,
+    if (!sigma) return;
+    sigma.getGraph().updateEachNodeAttributes((node, attr) => {
+      attr.color = defaultNodeColor;
+      return attr;
     });
-  }, [defaultNodeColor, setSettings]);
+  }, [defaultNodeColor, sigma]);
 
   useEffect(() => {
     if (!sigma) return;

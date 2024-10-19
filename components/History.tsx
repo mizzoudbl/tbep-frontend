@@ -1,8 +1,9 @@
 import type { GraphConfigForm } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import { ExternalLink, Eye, Pin, Trash2 } from 'lucide-react';
+import { ExternalLink, Eye, Pin, PinOff, Trash2 } from 'lucide-react';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
+import { ScrollArea } from './ui/scroll-area';
 
 export type HistoryItem = GraphConfigForm & { title: string; geneIDs: string[] };
 
@@ -32,71 +33,70 @@ export default function History({
   };
 
   return (
-    <>
+    <div className='h-[92%]'>
       <h3 className='text-2xl font-semibold'>History</h3>
       {history.length > 0 ? (
-        <div className='space-y-4'>
-          {history.map((item, index) => (
-            <Card key={item.title}>
-              <CardHeader className='p-2'>
-                <CardTitle>
-                  <Input
-                    type='text'
-                    name='title'
-                    className='h-fit w-fit border-none shadow-none p-1 underline'
-                    defaultValue={item.title}
-                    onBlur={e => {
-                      const newHistory = history.map((historyItem, idx) =>
-                        idx === index ? { ...historyItem, title: e.target.value } : historyItem,
-                      );
+        <ScrollArea className='h-full'>
+          <div className='space-y-4 pr-2 flex flex-col'>
+            {history.map((item, index) => (
+              <Card key={item.title}>
+                <CardHeader className='p-2'>
+                  <CardTitle>
+                    <Input
+                      type='text'
+                      name='title'
+                      className='h-fit w-fit border-none shadow-none p-1 underline'
+                      defaultValue={item.title}
+                      onBlur={e => {
+                        const newHistory = history.map((historyItem, idx) =>
+                          idx === index ? { ...historyItem, title: e.target.value } : historyItem,
+                        );
+                        setHistory(newHistory);
+                        localStorage.setItem('history', JSON.stringify(newHistory));
+                      }}
+                    />
+                  </CardTitle>
+                  <div className='pl-1 text-xs text-muted-foreground'>
+                    <p>{item.seedGenes.slice(0, 30) + (item.seedGenes.length > 30 && '...')}</p>
+                    <p>
+                      {item.diseaseMap} : Order - {item.order} : {item.interactionType} : {item.minScore}
+                    </p>
+                  </div>
+                </CardHeader>
+                <CardFooter className='p-1 flex flex-row-reverse'>
+                  <button
+                    type='button'
+                    className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
+                    onClick={() => {
+                      const newHistory = history.filter((_, idx) => idx !== index);
                       setHistory(newHistory);
                       localStorage.setItem('history', JSON.stringify(newHistory));
                     }}
-                  />
-                </CardTitle>
-                <CardDescription className='pl-1 text-xs'>
-                  <p>{item.seedGenes.slice(0, 30) + (item.seedGenes.length > 30 && '...')}</p>
-                  <p>
-                    {item.diseaseMap} : {item.order} : {item.interactionType} : {item.minScore}
-                  </p>
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className='p-1 flex flex-row-reverse'>
-                <button type='button' className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'>
-                  <Pin size={20} />
-                </button>
-                <button
-                  type='button'
-                  className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
-                  onClick={() => {
-                    const newHistory = history.filter((_, idx) => idx !== index);
-                    setHistory(newHistory);
-                    localStorage.setItem('history', JSON.stringify(newHistory));
-                  }}
-                >
-                  <Trash2 size={20} />
-                </button>
-                <button
-                  type='button'
-                  className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
-                  onClick={() => handleGenerateGraph(index)}
-                >
-                  <ExternalLink size={20} />
-                </button>
-                <button
-                  type='button'
-                  className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
-                  onClick={() => setFormData({ ...item })}
-                >
-                  <Eye size={20} />
-                </button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                  <button
+                    type='button'
+                    className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
+                    onClick={() => handleGenerateGraph(index)}
+                  >
+                    <ExternalLink size={20} />
+                  </button>
+                  <button
+                    type='button'
+                    className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
+                    onClick={() => setFormData({ ...item })}
+                  >
+                    <Eye size={20} />
+                  </button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
       ) : (
         <p className='text-center h-full italic grid place-items-center text-lg'>No history available</p>
       )}
-    </>
+    </div>
   );
 }

@@ -21,21 +21,17 @@ const SigmaContainer = dynamic(() => import('@/components/graph').then(module =>
 
 export default function NetworkPage() {
   return (
-    <>
-      <SigmaContainer
-        className='w-full h-screen'
-        settings={{
-          enableEdgeEvents: true,
-          defaultEdgeColor: 'gray',
-          zIndex: true,
-          defaultNodeType: 'circle',
-          labelRenderedSizeThreshold: 0.75,
-          labelDensity: 0.2,
-          renderEdgeLabels: true,
-          defaultDrawNodeHover: drawHover,
-        }}
-      />
-      <ChatWindow />
-    </>
+    <SigmaContainer
+      settings={{
+        enableEdgeEvents: true,
+        defaultEdgeColor: 'gray',
+        zIndex: true,
+        defaultNodeType: 'circle',
+        labelRenderedSizeThreshold: 0.75,
+        labelDensity: 0.2,
+        renderEdgeLabels: true,
+        defaultDrawNodeHover: drawHover,
+      }}
+    />
   );
 }

@@ -4,18 +4,22 @@
  */
 export interface ForceSettings {
   /**
-   * Strength of the repulsion force between each pair of nodes
+   * Strength of the link distance
    */
-  repulsion: number;
+  chargeStrength: number;
 
   /**
-   * Strength of the attraction force between each pair of connected noes
-   *
+   * Distance between the links
    */
-  attraction: number;
+  linkDistance: number;
 
   /**
-   * Strength of the gravity force that pulls nodes towards the center of the graph
+   * Strength of the collide force
    */
-  gravity: number;
+  collideForce: number;
+
+  /**
+   * Radius of the collide force
+   */
+  collideRadius: number;
 }

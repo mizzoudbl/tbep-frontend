@@ -18,7 +18,7 @@ export function ColorPicker({
   property: keyof GraphStore;
   className?: string;
 }) {
-  const solids = ['black', '#ff75c3', '#ffa647', '#ffe83f', '#9fff5b', '#70e2ff', '#cd93ff', 'red', 'blue'];
+  const solids = ['black', 'hotpink', 'orange', 'yellow', 'limegreen', 'aquamarine', 'darkorchid', 'red', 'blue'];
 
   const handleNodeColorChange = (e: React.KeyboardEvent<HTMLInputElement> | string, key: keyof GraphStore) => {
     if (typeof e === 'string') {
@@ -39,12 +39,11 @@ export function ColorPicker({
         >
           <div className='w-full flex items-center gap-2'>
             {color ? (
-              // biome-ignore lint/style/useSelfClosingElements: <explanation>
-              <div className='h-4 w-4 rounded !bg-center !bg-cover transition-all' style={{ background: color }}></div>
+              <div className='h-4 w-4 rounded !bg-center !bg-cover transition-all' style={{ background: color }} />
             ) : (
               <Paintbrush className='h-4 w-4' />
             )}
-            <div className='truncate flex-1'>{color ? color : 'Pick a color'}</div>
+            <span className='truncate flex-1'>{color ? color : 'Pick a color'}</span>
           </div>
         </Button>
       </PopoverTrigger>

@@ -1,5 +1,5 @@
-import type { GraphologyWorkerLayout } from '@/components/graph';
-import { type DiseaseType, type NodeColorType, type NodeSizeType, diseaseMap } from '@/lib/data';
+import type { DiseaseType, NodeColorType, NodeSizeType } from '@/lib/data';
+import type { WorkerLayoutForceHook } from '@/lib/graphology-force-v2';
 import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
@@ -28,7 +28,10 @@ export interface GraphStore {
   /**
    * Force Layout worker
    */
-  forceWorker: GraphologyWorkerLayout;
+  forceWorker: {
+    start: () => void;
+    stop: () => void;
+  };
 
   /**
    * Force Layout settings
