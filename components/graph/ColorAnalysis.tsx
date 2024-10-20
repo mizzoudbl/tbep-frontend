@@ -19,7 +19,7 @@ export function ColorAnalysis() {
     if (!sigma) return;
     const graph = sigma.getGraph();
     const minMaxWeight = graph.reduceEdges(
-      (acc, edge, attr) => {
+      (acc, _, attr) => {
         return [Math.min(acc[0], attr.score ?? 1), Math.max(acc[1], attr.score ?? 0)];
       },
       [1, 0],
@@ -76,6 +76,37 @@ export function ColorAnalysis() {
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node].common.Druggability?.[selectedNodeColorProperty]);
         if (!Number.isNaN(val)) attr.color = colorScale(val);
+        else attr.color = undefined;
+        return attr;
+      });
+    } else if (selectedRadioNodeColor === 'TE') {
+      const minMax = Object.values(universalData).reduce(
+        (acc, cur) => {
+          const valString = cur.common?.TE?.[selectedNodeColorProperty];
+          if (!valString) return acc;
+          const value = Number.parseFloat(valString);
+          return [Math.min(acc[0], value), Math.max(acc[1], value)];
+        },
+        [Number.POSITIVE_INFINITY, 0],
+      );
+      const colorScale = scaleLinear<string>(minMax, ['#00ff00', '#ff0000']);
+      graph.updateEachNodeAttributes((node, attr) => {
+        const val = Number.parseFloat(universalData[node].common?.TE?.[selectedNodeColorProperty] ?? 'NaN');
+        if (!Number.isNaN(val)) attr.color = colorScale(val);
+        else attr.color = undefined;
+        return attr;
+      });
+    } else if (selectedRadioNodeColor === 'Database') {
+      graph.updateEachNodeAttributes((node, attr) => {
+        attr.color =
+          Number.parseInt(universalData[node].common.Database?.[selectedNodeColorProperty] ?? '0') === 1
+            ? 'red'
+            : defaultNodeColor;
+        return attr;
+      });
+    } else if (selectedRadioNodeColor === 'Custom') {
+      graph.updateEachNodeAttributes((node, attr) => {
+        attr.color = universalData[node].common.Custom?.[selectedNodeColorProperty] || defaultNodeColor;
         return attr;
       });
     } else if (selectedRadioNodeColor === 'GDA') {
@@ -92,6 +123,7 @@ export function ColorAnalysis() {
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.GDA?.[selectedNodeColorProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.color = colorScale(val);
+        else attr.color = undefined;
         return attr;
       });
     } else if (selectedRadioNodeColor === 'Genetics') {
@@ -110,22 +142,6 @@ export function ColorAnalysis() {
         if (!Number.isNaN(val)) attr.color = colorScale(val);
         return attr;
       });
-    } else if (selectedRadioNodeColor === 'TE') {
-      const minMax = Object.values(universalData).reduce(
-        (acc, cur) => {
-          const valString = cur[diseaseName]?.TE?.[selectedNodeColorProperty];
-          if (!valString) return acc;
-          const value = Number.parseFloat(valString);
-          return [Math.min(acc[0], value), Math.max(acc[1], value)];
-        },
-        [Number.POSITIVE_INFINITY, 0],
-      );
-      const colorScale = scaleLinear<string>(minMax, ['#00ff00', '#ff0000']);
-      graph.updateEachNodeAttributes((node, attr) => {
-        const val = Number.parseFloat(universalData[node][diseaseName]?.TE?.[selectedNodeColorProperty] ?? 'NaN');
-        if (!Number.isNaN(val)) attr.color = colorScale(val);
-        return attr;
-      });
     } else if (selectedRadioNodeColor === 'logFC') {
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
@@ -140,19 +156,7 @@ export function ColorAnalysis() {
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.logFC?.[selectedNodeColorProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.color = colorScale(val);
-        return attr;
-      });
-    } else if (selectedRadioNodeColor === 'Database') {
-      graph.updateEachNodeAttributes((node, attr) => {
-        attr.color =
-          Number.parseInt(universalData[node].common.Database?.[selectedNodeColorProperty] ?? '0') === 1
-            ? 'red'
-            : defaultNodeColor;
-        return attr;
-      });
-    } else if (selectedRadioNodeColor === 'Custom') {
-      graph.updateEachNodeAttributes((node, attr) => {
-        attr.color = universalData[node].common.Custom?.[selectedNodeColorProperty] || defaultNodeColor;
+        else attr.color = undefined;
         return attr;
       });
     }

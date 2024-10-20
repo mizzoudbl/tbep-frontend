@@ -13,22 +13,22 @@ export function NetworkLayout({
 }) {
   return (
     <>
-      {/* <div className='flex space-x-2 items-center'>
+      <div className='flex space-x-2 items-center'>
         <Tooltip>
           <div className='flex flex-col space-y-2 w-full'>
             <TooltipTrigger asChild>
               <Label htmlFor='linkDistance' className='text-xs font-semibold'>
-                linkDistance (0.1-10)
+                Link Distance (1-1000)
               </Label>
             </TooltipTrigger>
             <Slider
               id='linkDistance'
               className='w-full'
               min={1}
-              max={100}
-              step={1}
+              max={1000}
+              step={10}
               value={[forceSettings.linkDistance]}
-              onValueChange={value => updateForceSetting(value || '0', 'linkDistance')}
+              onValueChange={value => updateForceSetting(value, 'linkDistance')}
             />
           </div>
           <TooltipContent>
@@ -39,10 +39,10 @@ export function NetworkLayout({
           type='number'
           className='w-16 h-8'
           min={1}
-          max={50}
+          max={100}
           step={1}
           value={forceSettings.linkDistance}
-          onChange={e => updateForceSetting(e.target.value || '0', 'linkDistance')}
+          onChange={e => updateForceSetting(e.target.value, 'linkDistance')}
         />
       </div>
       <div className='flex space-x-2 items-center'>
@@ -50,99 +50,32 @@ export function NetworkLayout({
           <div className='flex flex-col space-y-2 w-full'>
             <TooltipTrigger asChild>
               <Label htmlFor='chargeStrength' className='text-xs font-semibold'>
-                chargeStrength (0-10)
+                Charge Strength (-500 - 50)
               </Label>
             </TooltipTrigger>
             <Slider
               id='chargeStrength'
               className='w-full'
               min={-500}
-              max={100}
+              max={50}
               step={1}
               value={[forceSettings.chargeStrength]}
-              onValueChange={value => updateForceSetting(value || '-200', 'chargeStrength')}
+              onValueChange={value => updateForceSetting(value, 'chargeStrength')}
             />
           </div>
           <TooltipContent>
-            <p>Increases or decreases the strength of chargeStrength between nodes</p>
+            <p>Negative is repulsion strength and positive is attraction strength between nodes</p>
           </TooltipContent>
         </Tooltip>
         <Input
           type='number'
           className='w-16 h-8'
           min={-500}
-          max={100}
+          max={50}
           step={1}
           value={forceSettings.chargeStrength}
-          onChange={e => updateForceSetting(e.target.value || '-200', 'chargeStrength')}
+          onChange={e => updateForceSetting(e.target.value, 'chargeStrength')}
         />
-      </div>
-      <div className='flex space-x-2 items-center'>
-        <Tooltip>
-          <div className='flex flex-col space-y-2 w-full'>
-            <TooltipTrigger asChild>
-              <Label htmlFor='collideForce' className='text-xs font-semibold'>
-                collideForce (0-1)
-              </Label>
-            </TooltipTrigger>
-            <Slider
-              id='collideForce'
-              className='w-full'
-              min={0}
-              max={1}
-              step={0.1}
-              value={[forceSettings.collideForce]}
-              onValueChange={value => updateForceSetting(value, 'collideForce')}
-            />
-          </div>
-          <TooltipContent>
-            <p>collideForce of the layout</p>
-          </TooltipContent>
-        </Tooltip>
-        <Input
-          type='number'
-          className='w-16 h-8'
-          min={0}
-          max={1}
-          step={0.1}
-          value={forceSettings.collideForce}
-          onChange={e => updateForceSetting(e.target.value, 'collideForce')}
-        />
-      </div>
-      <div className='flex space-x-2 items-center'>
-        <Tooltip>
-          <div className='flex flex-col space-y-2 w-full'>
-            <TooltipTrigger asChild>
-              <Label htmlFor='collideRadius' className='text-xs font-semibold'>
-                collideRadius (0-10)
-              </Label>
-            </TooltipTrigger>
-            <Slider
-              id='collideRadius'
-              className='w-full'
-              min={0.1}
-              max={10}
-              step={0.1}
-              value={[forceSettings.collideRadius]}
-              onValueChange={value => updateForceSetting(value, 'collideRadius')}
-            />
-          </div>
-          <TooltipContent>
-            <p>collideRadius of the layout</p>
-          </TooltipContent>
-        </Tooltip>
-        <Input
-          type='number'
-          className='w-16 h-8'
-          min={0.1}
-          max={10}
-          step={0.1}
-          value={forceSettings.collideRadius}
-          onChange={e => updateForceSetting(e.target.value, 'collideRadius')}
-        />
-      </div> */}
-      <div className='flex justify-center text-bold text-destructive'>
-        More features will be coming soon to cotnrol the layout of the graph
       </div>
     </>
   );

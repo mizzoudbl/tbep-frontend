@@ -11,7 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function NetworkStyle({
   defaultNodeSize,
-  defaultLabelRenderedSizeThreshold,
+  defaultlabelDensity,
   showEdgeLabel,
   showEdgeColor,
   defaultNodeColor,
@@ -20,7 +20,7 @@ export function NetworkStyle({
   handleCheckBox,
 }: {
   defaultNodeSize: number;
-  defaultLabelRenderedSizeThreshold: number;
+  defaultlabelDensity: number;
   showEdgeLabel: boolean;
   showEdgeColor: boolean;
   defaultNodeColor: string;
@@ -73,18 +73,18 @@ export function NetworkStyle({
           <Tooltip>
             <div className='flex flex-col space-y-2 w-full'>
               <TooltipTrigger asChild>
-                <Label htmlFor='defaultLabelRenderedSizeThreshold' className='text-xs font-semibold'>
-                  Label Threshold
+                <Label htmlFor='defaultlabelDensity' className='text-xs font-semibold'>
+                  Label Density
                 </Label>
               </TooltipTrigger>
               <Slider
-                id='defaultLabelRenderedSizeThreshold'
+                id='defaultlabelDensity'
                 className='w-full'
                 min={0.1}
                 max={10}
                 step={0.1}
-                value={[defaultLabelRenderedSizeThreshold]}
-                onValueChange={value => handleDefaultChange(value?.[0], 'defaultLabelRenderedSizeThreshold')}
+                value={[defaultlabelDensity]}
+                onValueChange={value => handleDefaultChange(value?.[0], 'defaultlabelDensity')}
               />
             </div>
             <TooltipContent>
@@ -97,8 +97,8 @@ export function NetworkStyle({
             min={1}
             max={50}
             step={1}
-            value={defaultLabelRenderedSizeThreshold}
-            onChange={e => handleDefaultChange(Number.parseFloat(e.target.value), 'defaultLabelRenderedSizeThreshold')}
+            value={defaultlabelDensity}
+            onChange={e => handleDefaultChange(Number.parseFloat(e.target.value), 'defaultlabelDensity')}
           />
         </div>
         <hr />

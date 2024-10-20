@@ -8,22 +8,20 @@ export const useStore = create<GraphStore>(set => ({
   nodeSuggestions: [],
   forceWorker: {
     start() {
-      throw new Error('GraphologyWorkerLayout not initialized');
+      throw new Error('Graph Layout not initialized');
     },
     stop() {
-      throw new Error('GraphologyWorkerLayout not initialized');
+      throw new Error('Graph Layout not initialized');
     },
   },
   defaultNodeColor: 'blue',
   // Select defaultValue best for viewing the graph
   forceSettings: {
-    chargeStrength: 100,
+    chargeStrength: -200,
     linkDistance: 20,
-    collideForce: 1,
-    collideRadius: 10,
   },
   defaultNodeSize: 5,
-  defaultLabelRenderedSizeThreshold: 1,
+  defaultlabelDensity: 1,
   defaultEdgeColor: 'red',
   selectedNodes: [],
   selectedRadioNodeColor: 'None',

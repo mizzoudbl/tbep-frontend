@@ -7,11 +7,13 @@ import { useStore } from '@/lib/store';
 import { useLazyQuery } from '@apollo/client';
 import { Info } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { NodeColor, NodeSize } from '.';
 import { Combobox } from '../ComboBox';
 import FileSheet from '../FileSheet';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
+import { Spinner } from '../ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { GeneSearch } from './GeneSearch';
 
@@ -20,7 +22,7 @@ export function LeftSideBar() {
   const geneIDs = useStore(state => state.geneIDs);
   const bringCommon = useRef<boolean>(true);
 
-  const [fetchData] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
+  const [fetchData, { loading, called }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
     GENE_UNIVERSAL_QUERY(diseaseName, bringCommon.current ?? true),
     {
       returnPartialData: true,
@@ -77,7 +79,7 @@ export function LeftSideBar() {
           }
         }
 
-        const universalData: UniversalData = {};
+        const universalData: UniversalData = useStore.getState().universalData || {};
         for (const gene of val.data?.getGenes || []) {
           universalData[gene.ID] = {
             common: {
@@ -99,15 +101,17 @@ export function LeftSideBar() {
               Custom: {},
             },
           };
-          for (const key in gene.common) {
-            if (/^pathway_/i.test(key)) {
-              universalData[gene.ID].common.Pathways[key.replace(/^pathway_/i, '')] = gene.common[key];
-            } else if (/^druggability_/i.test(key)) {
-              universalData[gene.ID].common.Druggability[key.replace(/^druggability_/i, '')] = gene.common[key];
-            } else if (/^TE_/i.test(key)) {
-              universalData[gene.ID].common.TE[key.replace(/^TE_/i, '')] = gene.common[key];
-            } else if (/^database_/i.test(key)) {
-              universalData[gene.ID].common.Database[key.replace(/^database_/i, '')] = gene.common[key];
+          if (bringCommon.current) {
+            for (const key in gene.common) {
+              if (/^pathway_/i.test(key)) {
+                universalData[gene.ID].common.Pathways[key.replace(/^pathway_/i, '')] = gene.common[key];
+              } else if (/^druggability_/i.test(key)) {
+                universalData[gene.ID].common.Druggability[key.replace(/^druggability_/i, '')] = gene.common[key];
+              } else if (/^TE_/i.test(key)) {
+                universalData[gene.ID].common.TE[key.replace(/^TE_/i, '')] = gene.common[key];
+              } else if (/^database_/i.test(key)) {
+                universalData[gene.ID].common.Database[key.replace(/^database_/i, '')] = gene.common[key];
+              }
             }
           }
           for (const key in gene[diseaseName]) {
@@ -124,8 +128,13 @@ export function LeftSideBar() {
           initialUniversalData: JSON.parse(JSON.stringify(universalData)),
           initialRadioOptions: JSON.parse(JSON.stringify(radioOptions)),
         });
-        useStore.setState({ universalData, radioOptions }, false);
-        if (bringCommon.current) bringCommon.current = false;
+        useStore.setState({ universalData, radioOptions });
+        toast.info(`Data for ${diseaseName} disease Loaded`, {
+          cancel: { label: 'Close', onClick() {} },
+          position: 'top-center',
+          richColors: true,
+          description: 'You can now play with the data',
+        });
       })
       .catch(err => {
         console.error(err);
@@ -146,7 +155,7 @@ export function LeftSideBar() {
             />
             <Tooltip>
               <TooltipTrigger asChild>
-                <Info size={20} />
+                {!called || (called && loading) ? <Spinner size='small' /> : <Info size={20} />}
               </TooltipTrigger>
               <TooltipContent>{diseaseTooltip[diseaseName]}</TooltipContent>
             </Tooltip>

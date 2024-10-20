@@ -1,5 +1,4 @@
 import type { DiseaseType, NodeColorType, NodeSizeType } from '@/lib/data';
-import type { WorkerLayoutForceHook } from '@/lib/graphology-force-v2';
 import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
@@ -51,7 +50,7 @@ export interface GraphStore {
   /**
    * Default label rendered size threshold
    */
-  defaultLabelRenderedSizeThreshold: number;
+  defaultlabelDensity: number;
 
   /**
    * Default edge color of the graph
@@ -167,29 +166,21 @@ export type UniversalData = {
       logFC: Record<string, string>;
       GDA: Record<string, string>;
       Genetics: Record<string, string>;
-      TE: Record<string, string>;
-      Database: Record<string, string>;
     };
     PSP?: {
       logFC: Record<string, string>;
       GDA: Record<string, string>;
       Genetics: Record<string, string>;
-      TE: Record<string, string>;
-      Database: Record<string, string>;
     };
     FTD?: {
       logFC: Record<string, string>;
       GDA: Record<string, string>;
       Genetics: Record<string, string>;
-      TE: Record<string, string>;
-      Database: Record<string, string>;
     };
     OI?: {
       logFC: Record<string, string>;
       GDA: Record<string, string>;
       Genetics: Record<string, string>;
-      TE: Record<string, string>;
-      Database: Record<string, string>;
     };
   };
 };

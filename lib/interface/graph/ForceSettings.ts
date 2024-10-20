@@ -12,14 +12,4 @@ export interface ForceSettings {
    * Distance between the links
    */
   linkDistance: number;
-
-  /**
-   * Strength of the collide force
-   */
-  collideForce: number;
-
-  /**
-   * Radius of the collide force
-   */
-  collideRadius: number;
 }

@@ -1,11 +1,11 @@
+import type { SimulationNodeDatum } from 'd3-force';
 import type { Attributes } from 'graphology-types';
-
 /**
  * Node attributes used in the graph
  * @extends Attributes
  * @interface NodeAttributes
  */
-export interface NodeAttributes extends Attributes {
+export interface NodeAttributes extends Attributes, SimulationNodeDatum {
   /**
    * x coordinate of the node
    */

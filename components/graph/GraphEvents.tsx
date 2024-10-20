@@ -106,6 +106,7 @@ export function GraphEvents() {
       enterNode: e => setHoveredNode(e.node),
       leaveNode: () => setHoveredNode(null),
       enterEdge: e => {
+        graph.setEdgeAttribute(e.edge, 'altColor', graph.getEdgeAttribute(e.edge, 'color'));
         graph.setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
         graph.setEdgeAttribute(e.edge, 'forceLabel', true);
         for (const node of graph.extremities(e.edge)) {
@@ -113,8 +114,8 @@ export function GraphEvents() {
         }
       },
       leaveEdge: e => {
-        graph.removeEdgeAttribute(e.edge, 'color');
-        graph.removeEdgeAttribute(e.edge, 'forceLabel');
+        graph.setEdgeAttribute(e.edge, 'color', graph.getEdgeAttribute(e.edge, 'altColor'));
+        graph.setEdgeAttribute(e.edge, 'forceLabel', false);
         for (const node of graph.extremities(e.edge)) {
           graph.setNodeAttribute(node, 'highlighted', false);
         }
@@ -165,17 +166,17 @@ export function GraphEvents() {
     });
   }, [registerEvents, sigma, draggedNode, defaultEdgeColor, handleMouseUp, handleMouseDown, handleMouseMove]);
 
-  const setSettings = useSetSettings();
+  const setSettings = useSetSettings<NodeAttributes, EdgeAttributes>();
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
-  const defaultLabelRenderedSizeThreshold = useStore(state => state.defaultLabelRenderedSizeThreshold);
+  const defaultlabelDensity = useStore(state => state.defaultlabelDensity);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
 
   useEffect(() => {
     setSettings({
-      labelRenderedSizeThreshold: defaultLabelRenderedSizeThreshold,
+      labelDensity: defaultlabelDensity,
     });
-  }, [defaultLabelRenderedSizeThreshold, setSettings]);
+  }, [defaultlabelDensity, setSettings]);
 
   useEffect(() => {
     setSettings({
@@ -228,7 +229,13 @@ export function GraphEvents() {
             data.color = defaultEdgeColor;
           }
         }
-        return data;
+        return {
+          color: data.color,
+          forceLabel: data.forceLabel,
+          hidden: data.hidden,
+          label: data.score?.toString(),
+          size: data.size,
+        };
       },
     });
   }, [defaultEdgeColor, hoveredNode, setSettings, sigma]);

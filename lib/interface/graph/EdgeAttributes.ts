@@ -1,4 +1,6 @@
+import type { SimulationLinkDatum, SimulationNodeDatum } from 'd3-force';
 import type { Attributes } from 'graphology-types';
+import type { NodeAttributes } from './NodeAtrributes';
 
 /**
  * Edge attributes used in the graph
@@ -19,7 +21,12 @@ export interface EdgeAttributes extends Attributes {
   /**
    * color of the edge
    */
-  color?: number | string;
+  color?: string;
+
+  /**
+   * Hover color of edge
+   */
+  altColor?: string;
 
   /**
    * label of the edge visible on the graph

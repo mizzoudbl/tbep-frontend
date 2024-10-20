@@ -170,10 +170,6 @@ export default function FileSheet() {
                 universalData[row[IDHeaderName]][diseaseName]!.GDA[prop.replace(/^GDA_/i, '')] = row[prop];
               } else if (/^GWAS_/i.test(prop)) {
                 universalData[row[IDHeaderName]][diseaseName]!.Genetics[prop.replace(/^GWAS_/i, '')] = row[prop];
-              } else if (/^TE_/i.test(prop)) {
-                universalData[row[IDHeaderName]][diseaseName]!.TE[prop.replace(/^TE_/i, '')] = row[prop];
-              } else if (/^database_/i.test(prop)) {
-                universalData[row[IDHeaderName]][diseaseName]!.Database[prop.replace(/^database_/i, '')] = row[prop];
               } else if (/^pathway_/i.test(prop)) {
                 universalData[row[IDHeaderName]].common.Pathways[prop.replace(/^pathway_/i, '')] = row[prop];
               } else if (/^druggability_/i.test(prop)) {

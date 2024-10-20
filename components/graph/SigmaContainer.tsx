@@ -10,13 +10,17 @@ import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import { Suspense } from 'react';
 import type { Sigma } from 'sigma';
+import { EdgeLineProgram } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch, SizeAnalysis } from '.';
+import { drawHover } from './canvas-hover';
 
 export type SigmaContainerProps = _SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes> &
   React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null>;
 
 export function SigmaContainer(props: SigmaContainerProps) {
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
+  // const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
+  // const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
 
   return (
     <_SigmaContainer
@@ -33,9 +37,12 @@ export function SigmaContainer(props: SigmaContainerProps) {
             ],
           }),
         },
+        edgeProgramClasses: {
+          line: EdgeLineProgram,
+        },
         defaultNodeColor,
         labelSize: 10,
-        labelDensity: 0.1,
+        defaultDrawNodeHover: drawHover,
       }}
     >
       <Suspense>

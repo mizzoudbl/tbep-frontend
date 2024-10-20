@@ -3,6 +3,7 @@
 import type { ForceSettings, GraphStore, RadialAnalysisSetting } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import type { CheckedState } from '@radix-ui/react-checkbox';
+import { useEffect, useState } from 'react';
 import { Legend, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
@@ -14,12 +15,10 @@ export function RightSideBar() {
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
-  const defaultLabelRenderedSizeThreshold = useStore(state => state.defaultLabelRenderedSizeThreshold);
+  const defaultlabelDensity = useStore(state => state.defaultlabelDensity);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const radialAnalysis = useStore(state => state.radialAnalysis);
-  const minScore: number = useStore.getInitialState().radialAnalysis.edgeWeightCutOff;
-  // const minScore: number = JSON.parse(localStorage.getItem('graphConfig') || '{}').minScore || 0;
 
   const handleDefaultChange = (value: number | string, key: keyof GraphStore) => {
     useStore.setState({ [key]: value });
@@ -62,13 +61,13 @@ export function RightSideBar() {
         defaultNodeSize={defaultNodeSize}
         defaultNodeColor={defaultNodeColor}
         defaultEdgeColor={defaultEdgeColor}
-        defaultLabelRenderedSizeThreshold={defaultLabelRenderedSizeThreshold}
+        defaultlabelDensity={defaultlabelDensity}
         showEdgeLabel={showEdgeLabel}
         showEdgeColor={showEdgeColor}
         handleDefaultChange={handleDefaultChange}
         handleCheckBox={handleCheckBox}
       />
-      <RadialAnalysis value={radialAnalysis} onChange={updateRadialAnalysis} minScore={minScore} />
+      <RadialAnalysis value={radialAnalysis} onChange={updateRadialAnalysis} />
       <NetworkInfo />
       <Legend />
     </ScrollArea>

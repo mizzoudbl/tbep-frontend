@@ -82,8 +82,6 @@ export default function ChatWindow() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
-    console.log(textAreaRef.current?.clientWidth);
-
     setWidth(textAreaRef.current?.clientWidth ?? width);
   }, [textAreaRef.current?.clientWidth]);
 

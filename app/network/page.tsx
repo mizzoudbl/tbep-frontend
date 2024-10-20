@@ -2,8 +2,6 @@
 
 import React from 'react';
 import '@react-sigma/core/lib/react-sigma.min.css';
-import ChatWindow from '@/components/ChatWindow';
-import { drawHover } from '@/components/graph/canvas-hover';
 import { Spinner } from '@/components/ui/spinner';
 import dynamic from 'next/dynamic';
 
@@ -30,7 +28,6 @@ export default function NetworkPage() {
         labelRenderedSizeThreshold: 0.75,
         labelDensity: 0.2,
         renderEdgeLabels: true,
-        defaultDrawNodeHover: drawHover,
       }}
     />
   );

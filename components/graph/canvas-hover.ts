@@ -43,8 +43,10 @@ function drawRoundRect(
  */
 export function drawHover(
   context: CanvasRenderingContext2D,
-  data: PlainObject,
+  data: PartialButFor<NodeDisplayData, 'x' | 'y' | 'size' | 'label' | 'color'>,
   settings: Settings<NodeAttributes, EdgeAttributes>,
+  // sizePropertyText?: string,
+  // colorPropertyText?: string,
 ): void {
   const size = 14;
   const font = settings.labelFont;
@@ -66,10 +68,12 @@ export function drawHover(
   const geneNameWidth = context.measureText(geneName).width;
   context.font = `${weight} ${subLabelSize}px ${font}`;
   const geneIDWidth = geneID ? context.measureText(geneID).width : 0;
-  context.font = `${weight} ${subLabelSize}px ${font}`;
   const descriptionWidth = description ? context.measureText(description).width : 0;
+  // const sizePropertyWidth = sizePropertyText ? context.measureText(sizePropertyText).width : 0;
+  // const colorPropertyWidth = colorPropertyText ? context.measureText(colorPropertyText).width : 0;
 
   const textWidth = Math.max(geneNameWidth, geneIDWidth, descriptionWidth);
+  // const textWidth = Math.max(geneNameWidth, geneIDWidth, descriptionWidth, sizePropertyWidth, colorPropertyWidth);
 
   const x = Math.round(data.x);
   const y = Math.round(data.y);
@@ -77,8 +81,11 @@ export function drawHover(
   const hGenename = Math.round(size / 2 + 4);
   const hGeneID = geneID ? Math.round(subLabelSize / 2 + 9) : 0;
   const hDescription = Math.round(subLabelSize / 2 + 9);
+  // const hSizeProperty = sizePropertyText ? Math.round(subLabelSize / 2 + 9) : 0;
+  // const hColorProperty = colorPropertyText ? Math.round(subLabelSize / 2 + 9) : 0;
 
   drawRoundRect(context, x, y - hGeneID - 12, w, hDescription + hGenename + hGeneID + 12, 5);
+  // drawRoundRect(context, x, y - hGeneID - 18, w, hDescription + hGenename + hGeneID + 18, 5);
   context.closePath();
   context.fill();
 
@@ -87,7 +94,7 @@ export function drawHover(
   context.shadowBlur = 0;
 
   // And finally we draw the labels
-  context.fillStyle = TEXT_COLOR;
+  context.fillStyle = data.color;
   context.font = `${weight} ${size}px ${font}`;
   context.fillText(geneName, data.x + data.size + 3, data.y + size / 3);
 
@@ -95,7 +102,13 @@ export function drawHover(
   context.font = `${weight} ${subLabelSize}px ${font}`;
   context.fillText(geneID, data.x + data.size + 3, data.y - (2 * size) / 3 - 2);
 
-  context.fillStyle = data.color;
-  context.font = `${weight} ${subLabelSize}px ${font}`;
   context.fillText(description, data.x + data.size + 3, data.y + size / 3 + 3 + subLabelSize);
+
+  // if (sizePropertyText) {
+  //   context.fillText(sizePropertyText, data.x + data.size + 3, data.y + size / 3 + 6 + 2 * subLabelSize);
+  // }
+
+  // if (colorPropertyText) {
+  //   context.fillText(colorPropertyText, data.x + data.size + 3, data.y + size / 3 + 9 + 3 * subLabelSize);
+  // }
 }
