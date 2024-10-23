@@ -9,7 +9,9 @@ export default function Navbar() {
     <header className='bg-teal-800 text-white p-4'>
       <div className='container mx-auto flex justify-between items-center'>
         <Link href={'/'}>
-          <h1 className='text-2xl font-bold'>Target Discovery Platform</h1>
+          <h1 className='text-lg md:text-xl font-bold'>
+            Target & Biomarker Exploration portal (TBEP) for Drug Discovery
+          </h1>
         </Link>
         <nav className='hidden md:flex space-x-4'>
           {links.map(link => (

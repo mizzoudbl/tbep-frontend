@@ -34,7 +34,7 @@ export default function History({
 
   return (
     <div className='h-[92%]'>
-      <h3 className='text-2xl font-semibold'>History</h3>
+      <h3 className='text-2xl font-semibold mb-1'>History</h3>
       {history.length > 0 ? (
         <ScrollArea className='h-full'>
           <div className='space-y-4 pr-2 flex flex-col'>

@@ -1,5 +1,6 @@
 'use client';
 
+import Chat from '@/components/Chat';
 import History, { type HistoryItem } from '@/components/History';
 import PopUpTable from '@/components/PopUpTable';
 import { Button } from '@/components/ui/button';
@@ -298,12 +299,13 @@ FIG4`,
               </div>
             </form>
           </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel className='h-[60vh]' defaultSize={25} minSize={15}>
+          <ResizableHandle withHandle className='hidden md:flex' />
+          <ResizablePanel className='h-[60vh] hidden md:block' defaultSize={25} minSize={15}>
             <History history={history} setHistory={setHistory} setFormData={setFormData} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+      <Chat />
     </>
   );
 }

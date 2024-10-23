@@ -75,26 +75,18 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
         </div>
 
         <ResizablePanelGroup direction='horizontal' className='flex flex-1'>
-          {leftSidebar && (
-            <>
-              <ResizablePanel defaultSize={16} minSize={16}>
-                <LeftSideBar />
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-            </>
-          )}
+          <ResizablePanel defaultSize={16} minSize={16} className={leftSidebar ? 'block' : 'hidden'}>
+            <LeftSideBar />
+          </ResizablePanel>
+          <ResizableHandle withHandle className={leftSidebar ? 'flex' : 'hidden'} />
           <ResizablePanel defaultSize={68} className='bg-white h-screen'>
             <div className='bg-white h-[87%]'>{children}</div>
             <ChatWindow />
           </ResizablePanel>
-          {rightSidebar && (
-            <>
-              <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={16} minSize={16}>
-                <RightSideBar />
-              </ResizablePanel>
-            </>
-          )}
+          <ResizableHandle withHandle className={rightSidebar ? 'flex' : 'hidden'} />
+          <ResizablePanel defaultSize={16} minSize={16} className={rightSidebar ? 'block' : 'hidden'}>
+            <RightSideBar />
+          </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </>

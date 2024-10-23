@@ -41,14 +41,15 @@ export function NodeSearch() {
     for (const node of previousHighlightedNodes) {
       if (geneNames.has(node) || !graph.hasNode(node)) continue;
       graph.removeNodeAttribute(node, 'highlighted');
+      graph.setNodeAttribute(node, 'type', 'circle');
       graph.setNodeAttribute(node, 'color', defaultNodeColor);
     }
     let count = 0;
     for (const node of geneNames) {
       if (previousHighlightedNodes.has(node) || !graph.hasNode(node) || graph.getNodeAttribute(node, 'hidden') === true)
         continue;
+      graph.setNodeAttribute(node, 'type', 'border');
       graph.setNodeAttribute(node, 'highlighted', true);
-      graph.setNodeAttribute(node, 'color', 'blue');
       if (++count === geneNames.size) gotoNode(node, { duration: 100 });
     }
     highlightedNodesRef.current = geneNames;

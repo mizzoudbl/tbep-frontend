@@ -10,7 +10,8 @@ import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import { Suspense } from 'react';
 import type { Sigma } from 'sigma';
-import { EdgeLineProgram } from 'sigma/rendering';
+import { EdgeLineProgram, NodeCircleProgram } from 'sigma/rendering';
+import { drawDiscNodeHover, drawDiscNodeLabel } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch, SizeAnalysis } from '.';
 import { drawHover } from './canvas-hover';
 
@@ -42,7 +43,7 @@ export function SigmaContainer(props: SigmaContainerProps) {
         },
         defaultNodeColor,
         labelSize: 10,
-        defaultDrawNodeHover: drawHover,
+        defaultDrawNodeHover: drawDiscNodeHover,
       }}
     >
       <Suspense>

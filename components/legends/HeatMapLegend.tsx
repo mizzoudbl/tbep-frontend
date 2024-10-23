@@ -1,7 +1,7 @@
 'use client';
 
 import { generateColorTransition } from '@/lib/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export function HeatmapLegend({
   width = 200,
@@ -79,7 +79,7 @@ export function HeatmapLegend({
       svg.appendChild(tick);
 
       const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      label.setAttribute('x', x.toString());
+      label.setAttribute('x', i ? x.toString() : '7');
       label.setAttribute('y', (25 + legendHeight).toString());
       label.setAttribute('font-size', '10');
       label.setAttribute('text-anchor', 'middle');

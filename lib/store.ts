@@ -26,7 +26,7 @@ export const useStore = create<GraphStore>(set => ({
   selectedNodes: [],
   selectedRadioNodeColor: 'None',
   selectedRadioNodeSize: 'None',
-  showEdgeLabel: true,
+  showEdgeLabel: false,
   showEdgeColor: false,
   totalNodes: 0,
   totalEdges: 0,

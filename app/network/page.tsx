@@ -27,7 +27,6 @@ export default function NetworkPage() {
         defaultNodeType: 'circle',
         labelRenderedSizeThreshold: 0.75,
         labelDensity: 0.2,
-        renderEdgeLabels: true,
       }}
     />
   );

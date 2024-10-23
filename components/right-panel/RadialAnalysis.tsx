@@ -12,12 +12,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
   const [minScore, setMinScore] = React.useState(0);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
-    const minScore: number = JSON.parse(localStorage.getItem('graphConfig') || '{}').minScore || 0;
+    const minScore = Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0;
     setMinScore(minScore);
     onChange(minScore, 'edgeWeightCutOff');
-    console.log(minScore);
   }, []);
 
   return (
@@ -29,40 +29,6 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className='flex flex-col gap-2 mt-2'>
-        <div key={'edgeWeightCutOff'} className='flex space-x-2 items-center'>
-          <Tooltip>
-            <div className='flex flex-col space-y-2 w-full'>
-              <TooltipTrigger asChild>
-                <Label htmlFor={'edgeWeightCutOff'} className='text-xs font-semibold'>
-                  {'Edge Weight Cut-off'}
-                </Label>
-              </TooltipTrigger>
-              <Slider
-                id={'edgeWeightCutOff'}
-                className='w-full'
-                min={0}
-                max={1}
-                step={0.1}
-                value={[value.edgeWeightCutOff]}
-                onValueChange={value => onChange(value[0], 'edgeWeightCutOff' as keyof RadialAnalysisSetting)}
-              />
-            </div>
-            <TooltipContent>
-              <p>Removes edges with weight less than the cut-off value</p>
-            </TooltipContent>
-          </Tooltip>
-          <Input
-            type='number'
-            className='w-16 h-8'
-            min={minScore}
-            max={1}
-            step={0.1}
-            value={value.edgeWeightCutOff}
-            onChange={e =>
-              onChange(Number.parseFloat(e.target.value), 'edgeWeightCutOff' as keyof RadialAnalysisSetting)
-            }
-          />
-        </div>
         {radialAnalysisOptions.map(option => (
           <div key={option.key} className='flex space-x-2 items-center'>
             <Tooltip>
@@ -75,15 +41,17 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                 <Slider
                   id={option.key}
                   className='w-full'
-                  min={option.min}
+                  min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
                   max={option.max}
                   step={option.step}
                   value={[
-                    option.key === 'nodeDegreeCutOff'
-                      ? value.nodeDegreeCutOff
-                      : option.key === 'hubGeneEdgeCount'
-                        ? value.hubGeneEdgeCount
-                        : 0,
+                    option.key === 'edgeWeightCutOff'
+                      ? value.edgeWeightCutOff
+                      : option.key === 'nodeDegreeCutOff'
+                        ? value.nodeDegreeCutOff
+                        : option.key === 'hubGeneEdgeCount'
+                          ? value.hubGeneEdgeCount
+                          : 0,
                   ]}
                   onValueChange={value => onChange(value[0], option.key as keyof RadialAnalysisSetting)}
                 />
@@ -99,11 +67,13 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
               max={option.max}
               step={option.step}
               value={
-                option.key === 'nodeDegreeCutOff'
-                  ? value.nodeDegreeCutOff
-                  : option.key === 'hubGeneEdgeCount'
-                    ? value.hubGeneEdgeCount
-                    : undefined
+                option.key === 'edgeWeightCutOff'
+                  ? value.edgeWeightCutOff
+                  : option.key === 'nodeDegreeCutOff'
+                    ? value.nodeDegreeCutOff
+                    : option.key === 'hubGeneEdgeCount'
+                      ? value.hubGeneEdgeCount
+                      : undefined
               }
               onChange={e => onChange(Number.parseFloat(e.target.value), option.key as keyof RadialAnalysisSetting)}
             />

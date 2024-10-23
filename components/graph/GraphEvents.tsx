@@ -110,6 +110,7 @@ export function GraphEvents() {
         graph.setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
         graph.setEdgeAttribute(e.edge, 'forceLabel', true);
         for (const node of graph.extremities(e.edge)) {
+          graph.setNodeAttribute(node, 'type', 'border');
           graph.setNodeAttribute(node, 'highlighted', true);
         }
       },
@@ -117,6 +118,7 @@ export function GraphEvents() {
         graph.setEdgeAttribute(e.edge, 'color', graph.getEdgeAttribute(e.edge, 'altColor'));
         graph.setEdgeAttribute(e.edge, 'forceLabel', false);
         for (const node of graph.extremities(e.edge)) {
+          graph.setNodeAttribute(node, 'type', 'circle');
           graph.setNodeAttribute(node, 'highlighted', false);
         }
       },

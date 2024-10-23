@@ -35,13 +35,13 @@ export function GraphAnalysis() {
     //     droppedEdge.current.delete(edge);
     //   }
     // }
-    let edgeCount = graph.size;
+    let edgeCount = 0;
     graph.updateEachEdgeAttributes((edge, attr) => {
       if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
         attr.hidden = true;
-        edgeCount--;
       } else {
         attr.hidden = false;
+        edgeCount++;
       }
       return attr;
     });
@@ -50,20 +50,21 @@ export function GraphAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    let nodeCount = graph.order;
-    let edgeCount = graph.size;
+    let nodeCount = 0;
     graph.updateEachNodeAttributes((node, attr) => {
       const degree = graph.degree(node);
       if (degree < radialAnalysis.nodeDegreeCutOff * 2) {
         attr.hidden = true;
-        nodeCount--;
-        edgeCount -= degree;
       } else {
+        nodeCount++;
         attr.hidden = false;
       }
       return attr;
     });
-    useStore.setState({ totalNodes: nodeCount, totalEdges: Math.max(edgeCount, 0) });
+    const edgeCount = graph.reduceEdges((count, ____, ___, __, _, srcAttr, tgtAttr) => {
+      return count + (srcAttr.hidden || tgtAttr.hidden ? 0 : 1);
+    }, 0);
+    useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
   }, [radialAnalysis.nodeDegreeCutOff]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

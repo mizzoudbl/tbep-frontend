@@ -21,7 +21,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Drug Target Discovery',
+  title: 'TBEP',
   description: 'Drug Target Discovery Platform for Homosapiens',
 };
 

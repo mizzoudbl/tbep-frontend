@@ -1,7 +1,9 @@
-import { NodeProgram, type ProgramInfo } from 'sigma/rendering';
+import { type NodeHoverDrawingFunction, NodeProgram, type ProgramInfo } from 'sigma/rendering';
 import type { NodeDisplayData, RenderParams } from 'sigma/types';
 import { floatColor } from 'sigma/utils';
 
+import { drawHover } from '@/components/graph/canvas-hover';
+import type { Attributes } from 'graphology-types';
 import FRAGMENT_SHADER_SOURCE from './node-gradient-frag.glsl';
 import VERTEX_SHADER_SOURCE from './node-gradient-vert.glsl';
 
@@ -42,4 +44,6 @@ export default class NodeGradientProgram extends NodeProgram<(typeof UNIFORMS)[n
     gl.uniform1f(u_pixelRatio, params.pixelRatio);
     gl.uniformMatrix3fv(u_matrix, false, params.matrix);
   }
+
+  drawHover: NodeHoverDrawingFunction<Attributes, Attributes, Attributes> | undefined = drawHover;
 }

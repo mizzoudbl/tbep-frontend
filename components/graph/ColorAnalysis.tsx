@@ -4,7 +4,7 @@ import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { useSigma } from '@react-sigma/core';
 import { scaleLinear } from 'd3-scale';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function ColorAnalysis() {
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
@@ -14,17 +14,16 @@ export function ColorAnalysis() {
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const diseaseName = useStore(state => state.diseaseName);
   const showEdgeColor = useStore(state => state.showEdgeColor);
+  const [minScore, setMinScore] = useState(0);
 
   useEffect(() => {
-    if (!sigma) return;
+    setMinScore(Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0);
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
     const graph = sigma.getGraph();
-    const minMaxWeight = graph.reduceEdges(
-      (acc, _, attr) => {
-        return [Math.min(acc[0], attr.score ?? 1), Math.max(acc[1], attr.score ?? 0)];
-      },
-      [1, 0],
-    );
-    const colorScale = scaleLinear<string>(minMaxWeight, ['yellow', 'red']);
+    const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
     if (showEdgeColor) {
       graph.updateEachEdgeAttributes((edge, attr) => {
         if (attr.score) attr.color = colorScale(attr.score);
