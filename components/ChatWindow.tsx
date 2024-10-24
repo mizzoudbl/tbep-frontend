@@ -34,21 +34,22 @@ export default function ChatWindow() {
     setIsChatOpen(true);
     setIsChatInitiated(true);
 
-    const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
-      method: 'POST',
-      body: JSON.stringify({ question: inputValue }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      toast.error('Failed to fetch response from LLM');
-      return;
-    }
+    // const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
+    //   method: 'POST',
+    //   body: JSON.stringify({ question: inputValue }),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // });
+    // if (!response.ok) {
+    //   toast.error('Failed to fetch response from LLM');
+    //   return;
+    // }
     setIsLoading(false);
     setIsTyping(true);
     const llmResponse: Message = {
-      text: await response.text(),
+      // text: await response.text(),
+      text: 'Hi I am good LLM',
       sender: 'llm',
     };
     setMessages(prevMessages => [...prevMessages, llmResponse]);
@@ -86,7 +87,7 @@ export default function ChatWindow() {
   }, [textAreaRef.current?.clientWidth]);
 
   return (
-    <form onSubmit={handleSubmit} className='w-full mx-auto'>
+    <form onSubmit={handleSubmit} className='w-full mx-auto h-[10%]'>
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -94,7 +95,7 @@ export default function ChatWindow() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             style={{ height: chatHeight, width: width - 50 }}
-            className='absolute bottom-16 backdrop-blur rounded-lg shadow-lg overflow-hidden m-2'
+            className='absolute bottom-[8vh] backdrop-blur rounded-lg shadow-lg overflow-hidden m-2'
           >
             <motion.div
               drag='y'
@@ -154,14 +155,14 @@ export default function ChatWindow() {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className='flex w-full' ref={textAreaRef}>
+      <div className='flex w-full h-[55%] items-end' ref={textAreaRef}>
         <div className='flex w-[97%]'>
           <Textarea
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
-            placeholder='Type your message...'
+            placeholder='To chat with LLM, Type your message...'
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSubmit(e)}
-            className='px-4 py-2 min-h-10 rounded-md backdrop-blur'
+            className='px-4 py-2 rounded-md backdrop-blur resize-none ml-2'
           />
           <button type='submit' className='relative right-8  text-blue-500 hover:text-blue-600'>
             <Send className='w-5 h-5' />
@@ -173,7 +174,7 @@ export default function ChatWindow() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setIsChatOpen(true)}
-            className='relative bg-blue-500 text-white rounded-full p-2 right-4 shadow-lg hover:bg-blue-600 transition-colors duration-200'
+            className='relative h-10 bg-blue-500 text-white rounded-full p-2 right-4 shadow-lg hover:bg-blue-600 transition-colors duration-200'
           >
             <MessageCircle className='w-6 h-6' />
           </motion.button>

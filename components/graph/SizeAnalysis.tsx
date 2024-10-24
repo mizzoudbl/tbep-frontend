@@ -33,11 +33,11 @@ export function SizeAnalysis() {
         },
         [1, 0],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [1, 10]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node].common.Druggability?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
-        else attr.size = defaultNodeSize;
+        else attr.size = 0.5;
         return attr;
       });
     } else if (selectedRadioNodeSize === 'TE') {
@@ -50,11 +50,11 @@ export function SizeAnalysis() {
         },
         [Number.POSITIVE_INFINITY, 0],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [1, 10]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node].common?.TE?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
-        else attr.size = defaultNodeSize;
+        else attr.size = 0.5;
         return attr;
       });
     } else if (selectedRadioNodeSize === 'logFC') {
@@ -67,11 +67,11 @@ export function SizeAnalysis() {
         },
         [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [1, 10]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.logFC?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
-        else attr.size = defaultNodeSize;
+        else attr.size = 0.5;
         return attr;
       });
     } else if (selectedRadioNodeSize === 'GDA') {
@@ -84,11 +84,11 @@ export function SizeAnalysis() {
         },
         [1, 0],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [1, 10]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.GDA?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
-        else attr.size = defaultNodeSize;
+        else attr.size = 0.5;
         return attr;
       });
     } else if (selectedRadioNodeSize === 'Genetics') {
@@ -101,15 +101,15 @@ export function SizeAnalysis() {
         },
         [1, -1],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [1, 10]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.Genetics?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
-        else attr.size = defaultNodeSize;
+        else attr.size = 0.5;
         return attr;
       });
     }
-  }, [selectedNodeSizeProperty, selectedRadioNodeSize, sigma, universalData, defaultNodeSize]);
+  }, [selectedNodeSizeProperty, selectedRadioNodeSize, sigma, universalData]);
 
   return null;
 }

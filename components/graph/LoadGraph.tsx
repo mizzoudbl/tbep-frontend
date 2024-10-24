@@ -183,8 +183,8 @@ export function LoadGraph() {
   return (
     <>
       {loading ? (
-        <div className='w-full h-full grid place-items-center'>
-          <div className='flex flex-col items-center'>
+        <div className=' absolute bottom-0 w-full h-full z-40 grid place-items-center'>
+          <div className='flex flex-col items-center' id='test'>
             <Spinner size={'medium'} />
             Loading...
           </div>

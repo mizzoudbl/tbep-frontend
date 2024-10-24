@@ -42,6 +42,7 @@ export function SigmaContainer(props: SigmaContainerProps) {
           line: EdgeLineProgram,
         },
         defaultNodeColor,
+        defaultEdgeColor: '#c5c5c5',
         labelSize: 10,
         defaultDrawNodeHover: drawDiscNodeHover,
       }}

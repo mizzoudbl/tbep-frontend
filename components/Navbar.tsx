@@ -9,8 +9,10 @@ export default function Navbar() {
     <header className='bg-teal-800 text-white p-4'>
       <div className='container mx-auto flex justify-between items-center'>
         <Link href={'/'}>
-          <h1 className='text-lg md:text-xl font-bold'>
-            Target & Biomarker Exploration portal (TBEP) for Drug Discovery
+          <h1 className='text-lg md:text-xl font-bold flex items-end'>
+            <p className='text-3xl'>T</p>arget & <p className='text-3xl ml-1'>B</p>iomarker{' '}
+            <p className='text-3xl ml-1'>E</p>xploration <p className='text-3xl ml-1'>P</p>ortal{' '}
+            <p className='text-3xl ml-2'>(TBEP)</p>
           </h1>
         </Link>
         <nav className='hidden md:flex space-x-4'>

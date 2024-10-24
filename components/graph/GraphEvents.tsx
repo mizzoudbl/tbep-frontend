@@ -173,6 +173,8 @@ export function GraphEvents() {
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultlabelDensity = useStore(state => state.defaultlabelDensity);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
+  const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
+  const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
 
   useEffect(() => {
     setSettings({
@@ -194,12 +196,23 @@ export function GraphEvents() {
     });
   }, [defaultNodeColor, sigma]);
 
+  const prevNodeSize = useRef(5);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (!sigma) return;
-    sigma.getGraph().updateEachNodeAttributes((node, attr) => {
-      attr.size = defaultNodeSize;
-      return attr;
-    });
+    if (!sigma || !defaultNodeSize) return;
+    if (selectedRadioNodeSize !== 'None' && selectedNodeSizeProperty) {
+      sigma.getGraph().updateEachNodeAttributes((_, attr) => {
+        if (attr.size === 0.5) return attr;
+        if (attr.size) attr.size += (defaultNodeSize - prevNodeSize.current) / 5;
+        return attr;
+      });
+    } else {
+      sigma.getGraph().updateEachNodeAttributes((_, attr) => {
+        attr.size = defaultNodeSize;
+        return attr;
+      });
+    }
+    prevNodeSize.current = defaultNodeSize;
   }, [defaultNodeSize, sigma]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
