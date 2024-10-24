@@ -45,15 +45,13 @@ export default function Chat() {
         });
         return;
       }
-      setIsLoading(false);
-      setIsTyping(true);
       const llmResponse: Message = {
         text: await response.text(),
         sender: 'llm',
       };
-      setTimeout(() => {
-        setMessages(prevMessages => [...prevMessages, llmResponse]);
-      }, 1000);
+      setIsLoading(false);
+      setIsTyping(true);
+      setMessages(prevMessages => [...prevMessages, llmResponse]);
     } catch (error) {
       toast.error('Failed to fetch response from LLM');
       return;

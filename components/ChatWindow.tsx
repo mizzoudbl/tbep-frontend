@@ -34,24 +34,23 @@ export default function ChatWindow() {
     setIsChatOpen(true);
     setIsChatInitiated(true);
 
-    // const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
-    //   method: 'POST',
-    //   body: JSON.stringify({ question: inputValue }),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // });
-    // if (!response.ok) {
-    //   toast.error('Failed to fetch response from LLM');
-    //   return;
-    // }
-    setIsLoading(false);
-    setIsTyping(true);
+    const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
+      method: 'POST',
+      body: JSON.stringify({ question: inputValue }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      toast.error('Failed to fetch response from LLM');
+      return;
+    }
     const llmResponse: Message = {
-      // text: await response.text(),
-      text: 'Hi I am good LLM',
+      text: await response.text(),
       sender: 'llm',
     };
+    setIsLoading(false);
+    setIsTyping(true);
     setMessages(prevMessages => [...prevMessages, llmResponse]);
   };
 
