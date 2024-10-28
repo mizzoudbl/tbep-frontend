@@ -53,6 +53,7 @@ export function drawSelectionBox(
 export function findNodesInSelection(
   graph: AbstractGraph<NodeAttributes, EdgeAttributes>,
   box: SelectionBox,
+  highlightedNodes: Set<string>,
 ): string[] {
   const selectedNodes: string[] = [];
   graph.forEachNode(node => {
@@ -68,6 +69,7 @@ export function findNodesInSelection(
       graph.setNodeAttribute(node, 'type', 'border');
       selectedNodes.push(node);
     } else {
+      if (highlightedNodes.has(node)) return;
       graph.removeNodeAttribute(node, 'type');
       graph.removeNodeAttribute(node, 'borderColor');
     }

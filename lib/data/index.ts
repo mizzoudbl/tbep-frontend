@@ -5,3 +5,4 @@ export * from './nodeSize';
 export * from './navBarLinks';
 export * from './radialAnalysisOptions';
 export * from './team';
+export * from './datatable-column';

@@ -6,4 +6,10 @@ export const diseaseTooltip = {
   PSP: 'Progressive Supranuclear Palsy',
 };
 
+export const diseaseDependentProperties = ['logFC', 'GDA', 'Genetics'] as const;
+export type DiseaseDependentProperties = (typeof diseaseDependentProperties)[number];
+
+export const diseaseIndependentProperties = ['Pathways', 'Druggability', 'TE', 'Database', 'Custom'] as const;
+export type DiseaseIndependentProperties = (typeof diseaseIndependentProperties)[number];
+
 export type DiseaseType = (typeof diseaseMap)[number];

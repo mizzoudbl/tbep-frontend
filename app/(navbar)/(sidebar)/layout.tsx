@@ -13,8 +13,8 @@ export default function SideBarLayout({ children }: { children: React.ReactNode 
     <div className='container mx-auto p-4'>
       <div className='w-full flex gap-4'>
         <ul
-          style={{ backgroundImage: `url(${bg.src})` }}
-          className='bg-cover h-[70vh] shadow-teal-900 shadow-md rounded-md p-4 w-[25%] flex flex-col gap-2 font-semibold text-white'
+          // style={{ backgroundImage: `url(${bg.src})` }}
+          className='bg-[url(/image/sideBarBg.jpeg)] bg-cover h-[70vh] shadow-teal-900 shadow-md rounded-md p-4 w-[25%] flex flex-col gap-2 font-semibold text-white'
         >
           <li className={`transition-colors p-2 rounded hover:font-bold ${pathname === '/' && 'bg-primary'}`}>
             <Link href='/' className='flex items-center'>

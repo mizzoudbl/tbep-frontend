@@ -166,14 +166,14 @@ export function LoadGraph() {
             })),
           };
           if (transformedData) {
-            useStore.setState({
-              geneIDs: transformedData.nodes?.map(node => node.key) || [],
-              totalNodes: transformedData.nodes?.length || 0,
-              totalEdges: transformedData.edges?.length || 0,
-            });
             graph.import(transformedData);
             circlepack.assign(graph);
             loadGraph(graph);
+            useStore.setState({
+              geneIDs: transformedData.nodes?.map(node => node.key) || [],
+              totalNodes: graph.order || 0,
+              totalEdges: graph.directedSize || 0,
+            });
           }
         }
       }

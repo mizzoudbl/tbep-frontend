@@ -2,8 +2,10 @@
 
 import { radialAnalysisOptions } from '@/lib/data';
 import type { RadialAnalysisProps, RadialAnalysisSetting } from '@/lib/interface';
+import { useStore } from '@/lib/store';
 import { ChevronsUpDown } from 'lucide-react';
 import React from 'react';
+import { Combobox } from '../ComboBox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -29,54 +31,68 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className='flex flex-col gap-2 mt-2'>
-        {radialAnalysisOptions.map(option => (
-          <div key={option.key} className='flex space-x-2 items-center'>
-            <Tooltip>
-              <div className='flex flex-col space-y-2 w-full'>
-                <TooltipTrigger asChild>
-                  <Label htmlFor={option.key} className='text-xs font-semibold'>
-                    {option.label}
-                  </Label>
-                </TooltipTrigger>
-                <Slider
-                  id={option.key}
-                  className='w-full'
-                  min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
-                  max={option.max}
-                  step={option.step}
-                  value={[
-                    option.key === 'edgeWeightCutOff'
-                      ? value.edgeWeightCutOff
-                      : option.key === 'nodeDegreeCutOff'
-                        ? value.nodeDegreeCutOff
-                        : option.key === 'hubGeneEdgeCount'
-                          ? value.hubGeneEdgeCount
-                          : 0,
-                  ]}
-                  onValueChange={value => onChange(value[0], option.key as keyof RadialAnalysisSetting)}
-                />
-              </div>
-              <TooltipContent>
-                <p>{option.tooltip}</p>
-              </TooltipContent>
-            </Tooltip>
-            <Input
-              type='number'
-              className='w-16 h-8'
-              min={option.min}
-              max={option.max}
-              step={option.step}
-              value={
-                option.key === 'edgeWeightCutOff'
-                  ? value.edgeWeightCutOff
-                  : option.key === 'nodeDegreeCutOff'
-                    ? value.nodeDegreeCutOff
-                    : option.key === 'hubGeneEdgeCount'
-                      ? value.hubGeneEdgeCount
-                      : undefined
-              }
-              onChange={e => onChange(Number.parseFloat(e.target.value), option.key as keyof RadialAnalysisSetting)}
-            />
+        {radialAnalysisOptions.map((option, idx) => (
+          <div key={option.key} className='space-y-2'>
+            <div className='flex space-x-2 items-center'>
+              <Tooltip>
+                <div className='flex flex-col space-y-2 w-full'>
+                  <TooltipTrigger asChild>
+                    <Label htmlFor={option.key} className='text-xs font-semibold'>
+                      {option.label}
+                    </Label>
+                  </TooltipTrigger>
+                  <Slider
+                    id={option.key}
+                    className='w-full'
+                    min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
+                    max={option.max}
+                    step={option.step}
+                    value={[
+                      option.key === 'edgeWeightCutOff'
+                        ? value.edgeWeightCutOff
+                        : option.key === 'nodeDegreeCutOff'
+                          ? value.nodeDegreeCutOff
+                          : option.key === 'hubGeneEdgeCount'
+                            ? value.hubGeneEdgeCount
+                            : 0,
+                    ]}
+                    onValueChange={value => onChange(value[0], option.key as keyof RadialAnalysisSetting)}
+                  />
+                  {option.key === 'nodeDegreeCutOff' && (
+                    <Combobox
+                      data={[
+                        { value: 'geneDegree', label: 'Gene Degree' },
+                        ...useStore.getState().radioOptions.TE.map(item => ({ value: item, label: item })),
+                      ]}
+                      value={value.nodeDegreeProperty}
+                      className='w-full'
+                      onChange={value => onChange(value, 'nodeDegreeProperty')}
+                    />
+                  )}
+                </div>
+                <TooltipContent>
+                  <p>{option.tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+              <Input
+                type='number'
+                className='w-16 h-8'
+                min={option.min}
+                max={option.max}
+                step={option.step}
+                value={
+                  option.key === 'edgeWeightCutOff'
+                    ? value.edgeWeightCutOff
+                    : option.key === 'nodeDegreeCutOff'
+                      ? value.nodeDegreeCutOff
+                      : option.key === 'hubGeneEdgeCount'
+                        ? value.hubGeneEdgeCount
+                        : undefined
+                }
+                onChange={e => onChange(Number.parseFloat(e.target.value), option.key as keyof RadialAnalysisSetting)}
+              />
+            </div>
+            {idx !== radialAnalysisOptions.length - 1 && <hr />}
           </div>
         ))}
       </CollapsibleContent>

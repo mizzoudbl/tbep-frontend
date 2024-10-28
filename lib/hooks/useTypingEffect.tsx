@@ -1,24 +1,21 @@
 import { Markdown } from '@/components/Markdown';
-import { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { useEffect, useRef, useState } from 'react';
 
 export const useTypingEffect = (text: string, timeout: number, setIsTyping: (arg0: boolean) => void) => {
   const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const index = useRef(0);
   const splitText = text.split(' ');
 
   useEffect(() => {
-    if (currentIndex < splitText.length) {
+    if (index.current < splitText.length) {
       const timer = setTimeout(() => {
-        setDisplayedText(prev => `${prev} ${splitText[currentIndex]}`);
-        setCurrentIndex(prev => prev + 1);
+        setDisplayedText(prev => `${prev} ${splitText[index.current]}`);
+        index.current++;
       }, timeout);
-
       return () => clearTimeout(timer);
     }
     setIsTyping(false);
-  }, [splitText, currentIndex, timeout, setIsTyping]);
+  }, [splitText, timeout, setIsTyping]);
 
   return displayedText;
 };

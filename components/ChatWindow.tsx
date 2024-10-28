@@ -2,12 +2,10 @@
 
 import { TypingAnimation } from '@/lib/hooks';
 import type { Message } from '@/lib/interface';
+import { footNotes } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
 import { ChevronDown, GripHorizontal, MessageCircle, Send, Trash2 } from 'lucide-react';
-import React, { useEffect } from 'react';
-import Reactmarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import {} from 'remark-gfm';
+import React from 'react';
 import { toast } from 'sonner';
 import { Markdown } from './Markdown';
 import { Skeleton } from './ui/skeleton';
@@ -20,7 +18,7 @@ export default function ChatWindow() {
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
   const [isChatInitiated, setIsChatInitiated] = React.useState(false);
-  const [chatHeight, setChatHeight] = React.useState(300);
+  const [chatHeight, setChatHeight] = React.useState<number | null>(null);
   const chatRef = React.useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.KeyboardEvent<HTMLTextAreaElement> | React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +44,7 @@ export default function ChatWindow() {
       return;
     }
     const llmResponse: Message = {
-      text: await response.text(),
+      text: footNotes(await response.text()),
       sender: 'llm',
     };
     setIsLoading(false);
@@ -63,7 +61,7 @@ export default function ChatWindow() {
 
   const dragControls = useDragControls();
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const newHeight = chatHeight - info.delta.y;
+    const newHeight = (chatHeight ?? window.innerHeight - 100) - info.delta.y;
     if (newHeight >= 150 && newHeight <= window.innerHeight - 100) {
       setChatHeight(newHeight);
     }
@@ -78,23 +76,16 @@ export default function ChatWindow() {
 
   const textAreaRef = React.useRef<HTMLDivElement>(null);
 
-  const [width, setWidth] = React.useState(100);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  React.useEffect(() => {
-    setWidth(textAreaRef.current?.clientWidth ?? width);
-  }, [textAreaRef.current?.clientWidth]);
-
   return (
-    <form onSubmit={handleSubmit} className='w-full mx-auto h-[10%]'>
+    <form onSubmit={handleSubmit} className='w-full mx-auto h-[10%] relative flex flex-col items-center'>
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            style={{ height: chatHeight, width: width - 50 }}
-            className='absolute bottom-[8vh] backdrop-blur rounded-lg shadow-lg overflow-hidden m-2'
+            style={{ height: chatHeight ?? '85vh' }}
+            className='absolute bottom-[10vh] m-1 backdrop-blur rounded-lg shadow-lg overflow-hidden w-[98%]'
           >
             <motion.div
               drag='y'
@@ -154,7 +145,7 @@ export default function ChatWindow() {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className='flex w-full h-[55%] items-end' ref={textAreaRef}>
+      <div className='flex w-full h-full mb-4' ref={textAreaRef}>
         <div className='flex w-[97%]'>
           <Textarea
             value={inputValue}
@@ -173,7 +164,7 @@ export default function ChatWindow() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setIsChatOpen(true)}
-            className='relative h-10 bg-blue-500 text-white rounded-full p-2 right-4 shadow-lg hover:bg-blue-600 transition-colors duration-200'
+            className='relative self-end h-10 bg-blue-500 text-white rounded-full p-2 right-4 shadow-lg hover:bg-blue-600 transition-colors duration-200'
           >
             <MessageCircle className='w-6 h-6' />
           </motion.button>

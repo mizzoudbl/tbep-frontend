@@ -79,8 +79,8 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
             <LeftSideBar />
           </ResizablePanel>
           <ResizableHandle withHandle className={leftSidebar ? 'flex' : 'hidden'} />
-          <ResizablePanel defaultSize={68} className='bg-white h-screen'>
-            <div className='bg-white h-[90vh]'>{children}</div>
+          <ResizablePanel defaultSize={68} className='bg-white h-full'>
+            <div className='bg-white h-[90%]'>{children}</div>
             <ChatWindow />
           </ResizablePanel>
           <ResizableHandle withHandle className={rightSidebar ? 'flex' : 'hidden'} />

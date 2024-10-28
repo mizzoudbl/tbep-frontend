@@ -1,5 +1,6 @@
 'use client';
 
+import { columnSelectedNodes } from '@/lib/data';
 import { useStore } from '@/lib/store';
 import React from 'react';
 import PopUpDataTable from '../PopUpDataTable';
@@ -29,7 +30,7 @@ export function NetworkInfo() {
         >
           Show Details
         </Button>
-        <PopUpDataTable data={selectedNodes} open={showTable} setOpen={setShowTable} />
+        <PopUpDataTable data={selectedNodes} columns={columnSelectedNodes} open={showTable} setOpen={setShowTable} />
       </div>
     </div>
   );

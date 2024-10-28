@@ -105,3 +105,15 @@ export function generateColorTransition(startColor: string, endColor: string, st
     return rgbToHex(r, g, b);
   });
 }
+
+export function footNotes(text: string): string {
+  return text
+    .split(/References?:/i)
+    .map((chunk, idx, arr) => {
+      return chunk.replace(
+        /\[\d+\]/g,
+        matcher => `[^${matcher.slice(1)}${idx === arr.length - 1 ? `: ${matcher}` : ''}`,
+      );
+    })
+    .join('**References:**');
+}

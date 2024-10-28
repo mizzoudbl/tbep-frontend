@@ -1,17 +1,78 @@
 'use client';
 
+import {
+  type DiseaseDependentProperties,
+  type DiseaseIndependentProperties,
+  diseaseDependentProperties,
+} from '@/lib/data';
 import type { EdgeAttributes, NodeAttributes, SelectionBox } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import { useRegisterEvents, useSetSettings, useSigma } from '@react-sigma/core';
-import { downloadAsImage } from '@sigma/export-image';
+import { Trie } from '@/lib/trie';
+import { cn } from '@/lib/utils';
+import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
 
 export function GraphEvents() {
-  const registerEvents = useRegisterEvents();
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
+  const searchNodeQuery = useStore(state => state.nodeSearchQuery);
+  const highlightedNodesRef = useRef(new Set<string>());
+  const trieRef = useRef(new Trie<{ key: string; value: string }>());
+  const totalNodes = useStore(state => state.totalNodes);
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const nodeArr = sigma.getGraph().mapNodes((node, attributes) => ({
+      key: attributes.label,
+      value: node,
+    })) as { key: string; value: string }[];
+    if (!Array.isArray(nodeArr)) return;
+    trieRef.current = Trie.fromArray(nodeArr, 'key');
+  }, [totalNodes]);
+
+  const { gotoNode } = useCamera();
+
+  useEffect(() => {
+    const graph = sigma.getGraph();
+    if (trieRef.current.size === 0) return;
+    const geneNames = new Set(
+      searchNodeQuery
+        .toUpperCase()
+        .split(/[\n,]/)
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
+        .map(s => trieRef.current.get(s)?.value || s),
+    ) as Set<string>;
+
+    const previousHighlightedNodes = highlightedNodesRef.current;
+    for (const node of previousHighlightedNodes) {
+      if (geneNames.has(node) || !graph.hasNode(node)) continue;
+      graph.removeNodeAttribute(node, 'highlighted');
+      graph.setNodeAttribute(node, 'type', 'circle');
+      graph.setNodeAttribute(node, 'color', defaultNodeColor);
+    }
+    let count = 0;
+    for (const node of geneNames) {
+      if (previousHighlightedNodes.has(node) || !graph.hasNode(node) || graph.getNodeAttribute(node, 'hidden') === true)
+        continue;
+      graph.setNodeAttribute(node, 'type', 'border');
+      graph.setNodeAttribute(node, 'highlighted', true);
+      if (++count === geneNames.size) gotoNode(node, { duration: 100 });
+    }
+    highlightedNodesRef.current = geneNames;
+  }, [searchNodeQuery, defaultNodeColor, gotoNode, sigma]);
+
+  useEffect(() => {
+    if (trieRef.current.size === 0) return;
+    const prefix = searchNodeQuery.split(/[\n,]/).pop()?.trim() || '';
+    if (prefix.length === 0) return;
+    const suggestions = trieRef.current.search(prefix.toUpperCase()).map(s => s.key);
+    useStore.setState({ nodeSuggestions: suggestions });
+  }, [searchNodeQuery]);
+
+  const registerEvents = useRegisterEvents();
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [_selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionBox, setSelectionBox] = useState<SelectionBox | null>(null);
@@ -73,11 +134,15 @@ export function GraphEvents() {
         });
 
         // Find nodes within selection
-        const selectedNodes = findNodesInSelection(sigma.getGraph(), {
-          ...selectionBox,
-          endX: mousePosition.x,
-          endY: mousePosition.y,
-        });
+        const selectedNodes = findNodesInSelection(
+          sigma.getGraph(),
+          {
+            ...selectionBox,
+            endX: mousePosition.x,
+            endY: mousePosition.y,
+          },
+          highlightedNodesRef.current,
+        );
         setSelectedNodes(selectedNodes);
       }
     },
@@ -94,17 +159,15 @@ export function GraphEvents() {
     canvas.style.cursor = 'default';
     const ctx = canvas.getContext('2d');
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
-    handleSelectedNodes(_selectedNodes);
+    if (_selectedNodes.length) handleSelectedNodes(_selectedNodes);
   }, [handleSelectedNodes, _selectedNodes]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  //   biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!canvasRef.current) canvasRef.current = sigma.getCanvases().mouse;
     const graph = sigma.getGraph();
     registerEvents({
       /* Node Hover Program */
-      enterNode: e => setHoveredNode(e.node),
-      leaveNode: () => setHoveredNode(null),
       enterEdge: e => {
         graph.setEdgeAttribute(e.edge, 'altColor', graph.getEdgeAttribute(e.edge, 'color'));
         graph.setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
@@ -118,6 +181,7 @@ export function GraphEvents() {
         graph.setEdgeAttribute(e.edge, 'color', graph.getEdgeAttribute(e.edge, 'altColor'));
         graph.setEdgeAttribute(e.edge, 'forceLabel', false);
         for (const node of graph.extremities(e.edge)) {
+          if (highlightedNodesRef.current.has(node)) continue;
           graph.setNodeAttribute(node, 'type', 'circle');
           graph.setNodeAttribute(node, 'highlighted', false);
         }
@@ -158,128 +222,85 @@ export function GraphEvents() {
         if (e.original.shiftKey) handleMouseDown(e.original);
         else {
           for (const node of _selectedNodes) {
+            if (highlightedNodesRef.current.has(node)) continue;
             graph.setNodeAttribute(node, 'type', 'circle');
           }
           setSelectedNodes([]);
           handleSelectedNodes([]);
+          if (clickedNode) graph.setNodeAttribute(clickedNode, 'type', 'circle');
+          setClickedNode(null);
         }
         if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
       },
+      clickNode: e => {
+        setClickedNode(e.node);
+      },
     });
-  }, [registerEvents, sigma, draggedNode, defaultEdgeColor, handleMouseUp, handleMouseDown, handleMouseMove]);
+  }, [registerEvents, sigma, draggedNode, handleMouseUp, handleMouseDown, handleMouseMove]);
 
-  const setSettings = useSetSettings<NodeAttributes, EdgeAttributes>();
-  const defaultNodeSize = useStore(state => state.defaultNodeSize);
-  const defaultNodeColor = useStore(state => state.defaultNodeColor);
-  const defaultlabelDensity = useStore(state => state.defaultlabelDensity);
-  const showEdgeLabel = useStore(state => state.showEdgeLabel);
-  const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
+  const [clickedNode, setClickedNode] = useState<string | null>(null);
+  const universalData = useStore(state => state.universalData);
+  const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
+  const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
+  const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
+  const diseaseName = useStore(state => state.diseaseName);
 
-  useEffect(() => {
-    setSettings({
-      labelDensity: defaultlabelDensity,
-    });
-  }, [defaultlabelDensity, setSettings]);
+  return (
+    <>
+      {clickedNode && (
+        <div className='absolute top-0 right-0 space-y-1 text-xs shadow rounded border backdrop-blur p-1 m-1 w-40'>
+          <div>
+            <h3 className='font-bold'>Ensembl ID</h3>
+            <p>{clickedNode}</p>
+          </div>
+          <div>
+            <h3 className='font-bold'>Gene Name</h3>
+            <p>{clickedNode ? sigma.getGraph().getNodeAttribute(clickedNode, 'label') : 'No Node Selected'}</p>
+          </div>
+          <div>
+            <h3 className='font-bold'>Description</h3>
+            <p>{clickedNode ? sigma.getGraph().getNodeAttribute(clickedNode, 'description') : 'No Node Selected'}</p>
+          </div>
+          <div>
+            <h3 className={cn('font-bold break-words', selectedNodeColorProperty ? '' : 'italic')}>
+              {selectedNodeColorProperty || 'Not Selected'}
+            </h3>
+            {selectedRadioNodeColor && selectedNodeColorProperty ? (
+              <p>
+                {diseaseDependentProperties.includes(selectedRadioNodeColor as DiseaseDependentProperties)
+                  ? universalData?.[clickedNode][diseaseName]?.[selectedRadioNodeColor as DiseaseDependentProperties][
+                      selectedNodeColorProperty
+                    ]
+                  : universalData?.[clickedNode].common[selectedRadioNodeColor as DiseaseIndependentProperties][
+                      selectedNodeColorProperty
+                    ]}
+              </p>
+            ) : (
+              <p className='italic'>null</p>
+            )}
+          </div>
+          <div>
+            <h3 className={cn('font-bold break-words', selectedNodeSizeProperty ? '' : 'italic')}>
+              {selectedNodeSizeProperty || 'Not Selected'}
+            </h3>
 
-  useEffect(() => {
-    setSettings({
-      renderEdgeLabels: showEdgeLabel,
-    });
-  }, [showEdgeLabel, setSettings]);
-
-  useEffect(() => {
-    if (!sigma) return;
-    sigma.getGraph().updateEachNodeAttributes((node, attr) => {
-      attr.color = defaultNodeColor;
-      return attr;
-    });
-  }, [defaultNodeColor, sigma]);
-
-  const prevNodeSize = useRef(5);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!sigma || !defaultNodeSize) return;
-    if (selectedRadioNodeSize !== 'None' && selectedNodeSizeProperty) {
-      sigma.getGraph().updateEachNodeAttributes((_, attr) => {
-        if (attr.size === 0.5) return attr;
-        if (attr.size) attr.size += (defaultNodeSize - prevNodeSize.current) / 5;
-        return attr;
-      });
-    } else {
-      sigma.getGraph().updateEachNodeAttributes((_, attr) => {
-        attr.size = defaultNodeSize;
-        return attr;
-      });
-    }
-    prevNodeSize.current = defaultNodeSize;
-  }, [defaultNodeSize, sigma]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const graph = sigma.getGraph();
-    setSettings({
-      nodeReducer(node, data) {
-        if (!data.x) data.x = Math.random() * 1000;
-        if (!data.y) data.y = Math.random() * 1000;
-        if (!data.size) data.size = defaultNodeSize;
-        if (hoveredNode) {
-          if (
-            node === hoveredNode
-            // || graph.neighbors(hoveredNode).includes(node)
-          ) {
-            data.highlighted = true;
-          } else if (!graph.neighbors(hoveredNode).includes(node)) {
-            data.color = '#E2E2E2';
-            data.highlighted = false;
-          }
-        }
-        return data;
-      },
-      edgeReducer(edge, data) {
-        if (hoveredNode) {
-          if (!graph.extremities(edge).includes(hoveredNode)) {
-            data.color = '#ccc';
-          } else {
-            data.color = defaultEdgeColor;
-          }
-        }
-        return {
-          color: data.color,
-          forceLabel: data.forceLabel,
-          hidden: data.hidden,
-          label: data.score?.toString(),
-          size: data.size,
-        };
-      },
-    });
-  }, [defaultEdgeColor, hoveredNode, setSettings, sigma]);
-
-  const exportFormat = useStore(state => state.exportFormat);
-  const projectTitle = useStore(state => state.projectTitle);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!exportFormat || !sigma) return;
-    if (exportFormat === 'json') {
-      const serializedGraph = sigma.getGraph().export();
-      const json = JSON.stringify(serializedGraph, null, 2);
-      const element = document.createElement('a');
-      const file = new Blob([json], { type: 'application/json' });
-      element.href = URL.createObjectURL(file);
-      element.download = projectTitle;
-      document.body.appendChild(element);
-      element.click();
-      URL.revokeObjectURL(element.href);
-      element.remove();
-      return;
-    }
-    downloadAsImage(sigma, {
-      format: exportFormat,
-      fileName: projectTitle,
-      backgroundColor: 'white',
-    });
-  }, [exportFormat]);
-
-  return null;
+            {selectedRadioNodeSize && selectedNodeSizeProperty ? (
+              <p>
+                {diseaseDependentProperties.includes(selectedRadioNodeSize as DiseaseDependentProperties)
+                  ? universalData?.[clickedNode][diseaseName]?.[selectedRadioNodeSize as DiseaseDependentProperties][
+                      selectedNodeSizeProperty
+                    ]
+                  : universalData?.[clickedNode].common[selectedRadioNodeSize as DiseaseIndependentProperties][
+                      selectedNodeSizeProperty
+                    ]}
+              </p>
+            ) : (
+              <p className='italic'>null</p>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
 }

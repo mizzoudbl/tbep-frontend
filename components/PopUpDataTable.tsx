@@ -1,11 +1,10 @@
-import type { PopUpDataTableProps, SelectedNodeProperty } from '@/lib/interface';
-import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Download } from 'lucide-react';
+import type { PopUpDataTableProps } from '@/lib/interface';
+import { Download } from 'lucide-react';
 import { Button } from './ui/button';
 import { DataTable } from './ui/data-table';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
 
-export default function PopUpDataTable({ data, open = false, setOpen }: PopUpDataTableProps) {
+export default function PopUpDataTable<E>({ data, columns, open = false, setOpen }: PopUpDataTableProps<E>) {
   /**
    * Function to download the selected genes data as a JSON file
    */
@@ -20,45 +19,6 @@ export default function PopUpDataTable({ data, open = false, setOpen }: PopUpDat
     URL.revokeObjectURL(element.href);
     element.remove();
   };
-
-  /**
-   * Columns for the data table
-   */
-  const columns: ColumnDef<SelectedNodeProperty>[] = [
-    {
-      accessorKey: 'Gene_Name',
-      header({ column }) {
-        return (
-          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Gene Name
-            <ArrowUpDown className='ml-2 h-4 w-4' />
-          </Button>
-        );
-      },
-    },
-    {
-      accessorKey: 'ID',
-      header(props) {
-        return (
-          <Button variant='ghost' onClick={() => props.column.toggleSorting(props.column.getIsSorted() === 'asc')}>
-            ENSG ID
-            <ArrowUpDown className='ml-2 h-4 w-4' />
-          </Button>
-        );
-      },
-    },
-    {
-      accessorKey: 'Description',
-      header(props) {
-        return (
-          <Button variant='ghost' onClick={() => props.column.toggleSorting(props.column.getIsSorted() === 'asc')}>
-            Description
-            <ArrowUpDown className='ml-2 h-4 w-4' />
-          </Button>
-        );
-      },
-    },
-  ];
 
   return (
     <Dialog open={open}>

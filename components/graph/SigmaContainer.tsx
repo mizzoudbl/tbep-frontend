@@ -2,7 +2,6 @@
 
 import NodeGradientProgram from '@/lib/NodeGradientProgram';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { SigmaContainer as _SigmaContainer, type SigmaContainerProps as _SigmaContainerProps } from '@react-sigma/core';
 import { ControlsContainer, FullScreenControl, ZoomControl } from '@react-sigma/core';
 import { createNodeBorderProgram } from '@sigma/node-border';
@@ -10,19 +9,15 @@ import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import { Suspense } from 'react';
 import type { Sigma } from 'sigma';
-import { EdgeLineProgram, NodeCircleProgram } from 'sigma/rendering';
-import { drawDiscNodeHover, drawDiscNodeLabel } from 'sigma/rendering';
-import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, LoadGraph, NodeSearch, SizeAnalysis } from '.';
-import { drawHover } from './canvas-hover';
+import { EdgeLineProgram } from 'sigma/rendering';
+import { drawDiscNodeHover } from 'sigma/rendering';
+import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, GraphSettings, LoadGraph, SizeAnalysis } from '.';
+import { Button } from '../ui/button';
 
 export type SigmaContainerProps = _SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes> &
   React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null>;
 
 export function SigmaContainer(props: SigmaContainerProps) {
-  const defaultNodeColor = useStore(state => state.defaultNodeColor);
-  // const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
-  // const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
-
   return (
     <_SigmaContainer
       ref={props.ref}
@@ -38,10 +33,10 @@ export function SigmaContainer(props: SigmaContainerProps) {
             ],
           }),
         },
+        defaultNodeColor: 'blue',
         edgeProgramClasses: {
           line: EdgeLineProgram,
         },
-        defaultNodeColor,
         defaultEdgeColor: '#c5c5c5',
         labelSize: 10,
         defaultDrawNodeHover: drawDiscNodeHover,
@@ -52,11 +47,11 @@ export function SigmaContainer(props: SigmaContainerProps) {
       </Suspense>
       <GraphEvents />
       <ForceLayout />
-      <NodeSearch />
+      <GraphSettings />
       <ColorAnalysis />
       <SizeAnalysis />
       <GraphAnalysis />
-      <ControlsContainer position='bottom-right'>
+      <ControlsContainer position='bottom-right' style={{ zIndex: 0 }}>
         <ZoomControl labels={{ zoomIn: 'PLUS', zoomOut: 'MINUS', reset: 'RESET' }}>
           <ZoomIn />
           <ZoomOut />

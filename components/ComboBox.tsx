@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import type { DiseaseType } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
-export function Combobox<D, T>({
+export function Combobox<T>({
   data,
   value,
   onChange,

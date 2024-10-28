@@ -3,8 +3,10 @@
 import type { ForceSettings, GraphStore, RadialAnalysisSetting } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import type { CheckedState } from '@radix-ui/react-checkbox';
+import { ChevronsUpDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Legend, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Switch } from '../ui/switch';
@@ -45,9 +47,14 @@ export function RightSideBar() {
 
   return (
     <ScrollArea className='border-l p-2 text-xs flex flex-col h-[98vh]'>
-      <div className='mb-2 border p-2 rounded shadow'>
-        <p className='font-bold mb-2'>Network Layout</p>
-        <div className='flex flex-col gap-2'>
+      <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow'>
+        <CollapsibleTrigger asChild>
+          <div className='flex items-center justify-between w-full'>
+            <p className='font-bold cursor-pointer hover:underline'>Network Layout</p>
+            <ChevronsUpDown size={20} />
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className='flex flex-col gap-2'>
           <div className='flex items-center gap-2'>
             <Label htmlFor='network-animation-control' className='text-xs font-semibold'>
               Animation
@@ -55,8 +62,8 @@ export function RightSideBar() {
             <Switch id='network-animation-control' onCheckedChange={handleGraphAnimation} />
           </div>
           <NetworkLayout forceSettings={forceSettings} updateForceSetting={updateForceSetting} />
-        </div>
-      </div>
+        </CollapsibleContent>
+      </Collapsible>
       <NetworkStyle
         defaultNodeSize={defaultNodeSize}
         defaultNodeColor={defaultNodeColor}

@@ -48,16 +48,28 @@ export function GraphAnalysis() {
     useStore.setState({ totalEdges: edgeCount });
   }, [radialAnalysis.edgeWeightCutOff]);
 
+  const nodeDegreeProperty = useStore(state => state.radialAnalysis.nodeDegreeProperty);
+  const universalData = useStore(state => state.universalData);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     let nodeCount = 0;
     graph.updateEachNodeAttributes((node, attr) => {
-      const degree = graph.degree(node);
-      if (degree < radialAnalysis.nodeDegreeCutOff * 2) {
-        attr.hidden = true;
+      if (nodeDegreeProperty === 'geneDegree') {
+        const degree = graph.degree(node);
+        if (degree < radialAnalysis.nodeDegreeCutOff * 2) {
+          attr.hidden = true;
+        } else {
+          nodeCount++;
+          attr.hidden = false;
+        }
       } else {
-        nodeCount++;
-        attr.hidden = false;
+        const value = Number.parseFloat(universalData?.[node].common.TE[nodeDegreeProperty] ?? 'NaN');
+        if (value >= radialAnalysis.nodeDegreeCutOff) {
+          nodeCount++;
+          attr.hidden = false;
+        } else {
+          attr.hidden = true;
+        }
       }
       return attr;
     });
@@ -65,7 +77,7 @@ export function GraphAnalysis() {
       return count + (srcAttr.hidden || tgtAttr.hidden ? 0 : 1);
     }, 0);
     useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
-  }, [radialAnalysis.nodeDegreeCutOff]);
+  }, [radialAnalysis.nodeDegreeCutOff, nodeDegreeProperty]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
