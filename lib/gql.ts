@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GENE_VERIFICATION_QUERY = gql`
   query GeneVerification($geneIDs: [String!]!) {
-    getGenes(input: { geneIDs: $geneIDs }) {
+    getGenes(geneIDs: $geneIDs ) {
       ID
       Gene_name
       Description
@@ -32,12 +32,8 @@ export const GENE_GRAPH_QUERY = gql`
         Gene_name
       }
       links {
-        gene1 {
-          index
-        }
-        gene2 {
-          index
-        }
+        gene1
+        gene2
         score
       }
     }
@@ -46,7 +42,7 @@ export const GENE_GRAPH_QUERY = gql`
 
 export const GENE_UNIVERSAL_QUERY = (disease: string, common = true) => gql`
   query GeneUniversalData($geneIDs: [String!]!) {
-    getGenes(input: { geneIDs: $geneIDs }) {
+    getGenes(geneIDs: $geneIDs) {
       ID
       ${common ? 'common' : ''}
       ${disease}

@@ -156,9 +156,9 @@ export function LoadGraph() {
               },
             })),
             edges: links.map(link => ({
-              key: `${link.gene1.index}-${link.gene2.index}`,
-              source: genes[link.gene1.index].ID,
-              target: genes[link.gene2.index].ID,
+              key: `${link.gene1}-${link.gene2}`,
+              source: link.gene1,
+              target: link.gene2,
               attributes: {
                 score: link.score,
                 label: link.score.toString(),

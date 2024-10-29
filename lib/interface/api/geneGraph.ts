@@ -45,18 +45,14 @@ export interface GeneGraphData {
      */
     links: {
       /**
-       * Index of gene1 in genes array
+       * ID of gene1 in genes array
        */
-      gene1: {
-        index: number;
-      };
+      gene1: string;
 
       /**
-       * Index of gene2 in genes array
+       * ID of gene2 in genes array
        */
-      gene2: {
-        index: number;
-      };
+      gene2: string;
 
       /**
        * Combined score of the interaction

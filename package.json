@@ -1,7 +1,12 @@
 {
-  "name": "drug-target-frontend",
+  "name": "tbep-frontend",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Bhupesh Dewangan",
+    "email": "bhupeshdewangan20@gmail.com",
+    "url": "https://github.com/bhupesh98"
+  },
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
