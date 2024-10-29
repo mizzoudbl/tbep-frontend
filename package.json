@@ -16,7 +16,7 @@
     "format": "biome format --write",
     "check": "biome check --write --unsafe",
     "check:report": "biome check --reporter=summary",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "commit": "git-cz"
   },
   "dependencies": {

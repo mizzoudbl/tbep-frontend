@@ -219,7 +219,6 @@ export default function FileSheet() {
   const handleReset = () => {
     setCheckedOptions({});
     sessionStorage.removeItem('checkedOptions');
-    console.log(useStore.getState().initialRadioOptions);
     useStore.setState({
       universalData: useStore.getState().initialUniversalData,
       radioOptions: useStore.getState().initialRadioOptions,

@@ -1,6 +1,5 @@
 'use client';
 
-import { TypingAnimation } from '@/lib/hooks';
 import type { Message } from '@/lib/interface';
 import { footNotes } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
@@ -32,24 +31,55 @@ export default function ChatWindow() {
     setIsChatOpen(true);
     setIsChatInitiated(true);
 
-    const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
-      method: 'POST',
-      body: JSON.stringify({ question: inputValue }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
+    try {
+      if (process.env.NEXT_PUBLIC_LLM_BACKEND_URL === undefined) throw new Error('LLM backend URL is not defined');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/chat`, {
+        method: 'POST',
+        body: JSON.stringify({ question: inputValue }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        toast.error('Failed to fetch response from LLM', {
+          cancel: { label: 'Close', onClick() {} },
+          position: 'top-center',
+          richColors: true,
+          description: 'LLM server is not responding. Please try again later.',
+        });
+        return;
+      }
+      const { streamID } = await response.json();
+
+      const event = new EventSource(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/stream?sid=${streamID}`);
+      event.onopen = () => {
+        const llmResponse: Message = {
+          text: '',
+          sender: 'llm',
+        };
+        setIsLoading(false);
+        setIsTyping(true);
+        setMessages(prevMessages => [...prevMessages, llmResponse]);
+      };
+
+      event.onmessage = e => {
+        setMessages(prevMessages => [
+          ...prevMessages.slice(0, -1),
+          {
+            sender: 'llm',
+            text: prevMessages[prevMessages.length - 1].text + e.data,
+          },
+        ]);
+      };
+
+      event.onerror = () => {
+        setIsTyping(false);
+        event.close();
+      };
+    } catch (error) {
       toast.error('Failed to fetch response from LLM');
       return;
     }
-    const llmResponse: Message = {
-      text: footNotes(await response.text()),
-      sender: 'llm',
-    };
-    setIsLoading(false);
-    setIsTyping(true);
-    setMessages(prevMessages => [...prevMessages, llmResponse]);
   };
 
   const handleDeleteMessages = () => {
@@ -123,9 +153,7 @@ export default function ChatWindow() {
                       message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   >
-                    {message.sender === 'llm' && index === messages.length - 1 && isTyping ? (
-                      <TypingAnimation setIsTyping={setIsTyping} text={message.text} />
-                    ) : message.sender === 'llm' ? (
+                    {message.sender === 'llm' ? (
                       <Markdown>{message.text}</Markdown>
                     ) : (
                       <pre className='whitespace-pre-wrap'>{message.text}</pre>

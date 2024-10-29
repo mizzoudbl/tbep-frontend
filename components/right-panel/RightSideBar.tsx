@@ -36,7 +36,7 @@ export function RightSideBar() {
     });
   };
 
-  const updateRadialAnalysis = (value: number, key: keyof RadialAnalysisSetting) => {
+  const updateRadialAnalysis = (value: number | string, key: keyof RadialAnalysisSetting) => {
     useStore.setState({ radialAnalysis: { ...radialAnalysis, [key]: value } });
   };
 

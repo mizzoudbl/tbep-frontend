@@ -1,4 +1,3 @@
-import { TypingAnimation } from '@/lib/hooks';
 import type { Message } from '@/lib/interface';
 import { motion } from 'framer-motion';
 import { Send, Trash2 } from 'lucide-react';
@@ -29,7 +28,8 @@ export default function Chat() {
     setIsChatOpen(true);
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_LLM_BACKEND_URL as string, {
+      if (process.env.NEXT_PUBLIC_LLM_BACKEND_URL === undefined) throw new Error('LLM backend URL is not defined');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/chat`, {
         method: 'POST',
         body: JSON.stringify({ question: inputValue }),
         headers: {
@@ -45,13 +45,33 @@ export default function Chat() {
         });
         return;
       }
-      const llmResponse: Message = {
-        text: await response.text(),
-        sender: 'llm',
+      const { streamID } = await response.json();
+
+      const event = new EventSource(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/stream?sid=${streamID}`);
+      event.onopen = () => {
+        const llmResponse: Message = {
+          text: '',
+          sender: 'llm',
+        };
+        setIsLoading(false);
+        setIsTyping(true);
+        setMessages(prevMessages => [...prevMessages, llmResponse]);
       };
-      setIsLoading(false);
-      setIsTyping(true);
-      setMessages(prevMessages => [...prevMessages, llmResponse]);
+
+      event.onmessage = e => {
+        setMessages(prevMessages => [
+          ...prevMessages.slice(0, -1),
+          {
+            sender: 'llm',
+            text: prevMessages[prevMessages.length - 1].text + e.data,
+          },
+        ]);
+      };
+
+      event.onerror = () => {
+        setIsTyping(false);
+        event.close();
+      };
     } catch (error) {
       toast.error('Failed to fetch response from LLM');
       return;
@@ -67,7 +87,6 @@ export default function Chat() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     if (chatRef.current) {
-      console.log('scrolling');
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
       window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
     }
@@ -76,49 +95,44 @@ export default function Chat() {
   return (
     <div className='rounded-lg shadow-md mt-4 p-4'>
       {isChatOpen && (
-        <>
-          <div className=' p-2 space-y-2'>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className='flex justify-between pb-2 border-b'>
-                Chat with LLM
-                <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
-                  <Trash2 className='w-5 h-5' />
-                </button>
-              </div>
-              <div ref={chatRef} className='max-h-[70vh] overflow-y-scroll p-2 space-y-2'>
-                {messages.map((message, index) => (
+        <div className=' p-2 space-y-2'>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className='flex justify-between pb-2 border-b'>
+              Chat with LLM
+              <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
+                <Trash2 className='w-5 h-5' />
+              </button>
+            </div>
+            <div ref={chatRef} className='max-h-[70vh] overflow-y-scroll p-2 space-y-2'>
+              {messages.map((message, index) => (
+                <div
+                  key={`${index}-${message.sender}`}
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
                   <div
-                    key={`${index}-${message.sender}`}
-                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`max-w-full px-4 py-1 rounded-lg ${
+                      message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                    }`}
                   >
-                    <div
-                      className={`max-w-full px-4 py-1 rounded-lg ${
-                        message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
-                      }`}
-                    >
-                      {message.sender === 'llm' && index === messages.length - 1 && isTyping ? (
-                        <TypingAnimation setIsTyping={setIsTyping} text={message.text} />
-                      ) : message.sender === 'llm' ? (
-                        <Markdown>{message.text}</Markdown>
-                      ) : (
-                        <pre className='whitespace-pre-wrap'>{message.text}</pre>
-                      )}
-                    </div>
+                    {message.sender === 'llm' ? (
+                      <Markdown>{message.text}</Markdown>
+                    ) : (
+                      <pre className='whitespace-pre-wrap'>{message.text}</pre>
+                    )}
                   </div>
-                ))}
-                {isLoading && (
-                  <div className='flex justify-start'>
-                    <div className='bg-gray-200 rounded-lg p-4 max-w-xs w-full'>
-                      <Skeleton className='h-4 bg-gray-300 w-3/4 mb-2 ' />
-                      <Skeleton className='h-4 bg-gray-300 w-1/2 ' />
-                    </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className='flex justify-start'>
+                  <div className='bg-gray-200 rounded-lg p-4 max-w-xs w-full'>
+                    <Skeleton className='h-4 bg-gray-300 w-3/4 mb-2 ' />
+                    <Skeleton className='h-4 bg-gray-300 w-1/2 ' />
                   </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-          <hr />
-        </>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
       )}
       <div className='flex items-center space-x-2'>
         <Textarea
