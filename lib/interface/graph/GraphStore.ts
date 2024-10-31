@@ -142,6 +142,11 @@ export interface GraphStore {
    * Selected Node Color Property
    */
   selectedNodeColorProperty: string;
+
+  /**
+   * Map of Gene Name to Gene ID
+   */
+  geneNameToID: Map<string, string>;
 }
 
 export type RadioOptions = Record<NodeColorType | NodeSizeType, Array<string>>;

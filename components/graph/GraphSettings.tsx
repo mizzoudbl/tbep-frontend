@@ -37,12 +37,10 @@ export function GraphSettings() {
   }, [showEdgeLabel, setSettings]);
 
   useEffect(() => {
-    if (!sigma) return;
-    sigma.getGraph().updateEachNodeAttributes((node, attr) => {
-      attr.color = defaultNodeColor;
-      return attr;
+    setSettings({
+      defaultNodeColor,
     });
-  }, [defaultNodeColor, sigma]);
+  }, [defaultNodeColor, setSettings]);
 
   const prevNodeSize = useRef(5);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

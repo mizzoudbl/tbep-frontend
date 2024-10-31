@@ -1,17 +1,40 @@
 'use client';
 
-import { columnSelectedNodes } from '@/lib/data';
+import { columnGseaResults, columnSelectedNodes } from '@/lib/data';
+import type { Gsea } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { toast } from 'sonner';
 import PopUpDataTable from '../PopUpDataTable';
 import { Button } from '../ui/button';
 
 export function NetworkInfo() {
   const totalNodes = useStore(state => state.totalNodes);
   const totalEdges = useStore(state => state.totalEdges);
-
   const selectedNodes = useStore(state => state.selectedNodes);
   const [showTable, setShowTable] = React.useState(false);
+  const [gseaData, setGseaData] = React.useState<Array<Gsea>>([]);
+
+  useEffect(() => {
+    if (selectedNodes.length === 0) return;
+    (async () => {
+      const geneNames = selectedNodes.map(node => node.Gene_Name).join(',');
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL}/gsea?gene_list=${encodeURIComponent(geneNames)}`,
+      );
+      if (!response.ok) {
+        toast.error('Failed to fetch GSEA data', {
+          cancel: { label: 'Close', onClick() {} },
+          position: 'top-center',
+          richColors: true,
+          description: 'Server not available,Please try again later',
+        });
+        return;
+      }
+      const data: Array<Gsea> = await response.json();
+      setGseaData(data);
+    })();
+  }, [selectedNodes]);
 
   return (
     <div className='mb-2 border p-2 rounded shadow text-xs'>
@@ -30,7 +53,15 @@ export function NetworkInfo() {
         >
           Show Details
         </Button>
-        <PopUpDataTable data={selectedNodes} columns={columnSelectedNodes} open={showTable} setOpen={setShowTable} />
+        <PopUpDataTable
+          data={[selectedNodes, gseaData]}
+          columns={[columnSelectedNodes, columnGseaResults]}
+          dialogTitle={'Selected Genes'}
+          tabsTitle={['Details', 'GSEA Analysis']}
+          open={showTable}
+          setOpen={setShowTable}
+          filterColumnNames={['Gene_Name', 'Gene_set']}
+        />
       </div>
     </div>
   );

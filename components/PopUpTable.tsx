@@ -52,11 +52,11 @@ export default function PopUpTable({
             <TabsContent value='found'>
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className='font-bold'>S. No.</TableHead>
-                    <TableHead className='font-bold'>ENSG ID</TableHead>
-                    <TableHead className='font-bold'>Gene Name</TableHead>
-                    <TableHead className='font-bold'>Description</TableHead>
+                  <TableRow className='font-bold'>
+                    <TableHead>S. No.</TableHead>
+                    <TableHead>ENSG ID</TableHead>
+                    <TableHead>Gene Name</TableHead>
+                    <TableHead>Description</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

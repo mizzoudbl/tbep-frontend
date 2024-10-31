@@ -38,7 +38,7 @@ export default function FileSheet() {
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(true);
   const [checkedOptions, setCheckedOptions] = React.useState<Record<string, boolean>>({});
   const diseaseName = useStore(state => state.diseaseName);
-  const [isProcessing, setIsProcessing] = React.useState(false);
+  const geneNameToID = useStore(state => state.geneNameToID);
 
   React.useEffect(() => {
     const storedShowConfirmDialog = sessionStorage.getItem('showConfirmDialog');
@@ -59,13 +59,13 @@ export default function FileSheet() {
       const request = store.getAll();
       request.onsuccess = () => {
         setUploadedFiles(request.result);
+        const checkedOptions: Record<string, boolean> = {};
+        for (const file of request.result) {
+          checkedOptions[file.name] = false;
+        }
+        setCheckedOptions(checkedOptions);
       };
     });
-
-    const storedOptions = sessionStorage.getItem('checkedOptions');
-    if (storedOptions) {
-      setCheckedOptions(JSON.parse(storedOptions));
-    }
   }, []);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +90,7 @@ export default function FileSheet() {
           richColors: true,
         });
         setUploadedFiles([...uploadedFiles, file]);
+        setCheckedOptions({ ...checkedOptions, [file.name]: true });
       };
     }
   };
@@ -129,9 +130,9 @@ export default function FileSheet() {
   };
 
   const handleUniversalUpdate = async () => {
-    setIsProcessing(true);
-    const universalData = useStore.getState().initialUniversalData ?? {};
-    const radioOptions = useStore.getState().initialRadioOptions ?? {};
+    const universalData = structuredClone(useStore.getState().initialUniversalData);
+    const radioOptions = structuredClone(useStore.getState().initialRadioOptions);
+    if (universalData === null || radioOptions === null) return;
     for (const file of uploadedFiles) {
       if (!checkedOptions[file.name]) continue;
       const store = await openDB('files', 'readonly');
@@ -161,21 +162,28 @@ export default function FileSheet() {
         try {
           // biome-ignore lint/suspicious/noExplicitAny: TODO: Make this type-safe
           for (const row of parsedData.data as any[]) {
-            if (!(row[IDHeaderName] in universalData)) continue;
+            const geneID = row[IDHeaderName].startsWith('ENSG')
+              ? row[IDHeaderName]
+              : geneNameToID.get(row[IDHeaderName]);
+            if (!geneID || !universalData[geneID]) continue;
             for (const prop in row) {
               if (prop === IDHeaderName) continue;
               if (/^logFC_/i.test(prop)) {
-                universalData[row[IDHeaderName]][diseaseName]!.logFC[prop.replace(/^logFC_/i, '')] = row[prop];
+                universalData[geneID][diseaseName]!.logFC[prop.replace(/^logFC_/i, '')] = row[prop];
               } else if (/^GDA_/i.test(prop)) {
-                universalData[row[IDHeaderName]][diseaseName]!.GDA[prop.replace(/^GDA_/i, '')] = row[prop];
-              } else if (/^GWAS_/i.test(prop)) {
-                universalData[row[IDHeaderName]][diseaseName]!.Genetics[prop.replace(/^GWAS_/i, '')] = row[prop];
+                universalData[geneID][diseaseName]!.GDA[prop.replace(/^GDA_/i, '')] = row[prop];
+              } else if (/^(GWAS|Genetics)_/i.test(prop)) {
+                universalData[geneID][diseaseName]!.Genetics[prop.replace(/^(GWAS|Genetics)_/i, '')] = row[prop];
               } else if (/^pathway_/i.test(prop)) {
-                universalData[row[IDHeaderName]].common.Pathways[prop.replace(/^pathway_/i, '')] = row[prop];
+                universalData[geneID].common.Pathways[prop.replace(/^pathway_/i, '')] = row[prop];
               } else if (/^druggability_/i.test(prop)) {
-                universalData[row[IDHeaderName]].common.Druggability[prop.replace(/^druggability_/i, '')] = row[prop];
+                universalData[geneID].common.Druggability[prop.replace(/^druggability_/i, '')] = row[prop];
+              } else if (/^TE_/i.test(prop)) {
+                universalData[geneID].common.Database[prop.replace(/^TE_/i, '')] = row[prop];
+              } else if (/^database_/i.test(prop)) {
+                universalData[geneID].common.Database[prop.replace(/^database_/i, '')] = row[prop];
               } else if (/^custom_color_/i.test(prop)) {
-                universalData[row[IDHeaderName]].common.Custom[prop.replace(/^custom_color_/i, '')] = row[prop];
+                universalData[geneID].common.Custom[prop.replace(/^custom_color_/i, '')] = row[prop];
               }
             }
           }
@@ -186,8 +194,8 @@ export default function FileSheet() {
               radioOptions.logFC.push(prop.replace(/^logFC_/i, ''));
             } else if (/^GDA_/i.test(prop)) {
               radioOptions.GDA.push(prop.replace(/^GDA_/i, ''));
-            } else if (/^GWAS_/i.test(prop)) {
-              radioOptions.Genetics.push(prop.replace(/^GWAS_/i, ''));
+            } else if (/^(GWAS|Genetics)_/i.test(prop)) {
+              radioOptions.Genetics.push(prop.replace(/^(GWAS|Genetics)_/i, ''));
             } else if (/^TE_/i.test(prop)) {
               radioOptions.TE.push(prop.replace(/^TE_/i, ''));
             } else if (/^database_/i.test(prop)) {
@@ -211,18 +219,28 @@ export default function FileSheet() {
         }
       };
     }
-
     useStore.setState({ universalData, radioOptions });
-    setIsProcessing(false);
+    toast.success('Data updated successfully', {
+      cancel: { label: 'Close', onClick() {} },
+      position: 'top-center',
+      richColors: true,
+      description: 'You can now play your uploaded data!',
+    });
   };
 
   const handleReset = () => {
-    setCheckedOptions({});
-    sessionStorage.removeItem('checkedOptions');
+    setCheckedOptions(value => {
+      const updatedCheckedOptions = { ...value };
+      for (const key in updatedCheckedOptions) {
+        updatedCheckedOptions[key] = false;
+      }
+      return updatedCheckedOptions;
+    });
     useStore.setState({
       universalData: useStore.getState().initialUniversalData,
       radioOptions: useStore.getState().initialRadioOptions,
     });
+
     toast.info('Data reset successfully', {
       cancel: { label: 'Close', onClick() {} },
       position: 'top-center',
@@ -306,14 +324,7 @@ export default function FileSheet() {
           <SheetFooter>
             <SheetTrigger asChild>
               <Button onClick={handleUniversalUpdate} className='w-full'>
-                {isProcessing ? (
-                  <div className='flex'>
-                    <Loader className='animate-spin mr-2' />
-                    Processing...
-                  </div>
-                ) : (
-                  'Submit'
-                )}
+                Submit
               </Button>
             </SheetTrigger>
           </SheetFooter>

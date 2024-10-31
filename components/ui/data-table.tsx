@@ -39,13 +39,14 @@ export function DataTable<TData>({ columns, data, filterColumnName }: DataTableP
 
   return (
     <div>
-      <div className='flex items-center py-4'>
+      <div className='flex justify-between items-center py-4 p-2'>
         <Input
-          placeholder={`Filter ${filterColumnName}s...`}
+          placeholder={`Filter ${filterColumnName.replace('_', ' ')}s...`}
           value={(table.getColumn(filterColumnName)?.getFilterValue() as string) ?? ''}
           onChange={event => table.getColumn(filterColumnName)?.setFilterValue(event.target.value)}
           className='max-w-sm'
         />
+        <span className='font-semibold italic'>Rows : {table.getFilteredRowModel().rows.length}</span>
       </div>
       <div className='rounded-md border'>
         <Table>

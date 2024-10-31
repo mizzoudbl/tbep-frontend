@@ -20,3 +20,17 @@ export interface Message {
    */
   sender: 'user' | 'llm';
 }
+
+/**
+ * GSEA data format
+ * @interface Gsea
+ */
+export interface Gsea {
+  Gene_set: string;
+  Overlap: string;
+  'P-value': string;
+  'Adjusted P-value': string;
+  'Odds Ratio': string;
+  'Combined Score': string;
+  Genes: string;
+}

@@ -169,10 +169,15 @@ export function LoadGraph() {
             graph.import(transformedData);
             circlepack.assign(graph);
             loadGraph(graph);
+            const geneNameToID = new Map<string, string>();
+            for (const gene of genes) {
+              if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
+            }
             useStore.setState({
               geneIDs: transformedData.nodes?.map(node => node.key) || [],
               totalNodes: graph.order || 0,
               totalEdges: graph.directedSize || 0,
+              geneNameToID,
             });
           }
         }

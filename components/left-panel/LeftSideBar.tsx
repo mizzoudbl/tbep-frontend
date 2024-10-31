@@ -125,10 +125,11 @@ export function LeftSideBar() {
           }
         }
         useStore.setState({
-          initialUniversalData: JSON.parse(JSON.stringify(universalData)),
-          initialRadioOptions: JSON.parse(JSON.stringify(radioOptions)),
+          initialUniversalData: structuredClone(universalData),
+          initialRadioOptions: structuredClone(radioOptions),
+          universalData,
+          radioOptions,
         });
-        useStore.setState({ universalData, radioOptions });
         toast.info(`Data for ${diseaseName} disease Loaded`, {
           cancel: { label: 'Close', onClick() {} },
           position: 'top-center',
