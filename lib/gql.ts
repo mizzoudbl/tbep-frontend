@@ -36,6 +36,7 @@ export const GENE_GRAPH_QUERY = gql`
         gene2
         score
       }
+      graphName
     }
   }
 `;

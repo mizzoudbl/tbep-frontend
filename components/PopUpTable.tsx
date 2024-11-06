@@ -1,5 +1,6 @@
 import type { PopUpTableProps } from '@/lib/interface';
 import { Download } from 'lucide-react';
+import { unparse } from 'papaparse';
 import { Button } from './ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from './ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
@@ -14,20 +15,23 @@ export default function PopUpTable({
   handleGenerateGraph,
 }: PopUpTableProps) {
   const handleDownload = (foundGenes: boolean) => {
-    let json: string;
+    let csv: string;
     if (foundGenes) {
-      json = JSON.stringify(
-        data?.getGenes.map(gene => ({ ENSG_ID: gene.ID, Gene_Name: gene.Gene_name, Description: gene.Description })),
-        null,
-        2,
+      csv = unparse(
+        data?.getGenes.map(gene => ({ ENSG_ID: gene.ID, Gene_Name: gene.Gene_name, Description: gene.Description })) ??
+          [],
       );
     } else {
-      json = JSON.stringify(geneIDs.filter(gene => !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene)));
+      csv = unparse(
+        geneIDs
+          .filter(gene => !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene))
+          .map(gene => ({ Gene: gene })),
+      );
     }
     const element = document.createElement('a');
-    const file = new Blob([json], { type: 'application/json' });
+    const file = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     element.href = URL.createObjectURL(file);
-    element.download = foundGenes ? 'found_genes.json' : 'not_found_genes.json';
+    element.download = foundGenes ? 'found_genes.csv' : 'not_found_genes.csv';
     document.body.appendChild(element);
     element.click();
     URL.revokeObjectURL(element.href);

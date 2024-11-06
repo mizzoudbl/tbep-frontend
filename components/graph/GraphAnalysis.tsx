@@ -2,9 +2,11 @@
 
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useStore } from '@/lib/store';
+import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import type { SerializedEdge, SerializedNode } from 'graphology-types';
 import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 
 export function GraphAnalysis() {
   const graph = useSigma<NodeAttributes, EdgeAttributes>().getGraph();
@@ -92,6 +94,59 @@ export function GraphAnalysis() {
       return attr;
     });
   }, [radialAnalysis.hubGeneEdgeCount]);
+
+  async function renewSession() {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/algorithm/renew-session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: localStorage.getItem('graphConfig'),
+    });
+    if (res.status === 202 || res.status === 409) return true;
+    toast.error('Failed to renew session', {
+      cancel: { label: 'Close', onClick() {} },
+      position: 'top-center',
+      richColors: true,
+      description: 'Server not available,Please try again later',
+    });
+    return false;
+  }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    eventEmitter.on(Events.ALGORITHM, async ({ name, parameters }: EventMessage[Events.ALGORITHM]) => {
+      if (name === 'None') {
+        graph.updateEachNodeAttributes((_, attr) => {
+          attr.color = undefined;
+          return attr;
+        });
+      } else if (name === 'Leiden') {
+        (async function leiden() {
+          const { resolution, weighted } = parameters;
+          const { graphName } = JSON.parse(localStorage.getItem('graphConfig') ?? '{}');
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/algorithm/leiden?graphName=${encodeURIComponent(graphName)}${resolution ? `&resolution=${resolution}` : ''}&weighted=${encodeURIComponent(!!weighted)}`,
+          );
+          if (res.ok) {
+            const data: Record<string, { name: string; genes: string[]; color: string }> = await res.json();
+            for (const community of Object.values(data)) {
+              for (const gene of community.genes) {
+                graph.setNodeAttribute(gene, 'color', community.color);
+              }
+            }
+          } else if (res.status === 404) {
+            if (await renewSession()) await leiden();
+          } else {
+            toast.error('Failed to fetch Leiden data', {
+              cancel: { label: 'Close', onClick() {} },
+              position: 'top-center',
+              richColors: true,
+              description: 'Server not available,Please try again later',
+            });
+          }
+        })();
+      }
+    });
+  }, []);
 
   return null;
 }

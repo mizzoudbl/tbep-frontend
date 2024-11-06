@@ -50,7 +50,6 @@ export function GraphEvents() {
       if (geneNames.has(node) || !graph.hasNode(node)) continue;
       graph.removeNodeAttribute(node, 'highlighted');
       graph.setNodeAttribute(node, 'type', 'circle');
-      graph.setNodeAttribute(node, 'color', defaultNodeColor);
     }
     let count = 0;
     for (const node of geneNames) {
@@ -61,7 +60,7 @@ export function GraphEvents() {
       if (++count === geneNames.size) gotoNode(node, { duration: 100 });
     }
     highlightedNodesRef.current = geneNames;
-  }, [searchNodeQuery, defaultNodeColor, gotoNode, sigma]);
+  }, [searchNodeQuery, gotoNode, sigma]);
 
   useEffect(() => {
     if (trieRef.current.size === 0) return;

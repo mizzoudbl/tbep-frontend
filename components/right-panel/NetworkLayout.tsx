@@ -31,8 +31,8 @@ export function NetworkLayout({
               onValueChange={value => updateForceSetting(value, 'linkDistance')}
             />
           </div>
-          <TooltipContent>
-            <p>Increases or decreases the pull towards the center of the graph</p>
+          <TooltipContent align='end'>
+            <p>Distance between connected nodes</p>
           </TooltipContent>
         </Tooltip>
         <Input
@@ -63,8 +63,8 @@ export function NetworkLayout({
               onValueChange={value => updateForceSetting(value, 'chargeStrength')}
             />
           </div>
-          <TooltipContent>
-            <p>Negative is repulsion strength and positive is attraction strength between nodes</p>
+          <TooltipContent className='max-w-60' align='end'>
+            <b>Negative</b> is repulsion strength and <b>positive</b> is attraction strength between nodes
           </TooltipContent>
         </Tooltip>
         <Input

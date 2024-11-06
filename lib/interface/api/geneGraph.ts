@@ -59,5 +59,10 @@ export interface GeneGraphData {
        */
       score: number;
     }[];
+
+    /**
+     * Name of the graph
+     */
+    graphName: string;
   };
 }

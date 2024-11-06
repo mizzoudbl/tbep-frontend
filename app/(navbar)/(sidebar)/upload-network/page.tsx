@@ -134,7 +134,7 @@ export default function UploadFile() {
               type='file'
               accept='.csv,.json'
               onChange={handleFileChange}
-              className='border-2 hover:border-dashed cursor-pointer'
+              className='border-2 hover:border-dashed cursor-pointer h-9'
             />
           </div>
           <Button type='submit' className='w-full bg-teal-600 hover:bg-teal-700 text-white'>

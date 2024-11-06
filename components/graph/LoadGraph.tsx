@@ -145,7 +145,9 @@ export function LoadGraph() {
           return;
         }
         if (response) {
-          const { genes, links } = response.getGeneInteractions;
+          const { genes, links, graphName } = response.getGeneInteractions;
+          // store graphName in JSON in graphConfig key in localStorage
+          localStorage.setItem('graphConfig', JSON.stringify({ ...variable, graphName }));
           const transformedData: Partial<SerializedGraph<NodeAttributes, EdgeAttributes>> = {
             nodes: genes.map(gene => ({
               key: gene.ID,

@@ -56,5 +56,6 @@ export const columnGseaResults: ColumnDef<Gsea>[] = [
   {
     accessorKey: 'Genes',
     header: headerHelper('Genes'),
+    meta: { wordBreak: 'break-word' },
   },
 ];

@@ -1,6 +1,7 @@
 import type { PopUpDataTableProps } from '@/lib/interface';
 import { cn } from '@/lib/utils';
 import { Download } from 'lucide-react';
+import { unparse } from 'papaparse';
 import { Button } from './ui/button';
 import { DataTable } from './ui/data-table';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
@@ -17,14 +18,14 @@ export default function PopUpDataTable<E, F>({
   tabsTitle,
 }: PopUpDataTableProps<E, F>) {
   /**
-   * Function to download the selected genes data as a JSON file
+   * Function to download the selected genes data as a CSV file
    */
   const handleDownload = (fileName?: string) => {
-    const json = JSON.stringify(data, null, 2);
+    const csv = unparse<E | F>(data[tabsTitle?.indexOf(fileName ?? tabsTitle[0]) ?? 0]);
     const element = document.createElement('a');
-    const file = new Blob([json], { type: 'application/json' });
+    const file = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     element.href = URL.createObjectURL(file);
-    if (fileName) element.download = `${fileName}.json`;
+    if (fileName) element.download = `${fileName}.csv`;
     document.body.appendChild(element);
     element.click();
     URL.revokeObjectURL(element.href);

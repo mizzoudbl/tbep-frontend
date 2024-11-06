@@ -1,6 +1,6 @@
 import type { GraphStore } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { ChevronsUpDown } from 'lucide-react';
+import { ChevronsUpDown, Info } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { ColorPicker } from '../ui/color-picker';
@@ -38,27 +38,20 @@ export function NetworkStyle({
       </CollapsibleTrigger>
       <CollapsibleContent className='flex flex-col gap-2'>
         <div className='flex space-x-2 items-center'>
-          <Tooltip>
-            <div className='flex flex-col space-y-2 w-full mt-2'>
-              <TooltipTrigger asChild>
-                <Label htmlFor='defaultNodeSize' className='text-xs font-semibold'>
-                  Node Size
-                </Label>
-              </TooltipTrigger>
-              <Slider
-                id='defaultNodeSize'
-                className='w-full'
-                min={1}
-                max={50}
-                step={1}
-                value={[defaultNodeSize]}
-                onValueChange={value => handleDefaultChange(value?.[0], 'defaultNodeSize')}
-              />
-            </div>
-            <TooltipContent>
-              <p>Change the size of the nodes in the network</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className='flex flex-col space-y-2 w-full mt-2'>
+            <Label htmlFor='defaultNodeSize' className='text-xs font-semibold'>
+              Node Size
+            </Label>
+            <Slider
+              id='defaultNodeSize'
+              className='w-full'
+              min={1}
+              max={50}
+              step={1}
+              value={[defaultNodeSize]}
+              onValueChange={value => handleDefaultChange(value?.[0], 'defaultNodeSize')}
+            />
+          </div>
           <Input
             type='number'
             className='w-16 h-8'
@@ -87,8 +80,8 @@ export function NetworkStyle({
                 onValueChange={value => handleDefaultChange(value?.[0], 'defaultlabelDensity')}
               />
             </div>
-            <TooltipContent>
-              <p>Change till how far label should be visible</p>
+            <TooltipContent className='max-w-60' align='end'>
+              <p>Change the density of the node/edge labels in the network</p>
             </TooltipContent>
           </Tooltip>
           <Input
@@ -109,8 +102,16 @@ export function NetworkStyle({
               checked={showEdgeLabel}
               onCheckedChange={checked => handleCheckBox(checked, 'showEdgeLabel')}
             />
-            <Label htmlFor='showEdgeLabel' className='text-xs font-semibold'>
+            <Label htmlFor='showEdgeLabel' className='text-xs font-semibold flex gap-1'>
               Show Edge Label
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size={16} />
+                </TooltipTrigger>
+                <TooltipContent className='max-w-52' align='end'>
+                  For larger graphs, it is recommended to zoom before turn on edge labels to improve performance
+                </TooltipContent>
+              </Tooltip>
             </Label>
           </div>
           <div className='flex items-center gap-2'>

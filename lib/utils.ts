@@ -1,3 +1,4 @@
+import EventEmitter from 'node:events';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -117,3 +118,14 @@ export function footNotes(text: string): string {
     })
     .join('**References:**');
 }
+
+export const eventEmitter = new EventEmitter();
+export enum Events {
+  ALGORITHM = 'algorithm',
+}
+export type EventMessage = {
+  [Events.ALGORITHM]: {
+    name: string;
+    parameters: Record<string, string>;
+  };
+};

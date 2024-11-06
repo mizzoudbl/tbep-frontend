@@ -24,9 +24,9 @@ export default function History({
       JSON.stringify({
         geneIDs: configFromHistory.geneIDs,
         diseaseMap: configFromHistory.diseaseMap,
-        order: configFromHistory.order,
+        order: +configFromHistory.order,
         interactionType: configFromHistory.interactionType,
-        minScore: configFromHistory.minScore,
+        minScore: +configFromHistory.minScore,
       }),
     );
     window.open('/network', '_blank', 'noopener,noreferrer');

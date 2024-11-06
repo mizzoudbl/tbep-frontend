@@ -153,11 +153,7 @@ export default function ChatWindow() {
                       message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   >
-                    {message.sender === 'llm' ? (
-                      <Markdown>{message.text}</Markdown>
-                    ) : (
-                      <pre className='whitespace-pre-wrap'>{message.text}</pre>
-                    )}
+                    <Markdown>{message.text}</Markdown>
                   </div>
                 </div>
               ))}

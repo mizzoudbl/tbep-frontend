@@ -4,8 +4,7 @@ import type { ForceSettings, GraphStore, RadialAnalysisSetting } from '@/lib/int
 import { useStore } from '@/lib/store';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronsUpDown } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Legend, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
+import { AlgorithmicAnalysis, Legend, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
@@ -59,7 +58,7 @@ export function RightSideBar() {
             <Label htmlFor='network-animation-control' className='text-xs font-semibold'>
               Animation
             </Label>
-            <Switch id='network-animation-control' onCheckedChange={handleGraphAnimation} />
+            <Switch id='network-animation-control' defaultChecked onCheckedChange={handleGraphAnimation} />
           </div>
           <NetworkLayout forceSettings={forceSettings} updateForceSetting={updateForceSetting} />
         </CollapsibleContent>
@@ -74,6 +73,7 @@ export function RightSideBar() {
         handleDefaultChange={handleDefaultChange}
         handleCheckBox={handleCheckBox}
       />
+      <AlgorithmicAnalysis />
       <RadialAnalysis value={radialAnalysis} onChange={updateRadialAnalysis} />
       <NetworkInfo />
       <Legend />

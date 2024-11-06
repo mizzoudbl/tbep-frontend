@@ -6,3 +6,4 @@ export * from './navBarLinks';
 export * from './radialAnalysisOptions';
 export * from './team';
 export * from './datatable-column';
+export * from './algorithm';

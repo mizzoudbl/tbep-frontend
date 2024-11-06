@@ -124,9 +124,9 @@ export default function Home() {
       JSON.stringify({
         geneIDs: seedGenes,
         diseaseMap: formData.diseaseMap,
-        order: formData.order,
+        order: +formData.order,
         interactionType: formData.interactionType,
-        minScore: formData.minScore,
+        minScore: +formData.minScore,
       }),
     );
     const newHistory = [
@@ -217,7 +217,7 @@ FIG4`,
                     id='seedFile'
                     type='file'
                     accept='.txt'
-                    className='border-2 hover:border-dashed cursor-pointer'
+                    className='border-2 hover:border-dashed cursor-pointer h-9'
                     onChange={handleFileRead}
                   />
                 </div>
