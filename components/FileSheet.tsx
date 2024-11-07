@@ -84,11 +84,6 @@ export default function FileSheet() {
       const request = store.put(file, file.name);
       request.onerror = ev => console.error(ev);
       request.onsuccess = () => {
-        toast.success('File uploaded successfully', {
-          cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
-        });
         setUploadedFiles([...uploadedFiles, file]);
         setCheckedOptions({ ...checkedOptions, [file.name]: true });
       };

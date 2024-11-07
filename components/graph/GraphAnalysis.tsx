@@ -134,7 +134,24 @@ export function GraphAnalysis() {
               }
             }
           } else if (res.status === 404) {
-            if (await renewSession()) await leiden();
+            // biome-ignore lint/suspicious/noAsyncPromiseExecutor: <explanation>
+            toast.promise(
+              new Promise<void>(async (resolve, reject) => {
+                const res = await renewSession();
+                if (res) {
+                  resolve();
+                  await leiden();
+                } else {
+                  reject();
+                }
+              }),
+              {
+                success: 'Session renewed',
+                loading: 'Session expired, renewing...',
+                error: 'Failed to renew session',
+                description: 'This may take a while, please be patient',
+              },
+            );
           } else {
             toast.error('Failed to fetch Leiden data', {
               cancel: { label: 'Close', onClick() {} },

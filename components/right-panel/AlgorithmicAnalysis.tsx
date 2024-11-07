@@ -7,7 +7,6 @@ import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { Slider } from '../ui/slider';
 import SliderWithInput from './SliderWithInput';
 
 export function AlgorithmicAnalysis() {
