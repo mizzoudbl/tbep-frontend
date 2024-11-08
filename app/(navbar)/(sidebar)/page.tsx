@@ -53,13 +53,7 @@ export default function Home() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { seedGenes } = formData;
-    const geneIDs = distinct(
-      seedGenes.split(/[,|\n]/).map(gene => {
-        gene = gene.trim();
-        if (!/C\d+orf\d+/.test(gene)) gene = gene.toUpperCase();
-        return gene;
-      }),
-    ).filter(Boolean);
+    const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim().toUpperCase())).filter(Boolean);
     if (geneIDs.length < 2)
       toast.error('Please enter at least 2 genes', {
         cancel: { label: 'Close', onClick() {} },
