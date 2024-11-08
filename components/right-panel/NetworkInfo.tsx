@@ -21,6 +21,9 @@ export function NetworkInfo() {
       const geneNames = selectedNodes.map(node => node.Gene_Name).join(',');
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL}/gsea?gene_list=${encodeURIComponent(geneNames)}`,
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        },
       );
       if (!response.ok) {
         toast.error('Failed to fetch GSEA data', {

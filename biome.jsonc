@@ -41,10 +41,12 @@
         "noCommaOperator": "off",
         "useSingleVarDeclarator": "off",
         "useShorthandAssign": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useNodejsImportProtocol": "info"
       },
       "suspicious": {
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noAsyncPromiseExecutor": "off"
       }
     },
     "ignore": ["**/node_modules/**"]

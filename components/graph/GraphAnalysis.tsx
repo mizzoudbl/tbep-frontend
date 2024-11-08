@@ -125,6 +125,9 @@ export function GraphAnalysis() {
           const { graphName } = JSON.parse(localStorage.getItem('graphConfig') ?? '{}');
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/algorithm/leiden?graphName=${encodeURIComponent(graphName)}${resolution ? `&resolution=${resolution}` : ''}&weighted=${encodeURIComponent(!!weighted)}`,
+            {
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            },
           );
           if (res.ok) {
             const data: Record<string, { name: string; genes: string[]; color: string }> = await res.json();
@@ -134,8 +137,8 @@ export function GraphAnalysis() {
               }
             }
           } else if (res.status === 404) {
-            // biome-ignore lint/suspicious/noAsyncPromiseExecutor: <explanation>
             toast.promise(
+              // biome-ignore lint/suspicious/noAsyncPromiseExecutor: <explanation>
               new Promise<void>(async (resolve, reject) => {
                 const res = await renewSession();
                 if (res) {
