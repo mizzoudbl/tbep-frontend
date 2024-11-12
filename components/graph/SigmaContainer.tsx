@@ -12,7 +12,6 @@ import type { Sigma } from 'sigma';
 import { EdgeLineProgram } from 'sigma/rendering';
 import { drawDiscNodeHover } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, GraphSettings, LoadGraph, SizeAnalysis } from '.';
-import { Button } from '../ui/button';
 
 export type SigmaContainerProps = _SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes> &
   React.RefAttributes<Sigma<NodeAttributes, EdgeAttributes, Attributes> | null>;
@@ -33,12 +32,9 @@ export function SigmaContainer(props: SigmaContainerProps) {
             ],
           }),
         },
-        defaultNodeColor: 'blue',
         edgeProgramClasses: {
           line: EdgeLineProgram,
         },
-        defaultEdgeColor: '#c5c5c5',
-        labelSize: 10,
         defaultDrawNodeHover: drawDiscNodeHover,
       }}
     >

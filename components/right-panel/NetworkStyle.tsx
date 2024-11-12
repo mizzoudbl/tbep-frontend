@@ -11,7 +11,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function NetworkStyle({
   defaultNodeSize,
-  defaultlabelDensity,
+  defaultLabelDensity,
+  defaultLabelSize,
   showEdgeLabel,
   showEdgeColor,
   defaultNodeColor,
@@ -20,7 +21,8 @@ export function NetworkStyle({
   handleCheckBox,
 }: {
   defaultNodeSize: number;
-  defaultlabelDensity: number;
+  defaultLabelDensity: number;
+  defaultLabelSize: number;
   showEdgeLabel: boolean;
   showEdgeColor: boolean;
   defaultNodeColor: string;
@@ -38,7 +40,7 @@ export function NetworkStyle({
       </CollapsibleTrigger>
       <CollapsibleContent className='flex flex-col gap-2'>
         <div className='flex space-x-2 items-center'>
-          <div className='flex flex-col space-y-2 w-full mt-2'>
+          <div className='flex flex-col space-y-1 w-full'>
             <Label htmlFor='defaultNodeSize' className='text-xs font-semibold'>
               Node Size
             </Label>
@@ -63,21 +65,46 @@ export function NetworkStyle({
           />
         </div>
         <div className='flex space-x-2 items-center'>
+          <div className='flex flex-col space-y-1 w-full'>
+            <Label htmlFor='defaultLabelSize' className='text-xs font-semibold'>
+              Node Label Size
+            </Label>
+            <Slider
+              id='defaultLabelSize'
+              className='w-full'
+              min={1}
+              max={25}
+              step={1}
+              value={[defaultLabelSize]}
+              onValueChange={value => handleDefaultChange(value?.[0], 'defaultLabelSize')}
+            />
+          </div>
+          <Input
+            type='number'
+            className='w-16 h-8'
+            min={1}
+            max={50}
+            step={1}
+            value={defaultLabelSize}
+            onChange={e => handleDefaultChange(Number.parseInt(e.target.value), 'defaultLabelSize')}
+          />
+        </div>
+        <div className='flex space-x-2 items-center'>
           <Tooltip>
-            <div className='flex flex-col space-y-2 w-full'>
+            <div className='flex flex-col space-y-1 w-full'>
               <TooltipTrigger asChild>
-                <Label htmlFor='defaultlabelDensity' className='text-xs font-semibold'>
+                <Label htmlFor='defaultLabelDensity' className='text-xs font-semibold'>
                   Label Density
                 </Label>
               </TooltipTrigger>
               <Slider
-                id='defaultlabelDensity'
+                id='defaultLabelDensity'
                 className='w-full'
                 min={0.1}
                 max={10}
                 step={0.1}
-                value={[defaultlabelDensity]}
-                onValueChange={value => handleDefaultChange(value?.[0], 'defaultlabelDensity')}
+                value={[defaultLabelDensity]}
+                onValueChange={value => handleDefaultChange(value?.[0], 'defaultLabelDensity')}
               />
             </div>
             <TooltipContent className='max-w-60' align='end'>
@@ -90,8 +117,8 @@ export function NetworkStyle({
             min={1}
             max={50}
             step={1}
-            value={defaultlabelDensity}
-            onChange={e => handleDefaultChange(Number.parseFloat(e.target.value), 'defaultlabelDensity')}
+            value={defaultLabelDensity}
+            onChange={e => handleDefaultChange(Number.parseFloat(e.target.value), 'defaultLabelDensity')}
           />
         </div>
         <hr />
@@ -126,9 +153,9 @@ export function NetworkStyle({
           </div>
         </div>
         <hr />
-        <div className='flex flex-col xl:flex-row gap-2'>
+        <div className='flex flex-col lg:flex-row gap-2'>
           <Tooltip>
-            <div className='flex flex-col space-y-1 xl:w-1/2'>
+            <div className='flex flex-col space-y-1 lg:w-1/2'>
               <TooltipTrigger asChild>
                 <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
                   Node Color
@@ -141,7 +168,7 @@ export function NetworkStyle({
             </TooltipContent>
           </Tooltip>
           <Tooltip>
-            <div className='flex flex-col space-y-1 xl:w-1/2'>
+            <div className='flex flex-col space-y-1 lg:w-1/2'>
               <TooltipTrigger asChild>
                 <Label htmlFor='defaultEdgeColor' className='text-xs font-semibold'>
                   Edge Color

@@ -30,9 +30,9 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
           <ChevronsUpDown size={20} />
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className='flex flex-col gap-2 mt-2'>
+      <CollapsibleContent className='flex flex-col gap-1'>
         {radialAnalysisOptions.map((option, idx) => (
-          <div key={option.key} className='space-y-2'>
+          <div key={option.key} className='space-y-1'>
             <div className='flex space-x-2 items-center'>
               <Tooltip>
                 <div className='flex flex-col space-y-2 w-full'>
@@ -43,7 +43,6 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                   </TooltipTrigger>
                   <Slider
                     id={option.key}
-                    className='w-full'
                     min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
                     max={option.max}
                     step={option.step}
@@ -76,7 +75,7 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
               </Tooltip>
               <Input
                 type='number'
-                className='w-16 h-8'
+                className='w-14'
                 min={option.min}
                 max={option.max}
                 step={option.step}

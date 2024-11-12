@@ -9,8 +9,7 @@ import { Label } from '@/components/ui/label';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { diseaseMap } from '@/lib/data';
-import { interactionType } from '@/lib/data';
+import { graphConfig } from '@/lib/data';
 import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables, GraphConfigForm } from '@/lib/interface';
 import { useStore } from '@/lib/store';
@@ -29,7 +28,7 @@ export default function Home() {
     diseaseMap: 'PSP',
     order: '0',
     interactionType: 'PPI',
-    minScore: '0.7',
+    minScore: '0.9',
   });
   const [history, setHistory] = React.useState<HistoryItem[]>([]);
 
@@ -221,68 +220,24 @@ FIG4`,
                     onChange={handleFileRead}
                   />
                 </div>
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                  <div>
-                    <Label htmlFor='diseaseMap'>Disease Map</Label>
-                    <Select required value={formData.diseaseMap} onValueChange={val => handleSelect(val, 'diseaseMap')}>
-                      <SelectTrigger id='diseaseMap'>
-                        <SelectValue placeholder='Select disease map' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {diseaseMap.map(value => (
-                          <SelectItem key={value} value={value}>
-                            {value}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor='order'>Order</Label>
-                    <Select required value={formData.order} onValueChange={val => handleSelect(val, 'order')}>
-                      <SelectTrigger id='order'>
-                        <SelectValue placeholder='Select order' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='0'>Zero</SelectItem>
-                        <SelectItem value='1'>First</SelectItem>
-                        <SelectItem value='2'>Second</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor='interactionType'>Interaction Type</Label>
-                    <Select
-                      required
-                      value={formData.interactionType}
-                      onValueChange={val => handleSelect(val, 'interactionType')}
-                    >
-                      <SelectTrigger id='interactionType'>
-                        <SelectValue placeholder='Select interaction type' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {interactionType.map(({ value, label }) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor='minScore'>Min interaction score</Label>
-                    <Select required value={formData.minScore} onValueChange={val => handleSelect(val, 'minScore')}>
-                      <SelectTrigger id='minScore'>
-                        <SelectValue placeholder='Select min score' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='0.9'>Highest (0.9)</SelectItem>
-                        <SelectItem value='0.7'>High (0.7)</SelectItem>
-                        <SelectItem value='0.4'>Medium (0.4)</SelectItem>
-                        <SelectItem value='0.15'>Low (0.15)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                  {graphConfig.map(config => (
+                    <div key={config.id}>
+                      <Label htmlFor={config.id}>{config.name}</Label>
+                      <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
+                        <SelectTrigger id={config.id}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {config.options.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  ))}
                 </div>
                 <center>
                   <Button type='submit' className='w-3/4 bg-teal-600 hover:bg-teal-700 text-white'>

@@ -22,11 +22,14 @@ export default function NetworkPage() {
     <SigmaContainer
       settings={{
         enableEdgeEvents: true,
-        defaultEdgeColor: 'gray',
         zIndex: true,
         defaultNodeType: 'circle',
         labelRenderedSizeThreshold: 0.75,
         labelDensity: 0.2,
+        defaultEdgeColor: '#c5c5c5',
+        labelSize: 10,
+        defaultNodeColor: 'blue',
+        zoomingRatio: 1.4,
       }}
     />
   );

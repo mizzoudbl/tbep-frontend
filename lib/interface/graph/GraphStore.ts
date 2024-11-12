@@ -50,12 +50,17 @@ export interface GraphStore {
   /**
    * Default label rendered size threshold
    */
-  defaultlabelDensity: number;
+  defaultLabelDensity: number;
 
   /**
    * Default edge color of the graph
    */
   defaultEdgeColor: string;
+
+  /**
+   * Default label size of the graph
+   */
+  defaultLabelSize: number;
 
   /**
    * Selected nodes in the graph through Drag and Drop

@@ -65,4 +65,9 @@ export interface NodeAttributes extends Attributes, SimulationNodeDatum {
    * border size of the node (only for BorderNodeProgram of sigmajs)
    */
   borderSize?: number;
+
+  /**
+   * Community ID
+   */
+  community?: string;
 }

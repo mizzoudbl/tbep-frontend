@@ -13,6 +13,7 @@ Components Used:
 - [alert-dialog](./alert-dialog.tsx.tsx)
 - [badge](./badge.tsx)
 - [button](./button.tsx)
+- [card](./card.tsx)
 - [checkbox](./checkbox.tsx)
 - [collapsible](./collapsible.tsx)
 - [command](./command.tsx)

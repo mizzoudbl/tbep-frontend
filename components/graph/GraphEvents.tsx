@@ -19,7 +19,6 @@ export function GraphEvents() {
   const highlightedNodesRef = useRef(new Set<string>());
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
   const totalNodes = useStore(state => state.totalNodes);
-  const defaultNodeColor = useStore(state => state.defaultNodeColor);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -232,7 +231,7 @@ export function GraphEvents() {
         if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
       },
       clickNode: e => {
-        setClickedNode(e.node);
+        if (!e.event.original.shiftKey) setClickedNode(e.node);
       },
     });
   }, [registerEvents, sigma, draggedNode, handleMouseUp, handleMouseDown, handleMouseMove]);

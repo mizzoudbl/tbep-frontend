@@ -47,6 +47,9 @@
       "suspicious": {
         "noAssignInExpressions": "off",
         "noAsyncPromiseExecutor": "off"
+      },
+      "a11y": {
+        "useMediaCaption": "off"
       }
     },
     "ignore": ["**/node_modules/**"]

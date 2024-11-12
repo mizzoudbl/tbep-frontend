@@ -39,6 +39,7 @@
     "@react-sigma/core": "^4.0.3",
     "@sigma/export-image": "3.0.0-beta.1",
     "@sigma/node-border": "3.0.0-beta.7",
+    "@sigma/utils": "3.0.0-beta.6",
     "@tanstack/react-table": "^8.20.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

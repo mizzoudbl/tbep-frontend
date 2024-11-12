@@ -40,18 +40,22 @@ export const columnGseaResults: ColumnDef<Gsea>[] = [
   {
     accessorKey: 'P-value',
     header: headerHelper('P-Value'),
+    sortingFn: (a, b) => Number(a.original['P-value']) - Number(b.original['P-value']),
   },
   {
     accessorKey: 'Adjusted P-value',
     header: headerHelper('Adjusted P-Value'),
+    sortingFn: (a, b) => Number(a.original['Adjusted P-value']) - Number(b.original['Adjusted P-value']),
   },
   {
     accessorKey: 'Odds Ratio',
     header: headerHelper('Odds Ratio'),
+    sortingFn: (a, b) => Number(a.original['Odds Ratio']) - Number(b.original['Odds Ratio']),
   },
   {
     accessorKey: 'Combined Score',
     header: headerHelper('Combined Score'),
+    sortingFn: (a, b) => Number(a.original['Combined Score']) - Number(b.original['Combined Score']),
   },
   {
     accessorKey: 'Genes',

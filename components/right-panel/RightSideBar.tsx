@@ -16,7 +16,8 @@ export function RightSideBar() {
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
-  const defaultlabelDensity = useStore(state => state.defaultlabelDensity);
+  const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
+  const defaultLabelSize = useStore(state => state.defaultLabelSize);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const radialAnalysis = useStore(state => state.radialAnalysis);
@@ -67,7 +68,8 @@ export function RightSideBar() {
         defaultNodeSize={defaultNodeSize}
         defaultNodeColor={defaultNodeColor}
         defaultEdgeColor={defaultEdgeColor}
-        defaultlabelDensity={defaultlabelDensity}
+        defaultLabelDensity={defaultLabelDensity}
+        defaultLabelSize={defaultLabelSize}
         showEdgeLabel={showEdgeLabel}
         showEdgeColor={showEdgeColor}
         handleDefaultChange={handleDefaultChange}

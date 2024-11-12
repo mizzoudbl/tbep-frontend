@@ -65,6 +65,9 @@ importers:
       '@sigma/node-border':
         specifier: 3.0.0-beta.7
         version: 3.0.0-beta.7(sigma@3.0.0-beta.32(graphology-types@0.24.7))
+      '@sigma/utils':
+        specifier: 3.0.0-beta.6
+        version: 3.0.0-beta.6(sigma@3.0.0-beta.32(graphology-types@0.24.7))
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1291,6 +1294,11 @@ packages:
     resolution: {integrity: sha512-M4ivn9H5BNMZudeQJ63Kfngu4Uwn0QM3qXZeWjDKp/X6c1Bsf44furMf2EmMbBmGYvYS5ummi03CQ33lh//DeQ==}
     peerDependencies:
       sigma: '>=3.0.0-beta.17'
+
+  '@sigma/utils@3.0.0-beta.6':
+    resolution: {integrity: sha512-CKu0BvSKPKr0CVTfR+1tyqs9xtZ7VlHqtoPuzybGj4DqhwD3ysfa+32x5QWwy3ocNwFl9WmW7n4hGAvZGtuF/w==}
+    peerDependencies:
+      sigma: '>=3.0.0-beta.29'
 
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
@@ -4279,6 +4287,10 @@ snapshots:
       sigma: 3.0.0-beta.32(graphology-types@0.24.7)
 
   '@sigma/node-border@3.0.0-beta.7(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
+    dependencies:
+      sigma: 3.0.0-beta.32(graphology-types@0.24.7)
+
+  '@sigma/utils@3.0.0-beta.6(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
     dependencies:
       sigma: 3.0.0-beta.32(graphology-types@0.24.7)
 

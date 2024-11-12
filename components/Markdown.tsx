@@ -7,7 +7,7 @@ export const Markdown = ({ children }: { children: string }) => {
     <ReactMarkdown
       components={{
         a: ({ children, href }) => (
-          <a href={href as string} className='text-blue-500 underline'>
+          <a href={href as string} target='_blank' className='text-blue-500 underline' rel='noreferrer'>
             {children}
           </a>
         ),

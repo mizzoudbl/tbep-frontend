@@ -13,7 +13,7 @@ export default function SliderWithInput({
 }: { min?: number; max?: number; step?: number; name: string; id: string; defaultValue: number }) {
   const [value, setValue] = useState(defaultValue);
   return (
-    <div className='flex items-center space-x-2'>
+    <div className='flex items-center text-xs space-x-2'>
       <Slider
         min={min}
         max={max}

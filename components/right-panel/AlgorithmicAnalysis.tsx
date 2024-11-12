@@ -23,8 +23,8 @@ export function AlgorithmicAnalysis() {
           <ChevronsUpDown size={20} />
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className='mt-2'>
-        <RadioGroup>
+      <CollapsibleContent className='mt-1'>
+        <RadioGroup defaultValue='None'>
           {algorithms.map(({ name, parameters }) => (
             <Popover key={name}>
               <PopoverTrigger asChild onClick={() => name === 'None' && handleAlgoQuery(name)}>

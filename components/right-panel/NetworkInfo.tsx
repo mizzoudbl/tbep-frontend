@@ -19,10 +19,12 @@ export function NetworkInfo() {
     if (selectedNodes.length === 0) return;
     (async () => {
       const geneNames = selectedNodes.map(node => node.Gene_Name).join(',');
+      setShowTable(true);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL}/gsea?gene_list=${encodeURIComponent(geneNames)}`,
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          cache: 'force-cache',
         },
       );
       if (!response.ok) {

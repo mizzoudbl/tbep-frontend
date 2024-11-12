@@ -33,7 +33,7 @@ export function SizeAnalysis() {
         },
         [1, 0],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node].common.Druggability?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
@@ -50,7 +50,7 @@ export function SizeAnalysis() {
         },
         [Number.POSITIVE_INFINITY, 0],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node].common?.TE?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
@@ -67,7 +67,7 @@ export function SizeAnalysis() {
         },
         [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.logFC?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
@@ -84,7 +84,7 @@ export function SizeAnalysis() {
         },
         [1, 0],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.GDA?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
@@ -101,7 +101,7 @@ export function SizeAnalysis() {
         },
         [1, -1],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [3, 30]);
+      const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(universalData[node][diseaseName]?.Genetics?.[selectedNodeSizeProperty] ?? 'NaN');
         if (!Number.isNaN(val)) attr.size = sizeScale(val);

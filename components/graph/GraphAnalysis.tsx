@@ -4,39 +4,20 @@ import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
-import type { SerializedEdge, SerializedNode } from 'graphology-types';
-import { useEffect, useRef } from 'react';
+import { fitViewportToNodes } from '@sigma/utils';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '../ui/button';
 
 export function GraphAnalysis() {
-  const graph = useSigma<NodeAttributes, EdgeAttributes>().getGraph();
+  const sigma = useSigma<NodeAttributes, EdgeAttributes>();
+  const graph = sigma.getGraph();
   const radialAnalysis = useStore(state => state.radialAnalysis);
-  const droppedEdge = useRef<Set<SerializedEdge<EdgeAttributes>>>(new Set());
+  const communityMap = useRef<Record<string, { name: string; genes: string[]; color: string }>>({});
+  const [showCommunity, setShowCommunity] = useState(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    // graph.forEachEdge((edge, attr, source, target) => {
-    //   if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
-    //     droppedEdge.current.add({
-    //       key: edge,
-    //       source: source,
-    //       target: target,
-    //       attributes: attr,
-    //     });
-    //     graph.dropEdge(edge);
-    //   }
-    // });
-    // for (const edge of droppedEdge.current) {
-    //   if (
-    //     graph.hasNode(edge.source) &&
-    //     graph.hasNode(edge.target) &&
-    //     edge.attributes?.score &&
-    //     edge.attributes.score >= radialAnalysis.edgeWeightCutOff
-    //   ) {
-    //     graph.mergeEdgeWithKey(edge.key, edge.source, edge.target, edge.attributes);
-    //     droppedEdge.current.delete(edge);
-    //   }
-    // }
     let edgeCount = 0;
     graph.updateEachEdgeAttributes((edge, attr) => {
       if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
@@ -58,7 +39,7 @@ export function GraphAnalysis() {
     graph.updateEachNodeAttributes((node, attr) => {
       if (nodeDegreeProperty === 'geneDegree') {
         const degree = graph.degree(node);
-        if (degree < radialAnalysis.nodeDegreeCutOff * 2) {
+        if (degree < radialAnalysis.nodeDegreeCutOff) {
           attr.hidden = true;
         } else {
           nodeCount++;
@@ -86,7 +67,7 @@ export function GraphAnalysis() {
     if (radialAnalysis.hubGeneEdgeCount < 1) return;
     graph.updateEachNodeAttributes((node, attr) => {
       const degree = graph.degree(node);
-      if (degree >= radialAnalysis.hubGeneEdgeCount * 2) {
+      if (degree >= radialAnalysis.hubGeneEdgeCount) {
         attr.type = 'border';
       } else {
         attr.type = 'circle';
@@ -115,8 +96,10 @@ export function GraphAnalysis() {
   useEffect(() => {
     eventEmitter.on(Events.ALGORITHM, async ({ name, parameters }: EventMessage[Events.ALGORITHM]) => {
       if (name === 'None') {
+        setShowCommunity(false);
         graph.updateEachNodeAttributes((_, attr) => {
           attr.color = undefined;
+          attr.community = undefined;
           return attr;
         });
       } else if (name === 'Leiden') {
@@ -131,14 +114,15 @@ export function GraphAnalysis() {
           );
           if (res.ok) {
             const data: Record<string, { name: string; genes: string[]; color: string }> = await res.json();
+            communityMap.current = data;
             for (const community of Object.values(data)) {
               for (const gene of community.genes) {
                 graph.setNodeAttribute(gene, 'color', community.color);
               }
             }
+            setShowCommunity(true);
           } else if (res.status === 404) {
             toast.promise(
-              // biome-ignore lint/suspicious/noAsyncPromiseExecutor: <explanation>
               new Promise<void>(async (resolve, reject) => {
                 const res = await renewSession();
                 if (res) {
@@ -168,5 +152,22 @@ export function GraphAnalysis() {
     });
   }, []);
 
-  return null;
+  return (
+    <>
+      {showCommunity && (
+        <div className='absolute bottom-2 left-2 space-y-1 no-scrollbar flex flex-col max-h-56 overflow-scroll border shadow rounded-md p-2'>
+          {Object.entries(communityMap.current).map(([id, val], idx) => (
+            <Button
+              key={id}
+              style={{ backgroundColor: val.color }}
+              className='h-5 w-30'
+              onClick={() => fitViewportToNodes(sigma, val.genes, { animate: true })}
+            >
+              Community {idx + 1}
+            </Button>
+          ))}
+        </div>
+      )}
+    </>
+  );
 }

@@ -1,5 +1,4 @@
-export * from './diseaseMap';
-export * from './interactionType';
+export * from './graphConfig';
 export * from './nodeColor';
 export * from './nodeSize';
 export * from './navBarLinks';
@@ -7,3 +6,5 @@ export * from './radialAnalysisOptions';
 export * from './team';
 export * from './datatable-column';
 export * from './algorithm';
+export * from './tutorialVideo';
+export * from './forceLayoutOptions';
