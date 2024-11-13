@@ -67,4 +67,5 @@ export const useStore = create<GraphStore>(set => ({
   selectedNodeSizeProperty: '',
   selectedNodeColorProperty: '',
   geneNameToID: new Map(),
+  graphConfig: null,
 }));

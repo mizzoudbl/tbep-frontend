@@ -20,8 +20,8 @@ import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
 export default function Home() {
-  const [fetchData, { data, loading, error }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
-    GENE_VERIFICATION_QUERY,
+  const [fetchData, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
+    GENE_VERIFICATION_QUERY(true),
   );
   const [formData, setFormData] = React.useState<GraphConfigForm>({
     seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
@@ -53,27 +53,24 @@ export default function Home() {
     event.preventDefault();
     const { seedGenes } = formData;
     const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim().toUpperCase())).filter(Boolean);
-    if (geneIDs.length < 2)
-      toast.error('Please enter at least 2 genes', {
+    setGeneIDs(geneIDs);
+    const userId = localStorage.getItem('userID');
+    const { data, error } = await fetchData({
+      variables: { geneIDs },
+      ...(userId && { context: { headers: { 'x-user-id': userId } } }),
+    });
+    if (error) {
+      console.error(error);
+      toast.error('Error fetching data', {
         cancel: { label: 'Close', onClick() {} },
         position: 'top-center',
         richColors: true,
+        description: 'Server not available,Please try again later',
       });
-    else {
-      setGeneIDs(geneIDs);
-      await fetchData({ variables: { geneIDs } });
-      if (error) {
-        console.error(error);
-        toast.error('Error fetching data', {
-          cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
-          description: 'Server not available,Please try again later',
-        });
-        return;
-      }
-      setTableOpen(true);
+      return;
     }
+    if (!userId) localStorage.setItem('userID', data?.getUserID ?? '');
+    setTableOpen(true);
   };
 
   const handleSelect = (val: string, key: string) => {

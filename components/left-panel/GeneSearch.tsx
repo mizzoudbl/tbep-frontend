@@ -10,6 +10,7 @@ export function GeneSearch() {
   const suggestions = useStore(state => state.nodeSuggestions);
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const { geneIDs } = useStore(state => state.graphConfig) ?? { geneIDs: [] };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'ArrowDown') {
@@ -45,13 +46,7 @@ export function GeneSearch() {
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <span
         className='text-xs underline cursor-pointer text-zinc-500'
-        onClick={() =>
-          setNodeSearchQuery(
-            (
-              JSON.parse(localStorage.getItem('graphConfig') || '{ geneIDs: [] }') as { geneIDs: Array<string> }
-            ).geneIDs.join('\n'),
-          )
-        }
+        onClick={() => setNodeSearchQuery(geneIDs.join('\n'))}
       >
         #Seed Genes
       </span>

@@ -24,9 +24,7 @@ export function LeftSideBar() {
 
   const [fetchData, { loading, called }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
     GENE_UNIVERSAL_QUERY(diseaseName, bringCommon.current ?? true),
-    {
-      returnPartialData: true,
-    },
+    { returnPartialData: true },
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Fetchdata dependency is redundant

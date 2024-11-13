@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables } from '@/lib/interface';
 import { distinct, openDB } from '@/lib/utils';
-import uploadFileFormatImage from '@/public/image/uploadFormat.png';
 import { useLazyQuery } from '@apollo/client';
 import { Loader } from 'lucide-react';
 import Image from 'next/image';
@@ -17,8 +16,8 @@ import { toast } from 'sonner';
 export default function UploadFile() {
   const [file, setFile] = React.useState<File | null>(null);
   const [fileType, setFileType] = React.useState<'csv' | 'json'>('csv');
-  const [fetchData, { data, loading, error }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
-    GENE_VERIFICATION_QUERY,
+  const [fetchData, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
+    GENE_VERIFICATION_QUERY(true),
   );
   const [tableOpen, setTableOpen] = React.useState(false);
   const [geneIDs, setGeneIDs] = React.useState<string[]>([]);
@@ -65,7 +64,7 @@ export default function UploadFile() {
       );
     }
     if (distinctSeedGenes.length < 2) {
-      toast.error('Please provide at least 2 valid seed genes', {
+      toast.error('Please provide at least 2 valid genes', {
         cancel: { label: 'Close', onClick() {} },
         position: 'top-center',
         richColors: true,
@@ -73,7 +72,22 @@ export default function UploadFile() {
       });
       return;
     }
-    await fetchData({ variables: { geneIDs: distinctSeedGenes } });
+    const userId = localStorage.getItem('userID');
+    const { data, error } = await fetchData({
+      variables: { geneIDs: distinctSeedGenes },
+      ...(userId && { context: { headers: { 'x-user-id': userId } } }),
+    });
+    if (error) {
+      console.error(error);
+      toast.error('Error fetching data', {
+        cancel: { label: 'Close', onClick() {} },
+        position: 'top-center',
+        richColors: true,
+        description: 'Server not available,Please try again later',
+      });
+      return;
+    }
+    if (!userId) localStorage.setItem('userID', data?.getUserID ?? '');
     setGeneIDs(distinctSeedGenes);
     setTableOpen(true);
   };

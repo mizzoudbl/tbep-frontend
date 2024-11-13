@@ -23,4 +23,4 @@ export const radialAnalysisOptions = [
     max: 50,
     step: 1,
   },
-];
+] as const;

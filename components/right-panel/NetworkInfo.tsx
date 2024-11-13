@@ -4,7 +4,6 @@ import { columnGseaResults, columnSelectedNodes } from '@/lib/data';
 import type { Gsea } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import React, { useEffect } from 'react';
-import { toast } from 'sonner';
 import PopUpDataTable from '../PopUpDataTable';
 import { Button } from '../ui/button';
 
@@ -27,15 +26,6 @@ export function NetworkInfo() {
           cache: 'force-cache',
         },
       );
-      if (!response.ok) {
-        toast.error('Failed to fetch GSEA data', {
-          cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
-          description: 'Server not available,Please try again later',
-        });
-        return;
-      }
       const data: Array<Gsea> = await response.json();
       setGseaData(data);
     })();

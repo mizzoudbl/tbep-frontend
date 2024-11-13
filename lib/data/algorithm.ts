@@ -11,7 +11,7 @@ export const algorithms = [
         name: 'resolution',
         defaultValue: 1.0,
         min: 0.1,
-        max: 4,
+        max: 3,
         step: 0.1,
       },
       {

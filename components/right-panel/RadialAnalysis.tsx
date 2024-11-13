@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
   const [minScore, setMinScore] = React.useState(0);
+  const [isGeneDegree, setIsGeneDegree] = React.useState(true);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
@@ -44,17 +45,9 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                   <Slider
                     id={option.key}
                     min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
-                    max={option.max}
-                    step={option.step}
-                    value={[
-                      option.key === 'edgeWeightCutOff'
-                        ? value.edgeWeightCutOff
-                        : option.key === 'nodeDegreeCutOff'
-                          ? value.nodeDegreeCutOff
-                          : option.key === 'hubGeneEdgeCount'
-                            ? value.hubGeneEdgeCount
-                            : 0,
-                    ]}
+                    max={option.key === 'nodeDegreeCutOff' && !isGeneDegree ? 1 : option.max}
+                    step={option.key === 'nodeDegreeCutOff' && !isGeneDegree ? 0.01 : option.step}
+                    value={[value[option.key]]}
                     onValueChange={value => onChange(value[0], option.key as keyof RadialAnalysisSetting)}
                   />
                   {option.key === 'nodeDegreeCutOff' && (
@@ -65,7 +58,10 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                       ]}
                       value={value.nodeDegreeProperty}
                       className='w-full'
-                      onChange={value => onChange(value, 'nodeDegreeProperty')}
+                      onChange={value => {
+                        setIsGeneDegree(value === 'geneDegree');
+                        onChange(value, 'nodeDegreeProperty');
+                      }}
                     />
                   )}
                 </div>
@@ -79,15 +75,7 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                 min={option.min}
                 max={option.max}
                 step={option.step}
-                value={
-                  option.key === 'edgeWeightCutOff'
-                    ? value.edgeWeightCutOff
-                    : option.key === 'nodeDegreeCutOff'
-                      ? value.nodeDegreeCutOff
-                      : option.key === 'hubGeneEdgeCount'
-                        ? value.hubGeneEdgeCount
-                        : undefined
-                }
+                value={value[option.key]}
                 onChange={e => onChange(Number.parseFloat(e.target.value), option.key as keyof RadialAnalysisSetting)}
               />
             </div>

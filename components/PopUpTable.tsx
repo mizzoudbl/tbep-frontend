@@ -2,7 +2,7 @@ import type { PopUpTableProps } from '@/lib/interface';
 import { Download } from 'lucide-react';
 import { unparse } from 'papaparse';
 import { Button } from './ui/button';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from './ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';

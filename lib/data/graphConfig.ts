@@ -73,3 +73,12 @@ export const graphConfig = [
 ] as const;
 
 export type GeneInteractionType = (typeof graphConfig)[2]['options'][number]['value'];
+
+export interface GraphConfig {
+  geneIDs: string[];
+  diseaseMap: DiseaseType;
+  order: string;
+  interactionType: GeneInteractionType;
+  minScore: string;
+  graphName: string;
+}

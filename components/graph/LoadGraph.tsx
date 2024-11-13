@@ -11,7 +11,6 @@ import type {
   GeneVerificationVariables,
   NodeAttributes,
 } from '@/lib/interface';
-import type { Gene } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { openDB } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
@@ -34,18 +33,20 @@ export function LoadGraph() {
     GENE_GRAPH_QUERY,
     {
       variables: {
-        geneIDs: variable.geneIDs as string[],
-        interactionType: variable.interactionType as string,
-        minScore: Number.parseFloat(variable.minScore),
-        order: Number.parseInt(variable.order),
+        geneIDs: variable.geneIDs,
+        interactionType: variable.interactionType,
+        minScore: variable.minScore,
+        order: variable.order,
       },
+      context: { headers: { 'x-user-id': localStorage.getItem('userID') } },
     },
   );
 
-  const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
+  const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY(false));
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
+    useStore.setState({ graphConfig: variable });
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
       type: 'directed',
     });
@@ -116,7 +117,7 @@ export function LoadGraph() {
           }
           if (!result) return;
           const geneNameToID = new Map<string, string>();
-          for (const gene of result.data?.getGenes as Gene[]) {
+          for (const gene of result.data?.getGenes!) {
             if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             graph.addNode(gene.ID, {
               label: gene.Gene_name,

@@ -1,4 +1,4 @@
-import type { DiseaseType, NodeColorType, NodeSizeType } from '@/lib/data';
+import type { DiseaseType, GraphConfig, NodeColorType, NodeSizeType } from '@/lib/data';
 import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
@@ -152,6 +152,11 @@ export interface GraphStore {
    * Map of Gene Name to Gene ID
    */
   geneNameToID: Map<string, string>;
+
+  /**
+   *
+   */
+  graphConfig: GraphConfig | null;
 }
 
 export type RadioOptions = Record<NodeColorType | NodeSizeType, Array<string>>;
