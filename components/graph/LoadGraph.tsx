@@ -46,7 +46,6 @@ export function LoadGraph() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
-    useStore.setState({ graphConfig: variable });
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
       type: 'directed',
     });
@@ -149,6 +148,7 @@ export function LoadGraph() {
           const { genes, links, graphName } = response.getGeneInteractions;
           // store graphName in JSON in graphConfig key in localStorage
           localStorage.setItem('graphConfig', JSON.stringify({ ...variable, graphName }));
+          useStore.setState({ graphConfig: { ...variable, graphName } });
           const transformedData: Partial<SerializedGraph<NodeAttributes, EdgeAttributes>> = {
             nodes: genes.map(gene => ({
               key: gene.ID,

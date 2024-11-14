@@ -2,12 +2,15 @@
 
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
+import { type EventMessage, Events, cn, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
+import louvain from 'graphology-communities-louvain';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
 
 export function GraphAnalysis() {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
@@ -84,14 +87,10 @@ export function GraphAnalysis() {
       body: JSON.stringify(useStore.getState().graphConfig!),
     });
     if (res.status === 202 || res.status === 409) return true;
-    toast.error('Failed to renew session', {
-      cancel: { label: 'Close', onClick() {} },
-      position: 'top-center',
-      richColors: true,
-      description: 'Server not available,Please try again later',
-    });
     return false;
   }
+
+  const searchParams = useSearchParams();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -104,8 +103,41 @@ export function GraphAnalysis() {
           return attr;
         });
       } else if (name === 'Leiden') {
+        const { resolution, weighted } = parameters;
+        if (searchParams.get('file')) {
+          const hslToHex = (h: number, s: number, l: number) => {
+            l /= 100;
+            const a = (s * Math.min(l, 1 - l)) / 100;
+            const f = (n: number) => {
+              const k = (n + h / 30) % 12;
+              const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+              return Math.round(255 * color)
+                .toString(16)
+                .padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+          };
+          const res = louvain(graph, {
+            resolution: +resolution,
+            getEdgeWeight: weighted ? 'score' : null,
+          });
+          const map: Record<string, { name: string; genes: string[]; color: string }> = {};
+          let count = 0;
+          for (const [node, comm] of Object.entries(res)) {
+            if (!map[comm]) {
+              map[comm] = {
+                name: '',
+                genes: [],
+                color: hslToHex(count++ * 137.508, 75, 50),
+              };
+            }
+            map[comm].genes.push(node);
+            graph.setNodeAttribute(node, 'color', map[comm].color);
+          }
+          setCommunityMap(map);
+          return;
+        }
         (async function leiden() {
-          const { resolution, weighted } = parameters;
           const { graphName } = useStore.getState().graphConfig!;
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/algorithm/leiden?graphName=${encodeURIComponent(graphName)}${resolution ? `&resolution=${resolution}` : ''}&weighted=${encodeURIComponent(!!weighted)}`,
@@ -135,6 +167,9 @@ export function GraphAnalysis() {
                 loading: 'Session expired, renewing...',
                 error: 'Failed to renew session',
                 description: 'This may take a while, please be patient',
+                position: 'top-center',
+                richColors: true,
+                cancel: { label: 'Close', onClick() {} },
               },
             );
           } else {
@@ -155,14 +190,24 @@ export function GraphAnalysis() {
       {Object.keys(communityMap).length > 0 && (
         <div className='absolute bottom-2 left-2 space-y-1 no-scrollbar flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
           {Object.entries(communityMap).map(([id, val], idx) => (
-            <Button
-              key={id}
-              style={{ backgroundColor: val.color }}
-              className='h-5 w-30'
-              onClick={() => fitViewportToNodes(sigma, val.genes, { animate: true })}
-            >
-              Community {idx + 1}
-            </Button>
+            <div key={id} className='flex items-center gap-1'>
+              <Checkbox
+                defaultChecked
+                onCheckedChange={bool => {
+                  if (bool === 'indeterminate') return;
+                  for (const gene of val.genes) {
+                    graph.setNodeAttribute(gene, 'hidden', !bool);
+                  }
+                }}
+              />
+              <Button
+                style={{ backgroundColor: val.color }}
+                className='h-5 w-30'
+                onClick={() => fitViewportToNodes(sigma, val.genes, { animate: true })}
+              >
+                Community {idx + 1}
+              </Button>
+            </div>
           ))}
         </div>
       )}

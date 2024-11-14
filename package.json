@@ -48,6 +48,7 @@
     "d3-scale": "^4.0.2",
     "framer-motion": "^11.11.1",
     "graphology": "^0.25.4",
+    "graphology-communities-louvain": "^2.0.1",
     "graphology-layout": "^0.6.1",
     "graphology-types": "^0.24.7",
     "lucide-react": "^0.446.0",
