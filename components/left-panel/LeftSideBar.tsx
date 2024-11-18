@@ -1,13 +1,25 @@
 'use client';
 
-import { type DiseaseType, diseaseMap, diseaseTooltip } from '@/lib/data';
-import { GENE_UNIVERSAL_QUERY } from '@/lib/gql';
-import type { Gene, GeneUniversalData, GeneUniversalDataVariables, RadioOptions, UniversalData } from '@/lib/interface';
+import {
+  DISEASE_DEPENDENT_PROPERTIES,
+  DISEASE_INDEPENDENT_PROPERTIES,
+  type DiseaseDependentProperties,
+  type DiseaseIndependentProperties,
+  diseaseTooltip,
+} from '@/lib/data';
+import { GENE_UNIVERSAL_QUERY, GET_DISEASES_QUERY, GET_STATS_QUERY } from '@/lib/gql';
+import type {
+  GeneUniversalData,
+  GeneUniversalDataVariables,
+  GetStatsData,
+  GetStatsVariables,
+  OtherSection,
+  RadioOptions,
+} from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { Info } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
-import { toast } from 'sonner';
 import { NodeColor, NodeSize } from '.';
 import { Combobox } from '../ComboBox';
 import FileSheet from '../FileSheet';
@@ -22,152 +34,170 @@ export function LeftSideBar() {
   const geneIDs = useStore(state => state.geneIDs);
   const bringCommon = useRef<boolean>(true);
 
-  const [fetchData, { loading, called }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
-    GENE_UNIVERSAL_QUERY(diseaseName, bringCommon.current ?? true),
+  useEffect(() => {
+    useStore.setState({
+      diseaseName: JSON.parse(localStorage.getItem('graphConfig') || '{}').diseaseMap,
+    });
+  }, []);
+
+  const [fetchHeader, { loading, called }] = useLazyQuery<GetStatsData, GetStatsVariables>(
+    GET_STATS_QUERY(bringCommon.current),
     { returnPartialData: true },
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Fetchdata dependency is redundant
   useEffect(() => {
-    if (!diseaseName || !geneIDs.length) return;
-    fetchData({
+    if (diseaseName === '') return;
+    fetchHeader({
       variables: {
-        geneIDs: geneIDs,
+        disease: diseaseName,
       },
     })
       .then(val => {
-        if (!val.data?.getGenes) return;
+        const data = val.data?.getHeaders;
+        if (!data) return;
         const radioOptions: RadioOptions = {
-          None: [],
-          logFC: [],
-          GDA: [],
-          Genetics: [],
-          Pathways: [],
-          Druggability: [],
-          TE: [],
-          Database: [],
-          Custom: [],
+          database: {
+            ...useStore.getState().radioOptions.database,
+            DEG: [],
+            GDA: [],
+            Genetics: [],
+          },
+          user: useStore.getState().radioOptions.user,
         };
-        const gene = val.data.getGenes[0];
-        for (const key in gene) {
-          // using case insensitive regexp filter keys starting with pathway_ and extract the rest of the string
-          if (key === 'ID') continue;
-          if (key === 'common' && bringCommon.current) {
-            for (const prop in gene.common) {
-              if (/^pathway_/i.test(prop)) {
-                radioOptions.Pathways.push(prop.replace(/^pathway_/i, ''));
-              } else if (/^druggability_/i.test(prop)) {
-                radioOptions.Druggability.push(prop.replace(/^druggability_/i, ''));
-              } else if (/^TE_/i.test(prop)) {
-                radioOptions.TE.push(prop.replace(/^TE_/i, ''));
-              } else if (/^database_/i.test(prop)) {
-                radioOptions.Database.push(prop.replace(/^database_/i, ''));
-              }
-            }
-          } else {
-            for (const prop in gene[key as keyof Gene] as Record<string, string>) {
-              if (/^logFC_/i.test(prop)) {
-                radioOptions.logFC.push(prop.replace(/^logFC_/i, ''));
-              } else if (/^GDA_/i.test(prop)) {
-                radioOptions.GDA.push(prop.replace(/^GDA_/i, ''));
-              } else if (/^GWAS_/i.test(prop)) {
-                radioOptions.Genetics.push(prop.replace(/^GWAS_/i, ''));
-              }
+        bringCommon.current = false;
+        for (const prop of data.common ?? []) {
+          for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
+            if (new RegExp(`^${field}_`, 'i').test(prop)) {
+              radioOptions.database[field].push(prop.replace(new RegExp(`^${field}_`, 'i'), ''));
             }
           }
         }
-
-        const universalData: UniversalData = useStore.getState().universalData || {};
-        for (const gene of val.data?.getGenes || []) {
-          universalData[gene.ID] = {
-            common: {
-              Pathways: {},
-              Druggability: {},
-              TE: {},
-              Database: {},
-              Custom: {},
-            },
-            [diseaseName]: {
-              logFC: {},
-              GDA: {},
-              Genetics: {},
-              TE: {},
-              Database: {},
-              None: {},
-              Pathways: {},
-              Druggability: {},
-              Custom: {},
-            },
-          };
-          if (bringCommon.current) {
-            for (const key in gene.common) {
-              if (/^pathway_/i.test(key)) {
-                universalData[gene.ID].common.Pathways[key.replace(/^pathway_/i, '')] = gene.common[key];
-              } else if (/^druggability_/i.test(key)) {
-                universalData[gene.ID].common.Druggability[key.replace(/^druggability_/i, '')] = gene.common[key];
-              } else if (/^TE_/i.test(key)) {
-                universalData[gene.ID].common.TE[key.replace(/^TE_/i, '')] = gene.common[key];
-              } else if (/^database_/i.test(key)) {
-                universalData[gene.ID].common.Database[key.replace(/^database_/i, '')] = gene.common[key];
-              }
-            }
-          }
-          for (const key in gene[diseaseName]) {
-            if (/^logFC_/i.test(key)) {
-              universalData[gene.ID][diseaseName]!.logFC[key.replace(/^logFC_/i, '')] = gene[diseaseName][key];
-            } else if (/^GDA_/i.test(key)) {
-              universalData[gene.ID][diseaseName]!.GDA[key.replace(/^GDA_/i, '')] = gene[diseaseName][key];
-            } else if (/^GWAS_/i.test(key)) {
-              universalData[gene.ID][diseaseName]!.Genetics[key.replace(/^GWAS_/i, '')] = gene[diseaseName][key];
+        for (const prop of data.disease ?? []) {
+          for (const field of DISEASE_DEPENDENT_PROPERTIES) {
+            if (new RegExp(`^${diseaseName}_${field}_`, 'i').test(prop)) {
+              radioOptions.database[field].push(prop.replace(new RegExp(`^${diseaseName}_${field}_`, 'i'), ''));
             }
           }
         }
-        useStore.setState({
-          initialUniversalData: structuredClone(universalData),
-          initialRadioOptions: structuredClone(radioOptions),
-          universalData,
-          radioOptions,
-        });
-        toast.info(`Data for ${diseaseName} disease Loaded`, {
-          cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
-          description: 'You can now play with the data',
-        });
+        useStore.setState({ radioOptions });
       })
       .catch(err => {
         console.error(err);
       });
-  }, [diseaseName, geneIDs]);
+  }, [diseaseName]);
+
+  useEffect(() => {
+    if (!geneIDs) return;
+    const universalData = useStore.getState().universalData;
+    for (const gene of geneIDs) {
+      if (universalData.database[gene] === undefined) {
+        universalData.database[gene] = {
+          common: {
+            Custom: {},
+            Database: {},
+            Druggability: {},
+            Pathway: {},
+            TE: {},
+          },
+        };
+      }
+    }
+  }, [geneIDs]);
+
+  const [fetchUniversal, { loading: universalLoading }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
+    GENE_UNIVERSAL_QUERY,
+  );
+  const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
+  const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
+  const radioOptions = useStore(state => state.radioOptions);
+  const queryiedFields = useRef<Set<string>>(new Set());
+  const { data: diseaseData, loading: diseaseLoading } = useQuery<{
+    getDiseases: string[];
+  }>(GET_DISEASES_QUERY);
+
+  async function handlePropChange(val: string, type: 'color' | 'size') {
+    const selectedRadio = type === 'color' ? selectedRadioNodeColor : selectedRadioNodeSize;
+    const ddp = DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties);
+    const key = `${ddp ? diseaseName : ''}_${selectedRadio}_${val}`;
+    if (selectedRadio === 'None' || queryiedFields.current.has(key) || radioOptions.user[selectedRadio].includes(val)) {
+      useStore.setState({
+        [type === 'color' ? 'selectedNodeColorProperty' : 'selectedNodeSizeProperty']: val,
+      });
+    } else {
+      const result = await fetchUniversal({
+        variables: {
+          geneIDs,
+          config: [
+            {
+              properties: [`${selectedRadio}_${val}`],
+              ...(ddp && { disease: diseaseName }),
+            },
+          ],
+        },
+      });
+      if (result.error) {
+        console.error(result.error);
+        return;
+      }
+      const data = result.data?.getGenes;
+      queryiedFields.current.add(key);
+      const universalData = useStore.getState().universalData;
+      for (const gene of data ?? []) {
+        for (const prop in gene.common) {
+          universalData.database[gene.ID].common[selectedRadio as DiseaseIndependentProperties][
+            prop.replace(new RegExp(`^${selectedRadio}_`), '')
+          ] = gene.common[prop];
+        }
+        for (const prop in gene.disease?.[diseaseName]) {
+          const geneRecord = universalData.database[gene.ID];
+          if (geneRecord[diseaseName] === undefined) {
+            geneRecord[diseaseName] = {
+              DEG: {},
+              GDA: {},
+              Genetics: {},
+            } as OtherSection;
+          }
+          (universalData.database[gene.ID][diseaseName] as OtherSection)[selectedRadio as DiseaseDependentProperties][
+            prop.replace(new RegExp(`^${selectedRadio}_`), '')
+          ] = gene.disease[diseaseName][prop];
+        }
+      }
+      useStore.setState({
+        universalData,
+        [type === 'color' ? 'selectedNodeColorProperty' : 'selectedNodeSizeProperty']: val,
+      });
+    }
+  }
 
   return (
     <ScrollArea className='border-r p-2 flex flex-col h-[98vh]'>
-      <div>
-        <div className='flex flex-col'>
-          <Label className='font-bold mb-2'>Disease Map</Label>
-          <div className='flex items-center gap-2'>
-            <Combobox
-              value={diseaseName}
-              onChange={value => useStore.setState({ diseaseName: value as DiseaseType })}
-              data={diseaseMap}
-              className='w-full'
-            />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                {!called || (called && loading) ? <Spinner size='small' /> : <Info size={20} />}
-              </TooltipTrigger>
-              <TooltipContent>{diseaseTooltip[diseaseName]}</TooltipContent>
-            </Tooltip>
-          </div>
+      <div className='flex flex-col'>
+        <Label className='font-bold mb-2'>Disease Map</Label>
+        <div className='flex items-center gap-2'>
+          <Combobox
+            value={diseaseName}
+            onChange={value => useStore.setState({ diseaseName: value })}
+            data={diseaseData?.getDiseases ?? []}
+            className='w-full'
+          />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {!called || (called && loading) || diseaseLoading || universalLoading ? (
+                <Spinner size='small' />
+              ) : (
+                <Info size={20} />
+              )}
+            </TooltipTrigger>
+            <TooltipContent>{diseaseTooltip[diseaseName] ?? 'No info available'}</TooltipContent>
+          </Tooltip>
         </div>
-        <NodeColor />
       </div>
-      <NodeSize />
-      <div className='mt-auto'>
-        <div className='flex flex-col space-y-2 mb-2'>
-          <GeneSearch />
-          <FileSheet />
-        </div>
+      <NodeColor onPropChange={val => handlePropChange(val, 'color')} />
+      <NodeSize onPropChange={val => handlePropChange(val, 'size')} />
+      <div className='flex flex-col space-y-2 mb-2'>
+        <GeneSearch />
+        <FileSheet />
       </div>
     </ScrollArea>
   );

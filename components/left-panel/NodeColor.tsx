@@ -8,7 +8,7 @@ import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function NodeColor() {
+export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => void }) {
   const radioValue = useStore(state => state.selectedRadioNodeColor);
   const radioOptions = useStore(state => state.radioOptions);
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
@@ -50,12 +50,10 @@ export function NodeColor() {
             {/* Data fetching and input remaining */}
             <Combobox
               key={radioValue}
-              data={radioOptions[radioValue]}
+              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
               className='w-full'
               value={selectedNodeColorProperty}
-              onChange={value => {
-                useStore.setState({ selectedNodeColorProperty: value });
-              }}
+              onChange={onPropChange}
             />
           </div>
         )}

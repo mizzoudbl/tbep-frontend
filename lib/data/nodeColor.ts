@@ -4,7 +4,7 @@ export const nodeColor = [
     tooltipContent: null,
   },
   {
-    label: 'logFC',
+    label: 'DEG',
     tooltipContent: 'Differential Expression in Log2 fold change',
   },
   {
@@ -16,7 +16,7 @@ export const nodeColor = [
     tooltipContent: 'Odd ratio or Beta-values from population studies',
   },
   {
-    label: 'Pathways',
+    label: 'Pathway',
     tooltipContent: 'Pathway membership from MSigDB',
   },
   {

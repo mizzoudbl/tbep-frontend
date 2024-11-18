@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import type { DiseaseType } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
 export function Combobox<T>({
@@ -25,7 +24,7 @@ export function Combobox<T>({
   const handleFind = React.useCallback(
     (value: T) => {
       const item = data.find(item => (typeof item === 'string' ? item : item.value) === value);
-      return typeof item === 'string' ? item : item?.label;
+      return item ? (typeof item === 'string' ? item : item.label) : 'Select...';
     },
     [data],
   );

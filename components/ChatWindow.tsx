@@ -4,7 +4,7 @@ import type { Message } from '@/lib/interface';
 import { footNotes } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
 import { ChevronDown, GripHorizontal, MessageCircle, Send, Trash2 } from 'lucide-react';
-import React from 'react';
+import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from './Markdown';
 import { Skeleton } from './ui/skeleton';
@@ -18,7 +18,7 @@ export default function ChatWindow() {
   const [isTyping, setIsTyping] = React.useState(false);
   const [isChatInitiated, setIsChatInitiated] = React.useState(false);
   const [chatHeight, setChatHeight] = React.useState<number | null>(null);
-  const chatRef = React.useRef<HTMLDivElement>(null);
+  const chatRef = createRef<HTMLDivElement>();
 
   const handleSubmit = async (e: React.KeyboardEvent<HTMLTextAreaElement> | React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

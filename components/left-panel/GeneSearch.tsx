@@ -1,7 +1,7 @@
 'use client';
 
 import { useStore } from '@/lib/store';
-import React, { useEffect } from 'react';
+import React, { createRef, useEffect } from 'react';
 import { Textarea } from '../ui/textarea';
 
 export function GeneSearch() {
@@ -9,7 +9,7 @@ export function GeneSearch() {
   const setNodeSearchQuery = useStore(state => state.setNodeSearchQuery);
   const suggestions = useStore(state => state.nodeSuggestions);
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const textareaRef = createRef<HTMLTextAreaElement>();
   const { geneIDs } = useStore(state => state.graphConfig) ?? { geneIDs: [] };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

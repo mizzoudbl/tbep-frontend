@@ -10,11 +10,11 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { graphConfig } from '@/lib/data';
-import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
+import { GENE_VERIFICATION_QUERY, GET_DISEASES_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables, GraphConfigForm } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { distinct } from '@/lib/utils';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { Loader } from 'lucide-react';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
@@ -23,9 +23,11 @@ export default function Home() {
   const [fetchData, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
     GENE_VERIFICATION_QUERY(true),
   );
+  const { data: diseaseData, loading: diseaseLoading } = useQuery<{ getDiseases: string[] }>(GET_DISEASES_QUERY);
+
   const [formData, setFormData] = React.useState<GraphConfigForm>({
     seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
-    diseaseMap: 'PSP',
+    diseaseMap: 'ALS',
     order: '0',
     interactionType: 'PPI',
     minScore: '0.9',
@@ -223,14 +225,28 @@ FIG4`,
                       <Label htmlFor={config.id}>{config.name}</Label>
                       <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
                         <SelectTrigger id={config.id}>
-                          <SelectValue />
+                          <SelectValue placeholder='Select...' />
                         </SelectTrigger>
                         <SelectContent>
-                          {config.options.map(option => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
+                          {config.id === 'diseaseMap' ? (
+                            diseaseLoading ? (
+                              <div className='flex items-center justify-center py-2'>
+                                <Loader className='h-4 w-4 animate-spin' />
+                              </div>
+                            ) : (
+                              diseaseData?.getDiseases.map(option => (
+                                <SelectItem key={option} value={option}>
+                                  {option}
+                                </SelectItem>
+                              ))
+                            )
+                          ) : (
+                            config.options.map(option => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))
+                          )}
                         </SelectContent>
                       </Select>
                     </div>

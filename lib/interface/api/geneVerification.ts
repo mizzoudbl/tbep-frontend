@@ -1,4 +1,4 @@
-import type { Gene } from './Gene';
+import type { Gene } from '.';
 
 /**
  * API data for gene verification in index page

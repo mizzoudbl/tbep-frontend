@@ -54,7 +54,8 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                     <Combobox
                       data={[
                         { value: 'geneDegree', label: 'Gene Degree' },
-                        ...useStore.getState().radioOptions.TE.map(item => ({ value: item, label: item })),
+                        ...useStore.getState().radioOptions.database.TE.map(item => ({ value: item, label: item })),
+                        ...useStore.getState().radioOptions.user.TE.map(item => ({ value: item, label: item })),
                       ]}
                       value={value.nodeDegreeProperty}
                       className='w-full'

@@ -1,6 +1,7 @@
 import { links } from '@/lib/data';
 import { Menu } from 'lucide-react';
 import { Link } from 'next-view-transitions';
+import Image from 'next/image';
 import { Button, buttonVariants } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
@@ -8,7 +9,8 @@ export default function Navbar() {
   return (
     <header className='bg-teal-800 text-white p-4'>
       <div className='container mx-auto flex justify-between items-center'>
-        <Link href={'/'}>
+        <Link href={'/'} className='flex items-center gap-2'>
+          <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} />
           <h1 className='text-lg md:text-xl font-bold flex items-end'>
             <p className='text-3xl'>T</p>arget & <p className='text-3xl ml-1'>B</p>iomarker{' '}
             <p className='text-3xl ml-1'>E</p>xploration <p className='text-3xl ml-1'>P</p>ortal{' '}

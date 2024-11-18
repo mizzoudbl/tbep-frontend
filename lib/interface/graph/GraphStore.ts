@@ -1,4 +1,4 @@
-import type { DiseaseType, GraphConfig, NodeColorType, NodeSizeType } from '@/lib/data';
+import type { GraphConfig, NodeColorType, NodeSizeType } from '@/lib/data';
 import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
@@ -116,27 +116,17 @@ export interface GraphStore {
   /**
    * Disease Name
    */
-  diseaseName: DiseaseType;
+  diseaseName: string;
 
   /**
    * Universal Data of all the diseases to be mapped on left sidebar
    */
-  universalData: UniversalData | null;
-
-  /**
-   * Initial Copy of Universal data
-   */
-  initialUniversalData: UniversalData | null;
+  universalData: UniversalData;
 
   /**
    * Options for radio buttons
    */
   radioOptions: RadioOptions;
-
-  /**
-   * Initial Copy of Radio Options
-   */
-  initialRadioOptions: RadioOptions;
 
   /**
    * Selected Node Size Property
@@ -159,43 +149,36 @@ export interface GraphStore {
   graphConfig: GraphConfig | null;
 }
 
-export type RadioOptions = Record<NodeColorType | NodeSizeType, Array<string>>;
+export type RadioOptions = Record<'user' | 'database', Record<NodeColorType | NodeSizeType, Array<string>>>;
 
 /**
  * Universal Data of all the diseases to be mapped on left sidebar
  * It contains:
  * - ENSG ID of the gene
- *    - DiseaseType/`common(Pathways, Druggability)
+ *    - DiseaseType/`common(Pathway, Druggability)
  *    - DiseaseType/`ALS`
  */
-export type UniversalData = {
-  [key: string]: {
-    common: {
-      Pathways: Record<string, string>;
-      Druggability: Record<string, string>;
-      TE: Record<string, string>;
-      Database: Record<string, string>;
-      Custom: Record<string, string>;
-    };
-    ALS?: {
-      logFC: Record<string, string>;
-      GDA: Record<string, string>;
-      Genetics: Record<string, string>;
-    };
-    PSP?: {
-      logFC: Record<string, string>;
-      GDA: Record<string, string>;
-      Genetics: Record<string, string>;
-    };
-    FTD?: {
-      logFC: Record<string, string>;
-      GDA: Record<string, string>;
-      Genetics: Record<string, string>;
-    };
-    OI?: {
-      logFC: Record<string, string>;
-      GDA: Record<string, string>;
-      Genetics: Record<string, string>;
-    };
-  };
-};
+export type UniversalData = Record<
+  'database' | 'user',
+  Record<
+    string,
+    {
+      common: CommonSection;
+      [disease: string]: CommonSection | OtherSection;
+    }
+  >
+>;
+
+export interface CommonSection {
+  Pathway: Record<string, string>;
+  Druggability: Record<string, string>;
+  TE: Record<string, string>;
+  Database: Record<string, string>;
+  Custom: Record<string, string>;
+}
+
+export interface OtherSection {
+  DEG: Record<string, string>;
+  GDA: Record<string, string>;
+  Genetics: Record<string, string>;
+}

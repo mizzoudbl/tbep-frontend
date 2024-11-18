@@ -25,7 +25,7 @@ export function Legend() {
       </CollapsibleTrigger>
       <CollapsibleContent className='flex flex-col gap-2 p-1 items-center'>
         {selectedRadioNodeColor && selectedRadioNodeColor !== 'None' ? (
-          selectedRadioNodeColor === 'Pathways' || selectedRadioNodeColor === 'Database' ? (
+          selectedRadioNodeColor === 'Pathway' || selectedRadioNodeColor === 'Database' ? (
             <BinaryLegend />
           ) : (
             <HeatmapLegend title={selectedRadioNodeColor} width={200} height={50} />

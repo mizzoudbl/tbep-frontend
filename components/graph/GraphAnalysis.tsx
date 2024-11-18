@@ -2,12 +2,11 @@
 
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useStore } from '@/lib/store';
-import { type EventMessage, Events, cn, eventEmitter } from '@/lib/utils';
+import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
-import louvain from 'graphology-communities-louvain';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -40,6 +39,7 @@ export function GraphAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     let nodeCount = 0;
+    const userOrDatabase = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty) ? 'user' : 'database';
     graph.updateEachNodeAttributes((node, attr) => {
       if (nodeDegreeProperty === 'geneDegree') {
         const degree = graph.degree(node);
@@ -50,7 +50,7 @@ export function GraphAnalysis() {
           attr.hidden = false;
         }
       } else {
-        const value = Number.parseFloat(universalData?.[node].common.TE[nodeDegreeProperty] ?? 'NaN');
+        const value = Number.parseFloat(universalData[userOrDatabase][node].common.TE[nodeDegreeProperty] ?? 'NaN');
         if (value >= radialAnalysis.nodeDegreeCutOff) {
           nodeCount++;
           attr.hidden = false;
@@ -60,7 +60,7 @@ export function GraphAnalysis() {
       }
       return attr;
     });
-    const edgeCount = graph.reduceEdges((count, ____, ___, __, _, srcAttr, tgtAttr) => {
+    const edgeCount = graph.reduceEdges((count, _edge, _attr, _src, _tgt, srcAttr, tgtAttr) => {
       return count + (srcAttr.hidden || tgtAttr.hidden ? 0 : 1);
     }, 0);
     useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
@@ -105,6 +105,7 @@ export function GraphAnalysis() {
       } else if (name === 'Leiden') {
         const { resolution, weighted } = parameters;
         if (searchParams.get('file')) {
+          const louvain = await import('graphology-communities-louvain').then(lib => lib.default);
           const hslToHex = (h: number, s: number, l: number) => {
             l /= 100;
             const a = (s * Math.min(l, 1 - l)) / 100;

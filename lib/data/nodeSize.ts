@@ -4,7 +4,7 @@ export const nodeSize = [
     tooltipContent: null,
   },
   {
-    label: 'logFC',
+    label: 'DEG',
     tooltipContent: 'Differential Expression in Log2 fold change',
   },
   {

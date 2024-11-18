@@ -1,14 +1,14 @@
 'use client';
 
 import {
+  DISEASE_DEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
   type DiseaseIndependentProperties,
-  diseaseDependentProperties,
 } from '@/lib/data';
-import type { EdgeAttributes, NodeAttributes, SelectionBox } from '@/lib/interface';
+import type { EdgeAttributes, NodeAttributes, OtherSection, SelectionBox } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { Trie } from '@/lib/trie';
-import { cn } from '@/lib/utils';
+import { cn, propertyResolve } from '@/lib/utils';
 import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
@@ -266,13 +266,12 @@ export function GraphEvents() {
             </h3>
             {selectedRadioNodeColor && selectedNodeColorProperty ? (
               <p>
-                {diseaseDependentProperties.includes(selectedRadioNodeColor as DiseaseDependentProperties)
-                  ? universalData?.[clickedNode][diseaseName]?.[selectedRadioNodeColor as DiseaseDependentProperties][
-                      selectedNodeColorProperty
-                    ]
-                  : universalData?.[clickedNode].common[selectedRadioNodeColor as DiseaseIndependentProperties][
-                      selectedNodeColorProperty
-                    ]}
+                {propertyResolve(universalData, {
+                  clickedNode,
+                  diseaseName,
+                  selectedRadio: selectedRadioNodeColor,
+                  selectedProperty: selectedNodeColorProperty,
+                })}
               </p>
             ) : (
               <p className='italic'>null</p>
@@ -285,13 +284,12 @@ export function GraphEvents() {
 
             {selectedRadioNodeSize && selectedNodeSizeProperty ? (
               <p>
-                {diseaseDependentProperties.includes(selectedRadioNodeSize as DiseaseDependentProperties)
-                  ? universalData?.[clickedNode][diseaseName]?.[selectedRadioNodeSize as DiseaseDependentProperties][
-                      selectedNodeSizeProperty
-                    ]
-                  : universalData?.[clickedNode].common[selectedRadioNodeSize as DiseaseIndependentProperties][
-                      selectedNodeSizeProperty
-                    ]}
+                {propertyResolve(universalData, {
+                  clickedNode,
+                  diseaseName,
+                  selectedRadio: selectedRadioNodeSize,
+                  selectedProperty: selectedNodeSizeProperty,
+                })}
               </p>
             ) : (
               <p className='italic'>null</p>

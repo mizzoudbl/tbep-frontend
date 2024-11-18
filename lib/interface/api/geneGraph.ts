@@ -1,4 +1,4 @@
-import type { Gene } from './Gene';
+import type { GeneBase } from '.';
 
 /**
  * Variables for gene graph GraphQL query
@@ -38,7 +38,7 @@ export interface GeneGraphData {
      * List of genes
      * @inheritdoc Gene
      */
-    genes: Gene[];
+    genes: GeneBase[];
 
     /**
      * List of interactions between genes

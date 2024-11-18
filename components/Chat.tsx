@@ -1,7 +1,7 @@
 import type { Message } from '@/lib/interface';
 import { motion } from 'framer-motion';
 import { Send, Trash2 } from 'lucide-react';
-import React from 'react';
+import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from './Markdown';
 import { Button } from './ui/button';
@@ -14,7 +14,7 @@ export default function Chat() {
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [isTyping, setIsTyping] = React.useState(false);
-  const chatRef = React.useRef<HTMLDivElement>(null);
+  const chatRef = createRef<HTMLDivElement>();
 
   const handleSubmit = async (
     e: React.KeyboardEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>,

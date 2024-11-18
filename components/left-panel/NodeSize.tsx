@@ -8,7 +8,7 @@ import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function NodeSize() {
+export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => void }) {
   const radioValue = useStore(state => state.selectedRadioNodeSize);
   const radioOptions = useStore(state => state.radioOptions);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
@@ -50,12 +50,10 @@ export function NodeSize() {
             {/* Data fetching and input remaining */}
             <Combobox
               key={radioValue}
-              data={radioOptions[radioValue]}
+              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
               className='w-full'
               value={selectedNodeSizeProperty}
-              onChange={value => {
-                useStore.setState({ selectedNodeSizeProperty: value });
-              }}
+              onChange={onPropChange}
             />
           </div>
         )}

@@ -1,8 +1,16 @@
 import EventEmitter from 'events';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import {
+  DISEASE_DEPENDENT_PROPERTIES,
+  type DiseaseDependentProperties,
+  type DiseaseIndependentProperties,
+  NodeColorType,
+} from './data';
+import type { CommonSection, OtherSection, UniversalData } from './interface';
 
-export type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
+export type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Required<Pick<T, K>>;
+export type RequiredExcept<T, K extends keyof T> = Required<Omit<T, K>> & Partial<Pick<T, K>>;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -129,3 +137,23 @@ export type EventMessage = {
     parameters: Record<string, string>;
   };
 };
+
+export function propertyResolve(
+  universalData: UniversalData,
+  {
+    selectedRadio,
+    clickedNode,
+    diseaseName,
+    selectedProperty,
+  }: Record<'selectedRadio' | 'clickedNode' | 'diseaseName' | 'selectedProperty', string>,
+): string {
+  return DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties)
+    ? ((universalData.database[clickedNode]?.[diseaseName] as OtherSection)[
+        selectedRadio as DiseaseDependentProperties
+      ][selectedProperty] ??
+        (universalData.user[clickedNode]?.[diseaseName] as OtherSection)[selectedRadio as DiseaseDependentProperties][
+          selectedProperty
+        ])
+    : (universalData.database[clickedNode]?.common[selectedRadio as DiseaseIndependentProperties][selectedProperty] ??
+        universalData.user[clickedNode]?.common[selectedRadio as DiseaseIndependentProperties][selectedProperty]);
+}

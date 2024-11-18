@@ -1,24 +1,21 @@
-export const diseaseMap = ['PSP', 'ALS', 'FTD', 'OI'] as const;
-export const diseaseTooltip = {
+export const diseaseTooltip: Record<string, string> = {
   ALS: 'Amyotrophic Lateral Sclerosis',
   FTD: 'Frontotemporal Dementia',
   OI: 'Osteogenesis Imperfecta',
   PSP: 'Progressive Supranuclear Palsy',
 };
 
-export const diseaseDependentProperties = ['logFC', 'GDA', 'Genetics'] as const;
-export type DiseaseDependentProperties = (typeof diseaseDependentProperties)[number];
+export const DISEASE_DEPENDENT_PROPERTIES = ['DEG', 'GDA', 'Genetics'] as const;
+export type DiseaseDependentProperties = (typeof DISEASE_DEPENDENT_PROPERTIES)[number];
 
-export const diseaseIndependentProperties = ['Pathways', 'Druggability', 'TE', 'Database', 'Custom'] as const;
-export type DiseaseIndependentProperties = (typeof diseaseIndependentProperties)[number];
-
-export type DiseaseType = (typeof diseaseMap)[number];
+export const DISEASE_INDEPENDENT_PROPERTIES = ['Pathway', 'Druggability', 'TE', 'Database', 'Custom'] as const;
+export type DiseaseIndependentProperties = (typeof DISEASE_INDEPENDENT_PROPERTIES)[number];
 
 export const graphConfig = [
   {
     name: 'Disease Map',
     id: 'diseaseMap',
-    options: diseaseMap.map(disease => ({ label: disease, value: disease })),
+    options: [],
   },
   {
     name: 'Order',
@@ -76,7 +73,7 @@ export type GeneInteractionType = (typeof graphConfig)[2]['options'][number]['va
 
 export interface GraphConfig {
   geneIDs: string[];
-  diseaseMap: DiseaseType;
+  diseaseMap: string;
   order: string;
   interactionType: GeneInteractionType;
   minScore: string;

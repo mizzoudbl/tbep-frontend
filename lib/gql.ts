@@ -42,12 +42,27 @@ export const GENE_GRAPH_QUERY = gql`
   }
 `;
 
-export const GENE_UNIVERSAL_QUERY = (disease: string, common = true) => gql`
-  query GeneUniversalData($geneIDs: [String!]!) {
-    getGenes(geneIDs: $geneIDs) {
+export const GENE_UNIVERSAL_QUERY = gql`
+  query GeneUniversalData($config: [DataRequired!], $geneIDs: [String!]!) {
+    getGenes(geneIDs: $geneIDs, config: $config) {
       ID
-      ${common ? 'common' : ''}
-      ${disease}
+      disease
+      common
     }
+  }
+`;
+
+export const GET_STATS_QUERY = (bringCommon = true) => gql`
+  query GetStats($disease: String!) {
+    getHeaders(disease: $disease) {
+      ${bringCommon ? 'common' : ''}
+      disease
+    }
+  }
+`;
+
+export const GET_DISEASES_QUERY = gql`
+  query GetDiseases {
+    getDiseases
   }
 `;
