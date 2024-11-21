@@ -15,7 +15,6 @@ export function RightSideBar() {
   const forceSettings = useStore(state => state.forceSettings);
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
-  const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
   const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
   const defaultLabelSize = useStore(state => state.defaultLabelSize);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
@@ -67,7 +66,6 @@ export function RightSideBar() {
       <NetworkStyle
         defaultNodeSize={defaultNodeSize}
         defaultNodeColor={defaultNodeColor}
-        defaultEdgeColor={defaultEdgeColor}
         defaultLabelDensity={defaultLabelDensity}
         defaultLabelSize={defaultLabelSize}
         showEdgeLabel={showEdgeLabel}

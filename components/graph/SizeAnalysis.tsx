@@ -136,7 +136,7 @@ export function SizeAnalysis() {
         return attr;
       });
     }
-  }, [selectedNodeSizeProperty, sigma, universalData]);
+  }, [selectedNodeSizeProperty, sigma, universalData, defaultNodeSize]);
 
   return null;
 }

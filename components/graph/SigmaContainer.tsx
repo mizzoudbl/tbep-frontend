@@ -9,8 +9,7 @@ import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import React, { Suspense } from 'react';
 import type { Sigma } from 'sigma';
-import { EdgeLineProgram } from 'sigma/rendering';
-import { drawDiscNodeHover } from 'sigma/rendering';
+import { EdgeLineProgram, EdgeRectangleProgram, drawDiscNodeHover } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, GraphSettings, LoadGraph, SizeAnalysis } from '.';
 
 export const SigmaContainer = React.forwardRef<

@@ -3,12 +3,14 @@
 import {
   DISEASE_DEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
-  type DiseaseIndependentProperties,
+  HIGHLIGHTED_EDGE_COLOR,
+  type NodeColorType,
+  type NodeSizeType,
 } from '@/lib/data';
-import type { EdgeAttributes, NodeAttributes, OtherSection, SelectionBox } from '@/lib/interface';
+import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection, SelectionBox } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { Trie } from '@/lib/trie';
-import { cn, propertyResolve } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
@@ -89,8 +91,6 @@ export function GraphEvents() {
     [sigma],
   );
 
-  const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
-
   const handleMouseDown = useCallback(
     (e: MouseEvent) => {
       if (canvasRef.current) canvasRef.current.style.cursor = 'crosshair';
@@ -167,21 +167,34 @@ export function GraphEvents() {
     registerEvents({
       /* Node Hover Program */
       enterEdge: e => {
-        graph.setEdgeAttribute(e.edge, 'altColor', graph.getEdgeAttribute(e.edge, 'color'));
-        graph.setEdgeAttribute(e.edge, 'color', defaultEdgeColor);
-        graph.setEdgeAttribute(e.edge, 'forceLabel', true);
+        graph.updateEdgeAttributes(e.edge, attr => {
+          attr.altColor = attr.color;
+          attr.color = HIGHLIGHTED_EDGE_COLOR;
+          attr.forceLabel = true;
+
+          return attr;
+        });
         for (const node of graph.extremities(e.edge)) {
-          graph.setNodeAttribute(node, 'type', 'border');
-          graph.setNodeAttribute(node, 'highlighted', true);
+          graph.updateNodeAttributes(node, attr => {
+            attr.type = 'border';
+            attr.highlighted = true;
+            return attr;
+          });
         }
       },
       leaveEdge: e => {
-        graph.setEdgeAttribute(e.edge, 'color', graph.getEdgeAttribute(e.edge, 'altColor'));
-        graph.setEdgeAttribute(e.edge, 'forceLabel', false);
+        graph.updateEdgeAttributes(e.edge, attr => {
+          attr.color = attr.altColor;
+          attr.forceLabel = false;
+          return attr;
+        });
         for (const node of graph.extremities(e.edge)) {
           if (highlightedNodesRef.current.has(node)) continue;
-          graph.setNodeAttribute(node, 'type', 'circle');
-          graph.setNodeAttribute(node, 'highlighted', false);
+          graph.updateNodeAttributes(node, attr => {
+            attr.type = 'circle';
+            attr.highlighted = false;
+            return attr;
+          });
         }
       },
       /* Drag'n'Drop Program */
@@ -244,6 +257,21 @@ export function GraphEvents() {
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
   const diseaseName = useStore(state => state.diseaseName);
 
+  const propertyResolve = useCallback(
+    (node: string, selectedRadio: NodeColorType | NodeSizeType, selectedProperty: string) => {
+      if (selectedRadio === 'None') return 'None';
+      const userOrDatabase = useStore.getState().radioOptions.user[selectedRadio].includes(selectedProperty)
+        ? 'user'
+        : 'database';
+      return (
+        universalData[userOrDatabase][node]?.[
+          DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties) ? diseaseName : 'common'
+        ] as OtherSection & CommonSection
+      )[selectedRadio][selectedProperty];
+    },
+    [diseaseName, universalData],
+  );
+
   return (
     <>
       {clickedNode && (
@@ -262,35 +290,21 @@ export function GraphEvents() {
           </div>
           <div>
             <h3 className={cn('font-bold break-words', selectedNodeColorProperty ? '' : 'italic')}>
-              {selectedNodeColorProperty || 'Not Selected'}
+              {selectedNodeColorProperty || 'Node Color Property Not Selected'}
             </h3>
             {selectedRadioNodeColor && selectedNodeColorProperty ? (
-              <p>
-                {propertyResolve(universalData, {
-                  clickedNode,
-                  diseaseName,
-                  selectedRadio: selectedRadioNodeColor,
-                  selectedProperty: selectedNodeColorProperty,
-                })}
-              </p>
+              <p>{propertyResolve(clickedNode, selectedRadioNodeColor, selectedNodeColorProperty)}</p>
             ) : (
               <p className='italic'>null</p>
             )}
           </div>
           <div>
             <h3 className={cn('font-bold break-words', selectedNodeSizeProperty ? '' : 'italic')}>
-              {selectedNodeSizeProperty || 'Not Selected'}
+              {selectedNodeSizeProperty || 'Node Size Property Not Selected'}
             </h3>
 
             {selectedRadioNodeSize && selectedNodeSizeProperty ? (
-              <p>
-                {propertyResolve(universalData, {
-                  clickedNode,
-                  diseaseName,
-                  selectedRadio: selectedRadioNodeSize,
-                  selectedProperty: selectedNodeSizeProperty,
-                })}
-              </p>
+              <p>{propertyResolve(clickedNode, selectedRadioNodeSize, selectedNodeSizeProperty)}</p>
             ) : (
               <p className='italic'>null</p>
             )}

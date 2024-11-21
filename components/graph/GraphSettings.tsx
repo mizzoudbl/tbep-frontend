@@ -1,5 +1,6 @@
 'use client';
 
+import { FADED_EDGE_COLOR, HIGHLIGHTED_EDGE_COLOR } from '@/lib/data';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useStore } from '@/lib/store';
 import { useSetSettings, useSigma } from '@react-sigma/core';
@@ -13,7 +14,6 @@ export function GraphSettings() {
   const setSettings = useSetSettings<NodeAttributes, EdgeAttributes>();
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
-  const defaultEdgeColor = useStore(state => state.defaultEdgeColor);
   const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
   const defaultLabelSize = useStore(state => state.defaultLabelSize);
   const showEdgeLabel = useStore(state => state.showEdgeLabel);
@@ -49,14 +49,13 @@ export function GraphSettings() {
     });
   }, [defaultLabelSize, setSettings]);
 
-  const prevNodeSize = useRef(5);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!sigma || !defaultNodeSize) return;
     if (selectedRadioNodeSize !== 'None' && selectedNodeSizeProperty) {
       sigma.getGraph().updateEachNodeAttributes((_, attr) => {
         if (attr.size === 0.5) return attr;
-        if (attr.size) attr.size += (defaultNodeSize - prevNodeSize.current) / 3;
+        attr.size = defaultNodeSize;
         return attr;
       });
     } else {
@@ -65,7 +64,6 @@ export function GraphSettings() {
         return attr;
       });
     }
-    prevNodeSize.current = defaultNodeSize;
   }, [defaultNodeSize, sigma]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -93,9 +91,9 @@ export function GraphSettings() {
       edgeReducer(edge, data) {
         if (hoveredNode) {
           if (!graph.extremities(edge).includes(hoveredNode)) {
-            data.color = '#ccc';
+            data.color = FADED_EDGE_COLOR;
           } else {
-            data.color = defaultEdgeColor;
+            data.color = HIGHLIGHTED_EDGE_COLOR;
           }
         }
         return {
@@ -107,7 +105,7 @@ export function GraphSettings() {
         };
       },
     });
-  }, [defaultEdgeColor, hoveredNode, setSettings, sigma]);
+  }, [hoveredNode, setSettings, sigma]);
 
   const exportFormat = useStore(state => state.exportFormat);
   const projectTitle = useStore(state => state.projectTitle);

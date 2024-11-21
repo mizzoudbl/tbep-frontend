@@ -18,7 +18,6 @@ export default function History({
 }) {
   const handleGenerateGraph = (index: number) => {
     const configFromHistory = history[index];
-    useStore.setState({ diseaseName: configFromHistory.diseaseMap });
     localStorage.setItem(
       'graphConfig',
       JSON.stringify({
@@ -48,8 +47,8 @@ export default function History({
                       className='h-fit w-fit border-none shadow-none p-1 underline'
                       defaultValue={item.title}
                       onBlur={e => {
-                        const newHistory = history.map((historyItem, idx) =>
-                          idx === index ? { ...historyItem, title: e.target.value } : historyItem,
+                        const newHistory = history.map(historyItem =>
+                          item.title === historyItem.title ? { ...historyItem, title: e.target.value } : historyItem,
                         );
                         setHistory(newHistory);
                         localStorage.setItem('history', JSON.stringify(newHistory));
@@ -68,7 +67,7 @@ export default function History({
                     type='button'
                     className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
                     onClick={() => {
-                      const newHistory = history.filter((_, idx) => idx !== index);
+                      const newHistory = history.filter(({ title }) => title !== item.title);
                       setHistory(newHistory);
                       localStorage.setItem('history', JSON.stringify(newHistory));
                     }}
@@ -85,7 +84,15 @@ export default function History({
                   <button
                     type='button'
                     className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
-                    onClick={() => setFormData({ ...item })}
+                    onClick={() =>
+                      setFormData({
+                        diseaseMap: item.diseaseMap,
+                        seedGenes: item.seedGenes,
+                        interactionType: item.interactionType,
+                        minScore: item.minScore,
+                        order: item.order,
+                      })
+                    }
                   >
                     <Eye size={20} />
                   </button>

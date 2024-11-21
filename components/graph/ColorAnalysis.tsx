@@ -75,7 +75,7 @@ export function ColorAnalysis() {
         },
         [1, 0],
       );
-      const colorScale = scaleLinear<string>(minMax, ['#00ff00', '#ff0000']);
+      const colorScale = scaleLinear<string>(minMax, [defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
           universalData[userOrDatabase][node]?.common.Druggability[selectedNodeColorProperty] ?? Number.NaN,
@@ -94,7 +94,7 @@ export function ColorAnalysis() {
         },
         [Number.POSITIVE_INFINITY, 0],
       );
-      const colorScale = scaleLinear<string>(minMax, ['#00ff00', '#ff0000']);
+      const colorScale = scaleLinear<string>(minMax, [defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
           universalData[userOrDatabase][node]?.common.TE[selectedNodeColorProperty] ?? Number.NaN,
@@ -126,7 +126,7 @@ export function ColorAnalysis() {
         },
         [1, 0],
       );
-      const colorScale = scaleLinear<string>(minMax, ['#00ff00', '#ff0000']);
+      const colorScale = scaleLinear<string>(minMax, [defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
           (universalData[userOrDatabase][node]?.[diseaseName] as OtherSection)?.[selectedRadioNodeColor][
@@ -147,7 +147,7 @@ export function ColorAnalysis() {
         },
         [1, -1],
       );
-      const colorScale = scaleLinear<string>([min, 0, max], ['#00ff00', defaultNodeColor, '#ff0000']);
+      const colorScale = scaleLinear<string>([min, 0, max], ['green', defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
           (universalData[userOrDatabase][node]?.[diseaseName] as OtherSection)?.[selectedRadioNodeColor][
@@ -158,7 +158,7 @@ export function ColorAnalysis() {
         return attr;
       });
     } else if (selectedRadioNodeColor === 'DEG') {
-      const minMax = Object.values(universalData[userOrDatabase]).reduce(
+      const [min, max] = Object.values(universalData[userOrDatabase]).reduce(
         (acc, cur) => {
           const valString = (cur[diseaseName] as OtherSection).DEG?.[selectedNodeColorProperty];
           if (!valString) return acc;
@@ -167,7 +167,7 @@ export function ColorAnalysis() {
         },
         [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY],
       );
-      const colorScale = scaleLinear<string>(minMax, ['#00ff00', '#ff0000']);
+      const colorScale = scaleLinear<string>([min, 0, max], ['green', defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
           (universalData[userOrDatabase][node]?.[diseaseName] as OtherSection)?.[selectedRadioNodeColor][

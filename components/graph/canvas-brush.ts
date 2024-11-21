@@ -67,7 +67,7 @@ export function findNodesInSelection(
       nodePosition.y <= Math.max(box.startY, box.endY)
     ) {
       graph.setNodeAttribute(node, 'type', 'border');
-      selectedNodes.push(node);
+      if (!graph.getNodeAttribute(node, 'hidden')) selectedNodes.push(node);
     } else {
       if (highlightedNodes.has(node)) return;
       graph.removeNodeAttribute(node, 'type');

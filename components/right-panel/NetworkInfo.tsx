@@ -17,15 +17,13 @@ export function NetworkInfo() {
   useEffect(() => {
     if (selectedNodes.length === 0) return;
     (async () => {
-      const geneNames = selectedNodes.map(node => node.Gene_Name).join(',');
       setShowTable(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL}/gsea?gene_list=${encodeURIComponent(geneNames)}`,
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          cache: 'force-cache',
-        },
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL}/gsea`, {
+        method: 'POST',
+        body: JSON.stringify(selectedNodes.map(node => node.Gene_Name)),
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'force-cache',
+      });
       const data: Array<Gsea> = await response.json();
       setGseaData(data);
     })();
@@ -55,7 +53,7 @@ export function NetworkInfo() {
           tabsTitle={['Details', 'GSEA Analysis']}
           open={showTable}
           setOpen={setShowTable}
-          filterColumnNames={['Gene_Name', 'Gene_set']}
+          filterColumnNames={['Gene_Name', 'Term']}
         />
       </div>
     </div>

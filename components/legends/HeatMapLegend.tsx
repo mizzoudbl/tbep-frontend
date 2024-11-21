@@ -1,31 +1,28 @@
 'use client';
 
 import { generateColorTransition } from '@/lib/utils';
+import { scaleLinear } from 'd3-scale';
 import React, { createRef, useEffect, useRef } from 'react';
 
 export function HeatmapLegend({
   width = 200,
   height = 50,
-  minValue = 0,
-  maxValue = 1,
   title,
-  startColor = '#00ff00',
-  endColor = '#ff0000',
+  domain,
+  range,
   divisions = 10,
   formatLabel = value => value.toFixed(1),
 }: {
   width?: number;
   height?: number;
-  minValue?: number;
-  maxValue?: number;
   title?: string;
   formatLabel?: (value: number) => string;
-  startColor?: string;
-  endColor?: string;
+  domain: number[];
+  range: string[];
   divisions?: number;
 }) {
   const svgRef = createRef<SVGSVGElement>();
-  const colorScale = generateColorTransition(startColor, endColor, divisions);
+  const colorScale = scaleLinear(domain, range);
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -45,10 +42,12 @@ export function HeatmapLegend({
     linearGradient.setAttribute('x2', '100%');
     linearGradient.setAttribute('y2', '0%');
 
-    colorScale.forEach((color, index) => {
+    colorScale.ticks(divisions).forEach((num, index) => {
       const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-      stop.setAttribute('offset', `${(index / (colorScale.length - 1)) * 100}%`);
-      stop.setAttribute('stop-color', color);
+      stop.setAttribute('offset', `${(index / (divisions - 1)) * 100}%`);
+      stop.setAttribute('stop-color', colorScale(num));
+      console.log(num, colorScale(num));
+
       linearGradient.appendChild(stop);
     });
 
@@ -67,7 +66,7 @@ export function HeatmapLegend({
     // Add tick marks and labels
     for (let i = 0; i <= divisions; i++) {
       const x = (i / divisions) * width;
-      const value = minValue + (i / divisions) * (maxValue - minValue);
+      const value = domain.at(0)! + (i / divisions) * (domain.at(-1)! - domain.at(0)!);
 
       const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       tick.setAttribute('x1', x.toString());
@@ -78,7 +77,7 @@ export function HeatmapLegend({
       svg.appendChild(tick);
 
       const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      label.setAttribute('x', i ? x.toString() : '7');
+      label.setAttribute('x', i ? x.toString() : '5');
       label.setAttribute('y', (25 + legendHeight).toString());
       label.setAttribute('font-size', '10');
       label.setAttribute('text-anchor', 'middle');
@@ -95,7 +94,7 @@ export function HeatmapLegend({
     titleElement.setAttribute('text-anchor', 'middle');
     titleElement.textContent = title ?? null;
     svg.appendChild(titleElement);
-  }, [width, height, minValue, maxValue, title, divisions, formatLabel, colorScale, svgRef]);
+  }, [width, height, title, domain, divisions, formatLabel, colorScale, svgRef]);
 
   return (
     <div>

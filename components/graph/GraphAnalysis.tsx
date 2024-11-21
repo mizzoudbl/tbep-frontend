@@ -68,7 +68,13 @@ export function GraphAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (radialAnalysis.hubGeneEdgeCount < 1) return;
+    if (radialAnalysis.hubGeneEdgeCount < 1) {
+      const selectedNodes = useStore.getState().selectedNodes;
+      graph.updateEachNodeAttributes(($node, attr) => {
+        attr.type = selectedNodes.some(node => node.ID === $node) ? 'border' : 'circle';
+        return attr;
+      });
+    }
     graph.updateEachNodeAttributes((node, attr) => {
       const degree = graph.degree(node);
       if (degree >= radialAnalysis.hubGeneEdgeCount) {

@@ -3,6 +3,7 @@
 import React from 'react';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import { Spinner } from '@/components/ui/spinner';
+import { DEFAULT_EDGE_COLOR } from '@/lib/data';
 import dynamic from 'next/dynamic';
 
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {
@@ -22,11 +23,10 @@ export default function NetworkPage() {
     <SigmaContainer
       settings={{
         enableEdgeEvents: true,
-        zIndex: true,
         defaultNodeType: 'circle',
         labelRenderedSizeThreshold: 0.75,
         labelDensity: 0.2,
-        defaultEdgeColor: '#c5c5c5',
+        defaultEdgeColor: DEFAULT_EDGE_COLOR,
         labelSize: 10,
         defaultNodeColor: 'blue',
         zoomingRatio: 1.4,

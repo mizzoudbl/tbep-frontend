@@ -53,11 +53,6 @@ export interface GraphStore {
   defaultLabelDensity: number;
 
   /**
-   * Default edge color of the graph
-   */
-  defaultEdgeColor: string;
-
-  /**
    * Default label size of the graph
    */
   defaultLabelSize: number;

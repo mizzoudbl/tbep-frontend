@@ -16,7 +16,6 @@ export function NetworkStyle({
   showEdgeLabel,
   showEdgeColor,
   defaultNodeColor,
-  defaultEdgeColor,
   handleDefaultChange,
   handleCheckBox,
 }: {
@@ -26,7 +25,6 @@ export function NetworkStyle({
   showEdgeLabel: boolean;
   showEdgeColor: boolean;
   defaultNodeColor: string;
-  defaultEdgeColor: string;
   handleDefaultChange: (value: number | string, key: keyof GraphStore) => void;
   handleCheckBox: (value: CheckedState, key: keyof GraphStore) => void;
 }) {
@@ -152,35 +150,17 @@ export function NetworkStyle({
             </Label>
           </div>
         </div>
-        <hr />
-        <div className='flex flex-col lg:flex-row gap-2'>
-          <Tooltip>
-            <div className='flex flex-col space-y-1 lg:w-1/2'>
-              <TooltipTrigger asChild>
-                <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
-                  Node Color
-                </Label>
-              </TooltipTrigger>
-              <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />
-            </div>
-            <TooltipContent>
-              <p>Change the color of the nodes in the network</p>
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <div className='flex flex-col space-y-1 lg:w-1/2'>
-              <TooltipTrigger asChild>
-                <Label htmlFor='defaultEdgeColor' className='text-xs font-semibold'>
-                  Edge Color
-                </Label>
-              </TooltipTrigger>
-              <ColorPicker color={defaultEdgeColor} property='defaultEdgeColor' className='w-full' />
-            </div>
-            <TooltipContent>
-              <p>Change the color of the nodes in the network</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
+              Node Color
+            </Label>
+          </TooltipTrigger>
+          <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />
+          <TooltipContent>
+            <p>Change the color of the nodes in the network</p>
+          </TooltipContent>
+        </Tooltip>
       </CollapsibleContent>
     </Collapsible>
   );

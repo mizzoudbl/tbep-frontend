@@ -30,7 +30,7 @@ export const columnSelectedNodes: ColumnDef<SelectedNodeProperty>[] = [
 
 export const columnGseaResults: ColumnDef<Gsea>[] = [
   {
-    accessorKey: 'Gene_set',
+    accessorKey: 'Term',
     header: headerHelper('Term'),
   },
   {

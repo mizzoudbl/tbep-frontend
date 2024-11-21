@@ -37,4 +37,10 @@ export interface EdgeAttributes extends Attributes {
    * boolean whether the edge is hidden
    */
   hidden?: boolean;
+
+  /**
+   * type of the edge (custom defined but ProgramClasses needs to be mapped in SigmaContainer)
+   * defeault: line
+   */
+  type?: 'line' | 'rectangle';
 }

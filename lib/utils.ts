@@ -5,9 +5,8 @@ import {
   DISEASE_DEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
   type DiseaseIndependentProperties,
-  NodeColorType,
 } from './data';
-import type { CommonSection, OtherSection, UniversalData } from './interface';
+import type { OtherSection, UniversalData } from './interface';
 
 export type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Required<Pick<T, K>>;
 export type RequiredExcept<T, K extends keyof T> = Required<Omit<T, K>> & Partial<Pick<T, K>>;

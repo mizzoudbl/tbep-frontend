@@ -10,6 +10,7 @@ export function Legend() {
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const [minScore, setMinScore] = useState(0);
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
 
   useEffect(() => {
     setMinScore(Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0);
@@ -27,8 +28,23 @@ export function Legend() {
         {selectedRadioNodeColor && selectedRadioNodeColor !== 'None' ? (
           selectedRadioNodeColor === 'Pathway' || selectedRadioNodeColor === 'Database' ? (
             <BinaryLegend />
+          ) : selectedRadioNodeColor === 'Genetics' || selectedRadioNodeColor === 'DEG' ? (
+            <HeatmapLegend
+              title={selectedRadioNodeColor}
+              domain={[-1, 0, 1]}
+              range={['green', defaultNodeColor, 'red']}
+            />
+          ) : selectedRadioNodeColor === 'Druggability' ||
+            selectedRadioNodeColor === 'GDA' ||
+            selectedRadioNodeColor === 'TE' ? (
+            <HeatmapLegend
+              title={selectedRadioNodeColor}
+              domain={[0, 1]}
+              range={[defaultNodeColor, 'red']}
+              divisions={10}
+            />
           ) : (
-            <HeatmapLegend title={selectedRadioNodeColor} width={200} height={50} />
+            <p className='text-center font-semibold'>No Legends Available</p>
           )
         ) : (
           <p className='text-center font-semibold'>Select Datapoints on left to view legends!</p>
@@ -36,11 +52,9 @@ export function Legend() {
         {showEdgeColor && (
           <HeatmapLegend
             title='Edge Color'
-            width={200}
-            height={50}
-            startColor='#ffff00'
-            minValue={minScore || 0}
-            divisions={(1 - minScore) * 10}
+            range={['yellow', 'red']}
+            domain={[minScore ?? 0, 1]}
+            divisions={(1 - (minScore ?? 0)) * 10}
           />
         )}
       </CollapsibleContent>

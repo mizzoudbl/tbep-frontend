@@ -57,8 +57,10 @@ export const team = [
       },
       {
         name: 'Yijie Ren',
-        title: 'Manager',
-        email: 'yijieren@gmail.com',
+        title: `Manager
+        Jianna Consulting, LLC`,
+        email: 'manager@jianna.net',
+        link: 'https://www.linkedin.com/in/yijie-ren-851a61141/',
         image: '/image/team/yijieren.jpg',
       },
     ],

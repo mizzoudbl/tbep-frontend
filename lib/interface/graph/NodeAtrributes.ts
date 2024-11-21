@@ -48,8 +48,9 @@ export interface NodeAttributes extends Attributes, SimulationNodeDatum {
 
   /**
    * type of the node (custom defined but ProgramClasses needs to be mapped in SigmaContainer)
+   * defeault: circle
    */
-  type?: string; // circle (Default), border, image etc.
+  type?: 'circle' | 'border';
 
   /**
    * boolean whether the node is highlighted (shows hoverlabel on true)

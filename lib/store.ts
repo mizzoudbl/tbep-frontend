@@ -22,7 +22,6 @@ export const useStore = create<GraphStore>(set => ({
   },
   defaultNodeSize: 5,
   defaultLabelDensity: 1,
-  defaultEdgeColor: 'red',
   defaultLabelSize: 10,
   selectedNodes: [],
   selectedRadioNodeColor: 'None',
