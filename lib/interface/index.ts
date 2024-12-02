@@ -26,7 +26,7 @@ export interface Message {
  * @interface Gsea
  */
 export interface Gsea {
-  Gene_set: string;
+  Pathway: string;
   Overlap: string;
   'P-value': string;
   'Adjusted P-value': string;

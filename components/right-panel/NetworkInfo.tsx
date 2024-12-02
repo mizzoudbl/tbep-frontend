@@ -53,7 +53,7 @@ export function NetworkInfo() {
           tabsTitle={['Details', 'GSEA Analysis']}
           open={showTable}
           setOpen={setShowTable}
-          filterColumnNames={['Gene_Name', 'Term']}
+          filterColumnNames={['Gene_Name', 'Pathway']}
         />
       </div>
     </div>

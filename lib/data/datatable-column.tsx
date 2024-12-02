@@ -30,8 +30,8 @@ export const columnSelectedNodes: ColumnDef<SelectedNodeProperty>[] = [
 
 export const columnGseaResults: ColumnDef<Gsea>[] = [
   {
-    accessorKey: 'Term',
-    header: headerHelper('Term'),
+    accessorKey: 'Pathway',
+    header: headerHelper('Pathway'),
   },
   {
     accessorKey: 'Overlap',
