@@ -116,7 +116,7 @@ export function LoadGraph() {
           }
           if (!result) return;
           const geneNameToID = new Map<string, string>();
-          for (const gene of result.data?.getGenes!) {
+          for (const gene of result.data?.getGenes ?? []) {
             if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             graph.addNode(gene.ID, {
               label: gene.Gene_name,

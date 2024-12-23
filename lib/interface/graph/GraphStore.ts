@@ -165,6 +165,7 @@ export type UniversalData = Record<
 >;
 
 export interface CommonSection {
+  OT_Prioritization: Record<string, string>;
   Pathway: Record<string, string>;
   Druggability: Record<string, string>;
   TE: Record<string, string>;
@@ -176,4 +177,5 @@ export interface OtherSection {
   DEG: Record<string, string>;
   GDA: Record<string, string>;
   Genetics: Record<string, string>;
+  OpenTargets: Record<string, string>;
 }

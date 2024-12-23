@@ -140,7 +140,9 @@ export default function FileSheet() {
         None: [],
         DEG: [],
         GDA: [],
+        OpenTargets: [],
         Genetics: [],
+        OT_Prioritization: [],
         Pathway: [],
         Druggability: [],
         TE: [],
@@ -192,6 +194,7 @@ export default function FileSheet() {
                   Druggability: {},
                   Pathway: {},
                   TE: {},
+                  OT_Prioritization: {},
                 },
               };
             }
@@ -200,6 +203,7 @@ export default function FileSheet() {
                 DEG: {},
                 GDA: {},
                 Genetics: {},
+                OpenTargets: {},
               };
             }
 
@@ -273,7 +277,9 @@ export default function FileSheet() {
           None: [],
           DEG: [],
           GDA: [],
+          OpenTargets: [],
           Genetics: [],
+          OT_Prioritization: [],
           Pathway: [],
           Druggability: [],
           TE: [],

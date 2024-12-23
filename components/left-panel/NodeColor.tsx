@@ -2,8 +2,9 @@ import { type NodeColorType, nodeColor } from '@/lib/data';
 import { useStore } from '@/lib/store';
 import { ChevronsUpDown, Info } from 'lucide-react';
 import React from 'react';
-import { Combobox } from '../ComboBox';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
@@ -46,16 +47,13 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
           ))}
         </RadioGroup>
         {radioValue !== 'None' && (
-          <div className='mt-2'>
-            {/* Data fetching and input remaining */}
-            <Combobox
-              key={radioValue}
-              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
-              className='w-full'
-              value={selectedNodeColorProperty}
-              onChange={onPropChange}
-            />
-          </div>
+          <Combobox
+            key={radioValue}
+            data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
+            className='w-full mt-2'
+            value={selectedNodeColorProperty}
+            onChange={onPropChange}
+          />
         )}
       </CollapsibleContent>
     </Collapsible>

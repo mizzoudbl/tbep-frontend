@@ -16,6 +16,7 @@ Components Used:
 - [card](./card.tsx)
 - [checkbox](./checkbox.tsx)
 - [collapsible](./collapsible.tsx)
+- [combobox](./combobox.tsx)
 - [command](./command.tsx)
 - [data-table](./data-table.tsx)
 - [dialog](./dialog.tsx)

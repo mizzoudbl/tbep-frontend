@@ -3,6 +3,7 @@
 import Chat from '@/components/Chat';
 import History, { type HistoryItem } from '@/components/History';
 import PopUpTable from '@/components/PopUpTable';
+import { VirtualizedCombobox } from '@/components/VirtualizedCombobox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -220,6 +221,14 @@ FIG4`,
                   />
                 </div>
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                  <div>
+                    <Label htmlFor='diseaseMap'>Disease Map</Label>
+                    <VirtualizedCombobox
+                      data={diseaseData?.getDiseases ?? []}
+                      value={formData.diseaseMap}
+                      setValue={val => handleSelect(val, 'diseaseMap')}
+                    />
+                  </div>
                   {graphConfig.map(config => (
                     <div key={config.id}>
                       <Label htmlFor={config.id}>{config.name}</Label>
@@ -228,25 +237,11 @@ FIG4`,
                           <SelectValue placeholder='Select...' />
                         </SelectTrigger>
                         <SelectContent>
-                          {config.id === 'diseaseMap' ? (
-                            diseaseLoading ? (
-                              <div className='flex items-center justify-center py-2'>
-                                <Loader className='h-4 w-4 animate-spin' />
-                              </div>
-                            ) : (
-                              diseaseData?.getDiseases.map(option => (
-                                <SelectItem key={option} value={option}>
-                                  {option}
-                                </SelectItem>
-                              ))
-                            )
-                          ) : (
-                            config.options.map(option => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))
-                          )}
+                          {config.options.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>

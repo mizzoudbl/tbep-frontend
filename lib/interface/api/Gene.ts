@@ -15,6 +15,16 @@ export interface Gene {
   Description?: string;
 
   /**
+   * Input Gene Name
+   */
+  Input?: string;
+
+  /**
+   * Alias for Gene_name
+   */
+  Aliases?: string[];
+
+  /**
    * HGNC gene ID
    */
   hgnc_gene_id?: string;

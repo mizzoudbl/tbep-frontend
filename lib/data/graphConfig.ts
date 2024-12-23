@@ -5,18 +5,20 @@ export const diseaseTooltip: Record<string, string> = {
   PSP: 'Progressive Supranuclear Palsy',
 };
 
-export const DISEASE_DEPENDENT_PROPERTIES = ['DEG', 'GDA', 'Genetics'] as const;
+export const DISEASE_DEPENDENT_PROPERTIES = ['DEG', 'GDA', 'Genetics', 'OpenTargets'] as const;
 export type DiseaseDependentProperties = (typeof DISEASE_DEPENDENT_PROPERTIES)[number];
 
-export const DISEASE_INDEPENDENT_PROPERTIES = ['Pathway', 'Druggability', 'TE', 'Database', 'Custom'] as const;
+export const DISEASE_INDEPENDENT_PROPERTIES = [
+  'Pathway',
+  'Druggability',
+  'TE',
+  'Database',
+  'Custom',
+  'OT_Prioritization',
+] as const;
 export type DiseaseIndependentProperties = (typeof DISEASE_INDEPENDENT_PROPERTIES)[number];
 
 export const graphConfig = [
-  {
-    name: 'Disease Map',
-    id: 'diseaseMap',
-    options: [],
-  },
   {
     name: 'Order',
     id: 'order',
@@ -61,7 +63,7 @@ export const graphConfig = [
   },
 ] as const;
 
-export type GeneInteractionType = (typeof graphConfig)[2]['options'][number]['value'];
+export type GeneInteractionType = (typeof graphConfig)[1]['options'][number]['value'];
 
 export interface GraphConfig {
   geneIDs: string[];

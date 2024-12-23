@@ -37,18 +37,18 @@ export default function PopUpDataTable<E, F>({
       <DialogContent className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'>
         <DialogTitle>{dialogTitle}</DialogTitle>
         <div className='flex-grow overflow-y-scroll'>
-          <Tabs defaultValue={tabsTitle![0]}>
-            <TabsList className={cn('w-full grid', `grid-cols-${tabsTitle!.length}`)}>
-              {tabsTitle!.map(title => (
+          <Tabs defaultValue={tabsTitle?.[0]}>
+            <TabsList className={cn('w-full grid', `grid-cols-${tabsTitle?.length}`)}>
+              {tabsTitle?.map(title => (
                 <TabsTrigger key={title} value={title}>
                   {title}
                 </TabsTrigger>
               ))}
             </TabsList>
-            <TabsContent key={tabsTitle![0]} value={tabsTitle![0]}>
+            <TabsContent key={tabsTitle?.[0]} value={tabsTitle![0]}>
               <DataTable data={data[0]} columns={columns[0]} filterColumnName={filterColumnNames[0]} />
             </TabsContent>
-            <TabsContent key={tabsTitle![1]} value={tabsTitle![1]}>
+            <TabsContent key={tabsTitle?.[1]} value={tabsTitle![1]}>
               <DataTable data={data[1]} columns={columns[1]} filterColumnName={filterColumnNames[1]} />
             </TabsContent>
           </Tabs>
@@ -61,7 +61,7 @@ export default function PopUpDataTable<E, F>({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {tabsTitle!.map(title => (
+              {tabsTitle?.map(title => (
                 <DropdownMenuItem key={title} onClick={() => handleDownload(title)}>
                   {title}
                 </DropdownMenuItem>

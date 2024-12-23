@@ -7,6 +7,8 @@ export const GENE_VERIFICATION_QUERY = (getUserID = false) => gql`
       Gene_name
       Description
       hgnc_gene_id
+      Aliases
+      Input
     }
     ${getUserID ? 'getUserID' : ''}
   }

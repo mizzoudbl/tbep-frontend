@@ -54,6 +54,8 @@ export const useStore = create<GraphStore>(set => ({
       TE: [],
       Database: [],
       Custom: [],
+      OpenTargets: [],
+      OT_Prioritization: [],
     },
     database: {
       None: [],
@@ -65,6 +67,8 @@ export const useStore = create<GraphStore>(set => ({
       TE: [],
       Database: [],
       Custom: [],
+      OpenTargets: [],
+      OT_Prioritization: [],
     },
   },
   selectedNodeSizeProperty: '',

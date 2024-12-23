@@ -18,13 +18,18 @@ export default function PopUpTable({
     let csv: string;
     if (foundGenes) {
       csv = unparse(
-        data?.getGenes.map(gene => ({ ENSG_ID: gene.ID, Gene_Name: gene.Gene_name, Description: gene.Description })) ??
-          [],
+        data?.getGenes.map(gene => ({
+          ENSG_ID: gene.ID,
+          Input: gene.Input,
+          Gene_Name: gene.Gene_name,
+          Aliases: gene.Aliases,
+          Description: gene.Description,
+        })) ?? [],
       );
     } else {
       csv = unparse(
         geneIDs
-          .filter(gene => !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene))
+          .filter(gene => !data?.getGenes.find(g => g.Input === gene || g.ID === gene))
           .map(gene => ({ Gene: gene })),
       );
     }
@@ -38,9 +43,13 @@ export default function PopUpTable({
     element.remove();
   };
 
+  const notFoundFilteredGeneIDs = geneIDs.filter(
+    gene => !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene),
+  );
+
   return (
     <Dialog open={tableOpen}>
-      <DialogContent className='max-w-4xl w-11/12 max-h-[90vh] min-h-[60vh] flex flex-col'>
+      <DialogContent className='max-w-5xl w-11/12 max-h-[90vh] min-h-[60vh] flex flex-col'>
         <DialogTitle>Results Preview</DialogTitle>
         <div className='flex-grow overflow-y-scroll'>
           <Tabs defaultValue='found'>
@@ -48,7 +57,7 @@ export default function PopUpTable({
               <TabsTrigger value='found'>Found</TabsTrigger>
               <TabsTrigger
                 value='not-found'
-                className={`${data?.getGenes.length !== geneIDs.length && 'text-red-500 underline font-semibold'}`}
+                className={`${notFoundFilteredGeneIDs.length > 0 && 'text-red-500 underline font-semibold'}`}
               >
                 Not-Found
               </TabsTrigger>
@@ -58,15 +67,18 @@ export default function PopUpTable({
                 <TableHeader>
                   <TableRow className='font-bold'>
                     <TableHead>S. No.</TableHead>
+                    <TableHead>Input</TableHead>
                     <TableHead>ENSG ID</TableHead>
                     <TableHead>Gene Name</TableHead>
+                    <TableHead>Aliases</TableHead>
                     <TableHead>Description</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {data?.getGenes.map((gene, index) => (
                     <TableRow key={gene.ID}>
-                      <TableCell className=''>{index + 1}</TableCell>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{gene.Input}</TableCell>
                       <TableCell className='underline hover:text-teal-900 cursor-pointer'>
                         <a
                           className='flex gap-1'
@@ -87,7 +99,8 @@ export default function PopUpTable({
                           {gene.Gene_name}
                         </a>
                       </TableCell>
-                      <TableCell className=''>{gene.Description}</TableCell>
+                      <TableCell>{gene.Aliases}</TableCell>
+                      <TableCell>{gene.Description}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -103,14 +116,12 @@ export default function PopUpTable({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {geneIDs
-                    .filter(gene => !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene))
-                    .map((gene, index) => (
-                      <TableRow key={gene}>
-                        <TableCell className=''>{index + 1}</TableCell>
-                        <TableCell>{gene}</TableCell>
-                      </TableRow>
-                    ))}
+                  {notFoundFilteredGeneIDs.map((gene, index) => (
+                    <TableRow key={gene}>
+                      <TableCell className=''>{index + 1}</TableCell>
+                      <TableCell>{gene}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TabsContent>

@@ -21,8 +21,9 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import { Info } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import { NodeColor, NodeSize } from '.';
-import { Combobox } from '../ComboBox';
 import FileSheet from '../FileSheet';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
+import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Spinner } from '../ui/spinner';
@@ -96,6 +97,7 @@ export function LeftSideBar() {
           common: {
             Custom: {},
             Database: {},
+            OT_Prioritization: {},
             Druggability: {},
             Pathway: {},
             TE: {},
@@ -156,6 +158,7 @@ export function LeftSideBar() {
               DEG: {},
               GDA: {},
               Genetics: {},
+              OpenTargets: {},
             } as OtherSection;
           }
           (universalData.database[gene.ID][diseaseName] as OtherSection)[selectedRadio as DiseaseDependentProperties][
@@ -175,11 +178,10 @@ export function LeftSideBar() {
       <div className='flex flex-col'>
         <Label className='font-bold mb-2'>Disease Map</Label>
         <div className='flex items-center gap-2'>
-          <Combobox
+          <VirtualizedCombobox
             value={diseaseName}
-            onChange={value => useStore.setState({ diseaseName: value })}
+            setValue={value => useStore.setState({ diseaseName: value })}
             data={diseaseData?.getDiseases ?? []}
-            className='w-full'
           />
           <Tooltip>
             <TooltipTrigger asChild>

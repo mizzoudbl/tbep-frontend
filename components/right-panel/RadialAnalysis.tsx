@@ -5,8 +5,8 @@ import type { RadialAnalysisProps, RadialAnalysisSetting } from '@/lib/interface
 import { useStore } from '@/lib/store';
 import { ChevronsUpDown } from 'lucide-react';
 import React from 'react';
-import { Combobox } from '../ComboBox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { Combobox } from '../ui/combobox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';

@@ -73,7 +73,7 @@ export default function UploadFile() {
       return;
     }
     const userId = localStorage.getItem('userID');
-    const { data, error } = await fetchData({
+    const { error } = await fetchData({
       variables: { geneIDs: distinctSeedGenes },
       ...(userId && { context: { headers: { 'x-user-id': userId } } }),
     });

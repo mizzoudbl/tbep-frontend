@@ -12,16 +12,24 @@ export const nodeColor = [
     tooltipContent: 'Gene Disease Association score',
   },
   {
+    label: 'OpenTargets',
+    tooltipContent: 'Target-Disease Association from Opentargets Platform',
+  },
+  {
     label: 'Genetics',
-    tooltipContent: 'Odd ratio or Beta-values from population studies',
+    tooltipContent: 'Associations between traits, variants, and genes from OpenTargets Genetics',
+  },
+  {
+    label: 'OT_Prioritization',
+    tooltipContent: 'Target prioritization factors from Opentargets Platform',
   },
   {
     label: 'Pathway',
-    tooltipContent: 'Pathway membership from MSigDB',
+    tooltipContent: 'Pathways from KEGG and Reactome databases',
   },
   {
     label: 'Druggability',
-    tooltipContent: 'Druggability score from MantisML and Open Target',
+    tooltipContent: 'Druggability scores from DrugnomeAI/Mantis-ML',
   },
   {
     label: 'TE',
