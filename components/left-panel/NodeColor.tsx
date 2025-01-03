@@ -73,12 +73,13 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
               className='w-full mt-2'
               value={selectedNodeColorProperty}
               setValue={onPropChange}
+              width={radioValue === 'TE' ? '350px' : '800px'}
             />
           ) : (
             <Combobox
               key={radioValue}
               data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
-              className='w-full mt-2'
+              className='mt-2'
               value={selectedNodeColorProperty}
               onChange={onPropChange}
             />

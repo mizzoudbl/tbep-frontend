@@ -41,7 +41,7 @@ export function GraphAnalysis() {
     let nodeCount = 0;
     const userOrDatabase = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty) ? 'user' : 'database';
     graph.updateEachNodeAttributes((node, attr) => {
-      if (nodeDegreeProperty === 'geneDegree') {
+      if (nodeDegreeProperty === 'Gene Degree') {
         const degree = graph.degree(node);
         if (degree < radialAnalysis.nodeDegreeCutOff) {
           attr.hidden = true;

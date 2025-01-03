@@ -34,7 +34,7 @@ export const useStore = create<GraphStore>(set => ({
     edgeWeightCutOff: 0.4,
     nodeDegreeCutOff: 0,
     hubGeneEdgeCount: 0,
-    nodeDegreeProperty: 'geneDegree',
+    nodeDegreeProperty: 'Gene Degree',
   },
   exportFormat: null,
   geneIDs: [],

@@ -87,6 +87,7 @@ interface VirtualizedComboboxProps {
   value: string;
   width?: string;
   setValue: (value: string) => void;
+  align?: 'start' | 'end' | 'center';
 }
 
 export function VirtualizedCombobox({
@@ -97,6 +98,7 @@ export function VirtualizedCombobox({
   value,
   width = '800px',
   setValue,
+  align = 'start',
 }: VirtualizedComboboxProps) {
   const [open, setOpen] = React.useState<boolean>(false);
 
@@ -107,13 +109,13 @@ export function VirtualizedCombobox({
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className={cn('justify-between w-full', className)}
+          className={cn('w-[200px] justify-between text-ellipsis text-wrap break-words h-9', className)}
         >
-          <span className='truncate'>{(!!value && data.find(option => option === value)) ?? searchPlaceholder}</span>
+          <span className='truncate'>{(!!value && data.find(option => option === value)) || searchPlaceholder}</span>
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align='start' className={cn('p-0 w-full', className)}>
+      <PopoverContent align={align} className={cn('w-[200px] p-0', className)}>
         <VirtualizedCommand
           options={data}
           placeholder={searchPlaceholder}

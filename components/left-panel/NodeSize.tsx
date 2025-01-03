@@ -73,6 +73,7 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => voi
               className='w-full mt-2'
               value={selectedNodeSizeProperty}
               setValue={onPropChange}
+              width='350px'
             />
           ) : (
             <Combobox

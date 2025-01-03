@@ -10,6 +10,7 @@ FROM nginx:1.15-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/out /usr/share/nginx/html
+# COPY ./out /usr/share/nginx/html
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
