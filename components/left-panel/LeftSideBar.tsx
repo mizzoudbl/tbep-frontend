@@ -5,40 +5,47 @@ import {
   DISEASE_INDEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
   type DiseaseIndependentProperties,
-  diseaseTooltip,
 } from '@/lib/data';
-import { GENE_UNIVERSAL_QUERY, GET_DISEASES_QUERY, GET_STATS_QUERY } from '@/lib/gql';
+import { GENE_UNIVERSAL_QUERY, GET_STATS_QUERY } from '@/lib/gql';
+import { useStore } from '@/lib/hooks';
 import type {
   GeneUniversalData,
   GeneUniversalDataVariables,
+  GetDiseaseData,
   GetStatsData,
   GetStatsVariables,
   OtherSection,
   RadioOptions,
 } from '@/lib/interface';
-import { useStore } from '@/lib/store';
-import { useLazyQuery, useQuery } from '@apollo/client';
-import { Info } from 'lucide-react';
+import { useLazyQuery } from '@apollo/client';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
 import { NodeColor, NodeSize } from '.';
 import FileSheet from '../FileSheet';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
-import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Spinner } from '../ui/spinner';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { GeneSearch } from './GeneSearch';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
   const geneIDs = useStore(state => state.geneIDs);
   const bringCommon = useRef<boolean>(true);
+  const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | null>(null);
+  const [diseaseMap, setDiseaseMap] = React.useState<string>('amyotrophic lateral sclerosis (ALS)');
 
   useEffect(() => {
+    const diseaseMap = JSON.parse(localStorage.getItem('graphConfig') || '{}').diseaseMap;
     useStore.setState({
-      diseaseName: JSON.parse(localStorage.getItem('graphConfig') || '{}').diseaseMap,
+      diseaseName: diseaseMap.split(' ').at(-1)?.slice(1, -1),
     });
+    setDiseaseMap(diseaseMap);
+    (async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/diseases`);
+      const data = await response.json();
+      setDiseaseData(data);
+    })();
   }, []);
 
   const [fetchHeader, { loading, called }] = useLazyQuery<GetStatsData, GetStatsVariables>(
@@ -48,21 +55,20 @@ export function LeftSideBar() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Fetchdata dependency is redundant
   useEffect(() => {
-    if (diseaseName === '') return;
+    if (!diseaseName) return;
     fetchHeader({
       variables: {
         disease: diseaseName,
       },
     })
       .then(val => {
-        const data = val.data?.getHeaders;
+        const data = val.data?.headers;
         if (!data) return;
         const radioOptions: RadioOptions = {
           database: {
             ...useStore.getState().radioOptions.database,
             DEG: [],
-            GDA: [],
-            Genetics: [],
+            OpenTargets: [],
           },
           user: useStore.getState().radioOptions.user,
         };
@@ -95,8 +101,7 @@ export function LeftSideBar() {
       if (universalData.database[gene] === undefined) {
         universalData.database[gene] = {
           common: {
-            Custom: {},
-            Database: {},
+            Custom_Color: {},
             OT_Prioritization: {},
             Druggability: {},
             Pathway: {},
@@ -113,16 +118,14 @@ export function LeftSideBar() {
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
   const radioOptions = useStore(state => state.radioOptions);
-  const queryiedFields = useRef<Set<string>>(new Set());
-  const { data: diseaseData, loading: diseaseLoading } = useQuery<{
-    getDiseases: string[];
-  }>(GET_DISEASES_QUERY);
+  const queriedFieldSet = useRef<Set<string>>(new Set());
 
   async function handlePropChange(val: string, type: 'color' | 'size') {
     const selectedRadio = type === 'color' ? selectedRadioNodeColor : selectedRadioNodeSize;
+    if (!selectedRadio) return;
     const ddp = DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties);
     const key = `${ddp ? diseaseName : ''}_${selectedRadio}_${val}`;
-    if (selectedRadio === 'None' || queryiedFields.current.has(key) || radioOptions.user[selectedRadio].includes(val)) {
+    if (queriedFieldSet.current.has(key) || radioOptions.user[selectedRadio].includes(val)) {
       useStore.setState({
         [type === 'color' ? 'selectedNodeColorProperty' : 'selectedNodeSizeProperty']: val,
       });
@@ -142,8 +145,8 @@ export function LeftSideBar() {
         console.error(result.error);
         return;
       }
-      const data = result.data?.getGenes;
-      queryiedFields.current.add(key);
+      const data = result.data?.genes;
+      queriedFieldSet.current.add(key);
       const universalData = useStore.getState().universalData;
       for (const gene of data ?? []) {
         for (const prop in gene.common) {
@@ -156,8 +159,6 @@ export function LeftSideBar() {
           if (geneRecord[diseaseName] === undefined) {
             geneRecord[diseaseName] = {
               DEG: {},
-              GDA: {},
-              Genetics: {},
               OpenTargets: {},
             } as OtherSection;
           }
@@ -173,26 +174,38 @@ export function LeftSideBar() {
     }
   }
 
+  async function handleDiseaseChange(disease: string) {
+    setDiseaseMap(disease);
+    useStore.setState({ diseaseName: disease.split(' ').at(-1)?.slice(1, -1) });
+  }
+
   return (
     <ScrollArea className='border-r p-2 flex flex-col h-[98vh]'>
       <div className='flex flex-col'>
         <Label className='font-bold mb-2'>Disease Map</Label>
         <div className='flex items-center gap-2'>
-          <VirtualizedCombobox
-            value={diseaseName}
-            setValue={value => useStore.setState({ diseaseName: value })}
-            data={diseaseData?.getDiseases ?? []}
-          />
-          <Tooltip>
-            <TooltipTrigger asChild>
-              {!called || (called && loading) || diseaseLoading || universalLoading ? (
+          <motion.div layout transition={{ duration: 0.1, ease: 'easeInOut' }} initial={{ width: '100%' }} animate>
+            <VirtualizedCombobox
+              value={diseaseMap}
+              searchPlaceholder='Search Disease...'
+              setValue={handleDiseaseChange}
+              data={diseaseData?.map(val => `${val.name} (${val.ID})`)}
+              loading={diseaseData === null}
+              className='w-full'
+            />
+          </motion.div>
+          <AnimatePresence>
+            {(!called || (called && loading) || diseaseData === null || universalLoading) && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.1 }}
+              >
                 <Spinner size='small' />
-              ) : (
-                <Info size={20} />
-              )}
-            </TooltipTrigger>
-            <TooltipContent>{diseaseTooltip[diseaseName] ?? 'No info available'}</TooltipContent>
-          </Tooltip>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
       <NodeColor onPropChange={val => handlePropChange(val, 'color')} />

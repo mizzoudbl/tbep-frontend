@@ -1,4 +1,11 @@
-import type { GraphConfig, NodeColorType, NodeSizeType } from '@/lib/data';
+import type {
+  DiseaseDependentProperties,
+  DiseaseIndependentProperties,
+  GeneProperties,
+  GraphConfig,
+  NodeColorType,
+  NodeSizeType,
+} from '@/lib/data';
 import type { RadialAnalysisSetting } from '.';
 import type { SelectedNodeProperty } from '../SelectedNodeProperty';
 import type { ForceSettings } from './ForceSettings';
@@ -66,12 +73,12 @@ export interface GraphStore {
   /**
    * Selected radio button option for Node Color of graph
    */
-  selectedRadioNodeColor: NodeColorType;
+  selectedRadioNodeColor: NodeColorType | undefined;
 
   /**
    * Selected radio button option for Node Size of graph
    */
-  selectedRadioNodeSize: NodeSizeType;
+  selectedRadioNodeSize: NodeSizeType | undefined;
 
   /**
    * Whether to show the edge label or not
@@ -144,7 +151,7 @@ export interface GraphStore {
   graphConfig: GraphConfig | null;
 }
 
-export type RadioOptions = Record<'user' | 'database', Record<NodeColorType | NodeSizeType, Array<string>>>;
+export type RadioOptions = Record<'user' | 'database', Record<GeneProperties, Array<string>>>;
 
 /**
  * Universal Data of all the diseases to be mapped on left sidebar
@@ -164,18 +171,5 @@ export type UniversalData = Record<
   >
 >;
 
-export interface CommonSection {
-  OT_Prioritization: Record<string, string>;
-  Pathway: Record<string, string>;
-  Druggability: Record<string, string>;
-  TE: Record<string, string>;
-  Database: Record<string, string>;
-  Custom: Record<string, string>;
-}
-
-export interface OtherSection {
-  DEG: Record<string, string>;
-  GDA: Record<string, string>;
-  Genetics: Record<string, string>;
-  OpenTargets: Record<string, string>;
-}
+export type CommonSection = Record<DiseaseIndependentProperties, Record<string, string>>;
+export type OtherSection = Record<DiseaseDependentProperties, Record<string, string>>;

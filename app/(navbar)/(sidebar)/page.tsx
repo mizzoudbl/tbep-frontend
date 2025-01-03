@@ -10,25 +10,33 @@ import { Label } from '@/components/ui/label';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { graphConfig } from '@/lib/data';
-import { GENE_VERIFICATION_QUERY, GET_DISEASES_QUERY } from '@/lib/gql';
-import type { GeneVerificationData, GeneVerificationVariables, GraphConfigForm } from '@/lib/interface';
-import { useStore } from '@/lib/store';
+import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
+import type { GeneVerificationData, GeneVerificationVariables, GetDiseaseData, GraphConfigForm } from '@/lib/interface';
 import { distinct } from '@/lib/utils';
-import { useLazyQuery, useQuery } from '@apollo/client';
-import { Loader } from 'lucide-react';
+import { useLazyQuery } from '@apollo/client';
+import { Info, Loader } from 'lucide-react';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
 export default function Home() {
-  const [fetchData, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
+  const [verifyGenes, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
     GENE_VERIFICATION_QUERY(true),
   );
-  const { data: diseaseData, loading: diseaseLoading } = useQuery<{ getDiseases: string[] }>(GET_DISEASES_QUERY);
+  const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | null>(null);
+
+  React.useEffect(() => {
+    (async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/diseases`);
+      const data = await response.json();
+      setDiseaseData(data);
+    })();
+  }, []);
 
   const [formData, setFormData] = React.useState<GraphConfigForm>({
     seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
-    diseaseMap: 'ALS',
+    diseaseMap: 'amyotrophic lateral sclerosis (ALS)',
     order: '0',
     interactionType: 'PPI',
     minScore: '0.9',
@@ -58,7 +66,7 @@ export default function Home() {
     const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim().toUpperCase())).filter(Boolean);
     setGeneIDs(geneIDs);
     const userId = localStorage.getItem('userID');
-    const { data, error } = await fetchData({
+    const { data, error } = await verifyGenes({
       variables: { geneIDs },
       ...(userId && { context: { headers: { 'x-user-id': userId } } }),
     });
@@ -72,7 +80,7 @@ export default function Home() {
       });
       return;
     }
-    if (!userId) localStorage.setItem('userID', data?.getUserID ?? '');
+    if (!userId) localStorage.setItem('userID', data?.userID ?? '');
     setTableOpen(true);
   };
 
@@ -107,7 +115,7 @@ export default function Home() {
   };
 
   const handleGenerateGraph = () => {
-    const seedGenes = data?.getGenes.map(gene => gene.ID);
+    const seedGenes = data?.genes.map(gene => gene.ID);
     if (!seedGenes) {
       toast.error('There is no valid gene in the list', {
         cancel: { label: 'Close', onClick() {} },
@@ -117,7 +125,6 @@ export default function Home() {
       });
       return;
     }
-    useStore.setState({ diseaseName: formData.diseaseMap });
     localStorage.setItem(
       'graphConfig',
       JSON.stringify({
@@ -221,12 +228,22 @@ FIG4`,
                   />
                 </div>
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
-                  <div>
-                    <Label htmlFor='diseaseMap'>Disease Map</Label>
+                  <div className='space-y-2 mt-[2]'>
+                    <div className='flex items-end gap-1'>
+                      <Label htmlFor='diseaseMap'>Disease Map</Label>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info size={12} />
+                        </TooltipTrigger>
+                        <TooltipContent>To search disease with its ID, type disease ID in parentheses.</TooltipContent>
+                      </Tooltip>
+                    </div>
                     <VirtualizedCombobox
-                      data={diseaseData?.getDiseases ?? []}
+                      data={diseaseData?.map(val => `${val.name} (${val.ID})`)}
                       value={formData.diseaseMap}
                       setValue={val => handleSelect(val, 'diseaseMap')}
+                      searchPlaceholder='Search Disease...'
+                      loading={diseaseData === null}
                     />
                   </div>
                   {graphConfig.map(config => (

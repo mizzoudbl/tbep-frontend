@@ -1,6 +1,6 @@
 'use client';
 
-import { useStore } from '@/lib/store';
+import { useStore } from '@/lib/hooks';
 import { DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
 import { FolderUp } from 'lucide-react';
 import { Button } from './ui/button';

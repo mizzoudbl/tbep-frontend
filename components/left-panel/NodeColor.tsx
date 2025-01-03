@@ -1,8 +1,9 @@
-import { type NodeColorType, nodeColor } from '@/lib/data';
-import { useStore } from '@/lib/store';
-import { ChevronsUpDown, Info } from 'lucide-react';
+import { type NodeColorType, PROPERTY_LABEL_TYPE_MAPPING, nodeColor } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
+import { ChevronsUpDown, Info, RefreshCcw } from 'lucide-react';
 import React from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
+import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
@@ -16,28 +17,46 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
 
   return (
     <Collapsible defaultOpen className='my-2 border p-2 rounded shadow'>
-      <CollapsibleTrigger asChild>
-        <div className='flex items-center justify-between w-full'>
-          <Label className='font-bold cursor-pointer hover:underline'>Node Color</Label>
-          <ChevronsUpDown size={20} />
+      <div className='flex items-center justify-between w-full'>
+        <Label className='font-bold'>Node Color</Label>
+        <div className='space-x-1 flex items-center'>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => useStore.setState({ selectedRadioNodeColor: undefined })}
+                type='button'
+                variant='outline'
+                size='icon'
+                className='w-6 h-6'
+              >
+                <RefreshCcw size={15} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Reset</p>
+            </TooltipContent>
+          </Tooltip>
+          <CollapsibleTrigger asChild>
+            <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+              <ChevronsUpDown size={15} />
+            </Button>
+          </CollapsibleTrigger>
         </div>
-      </CollapsibleTrigger>
+      </div>
       <CollapsibleContent className='mt-2'>
         <RadioGroup
-          value={radioValue}
+          value={radioValue ?? ''}
           onValueChange={value => useStore.setState({ selectedRadioNodeColor: value as NodeColorType })}
         >
           {nodeColor.map(({ label, tooltipContent }) => (
             <Tooltip key={label}>
-              <TooltipTrigger asChild>
-                <div className='flex items-center space-x-2'>
-                  <RadioGroupItem value={label} id={label} />
-                  <Label htmlFor={label} className='text-xs'>
-                    {label}
-                  </Label>
-                  {tooltipContent && <Info size={12} />}
-                </div>
-              </TooltipTrigger>
+              <div className='flex items-center space-x-2'>
+                <RadioGroupItem value={PROPERTY_LABEL_TYPE_MAPPING[label]} id={label} />
+                <Label htmlFor={label} className='text-xs'>
+                  {label}
+                </Label>
+                <TooltipTrigger asChild>{tooltipContent && <Info size={12} />}</TooltipTrigger>
+              </div>
               {tooltipContent && (
                 <TooltipContent>
                   <p>{tooltipContent}</p>
@@ -46,15 +65,24 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
             </Tooltip>
           ))}
         </RadioGroup>
-        {radioValue !== 'None' && (
-          <Combobox
-            key={radioValue}
-            data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
-            className='w-full mt-2'
-            value={selectedNodeColorProperty}
-            onChange={onPropChange}
-          />
-        )}
+        {radioValue &&
+          (radioValue === 'TE' || radioValue === 'Pathway' ? (
+            <VirtualizedCombobox
+              key={radioValue}
+              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
+              className='w-full mt-2'
+              value={selectedNodeColorProperty}
+              setValue={onPropChange}
+            />
+          ) : (
+            <Combobox
+              key={radioValue}
+              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
+              className='w-full mt-2'
+              value={selectedNodeColorProperty}
+              onChange={onPropChange}
+            />
+          ))}
       </CollapsibleContent>
     </Collapsible>
   );

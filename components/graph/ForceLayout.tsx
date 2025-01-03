@@ -1,8 +1,8 @@
 'use client';
 
 import type EventEmitter from 'events';
+import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { useSigma } from '@react-sigma/core';
 import {
   type Simulation,

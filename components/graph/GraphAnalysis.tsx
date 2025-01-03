@@ -1,7 +1,7 @@
 'use client';
 
+import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
@@ -69,9 +69,8 @@ export function GraphAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (radialAnalysis.hubGeneEdgeCount < 1) {
-      const selectedNodes = useStore.getState().selectedNodes;
-      graph.updateEachNodeAttributes(($node, attr) => {
-        attr.type = selectedNodes.some(node => node.ID === $node) ? 'border' : 'circle';
+      graph.updateEachNodeAttributes((_node, attr) => {
+        attr.type = 'circle';
         return attr;
       });
     }
@@ -110,7 +109,7 @@ export function GraphAnalysis() {
         });
       } else if (name === 'Leiden') {
         const { resolution, weighted } = parameters;
-        if (searchParams.get('file')) {
+        if (searchParams?.get('file')) {
           const louvain = await import('graphology-communities-louvain').then(lib => lib.default);
           const hslToHex = (h: number, s: number, l: number) => {
             l /= 100;

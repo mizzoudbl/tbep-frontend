@@ -87,7 +87,7 @@ export default function UploadFile() {
       });
       return;
     }
-    if (!userId) localStorage.setItem('userID', data?.getUserID ?? '');
+    if (!userId) localStorage.setItem('userID', data?.userID ?? '');
     setGeneIDs(distinctSeedGenes);
     setTableOpen(true);
   };

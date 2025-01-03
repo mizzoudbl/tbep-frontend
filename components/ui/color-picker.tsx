@@ -3,8 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useStore } from '@/lib/hooks';
 import type { GraphStore } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Paintbrush } from 'lucide-react';
 import React from 'react';

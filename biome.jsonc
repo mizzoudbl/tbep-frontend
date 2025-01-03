@@ -42,7 +42,7 @@
         "useSingleVarDeclarator": "off",
         "useShorthandAssign": "off",
         "noNonNullAssertion": "off",
-        "useNodejsImportProtocol": "info"
+        "useNodejsImportProtocol": "off"
       },
       "suspicious": {
         "noAssignInExpressions": "off",

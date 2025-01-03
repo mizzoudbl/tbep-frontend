@@ -1,8 +1,8 @@
 'use client';
 
 import { columnGseaResults, columnSelectedNodes } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
 import type { Gsea } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import React, { useEffect } from 'react';
 import PopUpDataTable from '../PopUpDataTable';
 import { Button } from '../ui/button';

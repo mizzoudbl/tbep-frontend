@@ -7,7 +7,7 @@ import { RightSideBar } from '@/components/right-panel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useStore } from '@/lib/store';
+import { useStore } from '@/lib/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect } from 'react';
@@ -17,7 +17,7 @@ const FileName = () => {
   const projectTitle = useStore(state => state.projectTitle);
 
   useEffect(() => {
-    const fileName = searchParams.get('file') ?? 'Untitled';
+    const fileName = searchParams?.get('file') ?? 'Untitled';
     useStore.setState({ projectTitle: fileName });
   }, [searchParams]);
 

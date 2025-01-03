@@ -10,7 +10,7 @@ const SigmaContainer = dynamic(() => import('@/components/graph').then(module =>
   loading: () => (
     <div className='w-full h-full grid place-items-center'>
       <div className='flex flex-col items-center'>
-        <Spinner size={'medium'} />
+        <Spinner />
         Loading...
       </div>
     </div>

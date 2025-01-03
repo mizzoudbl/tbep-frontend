@@ -18,7 +18,7 @@ export default function PopUpTable({
     let csv: string;
     if (foundGenes) {
       csv = unparse(
-        data?.getGenes.map(gene => ({
+        data?.genes.map(gene => ({
           ENSG_ID: gene.ID,
           Input: gene.Input,
           Gene_Name: gene.Gene_name,
@@ -28,9 +28,7 @@ export default function PopUpTable({
       );
     } else {
       csv = unparse(
-        geneIDs
-          .filter(gene => !data?.getGenes.find(g => g.Input === gene || g.ID === gene))
-          .map(gene => ({ Gene: gene })),
+        geneIDs.filter(gene => !data?.genes.find(g => g.Input === gene || g.ID === gene)).map(gene => ({ Gene: gene })),
       );
     }
     const element = document.createElement('a');
@@ -43,9 +41,7 @@ export default function PopUpTable({
     element.remove();
   };
 
-  const notFoundFilteredGeneIDs = geneIDs.filter(
-    gene => !data?.getGenes.find(g => g.Gene_name === gene || g.ID === gene),
-  );
+  const notFoundFilteredGeneIDs = geneIDs.filter(gene => !data?.genes.find(g => g.Gene_name === gene || g.ID === gene));
 
   return (
     <Dialog open={tableOpen}>
@@ -75,7 +71,7 @@ export default function PopUpTable({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data?.getGenes.map((gene, index) => (
+                  {data?.genes.map((gene, index) => (
                     <TableRow key={gene.ID}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{gene.Input}</TableCell>
@@ -84,7 +80,7 @@ export default function PopUpTable({
                           className='flex gap-1'
                           target='_blank'
                           rel='noreferrer'
-                          href={`https://www.ensembl.org/Human/Search/Results?q=${gene.ID}`}
+                          href={`https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=${gene.ID}`}
                         >
                           {gene.ID}
                         </a>
@@ -107,7 +103,7 @@ export default function PopUpTable({
               </Table>
             </TabsContent>
             <TabsContent value='not-found'>
-              {/* Write only those geneIDs which are not present in data.getGenes and present in geneIDs */}
+              {/* Write only those geneIDs which are not present in data.genes and present in geneIDs */}
               <Table>
                 <TableHeader>
                   <TableRow>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useStore } from '@/lib/store';
+import { useStore } from '@/lib/hooks';
 import React, { createRef, useEffect } from 'react';
 import { Textarea } from '../ui/textarea';
 

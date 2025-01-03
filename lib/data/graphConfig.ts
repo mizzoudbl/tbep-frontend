@@ -1,22 +1,24 @@
-export const diseaseTooltip: Record<string, string> = {
-  ALS: 'Amyotrophic Lateral Sclerosis',
-  FTD: 'Frontotemporal Dementia',
-  OI: 'Osteogenesis Imperfecta',
-  PSP: 'Progressive Supranuclear Palsy',
-};
-
-export const DISEASE_DEPENDENT_PROPERTIES = ['DEG', 'GDA', 'Genetics', 'OpenTargets'] as const;
-export type DiseaseDependentProperties = (typeof DISEASE_DEPENDENT_PROPERTIES)[number];
-
+export const PROPERTY_LABEL_TYPE_MAPPING = {
+  'Differential Expression': 'DEG',
+  'Target Disease Association': 'OpenTargets',
+  'Target Prioritization Factors': 'OT_Prioritization',
+  Pathways: 'Pathway',
+  Druggability: 'Druggability',
+  'Tissue Specificity': 'TE',
+  Custom: 'Custom_Color',
+} as const;
+export const DISEASE_DEPENDENT_PROPERTIES = ['DEG', 'OpenTargets'] as const;
 export const DISEASE_INDEPENDENT_PROPERTIES = [
   'Pathway',
   'Druggability',
   'TE',
-  'Database',
-  'Custom',
+  'Custom_Color',
   'OT_Prioritization',
 ] as const;
+
+export type DiseaseDependentProperties = (typeof DISEASE_DEPENDENT_PROPERTIES)[number];
 export type DiseaseIndependentProperties = (typeof DISEASE_INDEPENDENT_PROPERTIES)[number];
+export type GeneProperties = DiseaseDependentProperties | DiseaseIndependentProperties;
 
 export const graphConfig = [
   {
@@ -64,7 +66,6 @@ export const graphConfig = [
 ] as const;
 
 export type GeneInteractionType = (typeof graphConfig)[1]['options'][number]['value'];
-
 export interface GraphConfig {
   geneIDs: string[];
   diseaseMap: string;

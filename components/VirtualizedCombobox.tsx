@@ -5,22 +5,27 @@ import { cn } from '@/lib/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
-
-type Option = {
-  value: string;
-  label: string;
-};
+import { Spinner } from './ui/spinner';
 
 interface VirtualizedCommandProps {
-  options: Option[];
+  options: string[];
   placeholder: string;
   selectedOption: string;
   onSelectOption?: (option: string) => void;
+  loading?: boolean;
+  width?: string;
 }
 
-const VirtualizedCommand = ({ options, placeholder, selectedOption, onSelectOption }: VirtualizedCommandProps) => {
-  const [filteredOptions, setFilteredOptions] = React.useState<Option[]>(options);
-  const parentRef = React.useRef(null);
+const VirtualizedCommand = ({
+  options,
+  placeholder,
+  selectedOption,
+  onSelectOption,
+  loading,
+  width,
+}: VirtualizedCommandProps) => {
+  const [filteredOptions, setFilteredOptions] = React.useState<string[]>(options);
+  const parentRef = React.useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
     count: filteredOptions.length,
@@ -32,13 +37,13 @@ const VirtualizedCommand = ({ options, placeholder, selectedOption, onSelectOpti
   const virtualOptions = virtualizer.getVirtualItems();
 
   const handleSearch = (search: string) => {
-    setFilteredOptions(options.filter(option => option.value.toLowerCase().includes(search.toLowerCase() ?? [])));
+    setFilteredOptions(options.filter(option => option.toLowerCase().includes(search.toLowerCase() ?? [])));
   };
 
   return (
-    <Command shouldFilter={false}>
+    <Command style={{ width }} shouldFilter={false}>
       <CommandInput onValueChange={handleSearch} placeholder={placeholder} />
-      <CommandEmpty>No item found.</CommandEmpty>
+      {loading ? <Spinner variant={1} size={'small'} /> : <CommandEmpty>No Result Found.</CommandEmpty>}
       <CommandGroup>
         <CommandList ref={parentRef}>
           <div
@@ -54,15 +59,15 @@ const VirtualizedCommand = ({ options, placeholder, selectedOption, onSelectOpti
                 style={{
                   transform: `translateY(${virtualOption.start}px)`,
                 }}
-                key={filteredOptions[virtualOption.index].value}
-                value={filteredOptions[virtualOption.index].value}
+                key={filteredOptions[virtualOption.index]}
+                value={filteredOptions[virtualOption.index]}
                 onSelect={onSelectOption}
               >
-                {filteredOptions[virtualOption.index].label}
+                {filteredOptions[virtualOption.index]}
                 <Check
                   className={cn(
                     'mr-2 h-4 w-4',
-                    selectedOption === filteredOptions[virtualOption.index].value ? 'opacity-100' : 'opacity-0',
+                    selectedOption === filteredOptions[virtualOption.index] ? 'opacity-100' : 'opacity-0',
                   )}
                 />
               </CommandItem>
@@ -75,20 +80,22 @@ const VirtualizedCommand = ({ options, placeholder, selectedOption, onSelectOpti
 };
 
 interface VirtualizedComboboxProps {
+  loading?: boolean;
   className?: string;
-  data: string[];
+  data?: string[];
   searchPlaceholder?: string;
-  width?: string;
-  height?: string;
   value: string;
+  width?: string;
   setValue: (value: string) => void;
 }
 
 export function VirtualizedCombobox({
+  loading = false,
   className,
-  data,
+  data = [],
   searchPlaceholder = 'Search items...',
   value,
+  width = '800px',
   setValue,
 }: VirtualizedComboboxProps) {
   const [open, setOpen] = React.useState<boolean>(false);
@@ -102,19 +109,21 @@ export function VirtualizedCombobox({
           aria-expanded={open}
           className={cn('justify-between w-full', className)}
         >
-          <span className='truncate'>{value ? data.find(option => option === value) : searchPlaceholder}</span>
+          <span className='truncate'>{(!!value && data.find(option => option === value)) ?? searchPlaceholder}</span>
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn('p-0 w-full', className)}>
+      <PopoverContent align='start' className={cn('p-0 w-full', className)}>
         <VirtualizedCommand
-          options={data.map(option => ({ value: option, label: option }))}
+          options={data}
           placeholder={searchPlaceholder}
           selectedOption={value ?? ''}
           onSelectOption={currentValue => {
-            setValue(currentValue === value ? '' : currentValue);
+            setValue(currentValue);
             setOpen(false);
           }}
+          loading={loading}
+          width={width}
         />
       </PopoverContent>
     </Popover>

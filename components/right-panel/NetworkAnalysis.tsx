@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import SliderWithInput from './SliderWithInput';
 
-export function AlgorithmicAnalysis() {
+export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
   const handleAlgoQuery = (name: string, formData?: FormData) => {
     if (formData) eventEmitter.emit(Events.ALGORITHM, { name, parameters: Object.fromEntries(formData.entries()) });
     else eventEmitter.emit(Events.ALGORITHM, { name });
@@ -17,14 +17,16 @@ export function AlgorithmicAnalysis() {
 
   return (
     <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
-      <CollapsibleTrigger asChild>
-        <div className='flex items-center justify-between w-full'>
-          <p className='font-bold cursor-pointer hover:underline'>Algorithmic Analysis</p>
-          <ChevronsUpDown size={20} />
-        </div>
-      </CollapsibleTrigger>
+      <div className='flex items-center justify-between w-full'>
+        <p className='font-bold cursor-pointer hover:underline'>Network Analysis</p>
+        <CollapsibleTrigger asChild>
+          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+            <ChevronsUpDown size={15} />
+          </Button>
+        </CollapsibleTrigger>
+      </div>
       <CollapsibleContent className='mt-1'>
-        <RadioGroup defaultValue='None'>
+        <RadioGroup defaultValue='None' className='mb-2'>
           {algorithms.map(({ name, parameters }) => (
             <Popover key={name}>
               <PopoverTrigger asChild onClick={() => name === 'None' && handleAlgoQuery(name)}>
@@ -78,6 +80,8 @@ export function AlgorithmicAnalysis() {
             </Popover>
           ))}
         </RadioGroup>
+        <hr className='mb-1' />
+        {children}
       </CollapsibleContent>
     </Collapsible>
   );

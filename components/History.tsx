@@ -1,7 +1,6 @@
 import type { GraphConfigForm } from '@/lib/interface';
-import { useStore } from '@/lib/store';
-import { ExternalLink, Eye, Pin, PinOff, Trash2 } from 'lucide-react';
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { ExternalLink, Eye, Trash2 } from 'lucide-react';
+import { Card, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -58,7 +57,8 @@ export default function History({
                   <div className='pl-1 text-xs text-muted-foreground'>
                     <p>{item.seedGenes.slice(0, 30) + (item.seedGenes.length > 30 && '...')}</p>
                     <p>
-                      {item.diseaseMap} : Order - {item.order} : {item.interactionType} : {item.minScore}
+                      {item.diseaseMap.split(' ').at(-1)?.slice(1, -1)} : Order - {item.order} : {item.interactionType}{' '}
+                      : {item.minScore}
                     </p>
                   </div>
                 </CardHeader>

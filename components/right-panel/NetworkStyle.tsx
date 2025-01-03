@@ -1,6 +1,7 @@
 import type { GraphStore } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronsUpDown, Info } from 'lucide-react';
+import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { ColorPicker } from '../ui/color-picker';
@@ -30,12 +31,14 @@ export function NetworkStyle({
 }) {
   return (
     <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
-      <CollapsibleTrigger asChild>
-        <div className='flex items-center justify-between w-full'>
-          <p className='font-bold cursor-pointer hover:underline'>Network Style</p>
-          <ChevronsUpDown size={20} />
-        </div>
-      </CollapsibleTrigger>
+      <div className='flex items-center justify-between w-full'>
+        <p className='font-bold cursor-pointer hover:underline'>Network Style</p>
+        <CollapsibleTrigger asChild>
+          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+            <ChevronsUpDown size={15} />
+          </Button>
+        </CollapsibleTrigger>
+      </div>
       <CollapsibleContent className='flex flex-col gap-2'>
         <div className='flex space-x-2 items-center'>
           <div className='flex flex-col space-y-1 w-full'>
@@ -88,27 +91,28 @@ export function NetworkStyle({
           />
         </div>
         <div className='flex space-x-2 items-center'>
-          <Tooltip>
-            <div className='flex flex-col space-y-1 w-full'>
-              <TooltipTrigger asChild>
-                <Label htmlFor='defaultLabelDensity' className='text-xs font-semibold'>
-                  Label Density
-                </Label>
-              </TooltipTrigger>
-              <Slider
-                id='defaultLabelDensity'
-                className='w-full'
-                min={0.1}
-                max={10}
-                step={0.1}
-                value={[defaultLabelDensity]}
-                onValueChange={value => handleDefaultChange(value?.[0], 'defaultLabelDensity')}
-              />
-            </div>
-            <TooltipContent className='max-w-60' align='end'>
-              <p>Change the density of the node/edge labels in the network</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className='flex flex-col space-y-1 w-full'>
+            <Label htmlFor='defaultLabelDensity' className='text-xs font-semibold flex gap-1'>
+              Label Density
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size={12} />
+                </TooltipTrigger>
+                <TooltipContent className='max-w-60' align='end'>
+                  Change the density of the node/edge labels in the network
+                </TooltipContent>
+              </Tooltip>
+            </Label>
+            <Slider
+              id='defaultLabelDensity'
+              className='w-full'
+              min={0.1}
+              max={10}
+              step={0.1}
+              value={[defaultLabelDensity]}
+              onValueChange={value => handleDefaultChange(value?.[0], 'defaultLabelDensity')}
+            />
+          </div>
           <Input
             type='number'
             className='w-16 h-8'
@@ -131,7 +135,7 @@ export function NetworkStyle({
               Show Edge Label
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={16} />
+                  <Info size={12} />
                 </TooltipTrigger>
                 <TooltipContent className='max-w-52' align='end'>
                   For larger graphs, it is recommended to zoom before turn on edge labels to improve performance
@@ -150,17 +154,10 @@ export function NetworkStyle({
             </Label>
           </div>
         </div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
-              Node Color
-            </Label>
-          </TooltipTrigger>
-          <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />
-          <TooltipContent>
-            <p>Change the color of the nodes in the network</p>
-          </TooltipContent>
-        </Tooltip>
+        <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
+          Node Color
+        </Label>
+        <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />
       </CollapsibleContent>
     </Collapsible>
   );

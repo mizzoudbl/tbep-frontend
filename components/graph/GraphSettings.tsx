@@ -1,8 +1,8 @@
 'use client';
 
 import { FADED_EDGE_COLOR, HIGHLIGHTED_EDGE_COLOR } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { useSetSettings, useSigma } from '@react-sigma/core';
 import { downloadAsImage } from '@sigma/export-image';
 import { useEffect, useRef, useState } from 'react';
@@ -52,7 +52,7 @@ export function GraphSettings() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!sigma || !defaultNodeSize) return;
-    if (selectedRadioNodeSize !== 'None' && selectedNodeSizeProperty) {
+    if (selectedRadioNodeSize && selectedNodeSizeProperty) {
       sigma.getGraph().updateEachNodeAttributes((_, attr) => {
         if (attr.size === 0.5) return attr;
         attr.size = defaultNodeSize;

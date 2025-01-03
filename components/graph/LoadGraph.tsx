@@ -3,6 +3,7 @@
 /******** only for testing with sample graph **************/
 // import { data as response } from '@/lib/data/sample-graph.json';
 import { GENE_GRAPH_QUERY, GENE_VERIFICATION_QUERY } from '@/lib/gql';
+import { useStore } from '@/lib/hooks';
 import type {
   EdgeAttributes,
   GeneGraphData,
@@ -11,7 +12,6 @@ import type {
   GeneVerificationVariables,
   NodeAttributes,
 } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { openDB } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { useLoadGraph } from '@react-sigma/core';
@@ -49,7 +49,7 @@ export function LoadGraph() {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
       type: 'directed',
     });
-    const fileName = searchParams.get('file');
+    const fileName = searchParams?.get('file');
     (async () => {
       if (fileName) {
         const fileType = fileName.split('.').pop();
@@ -116,7 +116,7 @@ export function LoadGraph() {
           }
           if (!result) return;
           const geneNameToID = new Map<string, string>();
-          for (const gene of result.data?.getGenes ?? []) {
+          for (const gene of result.data?.genes ?? []) {
             if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             graph.addNode(gene.ID, {
               label: gene.Gene_name,
@@ -193,7 +193,7 @@ export function LoadGraph() {
       {loading ? (
         <div className=' absolute bottom-0 w-full h-full z-40 grid place-items-center'>
           <div className='flex flex-col items-center' id='test'>
-            <Spinner size={'medium'} />
+            <Spinner />
             Loading...
           </div>
         </div>

@@ -26,8 +26,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { DISEASE_DEPENDENT_PROPERTIES, DISEASE_INDEPENDENT_PROPERTIES } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
 import type { OtherSection, RadioOptions, UniversalData } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { formatBytes, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Trash2, Upload } from 'lucide-react';
@@ -137,17 +137,13 @@ export default function FileSheet() {
     const radioOptions: RadioOptions = {
       database: useStore.getState().radioOptions.database,
       user: {
-        None: [],
         DEG: [],
-        GDA: [],
         OpenTargets: [],
-        Genetics: [],
         OT_Prioritization: [],
         Pathway: [],
         Druggability: [],
         TE: [],
-        Database: [],
-        Custom: [],
+        Custom_Color: [],
       },
     };
     for (const file of uploadedFiles) {
@@ -189,8 +185,7 @@ export default function FileSheet() {
             if (universalData.user[geneID] === undefined) {
               universalData.user[geneID] = {
                 common: {
-                  Custom: {},
-                  Database: {},
+                  Custom_Color: {},
                   Druggability: {},
                   Pathway: {},
                   TE: {},
@@ -201,8 +196,6 @@ export default function FileSheet() {
             if (universalData.user[geneID][diseaseName] === undefined) {
               universalData.user[geneID][diseaseName] = {
                 DEG: {},
-                GDA: {},
-                Genetics: {},
                 OpenTargets: {},
               };
             }
@@ -274,17 +267,13 @@ export default function FileSheet() {
       radioOptions: {
         database: useStore.getState().radioOptions.database,
         user: {
-          None: [],
           DEG: [],
-          GDA: [],
           OpenTargets: [],
-          Genetics: [],
           OT_Prioritization: [],
           Pathway: [],
           Druggability: [],
           TE: [],
-          Database: [],
-          Custom: [],
+          Custom_Color: [],
         },
       },
     });
@@ -296,7 +285,7 @@ export default function FileSheet() {
   };
 
   return (
-    <div className='flex flex-col gap-2 justify-between'>
+    <div className='flex flex-col lg:flex-row gap-2 justify-between'>
       <Sheet>
         <SheetTrigger asChild>
           <Button size='sm' className='text-xs w-full'>

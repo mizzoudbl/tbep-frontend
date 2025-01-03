@@ -1,18 +1,16 @@
 'use client';
 
+import { useStore } from '@/lib/hooks';
 import type { ForceSettings, GraphStore, RadialAnalysisSetting } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronsUpDown } from 'lucide-react';
-import { AlgorithmicAnalysis, Legend, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
+import { Legend, NetworkAnalysis, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Switch } from '../ui/switch';
 
 export function RightSideBar() {
-  const { start, stop } = useStore(state => state.forceWorker);
-  const forceSettings = useStore(state => state.forceSettings);
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
@@ -23,16 +21,6 @@ export function RightSideBar() {
 
   const handleDefaultChange = (value: number | string, key: keyof GraphStore) => {
     useStore.setState({ [key]: value });
-  };
-
-  const handleGraphAnimation = (checked: boolean) => {
-    checked ? start() : stop();
-  };
-
-  const updateForceSetting = (value: number[] | string, key: keyof ForceSettings) => {
-    useStore.setState({
-      forceSettings: { ...forceSettings, [key]: typeof value === 'string' ? Number.parseFloat(value) : value[0] },
-    });
   };
 
   const updateRadialAnalysis = (value: number | string, key: keyof RadialAnalysisSetting) => {
@@ -46,23 +34,12 @@ export function RightSideBar() {
 
   return (
     <ScrollArea className='border-l p-2 text-xs flex flex-col h-[98vh]'>
-      <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow'>
-        <CollapsibleTrigger asChild>
-          <div className='flex items-center justify-between w-full'>
-            <p className='font-bold cursor-pointer hover:underline'>Network Layout</p>
-            <ChevronsUpDown size={20} />
-          </div>
-        </CollapsibleTrigger>
-        <CollapsibleContent className='flex flex-col gap-2'>
-          <div className='flex items-center gap-2'>
-            <Label htmlFor='network-animation-control' className='text-xs font-semibold'>
-              Animation
-            </Label>
-            <Switch id='network-animation-control' defaultChecked onCheckedChange={handleGraphAnimation} />
-          </div>
-          <NetworkLayout forceSettings={forceSettings} updateForceSetting={updateForceSetting} />
-        </CollapsibleContent>
-      </Collapsible>
+      <NetworkAnalysis>
+        <RadialAnalysis value={radialAnalysis} onChange={updateRadialAnalysis} />
+      </NetworkAnalysis>
+      <NetworkInfo />
+      <Legend />
+      <NetworkLayout />
       <NetworkStyle
         defaultNodeSize={defaultNodeSize}
         defaultNodeColor={defaultNodeColor}
@@ -73,10 +50,6 @@ export function RightSideBar() {
         handleDefaultChange={handleDefaultChange}
         handleCheckBox={handleCheckBox}
       />
-      <AlgorithmicAnalysis />
-      <RadialAnalysis value={radialAnalysis} onChange={updateRadialAnalysis} />
-      <NetworkInfo />
-      <Legend />
     </ScrollArea>
   );
 }

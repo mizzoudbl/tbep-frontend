@@ -1,36 +1,30 @@
+import type { PROPERTY_LABEL_TYPE_MAPPING } from '.';
+
 export const nodeSize = [
   {
-    label: 'None',
-    tooltipContent: null,
-  },
-  {
-    label: 'DEG',
+    label: 'Differential Expression',
     tooltipContent: 'Differential Expression in Log2 fold change',
   },
   {
-    label: 'GDA',
-    tooltipContent: 'Gene Disease Association score',
-  },
-  {
-    label: 'OpenTargets',
+    label: 'Target Disease Association',
     tooltipContent: 'Target-Disease Association from Opentargets Platform',
   },
   {
-    label: 'Genetics',
-    tooltipContent: 'Associations between traits, variants, and genes from OpenTargets Genetics',
-  },
-  {
-    label: 'OT_Prioritization',
-    tooltipContent: 'Target prioritization factors from OpenTargets Platform',
+    label: 'Target Prioritization Factors',
+    tooltipContent: 'Target prioritization factors from Opentargets Platform',
   },
   {
     label: 'Druggability',
     tooltipContent: 'Druggability scores from DrugnomeAI/Mantis-ML',
   },
   {
-    label: 'TE',
+    label: 'Tissue Specificity',
     tooltipContent: 'Tissue-specific expression from GTEX and HPA',
   },
 ] as const;
 
-export type NodeSizeType = (typeof nodeSize)[number]['label'];
+export type NodeSizeType = {
+  [K in keyof typeof PROPERTY_LABEL_TYPE_MAPPING]: K extends (typeof nodeSize)[number]['label']
+    ? (typeof PROPERTY_LABEL_TYPE_MAPPING)[K]
+    : never;
+}[keyof typeof PROPERTY_LABEL_TYPE_MAPPING];

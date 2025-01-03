@@ -1,9 +1,10 @@
 'use client';
 
-import { useStore } from '@/lib/store';
+import { useStore } from '@/lib/hooks';
 import { ChevronsUpDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BinaryLegend, HeatmapLegend } from '../legends';
+import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 
 export function Legend() {
@@ -18,29 +19,38 @@ export function Legend() {
 
   return (
     <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
-      <CollapsibleTrigger asChild>
-        <div className='flex items-center justify-between w-full'>
-          <p className='font-bold cursor-pointer hover:underline'>Legends</p>
-          <ChevronsUpDown size={20} />
-        </div>
-      </CollapsibleTrigger>
+      <div className='flex items-center justify-between w-full'>
+        <p className='font-bold cursor-pointer hover:underline'>Legends</p>
+        <CollapsibleTrigger asChild>
+          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+            <ChevronsUpDown size={15} />
+          </Button>
+        </CollapsibleTrigger>
+      </div>
       <CollapsibleContent className='flex flex-col gap-2 p-1 items-center'>
-        {selectedRadioNodeColor && selectedRadioNodeColor !== 'None' ? (
-          selectedRadioNodeColor === 'Pathway' || selectedRadioNodeColor === 'Database' ? (
+        {selectedRadioNodeColor ? (
+          selectedRadioNodeColor === 'Pathway' ? (
             <BinaryLegend />
-          ) : selectedRadioNodeColor === 'Genetics' || selectedRadioNodeColor === 'DEG' ? (
+          ) : selectedRadioNodeColor === 'DEG' ? (
             <HeatmapLegend
               title={selectedRadioNodeColor}
               domain={[-1, 0, 1]}
               range={['green', defaultNodeColor, 'red']}
             />
           ) : selectedRadioNodeColor === 'Druggability' ||
-            selectedRadioNodeColor === 'GDA' ||
+            selectedRadioNodeColor === 'OpenTargets' ||
             selectedRadioNodeColor === 'TE' ? (
             <HeatmapLegend
               title={selectedRadioNodeColor}
               domain={[0, 1]}
               range={[defaultNodeColor, 'red']}
+              divisions={10}
+            />
+          ) : selectedRadioNodeColor === 'OT_Prioritization' ? (
+            <HeatmapLegend
+              title={selectedRadioNodeColor}
+              domain={[-1, 0, 1]}
+              range={['red', '#F0C584', 'green']}
               divisions={10}
             />
           ) : (

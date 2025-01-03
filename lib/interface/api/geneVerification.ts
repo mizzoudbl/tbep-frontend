@@ -8,12 +8,12 @@ export interface GeneVerificationData {
   /**
    * Genes to be displayed in the table
    */
-  getGenes: Gene[];
+  genes: Gene[];
 
   /**
    * User ID
    */
-  getUserID?: string;
+  userID?: string;
 }
 
 /**

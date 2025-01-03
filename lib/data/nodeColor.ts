@@ -1,30 +1,20 @@
+import type { PROPERTY_LABEL_TYPE_MAPPING } from '.';
+
 export const nodeColor = [
   {
-    label: 'None',
-    tooltipContent: null,
-  },
-  {
-    label: 'DEG',
+    label: 'Differential Expression',
     tooltipContent: 'Differential Expression in Log2 fold change',
   },
   {
-    label: 'GDA',
-    tooltipContent: 'Gene Disease Association score',
-  },
-  {
-    label: 'OpenTargets',
+    label: 'Target Disease Association',
     tooltipContent: 'Target-Disease Association from Opentargets Platform',
   },
   {
-    label: 'Genetics',
-    tooltipContent: 'Associations between traits, variants, and genes from OpenTargets Genetics',
-  },
-  {
-    label: 'OT_Prioritization',
+    label: 'Target Prioritization Factors',
     tooltipContent: 'Target prioritization factors from Opentargets Platform',
   },
   {
-    label: 'Pathway',
+    label: 'Pathways',
     tooltipContent: 'Pathways from KEGG and Reactome databases',
   },
   {
@@ -32,12 +22,8 @@ export const nodeColor = [
     tooltipContent: 'Druggability scores from DrugnomeAI/Mantis-ML',
   },
   {
-    label: 'TE',
+    label: 'Tissue Specificity',
     tooltipContent: 'Tissue-specific expression from GTEX and HPA',
-  },
-  {
-    label: 'Database',
-    tooltipContent: 'Membership in various databases',
   },
   {
     label: 'Custom',
@@ -45,4 +31,8 @@ export const nodeColor = [
   },
 ] as const;
 
-export type NodeColorType = (typeof nodeColor)[number]['label'];
+export type NodeColorType = {
+  [K in keyof typeof PROPERTY_LABEL_TYPE_MAPPING]: K extends (typeof nodeColor)[number]['label']
+    ? (typeof PROPERTY_LABEL_TYPE_MAPPING)[K]
+    : never;
+}[keyof typeof PROPERTY_LABEL_TYPE_MAPPING];

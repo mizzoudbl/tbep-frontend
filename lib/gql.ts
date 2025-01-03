@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GENE_VERIFICATION_QUERY = (getUserID = false) => gql`
   query GeneVerification($geneIDs: [String!]!) {
-    getGenes(geneIDs: $geneIDs ) {
+    genes(geneIDs: $geneIDs ) {
       ID
       Gene_name
       Description
@@ -10,7 +10,7 @@ export const GENE_VERIFICATION_QUERY = (getUserID = false) => gql`
       Aliases
       Input
     }
-    ${getUserID ? 'getUserID' : ''}
+    ${getUserID ? 'userID' : ''}
   }
 `;
 
@@ -46,7 +46,7 @@ export const GENE_GRAPH_QUERY = gql`
 
 export const GENE_UNIVERSAL_QUERY = gql`
   query GeneUniversalData($config: [DataRequired!], $geneIDs: [String!]!) {
-    getGenes(geneIDs: $geneIDs, config: $config) {
+    genes(geneIDs: $geneIDs, config: $config) {
       ID
       disease
       common
@@ -56,15 +56,9 @@ export const GENE_UNIVERSAL_QUERY = gql`
 
 export const GET_STATS_QUERY = (bringCommon = true) => gql`
   query GetStats($disease: String!) {
-    getHeaders(disease: $disease) {
+    headers(disease: $disease) {
       ${bringCommon ? 'common' : ''}
       disease
     }
-  }
-`;
-
-export const GET_DISEASES_QUERY = gql`
-  query GetDiseases {
-    getDiseases
   }
 `;

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { GraphStore } from './interface';
+import type { GraphStore } from '../interface';
 
 export const useStore = create<GraphStore>(set => ({
   projectTitle: 'Untitled',
@@ -24,8 +24,8 @@ export const useStore = create<GraphStore>(set => ({
   defaultLabelDensity: 1,
   defaultLabelSize: 10,
   selectedNodes: [],
-  selectedRadioNodeColor: 'None',
-  selectedRadioNodeSize: 'None',
+  selectedRadioNodeColor: undefined,
+  selectedRadioNodeSize: undefined,
   showEdgeLabel: false,
   showEdgeColor: false,
   totalNodes: 0,
@@ -38,35 +38,27 @@ export const useStore = create<GraphStore>(set => ({
   },
   exportFormat: null,
   geneIDs: [],
-  diseaseName: '',
+  diseaseName: 'ALS',
   universalData: {
     database: {},
     user: {},
   },
   radioOptions: {
     user: {
-      None: [],
       DEG: [],
-      GDA: [],
-      Genetics: [],
       Pathway: [],
       Druggability: [],
       TE: [],
-      Database: [],
-      Custom: [],
+      Custom_Color: [],
       OpenTargets: [],
       OT_Prioritization: [],
     },
     database: {
-      None: [],
       DEG: [],
-      GDA: [],
-      Genetics: [],
       Pathway: [],
       Druggability: [],
       TE: [],
-      Database: [],
-      Custom: [],
+      Custom_Color: [],
       OpenTargets: [],
       OT_Prioritization: [],
     },

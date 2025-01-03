@@ -1,7 +1,7 @@
 'use client';
 
+import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { useSigma } from '@react-sigma/core';
 import { scaleLinear } from 'd3-scale';
 import { useEffect } from 'react';
@@ -18,7 +18,7 @@ export function SizeAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const graph = sigma.getGraph();
-    if (selectedRadioNodeSize === 'None' && graph) {
+    if (!selectedRadioNodeSize && graph) {
       useStore.setState({ selectedNodeSizeProperty: '' });
       graph.updateEachNodeAttributes((_node, attr) => {
         attr.size = defaultNodeSize;
@@ -30,7 +30,7 @@ export function SizeAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const graph = sigma.getGraph();
-    if (selectedNodeSizeProperty === '' || !graph) return;
+    if (!selectedNodeSizeProperty || !graph || !selectedRadioNodeSize) return;
     const userOrDatabase = radioOptions.user[selectedRadioNodeSize].includes(selectedNodeSizeProperty)
       ? 'user'
       : 'database';
@@ -93,10 +93,10 @@ export function SizeAnalysis() {
         else attr.size = 0.5;
         return attr;
       });
-    } else if (selectedRadioNodeSize === 'GDA') {
+    } else if (selectedRadioNodeSize === 'OpenTargets') {
       const minMax = Object.values(universalData[userOrDatabase]).reduce(
         (acc, cur) => {
-          const valString = (cur[diseaseName] as OtherSection).GDA?.[selectedNodeSizeProperty];
+          const valString = (cur[diseaseName] as OtherSection).OpenTargets?.[selectedNodeSizeProperty];
           if (!valString) return acc;
           const value = Number.parseFloat(valString);
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
@@ -114,22 +114,15 @@ export function SizeAnalysis() {
         else attr.size = 0.5;
         return attr;
       });
-    } else if (selectedRadioNodeSize === 'Genetics') {
-      const minMax = Object.values(universalData[userOrDatabase]).reduce(
-        (acc, cur) => {
-          const valString = (cur[diseaseName] as OtherSection).Genetics?.[selectedNodeSizeProperty];
-          if (!valString) return acc;
-          const value = Number.parseFloat(valString);
-          return [Math.min(acc[0], value), Math.max(acc[1], value)];
-        },
-        [1, -1],
+    } else if (selectedRadioNodeSize === 'OT_Prioritization') {
+      // TODO: Implement OT_Prioritization
+      const sizeScale = scaleLinear<number, number>(
+        [-1, 0, 1],
+        [defaultNodeSize - 10, defaultNodeSize, defaultNodeSize + 10],
       );
-      const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
-          (universalData[userOrDatabase][node]?.[diseaseName] as OtherSection)?.[selectedRadioNodeSize][
-            selectedNodeSizeProperty
-          ] ?? Number.NaN,
+          universalData[userOrDatabase][node]?.common.OT_Prioritization[selectedNodeSizeProperty] ?? Number.NaN,
         );
         if (!Number.isNaN(val)) attr.size = sizeScale(val);
         else attr.size = 0.5;

@@ -7,8 +7,8 @@ import {
   type NodeColorType,
   type NodeSizeType,
 } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
 import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection, SelectionBox } from '@/lib/interface';
-import { useStore } from '@/lib/store';
 import { Trie } from '@/lib/trie';
 import { cn } from '@/lib/utils';
 import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
@@ -259,7 +259,7 @@ export function GraphEvents() {
 
   const propertyResolve = useCallback(
     (node: string, selectedRadio: NodeColorType | NodeSizeType, selectedProperty: string) => {
-      if (selectedRadio === 'None') return 'None';
+      if (!selectedRadio) return;
       const userOrDatabase = useStore.getState().radioOptions.user[selectedRadio].includes(selectedProperty)
         ? 'user'
         : 'database';

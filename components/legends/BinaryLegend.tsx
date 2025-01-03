@@ -1,6 +1,6 @@
 'use client';
 
-import { useStore } from '@/lib/store';
+import { useStore } from '@/lib/hooks';
 import React, { createRef } from 'react';
 
 export function BinaryLegend({
