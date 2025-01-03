@@ -46,8 +46,6 @@ export function HeatmapLegend({
       const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
       stop.setAttribute('offset', `${(index / (divisions - 1)) * 100}%`);
       stop.setAttribute('stop-color', colorScale(num));
-      console.log(num, colorScale(num));
-
       linearGradient.appendChild(stop);
     });
 

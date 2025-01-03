@@ -5,6 +5,7 @@ import { useStore } from '@/lib/hooks';
 import type { RadialAnalysisProps, RadialAnalysisSetting } from '@/lib/interface';
 import { Info } from 'lucide-react';
 import React from 'react';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Combobox } from '../ui/combobox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -14,6 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
   const [minScore, setMinScore] = React.useState(0);
   const [isGeneDegree, setIsGeneDegree] = React.useState(true);
+  const radioOptions = useStore(state => state.radioOptions);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
@@ -48,16 +50,14 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                 onValueChange={value => onChange(value[0], option.key as keyof RadialAnalysisSetting)}
               />
               {option.key === 'nodeDegreeCutOff' && (
-                <Combobox
-                  data={[
-                    { value: 'geneDegree', label: 'Gene Degree' },
-                    ...useStore.getState().radioOptions.database.TE.map(item => ({ value: item, label: item })),
-                    ...useStore.getState().radioOptions.user.TE.map(item => ({ value: item, label: item })),
-                  ]}
+                <VirtualizedCombobox
+                  data={['Gene Degree', ...radioOptions.database.TE, ...radioOptions.user.TE]}
+                  width='350px'
+                  align='end'
                   value={value.nodeDegreeProperty}
                   className='w-full'
-                  onChange={value => {
-                    setIsGeneDegree(value === 'geneDegree');
+                  setValue={value => {
+                    setIsGeneDegree(value === 'Gene Degree');
                     onChange(value, 'nodeDegreeProperty');
                   }}
                 />

@@ -228,8 +228,8 @@ FIG4`,
                   />
                 </div>
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
-                  <div className='space-y-2 mt-[2]'>
-                    <div className='flex items-end gap-1'>
+                  <div className='space-y-1' style={{ marginTop: 5.5 }}>
+                    <div className='flex items items-end gap-1'>
                       <Label htmlFor='diseaseMap'>Disease Map</Label>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -244,6 +244,7 @@ FIG4`,
                       setValue={val => handleSelect(val, 'diseaseMap')}
                       searchPlaceholder='Search Disease...'
                       loading={diseaseData === null}
+                      className='w-full'
                     />
                   </div>
                   {graphConfig.map(config => (
