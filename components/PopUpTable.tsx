@@ -72,7 +72,7 @@ export default function PopUpTable({
                 </TableHeader>
                 <TableBody>
                   {data?.genes.map((gene, index) => (
-                    <TableRow key={gene.ID}>
+                    <TableRow key={`${gene.ID}-${gene.Input}`}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{gene.Input}</TableCell>
                       <TableCell className='underline hover:text-teal-900 cursor-pointer'>
@@ -135,7 +135,7 @@ export default function PopUpTable({
               <DropdownMenuItem onClick={() => handleDownload(false)}>Not-Found</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button onClick={handleGenerateGraph} className='bg-teal-600 hover:bg-teal-700'>
+          <Button onClick={() => handleGenerateGraph()} className='bg-teal-600 hover:bg-teal-700'>
             Submit
           </Button>
           <DialogClose asChild>

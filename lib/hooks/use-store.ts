@@ -7,12 +7,8 @@ export const useStore = create<GraphStore>(set => ({
   setNodeSearchQuery: val => set({ nodeSearchQuery: val }),
   nodeSuggestions: [],
   forceWorker: {
-    start() {
-      throw new Error('Graph Layout not initialized');
-    },
-    stop() {
-      throw new Error('Graph Layout not initialized');
-    },
+    start() {},
+    stop() {},
   },
   defaultNodeColor: 'blue',
   // Select defaultValue best for viewing the graph
@@ -67,4 +63,5 @@ export const useStore = create<GraphStore>(set => ({
   selectedNodeColorProperty: '',
   geneNameToID: new Map(),
   graphConfig: null,
+  nodeSelectionEnabled: false,
 }));

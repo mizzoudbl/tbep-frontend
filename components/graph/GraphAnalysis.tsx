@@ -2,7 +2,7 @@
 
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
+import { type EventMessage, Events, envURL, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
 import { useSearchParams } from 'next/navigation';
@@ -73,20 +73,21 @@ export function GraphAnalysis() {
         attr.type = 'circle';
         return attr;
       });
+    } else {
+      graph.updateEachNodeAttributes((node, attr) => {
+        const degree = graph.degree(node);
+        if (degree >= radialAnalysis.hubGeneEdgeCount) {
+          attr.type = 'border';
+        } else {
+          attr.type = 'circle';
+        }
+        return attr;
+      });
     }
-    graph.updateEachNodeAttributes((node, attr) => {
-      const degree = graph.degree(node);
-      if (degree >= radialAnalysis.hubGeneEdgeCount) {
-        attr.type = 'border';
-      } else {
-        attr.type = 'circle';
-      }
-      return attr;
-    });
   }, [radialAnalysis.hubGeneEdgeCount]);
 
   async function renewSession() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/algorithm/renew-session`, {
+    const res = await fetch(`${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/algorithm/renew-session`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(useStore.getState().graphConfig!),
@@ -108,7 +109,7 @@ export function GraphAnalysis() {
           return attr;
         });
       } else if (name === 'Leiden') {
-        const { resolution, weighted } = parameters;
+        const { resolution, weighted, minCommunitySize } = parameters;
         if (searchParams?.get('file')) {
           const louvain = await import('graphology-communities-louvain').then(lib => lib.default);
           const hslToHex = (h: number, s: number, l: number) => {
@@ -146,7 +147,7 @@ export function GraphAnalysis() {
         (async function leiden() {
           const { graphName } = useStore.getState().graphConfig!;
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/algorithm/leiden?graphName=${encodeURIComponent(graphName)}${resolution ? `&resolution=${resolution}` : ''}&weighted=${encodeURIComponent(!!weighted)}`,
+            `${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/algorithm/leiden?graphName=${encodeURIComponent(graphName)}&minCommunitySize=${minCommunitySize}${resolution ? `&resolution=${resolution}` : ''}&weighted=${encodeURIComponent(!!weighted)}`,
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
           );
           if (res.ok) {
@@ -194,7 +195,7 @@ export function GraphAnalysis() {
   return (
     <>
       {Object.keys(communityMap).length > 0 && (
-        <div className='absolute bottom-2 left-2 space-y-1 no-scrollbar flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
+        <div className='absolute bottom-2 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
           {Object.entries(communityMap).map(([id, val], idx) => (
             <div key={id} className='flex items-center gap-1'>
               <Checkbox

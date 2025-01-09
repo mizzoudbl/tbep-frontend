@@ -8,9 +8,6 @@ import {
 } from './data';
 import type { OtherSection, UniversalData } from './interface';
 
-export type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Required<Pick<T, K>>;
-export type RequiredExcept<T, K extends keyof T> = Required<Omit<T, K>> & Partial<Pick<T, K>>;
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -57,75 +54,6 @@ export function formatBytes(bytes: number | string, decimals = 2): string {
   return `${Number.parseFloat((+bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
 }
 
-/**
- * Capitalises the first letter of a string
- * @param str
- * @returns Capitalised string
- */
-export function toCapitalise(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-/**
- * Generates a color transition between two hex colors
- * @param startColor Hexcode color 1
- * @param endColor Hexcode color 2
- * @param steps Number of divisions
- * @returns
- */
-export function generateColorTransition(startColor: string, endColor: string, steps: number): Array<string> {
-  // Helper function to parse a hex color into RGB components
-  const parseColor = (color: string) => {
-    // check with regex if the color consist of only characters
-    if (/[a-z]/i.test(color)) {
-    }
-    const hex = color.replace('#', '');
-    return {
-      r: Number.parseInt(hex.substring(0, 2), 16),
-      g: Number.parseInt(hex.substring(2, 4), 16),
-      b: Number.parseInt(hex.substring(4, 6), 16),
-    };
-  };
-
-  // Helper function to interpolate between two values
-  const interpolate = (start: number, end: number, factor: number) => {
-    return Math.round(start + factor * (end - start));
-  };
-
-  // Helper function to convert RGB to hex
-  const rgbToHex = (r: number, g: number, b: number) => {
-    return `#${[r, g, b]
-      .map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? `0${hex}` : hex;
-      })
-      .join('')}`;
-  };
-
-  const startRGB = parseColor(startColor);
-  const endRGB = parseColor(endColor);
-
-  return Array.from({ length: steps }, (_, i) => {
-    const factor = i / (steps - 1);
-    const r = interpolate(startRGB.r, endRGB.r, factor);
-    const g = interpolate(startRGB.g, endRGB.g, factor);
-    const b = interpolate(startRGB.b, endRGB.b, factor);
-    return rgbToHex(r, g, b);
-  });
-}
-
-export function footNotes(text: string): string {
-  return text
-    .split(/References?:/i)
-    .map((chunk, idx, arr) => {
-      return chunk.replace(
-        /\[\d+\]/g,
-        matcher => `[^${matcher.slice(1)}${idx === arr.length - 1 ? `: ${matcher}` : ''}`,
-      );
-    })
-    .join('**References:**');
-}
-
 export const eventEmitter = new EventEmitter();
 export enum Events {
   ALGORITHM = 'algorithm',
@@ -155,4 +83,8 @@ export function propertyResolve(
         ])
     : (universalData.database[clickedNode]?.common[selectedRadio as DiseaseIndependentProperties][selectedProperty] ??
         universalData.user[clickedNode]?.common[selectedRadio as DiseaseIndependentProperties][selectedProperty]);
+}
+
+export function envURL(env?: string) {
+  return (env || 'https://pdnet.missouri.edu').replace(/\/$/, '');
 }

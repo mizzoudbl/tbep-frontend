@@ -17,6 +17,11 @@ export interface PopUpDataTableProps<E, F> {
   data: [E[], F[]];
 
   /**
+   * Loading state of the data table
+   */
+  loading?: [boolean, boolean];
+
+  /**
    * Columns for the data table
    */
   columns: [ColumnDef<E>[], ColumnDef<F>[]];

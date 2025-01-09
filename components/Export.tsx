@@ -15,7 +15,7 @@ export function Export() {
         <Button
           variant='outline'
           size='sm'
-          className='text-xs hover:bg-zinc-300 border-none bg-zinc-200 hover:text-black rounded-none '
+          className='text-xs hover:bg-zinc-300 border-none bg-zinc-200 hover:text-black rounded-sm '
         >
           <FolderUp className='h-3 w-3 mr-1' />
           Export

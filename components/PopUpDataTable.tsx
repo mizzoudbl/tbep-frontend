@@ -2,6 +2,7 @@ import type { PopUpDataTableProps } from '@/lib/interface';
 import { cn } from '@/lib/utils';
 import { Download } from 'lucide-react';
 import { unparse } from 'papaparse';
+import React from 'react';
 import { Button } from './ui/button';
 import { DataTable } from './ui/data-table';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
@@ -16,6 +17,7 @@ export default function PopUpDataTable<E, F>({
   setOpen,
   filterColumnNames,
   tabsTitle,
+  loading,
 }: PopUpDataTableProps<E, F>) {
   /**
    * Function to download the selected genes data as a CSV file
@@ -32,6 +34,16 @@ export default function PopUpDataTable<E, F>({
     element.remove();
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  React.useEffect(() => {
+    // esc key to close the dialog
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <Dialog open={open}>
       <DialogContent className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'>
@@ -46,10 +58,20 @@ export default function PopUpDataTable<E, F>({
               ))}
             </TabsList>
             <TabsContent key={tabsTitle?.[0]} value={tabsTitle![0]}>
-              <DataTable data={data[0]} columns={columns[0]} filterColumnName={filterColumnNames[0]} />
+              <DataTable
+                data={data[0]}
+                loading={loading?.[0]}
+                columns={columns[0]}
+                filterColumnName={filterColumnNames[0]}
+              />
             </TabsContent>
             <TabsContent key={tabsTitle?.[1]} value={tabsTitle![1]}>
-              <DataTable data={data[1]} columns={columns[1]} filterColumnName={filterColumnNames[1]} />
+              <DataTable
+                data={data[1]}
+                loading={loading?.[1]}
+                columns={columns[1]}
+                filterColumnName={filterColumnNames[1]}
+              />
             </TabsContent>
           </Tabs>
         </div>
@@ -70,7 +92,7 @@ export default function PopUpDataTable<E, F>({
           </DropdownMenu>
           <DialogClose asChild>
             <Button type='button' variant={'secondary'} onClick={() => setOpen(false)}>
-              Close
+              Close (Esc)
             </Button>
           </DialogClose>
         </DialogFooter>

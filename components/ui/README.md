@@ -10,6 +10,7 @@ For Examples, please refer to their respective sites.
 
 Components Used:
 
+- [alert](./alert.tsx)
 - [alert-dialog](./alert-dialog.tsx.tsx)
 - [badge](./badge.tsx)
 - [button](./button.tsx)
@@ -36,6 +37,7 @@ Components Used:
 - [table](./table.tsx)
 - [tabs](./tabs.tsx)
 - [textarea](./textarea.tsx)
+- [toggle](./toggle.tsx)
 - [tooltip](./tooltip.tsx)
 
 ## shadcn-ui expansions

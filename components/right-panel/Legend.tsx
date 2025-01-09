@@ -1,5 +1,6 @@
 'use client';
 
+import { PROPERTY_TYPE_LABEL_MAPPING } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { ChevronsUpDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -33,22 +34,28 @@ export function Legend() {
             <BinaryLegend />
           ) : selectedRadioNodeColor === 'DEG' ? (
             <HeatmapLegend
-              title={selectedRadioNodeColor}
+              title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}
               domain={[-1, 0, 1]}
               range={['green', defaultNodeColor, 'red']}
+              divisions={10}
             />
-          ) : selectedRadioNodeColor === 'Druggability' ||
-            selectedRadioNodeColor === 'OpenTargets' ||
-            selectedRadioNodeColor === 'TE' ? (
+          ) : selectedRadioNodeColor === 'Druggability' || selectedRadioNodeColor === 'OpenTargets' ? (
             <HeatmapLegend
-              title={selectedRadioNodeColor}
+              title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}
               domain={[0, 1]}
               range={[defaultNodeColor, 'red']}
               divisions={10}
             />
+          ) : selectedRadioNodeColor === 'TE' ? (
+            <HeatmapLegend
+              title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}
+              range={[defaultNodeColor, 'red']}
+              startLabel='Low'
+              endLabel='High'
+            />
           ) : selectedRadioNodeColor === 'OT_Prioritization' ? (
             <HeatmapLegend
-              title={selectedRadioNodeColor}
+              title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}
               domain={[-1, 0, 1]}
               range={['red', '#F0C584', 'green']}
               divisions={10}
@@ -57,7 +64,7 @@ export function Legend() {
             <p className='text-center font-semibold'>No Legends Available</p>
           )
         ) : (
-          <p className='text-center font-semibold'>Select Datapoints on left to view legends!</p>
+          <p className='text-center font-semibold'>Select Data-points on left to view legends!</p>
         )}
         {showEdgeColor && (
           <HeatmapLegend

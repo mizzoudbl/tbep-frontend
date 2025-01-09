@@ -3,7 +3,7 @@
 import { forceLayoutOptions } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { ForceSettings } from '@/lib/interface';
-import { ChevronsUpDown } from 'lucide-react';
+import { ChevronsUpDown, Info } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Input } from '../ui/input';
@@ -22,7 +22,10 @@ export function NetworkLayout() {
 
   const updateForceSetting = (value: number[] | string, key: keyof ForceSettings) => {
     useStore.setState({
-      forceSettings: { ...forceSettings, [key]: typeof value === 'string' ? Number.parseFloat(value) : value[0] },
+      forceSettings: {
+        ...forceSettings,
+        [key]: typeof value === 'string' ? Number.parseFloat(value) : value[0],
+      },
     });
   };
   return (
@@ -44,25 +47,28 @@ export function NetworkLayout() {
         </div>
         {forceLayoutOptions.map(option => (
           <div key={option.key} className='flex space-x-2 items-center'>
-            <Tooltip>
-              <div className='flex flex-col space-y-2 w-full'>
-                <TooltipTrigger asChild>
-                  <Label htmlFor={option.key} className='text-xs font-semibold'>
-                    {option.label}
-                  </Label>
-                </TooltipTrigger>
-                <Slider
-                  id={option.key}
-                  className='w-full'
-                  min={option.min}
-                  max={option.max}
-                  step={option.step}
-                  value={[forceSettings[option.key]]}
-                  onValueChange={value => updateForceSetting(value, option.key)}
-                />
-              </div>
-              <TooltipContent align='end'>{option.tooltip}</TooltipContent>
-            </Tooltip>
+            <div className='flex flex-col space-y-2 w-full'>
+              <Label htmlFor={option.key} className='text-xs font-semibold flex gap-1 items-center'>
+                {option.label}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info size={12} />
+                  </TooltipTrigger>
+                  <TooltipContent className='max-w-60' align='end'>
+                    {option.tooltip}
+                  </TooltipContent>
+                </Tooltip>
+              </Label>
+              <Slider
+                id={option.key}
+                className='w-full'
+                min={option.min}
+                max={option.max}
+                step={option.step}
+                value={[forceSettings[option.key]]}
+                onValueChange={value => updateForceSetting(value, option.key)}
+              />
+            </div>
             <Input
               type='number'
               className='w-16 h-8'

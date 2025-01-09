@@ -19,7 +19,7 @@ export default function TeamPage() {
                     alt={person.name}
                     width={170}
                     height={170}
-                    className='object-cover aspect-square rounded-full'
+                    className='object-cover aspect-square rounded-full border border-primary p-2 hover:shadow-md'
                   />
                   <center>
                     <a href={person.link}>

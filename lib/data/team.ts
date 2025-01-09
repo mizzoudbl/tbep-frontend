@@ -4,10 +4,9 @@ export const team = [
     members: [
       {
         name: 'Dr. Gyan P. Srivastava',
-        title: `Adjunct Associate Professor
-        Department of Electrical Engineering and Computer Science
+        title: `Department of Electrical Engineering and Computer Science
         University of Missouri, Columbia`,
-        email: 'gpsrivastava@gmail.com',
+        email: 'gps8b9@missouri.edu',
         link: 'https://engineering.missouri.edu/faculty/gyan-srivastava/',
         image: '/image/team/gpsrivastava.jpg',
       },
@@ -18,8 +17,7 @@ export const team = [
     members: [
       {
         name: 'Prof. Dong Xu',
-        title: `Professor
-        Department of Electrical Engineering and Computer Science
+        title: `Department of Electrical Engineering and Computer Science
         University of Missouri, Columbia`,
         email: 'xudong@missouri.edu',
         link: 'https://engineering.missouri.edu/faculty/dong-xu/',
@@ -27,8 +25,7 @@ export const team = [
       },
       {
         name: 'Dr. Muneendra Ojha',
-        title: `Assistant Professor
-        Department of Information Technology
+        title: `Department of Information Technology
         Indian Institute of Information Technology, Allahabad`,
         email: 'muneendra@iiita.ac.in',
         link: 'https://www.linkedin.com/in/muneendra-ojha-a3153b15/',
@@ -41,7 +38,7 @@ export const team = [
     members: [
       {
         name: 'Bhupesh Dewangan',
-        title: `B.Tech Student
+        title: `B.Tech
         Indian Institute of Information Technology, Allahabad`,
         email: 'bhupesh.it.iiita@gmail.com',
         link: 'https://www.linkedin.com/in/bhupesh-dewangan/',
@@ -49,7 +46,7 @@ export const team = [
       },
       {
         name: 'Debjyoti Ray',
-        title: `B.Tech Student
+        title: `B.Tech
         Indian Institute of Information Technology, Allahabad`,
         email: 'iec2022111@iiita.ac.in',
         link: 'https://www.linkedin.com/in/debjyotiray5811/',
@@ -62,6 +59,34 @@ export const team = [
         email: 'manager@jianna.net',
         link: 'https://www.linkedin.com/in/yijie-ren-851a61141/',
         image: '/image/team/yijieren.jpg',
+      },
+      {
+        name: 'Lei Jiang',
+        title: `PhD
+        University of Missouri, Columbia`,
+        email: 'leijiang@missouri.edu',
+        image: '/image/team/leijiang.jpg',
+      },
+    ],
+  },
+  {
+    heading: 'Bioinformatics Team',
+    members: [
+      {
+        name: 'Dr. Shilpi Chaurasia',
+        title: `Senior Scientific Manager
+        Excelra Knowledge Solutions, Hyderabad, India`,
+        email: 'shilpi.chaurasia@excelra.com',
+        link: 'https://www.linkedin.com/in/shilpi-chaurasia-phd-238651b/',
+        image: '/image/team/shilpichaurasia.jpg',
+      },
+      {
+        name: 'Devulapalli Krishna Sameera',
+        title: `Senior Scientific Specialist
+        Excelra Knowledge Solutions, Hyderabad, India`,
+        email: 'sameera.devulapalli@excelra.com',
+        link: 'https://www.linkedin.com/in/sameeradevulapalli/',
+        image: '/image/team/sameeradevulapalli.jpg',
       },
     ],
   },

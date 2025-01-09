@@ -30,14 +30,14 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
         <div key={option.key} className='space-y-1'>
           <div className='flex space-x-2 items-center'>
             <div className='flex flex-col space-y-2 w-full'>
-              <Label htmlFor={option.key} className='text-xs font-semibold flex gap-1'>
+              <Label htmlFor={option.key} className='text-xs font-semibold flex gap-1 items-center'>
                 {option.label}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info size={12} />
                   </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{option.tooltip}</p>
+                  <TooltipContent align='end'>
+                    <p className='max-w-60'>{option.tooltip}</p>
                   </TooltipContent>
                 </Tooltip>
               </Label>

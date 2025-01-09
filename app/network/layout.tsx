@@ -7,8 +7,10 @@ import { RightSideBar } from '@/components/right-panel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { Toggle } from '@/components/ui/toggle';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useStore } from '@/lib/hooks';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, SquareDashedMousePointer } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect } from 'react';
 
@@ -30,23 +32,14 @@ const FileName = () => {
   );
 };
 
-export default function NetworkLayoutPage({ children }: { children: React.ReactNode }) {
+export default function NetworkLayoutPage({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
   const projectTitle = useStore(state => state.projectTitle);
-
-  React.useEffect(() => {
-    const event = async (event: globalThis.KeyboardEvent) => {
-      if (event.altKey) {
-        if (event.key === 'l') setLeftSidebar(!leftSidebar);
-        if (event.key === 'r') setRightSidebar(!rightSidebar);
-      }
-    };
-    window.addEventListener('keydown', event);
-    return () => {
-      window.removeEventListener('keydown', event);
-    };
-  }, [leftSidebar, rightSidebar]);
 
   return (
     <>
@@ -56,6 +49,24 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
             {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
           </Button>
           <div className='flex gap-2'>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Toggle
+                  aria-label='Toggle selection'
+                  onPressedChange={e => useStore.setState({ nodeSelectionEnabled: e })}
+                >
+                  <SquareDashedMousePointer className='h-4 w-4' />
+                </Toggle>
+              </TooltipTrigger>
+              <TooltipContent align='start'>
+                Use this options, then <kbd>Click</kbd> & Drag to select multiple nodes
+                <br />
+                <b>
+                  <i>Shortcut:</i>
+                </b>{' '}
+                <kbd> Shift(⇧) + Click</kbd> & Drag
+              </TooltipContent>
+            </Tooltip>
             <Suspense
               fallback={
                 <Input

@@ -17,7 +17,7 @@ export default function UploadFile() {
   const [file, setFile] = React.useState<File | null>(null);
   const [fileType, setFileType] = React.useState<'csv' | 'json'>('csv');
   const [fetchData, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
-    GENE_VERIFICATION_QUERY(true),
+    GENE_VERIFICATION_QUERY,
   );
   const [tableOpen, setTableOpen] = React.useState(false);
   const [geneIDs, setGeneIDs] = React.useState<string[]>([]);
@@ -72,10 +72,8 @@ export default function UploadFile() {
       });
       return;
     }
-    const userId = localStorage.getItem('userID');
     const { error } = await fetchData({
       variables: { geneIDs: distinctSeedGenes },
-      ...(userId && { context: { headers: { 'x-user-id': userId } } }),
     });
     if (error) {
       console.error(error);
@@ -87,7 +85,6 @@ export default function UploadFile() {
       });
       return;
     }
-    if (!userId) localStorage.setItem('userID', data?.userID ?? '');
     setGeneIDs(distinctSeedGenes);
     setTableOpen(true);
   };
@@ -130,10 +127,12 @@ export default function UploadFile() {
             </Select>
           </div>
           <div>
-            <div className='flex justify-between'>
+            <div className='flex justify-between items-center'>
               <Label htmlFor='fileUpload'>Upload {fileType.toUpperCase()}</Label>
               <p className='text-zinc-500'>
-                (1st 2nd columns can have ENSG IDs or Gene name; examples:{' '}
+                (1st & 2nd columns need to be ENSG IDs or Gene name,
+                <br />
+                while 3rd column should be interaction score; examples:{' '}
                 <a href={'/example1.csv'} download className='underline'>
                   #1
                 </a>{' '}
@@ -148,6 +147,7 @@ export default function UploadFile() {
               type='file'
               accept='.csv,.json'
               onChange={handleFileChange}
+              required
               className='border-2 hover:border-dashed cursor-pointer h-9'
             />
           </div>

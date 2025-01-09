@@ -12,15 +12,17 @@ import {
 } from '@tanstack/react-table';
 import React from 'react';
 import { Input } from './input';
+import { Spinner } from './spinner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
   filterColumnName: string;
+  loading?: boolean;
 }
 
-export function DataTable<TData>({ columns, data, filterColumnName }: DataTableProps<TData>) {
+export function DataTable<TData>({ columns, data, filterColumnName, loading = false }: DataTableProps<TData>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
@@ -74,6 +76,12 @@ export function DataTable<TData>({ columns, data, filterColumnName }: DataTableP
                   ))}
                 </TableRow>
               ))
+            ) : loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className='h-24 text-center'>
+                  <Spinner variant={1} />
+                </TableCell>
+              </TableRow>
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>

@@ -1,7 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { envURL } from './utils';
 
 const client = new ApolloClient({
-  uri: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000'}/graphql`,
+  uri: `${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/graphql`,
+  credentials: 'include',
   cache: new InMemoryCache({
     addTypename: false,
   }),

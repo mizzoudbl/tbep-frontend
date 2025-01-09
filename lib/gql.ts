@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const GENE_VERIFICATION_QUERY = (getUserID = false) => gql`
+export const GENE_VERIFICATION_QUERY = gql`
   query GeneVerification($geneIDs: [String!]!) {
     genes(geneIDs: $geneIDs ) {
       ID
@@ -10,7 +10,6 @@ export const GENE_VERIFICATION_QUERY = (getUserID = false) => gql`
       Aliases
       Input
     }
-    ${getUserID ? 'userID' : ''}
   }
 `;
 

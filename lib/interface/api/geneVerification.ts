@@ -9,11 +9,6 @@ export interface GeneVerificationData {
    * Genes to be displayed in the table
    */
   genes: Gene[];
-
-  /**
-   * User ID
-   */
-  userID?: string;
 }
 
 /**

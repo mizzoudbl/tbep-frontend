@@ -18,10 +18,21 @@ import { useLoadGraph } from '@react-sigma/core';
 import Graph from 'graphology';
 import { circlepack } from 'graphology-layout';
 import type { SerializedGraph } from 'graphology-types';
+import { AlertTriangle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Papa from 'papaparse';
 import React from 'react';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../ui/alert-dialog';
 import { Spinner } from '../ui/spinner';
 
 export function LoadGraph() {
@@ -38,11 +49,11 @@ export function LoadGraph() {
         minScore: variable.minScore,
         order: variable.order,
       },
-      context: { headers: { 'x-user-id': localStorage.getItem('userID') } },
     },
   );
 
-  const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY(false));
+  const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
+  const [showWarning, setShowWarning] = React.useState<boolean>(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
@@ -146,6 +157,22 @@ export function LoadGraph() {
         }
         if (response) {
           const { genes, links, graphName } = response.getGeneInteractions;
+          if (genes.length > 5000 || links.length > 50000) {
+            toast.warning('Large graph detected!', {
+              position: 'top-center',
+              richColors: true,
+              description: 'Computation is stopped. Auto closing the graph in 3 seconds to prevent browser crash',
+              cancel: {
+                label: 'Close',
+                onClick: () => window.close(),
+              },
+            });
+            setTimeout(() => window.close(), 3000);
+            return;
+          }
+          if (genes.length > 1000 || links.length > 10000) {
+            setShowWarning(true);
+          }
           // store graphName in JSON in graphConfig key in localStorage
           localStorage.setItem('graphConfig', JSON.stringify({ ...variable, graphName }));
           useStore.setState({ graphConfig: { ...variable, graphName } });
@@ -197,6 +224,39 @@ export function LoadGraph() {
             Loading...
           </div>
         </div>
+      ) : showWarning ? (
+        <AlertDialog open={showWarning}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className='text-red-500 flex items-center'>
+                <AlertTriangle size={24} className='mr-2' />
+                Warning!
+              </AlertDialogTitle>
+              <AlertDialogDescription className='text-black'>
+                You are about to generate a graph with a large number of nodes/edges. You may face difficulties in
+                analyzing the graph.
+              </AlertDialogDescription>
+              <p className='text-black font-semibold'>Are you sure you want to proceed?</p>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={() => {
+                  setShowWarning(false);
+                  window.close();
+                }}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setShowWarning(false);
+                }}
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       ) : null}
     </>
   );

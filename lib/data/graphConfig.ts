@@ -7,6 +7,17 @@ export const PROPERTY_LABEL_TYPE_MAPPING = {
   'Tissue Specificity': 'TE',
   Custom: 'Custom_Color',
 } as const;
+
+export const PROPERTY_TYPE_LABEL_MAPPING = {
+  DEG: 'Differential Expression',
+  OpenTargets: 'Target Disease Association',
+  OT_Prioritization: 'Target Prioritization Factors',
+  Pathway: 'Pathways',
+  Druggability: 'Druggability',
+  TE: 'Tissue Specificity',
+  Custom_Color: 'Custom',
+} as const;
+
 export const DISEASE_DEPENDENT_PROPERTIES = ['DEG', 'OpenTargets'] as const;
 export const DISEASE_INDEPENDENT_PROPERTIES = [
   'Pathway',

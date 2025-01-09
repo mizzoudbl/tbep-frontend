@@ -15,6 +15,14 @@ export const algorithms = [
         step: 0.1,
       },
       {
+        type: 'slider',
+        name: 'minCommunitySize',
+        defaultValue: 4,
+        min: 1,
+        max: 50,
+        step: 1,
+      },
+      {
         type: 'checkbox',
         name: 'weighted',
         defaultValue: true,

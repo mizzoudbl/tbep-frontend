@@ -1,12 +1,14 @@
 'use client';
 
 import type { Message } from '@/lib/interface';
-import { footNotes } from '@/lib/utils';
+import { envURL } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
-import { ChevronDown, GripHorizontal, MessageCircle, Send, Trash2 } from 'lucide-react';
+import { ChevronDown, GripHorizontal, Info, MessageCircle, Send, Trash2, TriangleAlert, X } from 'lucide-react';
+import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from './Markdown';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Skeleton } from './ui/skeleton';
 import { Textarea } from './ui/textarea';
 
@@ -19,6 +21,14 @@ export default function ChatWindow() {
   const [isChatInitiated, setIsChatInitiated] = React.useState(false);
   const [chatHeight, setChatHeight] = React.useState<number | null>(null);
   const chatRef = createRef<HTMLDivElement>();
+  const [showAlert, setShowAlert] = React.useState(true);
+
+  React.useEffect(() => {
+    const show = localStorage.getItem('showAlert');
+    if (show !== 'false') {
+      setShowAlert(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.KeyboardEvent<HTMLTextAreaElement> | React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,10 +40,8 @@ export default function ChatWindow() {
     setIsLoading(true);
     setIsChatOpen(true);
     setIsChatInitiated(true);
-
     try {
-      if (process.env.NEXT_PUBLIC_LLM_BACKEND_URL === undefined) throw new Error('LLM backend URL is not defined');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/chat`, {
+      const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/chat`, {
         method: 'POST',
         body: JSON.stringify({ question: inputValue }),
         headers: {
@@ -51,7 +59,7 @@ export default function ChatWindow() {
       }
       const { streamID } = await response.json();
 
-      const event = new EventSource(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/stream?sid=${streamID}`);
+      const event = new EventSource(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/stream?sid=${streamID}`);
       event.onopen = () => {
         const llmResponse: Message = {
           text: '',
@@ -128,7 +136,9 @@ export default function ChatWindow() {
               <GripHorizontal className='w-4 h-4 text-gray-400' />
             </motion.div>
             <div className='flex justify-between items-center p-4 bg-gray-100 border-b'>
-              <h2 className='text-lg font-semibold'>Chat with LLM</h2>
+              <div className='flex items-center gap-4'>
+                <h2 className='text-lg font-semibold'>Chat with LLM </h2>
+              </div>
               <div className='flex items-center space-x-8'>
                 <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
                   <Trash2 className='w-5 h-5' />
@@ -143,9 +153,9 @@ export default function ChatWindow() {
               </div>
             </div>
             <div ref={chatRef} className='max-h-[87%] overflow-y-scroll p-2 space-y-2'>
-              {messages.map((message, index) => (
+              {messages.map(message => (
                 <div
-                  key={`${index}-${message.sender}`}
+                  key={`${message.text}-${message.sender}`}
                   className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
@@ -166,6 +176,45 @@ export default function ChatWindow() {
                 </div>
               )}
             </div>
+            {showAlert && (
+              <center>
+                <Alert className='w-3/4'>
+                  <TriangleAlert size={20} />
+                  <AlertTitle className='font-bold flex w-full justify-between items-center'>
+                    Disclaimer{' '}
+                    <X
+                      size={15}
+                      className='hover:border rounded m-2'
+                      onClick={() => {
+                        setShowAlert(false);
+                        localStorage.setItem('showAlert', 'false');
+                      }}
+                    />
+                  </AlertTitle>
+                  <AlertDescription>
+                    <p className='text-sm items-center'>
+                      This AI assistant may occasionally generate incorrect or misleading information. We are not
+                      responsible for any decisions made based on the generated content. By using this service, you
+                      agree to our{' '}
+                      <Link
+                        href='/docs/terms-of-use'
+                        className='font-medium underline underline-offset-4 hover:text-primary'
+                      >
+                        Terms of Use
+                      </Link>{' '}
+                      and{' '}
+                      <Link
+                        href='/docs/privacy-policy'
+                        className='font-medium underline underline-offset-4 hover:text-primary'
+                      >
+                        Privacy Policy
+                      </Link>
+                      . <b>Also, currently this graph is not connected to the AI assistant.</b>
+                    </p>
+                  </AlertDescription>
+                </Alert>
+              </center>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,6 +1,8 @@
 import type { Message } from '@/lib/interface';
+import { envURL } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Send, Trash2 } from 'lucide-react';
+import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from './Markdown';
@@ -28,8 +30,7 @@ export default function Chat() {
     setIsChatOpen(true);
 
     try {
-      if (process.env.NEXT_PUBLIC_LLM_BACKEND_URL === undefined) throw new Error('LLM backend URL is not defined');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/chat`, {
+      const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/chat`, {
         method: 'POST',
         body: JSON.stringify({ question: inputValue }),
         headers: {
@@ -47,7 +48,7 @@ export default function Chat() {
       }
       const { streamID } = await response.json();
 
-      const event = new EventSource(`${process.env.NEXT_PUBLIC_LLM_BACKEND_URL}/stream?sid=${streamID}`);
+      const event = new EventSource(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/stream?sid=${streamID}`);
       event.onopen = () => {
         const llmResponse: Message = {
           text: '',
@@ -93,9 +94,9 @@ export default function Chat() {
   }, [isTyping]);
 
   return (
-    <div className='rounded-lg shadow-md mt-4 p-4'>
+    <div className='rounded-lg shadow-md mt-4 p-4 flex flex-col'>
       {isChatOpen && (
-        <div className=' p-2 space-y-2'>
+        <div className='p-2 space-y-2'>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className='flex justify-between pb-2 border-b'>
               Chat with LLM
@@ -104,9 +105,9 @@ export default function Chat() {
               </button>
             </div>
             <div ref={chatRef} className='max-h-[70vh] overflow-y-scroll p-2 space-y-2'>
-              {messages.map((message, index) => (
+              {messages.map(message => (
                 <div
-                  key={`${index}-${message.sender}`}
+                  key={`${message.text}-${message.sender}`}
                   className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
@@ -146,6 +147,18 @@ export default function Chat() {
           <Send className='w-5 h-5' />
         </Button>
       </div>
+      <center className='text-sm text-gray-500'>
+        This AI assistant may occasionally generate incorrect or misleading information. We are not responsible for any
+        decisions made based on the generated content. By using this service, you agree to our{' '}
+        <Link href='/docs/terms-of-use' className='font-medium underline underline-offset-4 hover:text-primary'>
+          Terms of Use
+        </Link>{' '}
+        and{' '}
+        <Link href='/docs/privacy-policy' className='font-medium underline underline-offset-4 hover:text-primary'>
+          Privacy Policy
+        </Link>
+        .
+      </center>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { columnGseaResults, columnSelectedNodes } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { Gsea } from '@/lib/interface';
+import { envURL } from '@/lib/utils';
 import React, { useEffect } from 'react';
 import PopUpDataTable from '../PopUpDataTable';
 import { Button } from '../ui/button';
@@ -13,12 +14,14 @@ export function NetworkInfo() {
   const selectedNodes = useStore(state => state.selectedNodes);
   const [showTable, setShowTable] = React.useState(false);
   const [gseaData, setGseaData] = React.useState<Array<Gsea>>([]);
+  const [gseaLoading, setGseaLoading] = React.useState(false);
 
   useEffect(() => {
     if (selectedNodes.length === 0) return;
     (async () => {
+      setGseaLoading(true);
       setShowTable(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL}/gsea`, {
+      const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_PYTHON_BACKEND_URL)}/gsea`, {
         method: 'POST',
         body: JSON.stringify(selectedNodes.map(node => node.Gene_Name)),
         headers: { 'Content-Type': 'application/json' },
@@ -26,6 +29,7 @@ export function NetworkInfo() {
       });
       const data: Array<Gsea> = await response.json();
       setGseaData(data);
+      setGseaLoading(false);
     })();
   }, [selectedNodes]);
 
@@ -52,6 +56,7 @@ export function NetworkInfo() {
           dialogTitle={'Selected Genes'}
           tabsTitle={['Details', 'GSEA Analysis']}
           open={showTable}
+          loading={[false, gseaLoading]}
           setOpen={setShowTable}
           filterColumnNames={['Gene_Name', 'Pathway']}
         />

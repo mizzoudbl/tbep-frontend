@@ -17,8 +17,10 @@ import type {
   OtherSection,
   RadioOptions,
 } from '@/lib/interface';
+import { envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
+import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { NodeColor, NodeSize } from '.';
 import FileSheet from '../FileSheet';
@@ -36,13 +38,15 @@ export function LeftSideBar() {
   const [diseaseMap, setDiseaseMap] = React.useState<string>('amyotrophic lateral sclerosis (ALS)');
 
   useEffect(() => {
-    const diseaseMap = JSON.parse(localStorage.getItem('graphConfig') || '{}').diseaseMap;
+    const graphConfig = localStorage.getItem('graphConfig');
+    if (!graphConfig) redirect('/');
+    const diseaseMap = JSON.parse(graphConfig).diseaseMap;
     useStore.setState({
-      diseaseName: diseaseMap.split(' ').at(-1)?.slice(1, -1),
+      diseaseName: diseaseMap?.split(' ')?.at(-1)?.slice(1, -1),
     });
     setDiseaseMap(diseaseMap);
     (async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/diseases`);
+      const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/diseases`);
       const data = await response.json();
       setDiseaseData(data);
     })();

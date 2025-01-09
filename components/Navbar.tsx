@@ -10,7 +10,7 @@ export default function Navbar() {
     <header className='bg-teal-800 text-white p-4'>
       <div className='container mx-auto flex justify-between items-center'>
         <Link href={'/'} className='flex items-center gap-2'>
-          <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} />
+          <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} className='aspect-square' />
           <h1 className='text-lg md:text-xl font-bold flex items-end'>
             <p className='text-3xl'>T</p>arget & <p className='text-3xl ml-1'>B</p>iomarker{' '}
             <p className='text-3xl ml-1'>E</p>xploration <p className='text-3xl ml-1'>P</p>ortal{' '}
@@ -38,7 +38,7 @@ export default function Navbar() {
           <DropdownMenuContent className='w-56 text-black text-lg' align='end'>
             {links.map(link => (
               <Link key={link.text} href={link.href}>
-                <DropdownMenuItem>
+                <DropdownMenuItem className='cursor-pointer'>
                   {link.icon}
                   <span>{link.text}</span>
                 </DropdownMenuItem>

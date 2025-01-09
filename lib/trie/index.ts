@@ -37,8 +37,6 @@ export class Trie<E = string> {
         this.#addString(key, input);
       }
       this.size++;
-    } else {
-      throw new Error('Invalid input parameters');
     }
   }
 
@@ -77,7 +75,7 @@ export class Trie<E = string> {
 
   addAll(objects: E[], keyToIndex: string): void {
     if (!Array.isArray(objects)) {
-      throw new Error('First parameter must be an array');
+      return;
     }
 
     for (const obj of objects) {

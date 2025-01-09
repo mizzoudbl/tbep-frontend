@@ -149,6 +149,11 @@ export interface GraphStore {
    *
    */
   graphConfig: GraphConfig | null;
+
+  /**
+   * Node Selection Enabled
+   */
+  nodeSelectionEnabled: boolean;
 }
 
 export type RadioOptions = Record<'user' | 'database', Record<GeneProperties, Array<string>>>;

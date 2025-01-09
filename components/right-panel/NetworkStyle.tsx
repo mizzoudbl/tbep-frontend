@@ -92,7 +92,7 @@ export function NetworkStyle({
         </div>
         <div className='flex space-x-2 items-center'>
           <div className='flex flex-col space-y-1 w-full'>
-            <Label htmlFor='defaultLabelDensity' className='text-xs font-semibold flex gap-1'>
+            <Label htmlFor='defaultLabelDensity' className='text-xs font-semibold flex gap-1 items-center'>
               Label Density
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -131,13 +131,13 @@ export function NetworkStyle({
               checked={showEdgeLabel}
               onCheckedChange={checked => handleCheckBox(checked, 'showEdgeLabel')}
             />
-            <Label htmlFor='showEdgeLabel' className='text-xs font-semibold flex gap-1'>
+            <Label htmlFor='showEdgeLabel' className='text-xs font-semibold flex gap-1 items-center'>
               Show Edge Label
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Info size={12} />
                 </TooltipTrigger>
-                <TooltipContent className='max-w-52' align='end'>
+                <TooltipContent className='max-w-60' align='end'>
                   For larger graphs, it is recommended to zoom before turn on edge labels to improve performance
                 </TooltipContent>
               </Tooltip>

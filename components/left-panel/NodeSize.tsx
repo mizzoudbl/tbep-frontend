@@ -48,22 +48,24 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => voi
           value={radioValue ?? ''}
           onValueChange={value => useStore.setState({ selectedRadioNodeSize: value as NodeSizeType })}
         >
-          {nodeSize.map(({ label, tooltipContent }) => (
-            <Tooltip key={label}>
-              <div className='flex items-center space-x-2'>
-                <RadioGroupItem value={PROPERTY_LABEL_TYPE_MAPPING[label]} id={label} />
-                <Label htmlFor={label} className='text-xs'>
-                  {label}
-                </Label>
-                <TooltipTrigger asChild>{tooltipContent && <Info size={12} />}</TooltipTrigger>
-              </div>
-              {tooltipContent && (
-                <TooltipContent>
-                  <p>{tooltipContent}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          ))}
+          {nodeSize.map(({ label, tooltipContent }) => {
+            return (
+              <Tooltip key={label}>
+                <div className='flex items-center space-x-2'>
+                  <RadioGroupItem value={PROPERTY_LABEL_TYPE_MAPPING[label]} id={label} />
+                  <Label htmlFor={label} className='text-xs'>
+                    {label}
+                  </Label>
+                  <TooltipTrigger asChild>{tooltipContent && <Info size={12} />}</TooltipTrigger>
+                </div>
+                {tooltipContent && (
+                  <TooltipContent align='start'>
+                    <p className='max-w-80'>{tooltipContent}</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            );
+          })}
         </RadioGroup>
         {radioValue &&
           (radioValue === 'TE' ? (

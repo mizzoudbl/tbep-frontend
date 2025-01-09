@@ -1,14 +1,10 @@
 'use client';
 
 import { useStore } from '@/lib/hooks';
-import type { ForceSettings, GraphStore, RadialAnalysisSetting } from '@/lib/interface';
+import type { GraphStore, RadialAnalysisSetting } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { ChevronsUpDown } from 'lucide-react';
 import { Legend, NetworkAnalysis, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
-import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
-import { Switch } from '../ui/switch';
 
 export function RightSideBar() {
   const defaultNodeSize = useStore(state => state.defaultNodeSize);

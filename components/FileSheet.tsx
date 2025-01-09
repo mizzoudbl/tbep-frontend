@@ -9,7 +9,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -37,17 +36,12 @@ import { toast } from 'sonner';
 
 export default function FileSheet() {
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
-  const [showConfirmDialog, setShowConfirmDialog] = React.useState(true);
+  const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const [checkedOptions, setCheckedOptions] = React.useState<Record<string, boolean>>({});
   const diseaseName = useStore(state => state.diseaseName);
   const geneNameToID = useStore(state => state.geneNameToID);
 
   React.useEffect(() => {
-    const storedShowConfirmDialog = sessionStorage.getItem('showConfirmDialog');
-    if (storedShowConfirmDialog !== null) {
-      setShowConfirmDialog(JSON.parse(storedShowConfirmDialog));
-    }
-
     openDB('files', 'readonly').then(store => {
       if (!store) {
         toast.error('Failed to open IndexedDB database', {
@@ -103,7 +97,7 @@ export default function FileSheet() {
 
   const removeFile = async (name: string) => {
     setUploadedFiles(uploadedFiles.filter(file => file.name !== name));
-
+    setShowConfirmDialog(false);
     const store = await openDB('files', 'readwrite');
     if (!store) {
       toast.error('Failed to open IndexedDB database', {
@@ -323,35 +317,41 @@ export default function FileSheet() {
                       Date: {new Date(file.lastModified).toLocaleString()} | Size: {formatBytes(file.size)}
                     </div>
                   </div>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant='ghost' size='icon'>
-                        <Trash2 className='h-4 w-4' />
-                      </Button>
-                    </AlertDialogTrigger>
-                    {showConfirmDialog && (
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription className='text-black'>
-                            This action cannot be undone. This will permanently delete the file.
-                          </AlertDialogDescription>
-                          <div className='flex items-center space-x-2 mt-4'>
-                            <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
-                            <Label
-                              htmlFor='terms'
-                              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                            >
-                              Do not show again
-                            </Label>
-                          </div>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => removeFile(file.name)}>Continue</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    )}
+                  <AlertDialog open={showConfirmDialog}>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => {
+                        if (sessionStorage.getItem('showConfirmDialog') === 'false') {
+                          removeFile(file.name);
+                        } else {
+                          setShowConfirmDialog(true);
+                        }
+                      }}
+                    >
+                      <Trash2 className='h-4 w-4' />
+                    </Button>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription className='text-black'>
+                          This action cannot be undone. This will permanently delete the file.
+                        </AlertDialogDescription>
+                        <div className='flex items-center space-x-2 mt-4'>
+                          <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
+                          <Label
+                            htmlFor='terms'
+                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                          >
+                            Do not show again
+                          </Label>
+                        </div>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => removeFile(file.name)}>Continue</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
                   </AlertDialog>
                 </div>
               ))}

@@ -4,6 +4,16 @@ import Chat from '@/components/Chat';
 import History, { type HistoryItem } from '@/components/History';
 import PopUpTable from '@/components/PopUpTable';
 import { VirtualizedCombobox } from '@/components/VirtualizedCombobox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,21 +24,23 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { graphConfig } from '@/lib/data';
 import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables, GetDiseaseData, GraphConfigForm } from '@/lib/interface';
-import { distinct } from '@/lib/utils';
+import { distinct, envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
-import { Info, Loader } from 'lucide-react';
+import { AlertTriangle, Info, Loader } from 'lucide-react';
+import { Link } from 'next-view-transitions';
+import Script from 'next/script';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
 export default function Home() {
   const [verifyGenes, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
-    GENE_VERIFICATION_QUERY(true),
+    GENE_VERIFICATION_QUERY,
   );
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | null>(null);
 
   React.useEffect(() => {
     (async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/diseases`);
+      const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/diseases`);
       const data = await response.json();
       setDiseaseData(data);
     })();
@@ -59,16 +71,15 @@ export default function Home() {
 
   const [tableOpen, setTableOpen] = React.useState(false);
   const [geneIDs, setGeneIDs] = React.useState<string[]>([]);
+  const [showAlert, setShowAlert] = React.useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { seedGenes } = formData;
     const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim().toUpperCase())).filter(Boolean);
     setGeneIDs(geneIDs);
-    const userId = localStorage.getItem('userID');
     const { data, error } = await verifyGenes({
       variables: { geneIDs },
-      ...(userId && { context: { headers: { 'x-user-id': userId } } }),
     });
     if (error) {
       console.error(error);
@@ -80,7 +91,6 @@ export default function Home() {
       });
       return;
     }
-    if (!userId) localStorage.setItem('userID', data?.userID ?? '');
     setTableOpen(true);
   };
 
@@ -114,7 +124,28 @@ export default function Home() {
     setFormData({ ...formData, seedGenes: event.target.value });
   };
 
-  const handleGenerateGraph = () => {
+  const handleGenerateGraph = (skipWarning = false) => {
+    if (!skipWarning) {
+      const seedCount = data?.genes.length ?? 0;
+      const orderNum = +formData.order;
+      const maxGenes = orderNum === 0 ? 5000 : 50;
+      const warningThreshold = orderNum === 0 ? 1000 : 25;
+
+      if (seedCount > maxGenes) {
+        toast.error('Too many seed genes', {
+          description: `Maximum ${maxGenes} genes allowed for ${orderNum === 0 ? 'zero' : 'first/second'} order networks`,
+          position: 'top-center',
+          richColors: true,
+          cancel: { label: 'Close', onClick() {} },
+        });
+        return;
+      }
+
+      if (seedCount > warningThreshold) {
+        setShowAlert(true);
+        return;
+      }
+    }
     const seedGenes = data?.genes.map(gene => gene.ID);
     if (!seedGenes) {
       toast.error('There is no valid gene in the list', {
@@ -147,9 +178,30 @@ export default function Home() {
     localStorage.setItem('history', JSON.stringify(newHistory));
     window.open('/network', '_blank', 'noopener,noreferrer');
   };
+  const [showSlowWarning, setShowSlowWarning] = React.useState(false);
+
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (loading) {
+      timeout = setTimeout(() => {
+        setShowSlowWarning(true);
+      }, 15000);
+    } else {
+      setShowSlowWarning(false);
+    }
+    return () => clearTimeout(timeout);
+  }, [loading]);
 
   return (
     <>
+      {showSlowWarning && (
+        <div className='font-semibold absolute top-0 z-10 left-0 right-0 flex justify-center pb-1 bg-teal-600 text-gray-300'>
+          If this page slows down, you can try our mirror site{' '}
+          <Link className='ml-1 underline hover:text-white' target='_blank' href='https://pdnet.saipuram.com/'>
+            here
+          </Link>
+        </div>
+      )}
       <div className='mx-auto rounded-lg shadow-md p-4 min-h-[70vh]'>
         <h2 className='text-2xl font-semibold mb-6'>Search by Multiple Proteins</h2>
         <ResizablePanelGroup direction='horizontal' className='gap-4'>
@@ -216,6 +268,7 @@ FIG4`,
                     className='mt-1'
                     value={formData.seedGenes}
                     onChange={handleSeedGenesChange}
+                    required
                   />
                   <center>OR</center>
                   <Label htmlFor='seedFile'>Upload Text File</Label>
@@ -267,7 +320,14 @@ FIG4`,
                 </div>
                 <center>
                   <Button type='submit' className='w-3/4 bg-teal-600 hover:bg-teal-700 text-white'>
-                    {loading && <Loader className='animate-spin mr-2' size={20} />} Submit
+                    {loading ? (
+                      <>
+                        <Loader className='animate-spin mr-2' size={20} />
+                        Verifying {geneIDs.length} genes...
+                      </>
+                    ) : (
+                      'Submit'
+                    )}
                   </Button>
                 </center>
                 <PopUpTable
@@ -278,6 +338,32 @@ FIG4`,
                   geneIDs={geneIDs}
                 />
               </div>
+              <AlertDialog open={showAlert}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className='text-red-500 flex items-center'>
+                      <AlertTriangle size={24} className='mr-2' />
+                      Warning!
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className='text-black'>
+                      You are about to generate a graph with a large number of nodes/edges. This may take a long time to
+                      complete.
+                    </AlertDialogDescription>
+                    <p className='text-black font-semibold'>Are you sure you want to proceed?</p>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setShowAlert(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        setShowAlert(false);
+                        handleGenerateGraph(true);
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </form>
           </ResizablePanel>
           <ResizableHandle withHandle className='hidden md:flex' />

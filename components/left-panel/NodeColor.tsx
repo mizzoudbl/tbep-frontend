@@ -58,8 +58,8 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
                 <TooltipTrigger asChild>{tooltipContent && <Info size={12} />}</TooltipTrigger>
               </div>
               {tooltipContent && (
-                <TooltipContent>
-                  <p>{tooltipContent}</p>
+                <TooltipContent align='start'>
+                  <p className='max-w-80'>{tooltipContent}</p>
                 </TooltipContent>
               )}
             </Tooltip>
@@ -79,7 +79,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
             <Combobox
               key={radioValue}
               data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
-              className='mt-2'
+              className='w-full mt-2'
               value={selectedNodeColorProperty}
               onChange={onPropChange}
             />

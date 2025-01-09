@@ -1,0 +1,96 @@
+---
+description: Basic functions related to network analysis
+---
+
+
+# Left panel
+
+Once you decide the details of your own network, the network visualization page will show up for basic analysis purpose as below.
+
+![Left panel of network visualization page](../../../public/image/docs/left-panel.png)
+
+Before going over the functions on the left panel, you might want to have some basic understandings of the data available in our tool.
+
+[Knowledge Base](../knowledge-base.mdx) integrated in our tool is build based on [disease-dependent data](../knowledge-base/disease-dependent-data.mdx) and [disease-independent data](../knowledge-base/disease-independent-data.mdx). Disease-dependent data indicates the data of specific features varies based on different diseases, while disease-independent data indicates the data remains the same once the disease changes.
+
+Disease-dependent data includes [Differential Expression](../knowledge-base/disease-dependent-data/differential-expression.mdx) and [Target Disease Association ](../knowledge-base/disease-dependent-data/target-disease-association.mdx), while disease-independent data includes [Pathways](../knowledge-base/disease-independent-data/pathways.mdx), [Druggability](../knowledge-base/disease-independent-data/druggability.mdx) and [Tissue Specificity](../knowledge-base/disease-independent-data/tissue-specificity.mdx). We also call these data types as **features**.
+
+### Disease Map
+
+Sometimes you may want to switch to another disease after generating the network visualization, no need to go back to the Dashboard to change the disease and re-render the network, here is a simple way to do it:
+
+* Locate **Disease Map** on the top of the left panel and select the disease name that you want to switch to.
+* Please note that only the [disease-dependent data](../knowledge-base/disease-dependent-data.mdx) will change if you switch to another disease.
+
+![Disease Map](../../../public/image/docs/disease-map.png)
+
+### Change Node Color
+
+You can change the node color by selecting different features.
+
+1. Choose a feature.
+   > **Note**: You can hover on the info icon <img src="/image/docs/info-tooltip.png" alt="" className="inline"/> to check the explanation.
+2. Select the preferred option for that feature in the dropdown list. You can type the keyword in the search bar to help locate the data name.
+   > **Note**: You can check the [Legends](right-panel.mdx#legends) section on the [Right panel](right-panel.mdx) to get the legend of each feature.
+
+![Change node color](../../../public/image/docs/change-node-color-property.png)
+
+### Change Node Size
+
+You can change the node size by selecting a feature.
+
+1. Choose a feature.
+   > **Note**: You can hover on the info icon <img src="/image/docs/info-tooltip.png" alt="" className="inline"/> to check the explanation.
+2. Select the preferred data for that feature in the dropdown list. You can type the keyword in the search bar to help locate the data name.
+
+![Change node size](../../../public/image/docs/change-node-size-property.png)
+
+We provide less features in Node Size section simply because the feature Pathways is binary features -- either a gene exists in a pathway or it does not exist. However, to change the node size in a network, we need consistent data instead of the binary data.
+
+### Combination of both Node Color and Node Size Change
+
+Node color and node size can be both changed at the same time to highlight the corresponding genes, making them clearer.
+
+![Change both node color and node size](../../../public/image/docs/change-both-color-and-size.png)
+
+### Custom Search
+
+You can find nodes in the network.
+
+1. Locate the search box.
+2. Enter the gene names or Ensemble IDs into the search box.
+   > **Note**: To find seed genes, simply click `#Seed Genes` above the search box.
+3. The nodes you are looking for will be highlighted in the network.
+
+![Custom search](../../../public/image/docs/custom-search.png)
+
+### Custom Upload
+
+You can upload your own customized data to analyze the network, instead of using the existing data.
+
+1. Upload a **CSV** file with your own data, please refer to the [File Format](left-panel.mdx#file-format) below.
+2. Click Submit.
+3. Locate Node Color and/or Node Size section and select the corresponding uploaded feature name.
+4. Select the column name of your customized data.
+
+![Custom upload](../../../public/image/docs/custom-upload.png)
+
+#### File Format
+* The table below elaborates the naming convention, and the value ranges for all the supported features (data types).
+  * "Custom" data type is for customized color purpose. For example, if you find all the features do not fit your needs, you can create your own "customized feature" and color them by yourself.
+
+| Data Type | Column Naming Convention | Value range |
+| --- | --- | --- |
+| Differential Expression | DEG_<pre className="inline text-red-500">CustomName</pre> | [-Inf, +Inf] |
+| Target Disease Association | OpenTargets_<pre className="inline text-red-500">CustomName</pre> | [0, 1] |
+| Target Prioritization Factors | OT_Prioritization_<pre className="inline text-red-500">CustomName</pre> | [-1, 1] |
+| Pathway | Pathway_<pre className="inline text-red-500">CustomName</pre> | Binary (0/1) |
+| Druggability | Druggability_<pre className="inline text-red-500">CustomName</pre> | [0, 1] |
+| Tissue Specificity | TE_<pre className="inline text-red-500">CustomName</pre> | [0, +Inf] |
+| Custom | Custom_Color_<pre className="inline text-red-500">CustomName</pre> | Any hex color code or CSS color name, see list [here](https://www.w3schools.com/colors/colors_names.asp) |
+
+* The CSV file below provides an example of what the real file looks like.
+  * The first column must be either gene name or Ensembl id (column name doesn't matter)
+  * The prefix of columns is case-insensitive
+
+![Example of a customized CSV file](../../../public/image/docs/custom-upload-csv-example.png)

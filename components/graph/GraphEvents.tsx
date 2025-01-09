@@ -21,6 +21,7 @@ export function GraphEvents() {
   const highlightedNodesRef = useRef(new Set<string>());
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
   const totalNodes = useStore(state => state.totalNodes);
+  const nodeSelectionEnabled = useStore(state => state.nodeSelectionEnabled);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -230,7 +231,7 @@ export function GraphEvents() {
       },
       // Disable the autoscale at the first down interaction
       mousedown: e => {
-        if (e.original.shiftKey) handleMouseDown(e.original);
+        if (nodeSelectionEnabled || e.original.shiftKey) handleMouseDown(e.original);
         else {
           for (const node of _selectedNodes) {
             if (highlightedNodesRef.current.has(node)) continue;
