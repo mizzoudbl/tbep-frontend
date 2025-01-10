@@ -7,7 +7,6 @@ import { RightSideBar } from '@/components/right-panel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { Toggle } from '@/components/ui/toggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useStore } from '@/lib/hooks';
 import { ChevronLeft, ChevronRight, SquareDashedMousePointer } from 'lucide-react';
@@ -48,23 +47,18 @@ export default function NetworkLayoutPage({
           <Button variant='ghost' size='icon' onClick={() => setLeftSidebar(!leftSidebar)}>
             {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
           </Button>
-          <div className='flex gap-2'>
+          <div className='flex gap-2 items-center'>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Toggle
-                  aria-label='Toggle selection'
-                  onPressedChange={e => useStore.setState({ nodeSelectionEnabled: e })}
-                >
-                  <SquareDashedMousePointer className='h-4 w-4' />
-                </Toggle>
+                <SquareDashedMousePointer className='h-4 w-4' />
               </TooltipTrigger>
-              <TooltipContent align='start'>
-                Use this options, then <kbd>Click</kbd> & Drag to select multiple nodes
+              <TooltipContent align='start' className='max-w-80'>
+                To select multiple genes and export details or perform GSEA analysis, use the mouse to select the genes
                 <br />
                 <b>
                   <i>Shortcut:</i>
                 </b>{' '}
-                <kbd> Shift(⇧) + Click</kbd> & Drag
+                <kbd className='border rounded-md px-1'> Shift(⇧) + Click</kbd> & Drag
               </TooltipContent>
             </Tooltip>
             <Suspense
