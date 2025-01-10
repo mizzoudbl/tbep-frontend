@@ -176,11 +176,13 @@ export default function Home() {
     ];
     setHistory(newHistory);
     localStorage.setItem('history', JSON.stringify(newHistory));
+    setTableOpen(false);
     window.open('/network', '_blank', 'noopener,noreferrer');
   };
   const [showSlowWarning, setShowSlowWarning] = React.useState(false);
 
   React.useEffect(() => {
+    if (process.env.NEXT_PUBLIC_SITE_URL === 'https://pdnet.saipuram.com') return;
     let timeout: NodeJS.Timeout;
     if (loading) {
       timeout = setTimeout(() => {

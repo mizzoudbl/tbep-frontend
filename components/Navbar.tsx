@@ -11,10 +11,10 @@ export default function Navbar() {
       <div className='container mx-auto flex justify-between items-center'>
         <Link href={'/'} className='flex items-center gap-2'>
           <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} className='aspect-square' />
-          <h1 className='text-lg md:text-xl font-bold flex items-end'>
-            <p className='text-3xl'>T</p>arget & <p className='text-3xl ml-1'>B</p>iomarker{' '}
-            <p className='text-3xl ml-1'>E</p>xploration <p className='text-3xl ml-1'>P</p>ortal{' '}
-            <p className='text-3xl ml-2'>(TBEP)</p>
+          <h1 className='text-lg md:text-xl font-bold flex items-end flex-wrap'>
+            <p className='text-2xl lg:text-3xl'>T</p>arget & <p className='lg:text-3xl text-2xl ml-1'>B</p>iomarker{' '}
+            <p className='text-2xl lg:text-3xl ml-1'>E</p>xploration <p className='lg:text-3xl text-2xl ml-1'>P</p>ortal{' '}
+            <p className='text-2xl lg:text-3xl ml-2 '>(TBEP)</p>
           </h1>
         </Link>
         <nav className='hidden md:flex space-x-4'>
@@ -30,7 +30,7 @@ export default function Navbar() {
         </nav>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon' className='md:hidden hover:bg-teal-600'>
+            <Button variant='ghost' size='icon' className='md:hidden hover:bg-teal-600 ml-2'>
               <Menu className='h-6 w-6' />
               <span className='sr-only'>Open menu</span>
             </Button>

@@ -8,6 +8,7 @@ export const algorithms = [
     parameters: [
       {
         type: 'slider',
+        displayName: 'Resolution',
         name: 'resolution',
         defaultValue: 1.0,
         min: 0.1,
@@ -16,6 +17,7 @@ export const algorithms = [
       },
       {
         type: 'slider',
+        displayName: 'Minimum Community Size',
         name: 'minCommunitySize',
         defaultValue: 4,
         min: 1,
@@ -24,6 +26,7 @@ export const algorithms = [
       },
       {
         type: 'checkbox',
+        displayName: 'Weighted',
         name: 'weighted',
         defaultValue: true,
       },

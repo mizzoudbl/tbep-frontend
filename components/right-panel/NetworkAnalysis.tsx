@@ -40,12 +40,12 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
               {parameters.length > 0 && (
                 <PopoverContent className='w-52'>
                   <form key={name} className='space-y-2 flex flex-col' action={f => handleAlgoQuery(name, f)}>
-                    {parameters.map(({ name, type, defaultValue, min, max, step }) => {
+                    {parameters.map(({ name, displayName, type, defaultValue, min, max, step }) => {
                       if (type === 'slider') {
                         return (
                           <div key={name}>
                             <Label key={name} htmlFor={name} className='font-semibold text-xs'>
-                              {name}
+                              {displayName}
                             </Label>
                             <SliderWithInput
                               min={min}
@@ -65,7 +65,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                           className='grid grid-cols-2 w-full items-center gap-2'
                         >
                           <Label key={name} htmlFor={name} className='font-semibold text-xs'>
-                            {name}
+                            {displayName}
                           </Label>
                           <Checkbox name={name} id={name} defaultChecked={defaultValue as boolean} />
                         </div>

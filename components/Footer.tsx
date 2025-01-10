@@ -21,6 +21,12 @@ export default function Footer() {
             <Link href='/upload-network' className='hover:text-teal-200 mb-2'>
               Custom Upload Network
             </Link>
+            <Link href='/docs/terms-of-use' className='hover:text-teal-200 mb-2'>
+              Terms of Use
+            </Link>
+            <Link href='/docs/privacy-policy' className='hover:text-teal-200 mb-2'>
+              Privacy Policy
+            </Link>
           </div>
           <div className='flex flex-col'>
             <h3 className='text-lg font-semibold mb-4'>Collaborating Institutions</h3>
