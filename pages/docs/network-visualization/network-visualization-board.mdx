@@ -1,6 +1,7 @@
 ---
 description: Interactive operations to apply various analysis on the network
 ---
+import Image from 'next/image';
 
 # Network visualization board
 
@@ -10,34 +11,38 @@ Now we focus on the functions of network visualization board.
 
 ### Network Export
 
+You can export the network you created.
 
+1. Type in the name of your saved network.
+2. Click "Export" and select proper format of your saved image.
+
+![Network export](../../../public/image/docs/network-export.png)
 
 ### Network Parameters
 
+On the right bottom corner of network visualization board, we have four different parameters to help you visualize the network better.
 
+1. <Image width={30} height={30} src="/image/docs/zoom-in-button.png" alt="zoom in button" className="inline aspect-square"/>: zoom in the network
+2. <Image width={30} height={30} src="/image/docs/zoom-out-button.png" alt="zoom out button" className="inline aspect-square"/>: zoom out the network
+3. <Image width={30} height={30} src="/image/docs/center-network-button.png" alt="center network button" className="inline aspect-square"/>: center the network
+4. <Image width={30} height={30} src="/image/docs/fullscreen-button.png" alt="fullscreen button" className="inline aspect-square"/>: make the network visualization board full screen
 
 ### Knowledge bot
 
-| what is the role of ULK1 in tauopathy? |
-| -------------------------------------- |
-| KEGG\_Autophagy - animal               |
-| ALS                                    |
+After created your network, you can ask questions regarding your network through our knowledge bot. For example, if you want to explore gene ULK1 more of ALS disease in KEGG\_Autophagy - animal, you can ask questions like "what is the role of ULK1 in tauopathy?", shown in the image below.
 
-### Annotations
+* **Note**: currently our knowledge bot cannot interact with the network, please pay attention to our next version!
 
-You can check the details of the selected nodes in Annotations section.
+![Knowledge bot](../../../public/image/docs/knowledge-bot-network-page-window.png)
 
-1. Press "shift" + left mouse button to select nodes on the network, and the selected nodes will be highlighted with black circle.
-2. Click Node Details button to obtain the more detailed information of selected nodes.
+### Node Details & GSEA
 
-{/* ![Annotations](../../../public/image/docs/1735615210318.png) */}
+You can check the node details and perform GSEA (Gene Set Enrichment Analysis) on the network visualization board.
 
-### GSEA
+1. Press `Shift + Click Left Mouse` & then drag to select nodes on the network, and the selected nodes will be highlighted with black circle.
+2. Click Details tab to obtain the detailed information of selected nodes.
+3. Click GSEA Analysis tab to obtain the more detailed information of GSEA Analysis Results.
+4. Navigate to [Network Info](right-panel.mdx#network-info) section of [Right panel](right-panel.mdx), click Show Details button to get back to the Node details and GSEA Analysis result window.
+5. If needed, click download button in the window to export the results.
 
-Similar to Annotation section, after select nodes on the network, you can find the GSEA analysis results in the GSEA section.
-
-1. Press "shift" + left mouse button to select nodes on the network, and the selected nodes will be highlighted with black circle.
-2. Click Analysis Details button to obtain the more detailed information of selected nodes.
-3. If needed, Click Export Details button in the GSEA Analysis Results window to export the results.
-
-{/* ![GSEA](../../../public/image/docs/1735615241904.png) */}
+![Node Details and GSEA](../../../public/image/docs/node-details-gsea.png)

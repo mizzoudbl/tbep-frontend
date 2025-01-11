@@ -80,7 +80,10 @@ export default {
     </>
   ),
   logoLink: "/docs",
-  darkMode: false,
+  darkMode: true,
+  nextThemes: {
+    defaultTheme: 'light',
+  },
   editLink: {
     component: null,
   },

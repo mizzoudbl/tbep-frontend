@@ -30,8 +30,10 @@ import type { OtherSection, RadioOptions, UniversalData } from '@/lib/interface'
 import { formatBytes, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Trash2, Upload } from 'lucide-react';
+import { Link } from 'next-view-transitions';
 import Papa from 'papaparse';
 import React, { type ChangeEvent } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 
 export default function FileSheet() {
@@ -64,9 +66,8 @@ export default function FileSheet() {
     });
   }, []);
 
-  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: async (acceptedFiles, fileRejections) => {
       const store = await openDB('files', 'readwrite');
       if (!store) {
         toast.error('Failed to open IndexedDB database', {
@@ -77,14 +78,35 @@ export default function FileSheet() {
         });
         return;
       }
-      const request = store.put(file, file.name);
-      request.onerror = ev => console.error(ev);
-      request.onsuccess = () => {
-        setUploadedFiles([...uploadedFiles, file]);
-        setCheckedOptions({ ...checkedOptions, [file.name]: true });
-      };
-    }
-  };
+      const filesToAdd: File[] = [];
+      const newCheckedOptions: Record<string, boolean> = {};
+
+      for (const file of acceptedFiles) {
+        const request = store.put(file, file.name);
+        request.onerror = ev => console.error(ev);
+        request.onsuccess = () => {
+          filesToAdd.push(file);
+          newCheckedOptions[file.name] = true;
+
+          // Check if all files have been processed
+          if (filesToAdd.length === acceptedFiles.length) {
+            setUploadedFiles(prev => [...prev, ...filesToAdd]);
+            setCheckedOptions(prev => ({ ...prev, ...newCheckedOptions }));
+          }
+        };
+      }
+      if (fileRejections.length > 0) {
+        const rejectedFiles = fileRejections.map(r => r.file.name).join(', ');
+        toast.error(`Files rejected: ${rejectedFiles}`, {
+          cancel: { label: 'Close', onClick() {} },
+          position: 'top-center',
+          richColors: true,
+          description: 'Please make sure files are in CSV format',
+        });
+      }
+    },
+    accept: { 'text/csv': ['.csv'] },
+  });
 
   const handleCheckboxChange = (fileName: string) => {
     const updatedCheckedOptions = {
@@ -108,15 +130,7 @@ export default function FileSheet() {
       });
       return;
     }
-    const request = store.delete(name);
-    request.onerror = ev => console.error(ev);
-    request.onsuccess = () => {
-      toast.info('File removed successfully', {
-        cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
-      });
-    };
+    store.delete(name).onerror = ev => console.error(ev);
   };
 
   const handleConfirmDialogChange = (checked: CheckedState) => {
@@ -290,32 +304,50 @@ export default function FileSheet() {
         <SheetContent side='bottom'>
           <SheetHeader>
             <SheetTitle>Uploaded Files</SheetTitle>
-            <SheetDescription>Manage your uploaded files here.</SheetDescription>
+            <SheetDescription>
+              Manage your uploaded files here. <br />
+              To know more about the file format, click{' '}
+              <Link
+                className='font-semibold underline'
+                href='/docs/network-visualization/left-panel#file-format'
+                target='_blank'
+              >
+                here ↗
+              </Link>
+              .
+            </SheetDescription>
           </SheetHeader>
           <div className='py-4'>
-            <div className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-4'>
-              <Input type='file' className='hidden' id='file-upload' accept='*.csv' onChange={handleFileUpload} />
-              <Label htmlFor='file-upload' className='cursor-pointer text-sm text-gray-600'>
-                Drop files here or click to upload
-              </Label>
+            {/* <div className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-4'> */}
+            <div
+              className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-4 cursor-pointer'
+              {...getRootProps()}
+            >
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the files here ...</p>
+              ) : (
+                <p>Drag 'n' drop some files here, or click to select files</p>
+              )}
             </div>
             <ScrollArea className='h-[200px]'>
               {uploadedFiles.map(file => (
-                <div key={file.name} className='flex justify-between items-center mb-2 p-2 bg-gray-100 rounded'>
+                <div
+                  key={file.name}
+                  className='flex justify-between items-center mb-2 p-2 bg-primary-foreground shadow rounded'
+                >
                   <div>
-                    <div className='text-sm font-medium'>
-                      <div className='flex gap-4'>
-                        <Checkbox
-                          id={file.name}
-                          checked={checkedOptions[file.name] || false}
-                          onCheckedChange={() => handleCheckboxChange(file.name)}
-                        />
-                        {file.name}
-                      </div>
+                    <div className='text-sm font-medium flex gap-4'>
+                      <Checkbox
+                        id={file.name}
+                        checked={checkedOptions[file.name] || false}
+                        onCheckedChange={() => handleCheckboxChange(file.name)}
+                      />
+                      {file.name}
                     </div>
-                    <div className='text-xs text-gray-500 ml-8'>
+                    <span className='text-xs text-gray-500 ml-8'>
                       Date: {new Date(file.lastModified).toLocaleString()} | Size: {formatBytes(file.size)}
-                    </div>
+                    </span>
                   </div>
                   <AlertDialog open={showConfirmDialog}>
                     <Button

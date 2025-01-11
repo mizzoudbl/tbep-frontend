@@ -265,10 +265,12 @@ export function GraphEvents() {
         ? 'user'
         : 'database';
       return (
-        universalData[userOrDatabase][node]?.[
-          DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties) ? diseaseName : 'common'
-        ] as OtherSection & CommonSection
-      )[selectedRadio][selectedProperty];
+        (
+          universalData[userOrDatabase][node]?.[
+            DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties) ? diseaseName : 'common'
+          ] as OtherSection & CommonSection
+        )[selectedRadio]?.[selectedProperty] || 'N/A'
+      );
     },
     [diseaseName, universalData],
   );

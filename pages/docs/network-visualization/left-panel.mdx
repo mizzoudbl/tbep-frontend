@@ -1,7 +1,7 @@
 ---
 description: Basic functions related to network analysis
 ---
-
+import Image from 'next/image';
 
 # Left panel
 
@@ -29,7 +29,7 @@ Sometimes you may want to switch to another disease after generating the network
 You can change the node color by selecting different features.
 
 1. Choose a feature.
-   > **Note**: You can hover on the info icon <img src="/image/docs/info-tooltip.png" alt="" className="inline"/> to check the explanation.
+   > **Note**: You can hover on the info icon <Image width={30} height={30} src="/image/docs/info-tooltip.png" alt="Info Button" className="inline aspect-square"/> to check the explanation.
 2. Select the preferred option for that feature in the dropdown list. You can type the keyword in the search bar to help locate the data name.
    > **Note**: You can check the [Legends](right-panel.mdx#legends) section on the [Right panel](right-panel.mdx) to get the legend of each feature.
 
@@ -40,7 +40,7 @@ You can change the node color by selecting different features.
 You can change the node size by selecting a feature.
 
 1. Choose a feature.
-   > **Note**: You can hover on the info icon <img src="/image/docs/info-tooltip.png" alt="" className="inline"/> to check the explanation.
+   > **Note**: You can hover on the info icon <Image width={30} height={30} src="/image/docs/info-tooltip.png" alt="Info Button" className="inline aspect-square"/> to check the explanation.
 2. Select the preferred data for that feature in the dropdown list. You can type the keyword in the search bar to help locate the data name.
 
 ![Change node size](../../../public/image/docs/change-node-size-property.png)
@@ -87,7 +87,7 @@ You can upload your own customized data to analyze the network, instead of using
 | Pathway | Pathway_<pre className="inline text-red-500">CustomName</pre> | Binary (0/1) |
 | Druggability | Druggability_<pre className="inline text-red-500">CustomName</pre> | [0, 1] |
 | Tissue Specificity | TE_<pre className="inline text-red-500">CustomName</pre> | [0, +Inf] |
-| Custom | Custom_Color_<pre className="inline text-red-500">CustomName</pre> | Any hex color code or CSS color name, see list [here](https://www.w3schools.com/colors/colors_names.asp) |
+| Custom | Custom_Color_<pre className="inline text-red-500">CustomName</pre> | Any hex color code or CSS color name, see list [here ↗](https://www.w3schools.com/colors/colors_names.asp) |
 
 * The CSV file below provides an example of what the real file looks like.
   * The first column must be either gene name or Ensembl id (column name doesn't matter)

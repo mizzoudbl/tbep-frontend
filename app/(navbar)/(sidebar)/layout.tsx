@@ -11,13 +11,7 @@ export default function SideBarLayout({ children }: { children: React.ReactNode 
     <div className='container mx-auto p-4'>
       <div className='w-full flex gap-4 flex-col md:flex-row'>
         <div className='relative md:h-[70vh] md:w-[25%] w-full shadow-teal-900 shadow-md rounded-md'>
-          <Image
-            src='/image/sideBarBg.jpeg'
-            alt='sideBarBg'
-            priority
-            className='rounded-md object-cover'
-            layout='fill'
-          />
+          <Image src='/image/sideBarBg.jpeg' alt='sideBarBg' priority className='rounded-md object-cover' fill />
           <ul className='relative z-10 p-4 flex md:flex-col gap-2 font-semibold text-white'>
             <li className={`transition-colors p-2 rounded hover:font-bold ${pathname === '/' && 'bg-primary'}`}>
               <Link href='/' className='flex items-center'>
