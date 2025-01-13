@@ -10,6 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 
 export function Legend() {
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
+  const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const [minScore, setMinScore] = useState(0);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
@@ -33,12 +34,21 @@ export function Legend() {
           selectedRadioNodeColor === 'Pathway' ? (
             <BinaryLegend />
           ) : selectedRadioNodeColor === 'DEG' ? (
-            <HeatmapLegend
-              title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}
-              domain={[-1, 0, 1]}
-              range={['green', defaultNodeColor, 'red']}
-              divisions={10}
-            />
+            /P_Val/i.test(selectedNodeColorProperty) ? (
+              <HeatmapLegend
+                title='P-Value'
+                range={[defaultNodeColor, 'red']}
+                startLabel='Low Significance'
+                endLabel='High Significance'
+              />
+            ) : (
+              <HeatmapLegend
+                title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}
+                domain={[-1, 0, 1]}
+                range={['green', '#E2E2E2', 'red']}
+                divisions={10}
+              />
+            )
           ) : selectedRadioNodeColor === 'Druggability' || selectedRadioNodeColor === 'OpenTargets' ? (
             <HeatmapLegend
               title={PROPERTY_TYPE_LABEL_MAPPING[selectedRadioNodeColor]}

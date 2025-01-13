@@ -79,23 +79,29 @@ export function ColorAnalysis() {
         return attr;
       });
     } else if (selectedRadioNodeColor === 'DEG') {
+      const isPValue = /^P_Val/i.test(selectedNodeColorProperty);
+
       const [min, max] = Object.values(universalData[userOrDatabase]).reduce(
         (acc, cur) => {
-          const valString = (cur[diseaseName] as OtherSection).DEG?.[selectedNodeColorProperty];
-          if (!valString) return acc;
-          const value = Number.parseFloat(valString);
+          const val = (cur[diseaseName] as OtherSection).DEG?.[selectedNodeColorProperty];
+          if (!val) return acc;
+          const value = isPValue ? -Math.log10(Number.parseFloat(val)) : Number.parseFloat(val);
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY],
       );
-      const colorScale = scaleLinear<string>([min, 0, max], ['green', defaultNodeColor, 'red']);
+
+      const colorScale = isPValue
+        ? scaleLinear<string>([min, max], [defaultNodeColor, 'red'])
+        : scaleLinear<string>([min, 0, max], ['green', '#E2E2E2', 'red']);
+
       graph.updateEachNodeAttributes((node, attr) => {
         const val = Number.parseFloat(
           (universalData[userOrDatabase][node]?.[diseaseName] as OtherSection)?.[selectedRadioNodeColor][
             selectedNodeColorProperty
           ] ?? Number.NaN,
         );
-        if (!Number.isNaN(val)) attr.color = colorScale(val);
+        if (!Number.isNaN(val)) attr.color = colorScale(isPValue ? -Math.log10(val) : val);
         else attr.color = undefined;
         return attr;
       });

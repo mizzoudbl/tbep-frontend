@@ -220,6 +220,17 @@ export default function FileSheet() {
                 }
               }
 
+              // LogFC alias of DEG
+              if (/^LogFC_/i.test(prop)) {
+                (universalData.user[geneID][diseaseName] as OtherSection).DEG[prop.replace(/^LogFC_/i, '')] = row[prop];
+                continue;
+              }
+
+              // P_Val alias of DEG
+              if (/^P_Val/i.test(prop)) {
+                (universalData.user[geneID][diseaseName] as OtherSection).DEG[prop] = row[prop];
+              }
+
               for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
                 if (new RegExp(`^${field}_`, 'i').test(prop)) {
                   universalData.user[geneID].common[field][prop.replace(new RegExp(`^${field}_`, 'i'), '')] = row[prop];
@@ -231,6 +242,18 @@ export default function FileSheet() {
 
           for (const prop of parsedData.meta.fields ?? []) {
             if (prop === IDHeaderName) continue;
+
+            // LogFC alias of DEG
+            if (/^LogFC_/i.test(prop)) {
+              radioOptions.user.DEG.push(prop.replace(/^LogFC_/i, ''));
+              continue;
+            }
+
+            // P_Val alias of DEG
+            if (/^P_Val/i.test(prop)) {
+              radioOptions.user.DEG.push(prop);
+              continue;
+            }
 
             for (const field of [...DISEASE_DEPENDENT_PROPERTIES, ...DISEASE_INDEPENDENT_PROPERTIES]) {
               if (new RegExp(`^${field}_`, 'i').test(prop)) {
