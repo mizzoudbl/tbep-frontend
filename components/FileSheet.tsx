@@ -422,7 +422,7 @@ export default function FileSheet() {
         </SheetContent>
       </Sheet>
       <Button variant={'destructive'} size={'sm'} className='text-xs' onClick={handleReset}>
-        Reset
+        Reset Uploads
       </Button>
     </div>
   );

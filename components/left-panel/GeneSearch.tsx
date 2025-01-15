@@ -52,12 +52,7 @@ export function GeneSearch() {
       </span>
       <div className='relative w-full'>
         {suggestions.length > 0 && (
-          <ul
-            style={{
-              bottom: textareaRef.current?.clientHeight,
-            }}
-            className='absolute z-10 w-full mt-0.5 bg-white border border-gray-300 rounded-md shadow-sm max-h-32 overflow-auto text-xs'
-          >
+          <ul className='absolute z-10 w-full mt-0.5 bg-white border border-gray-300 rounded-md shadow-sm max-h-32 overflow-auto text-xs'>
             {suggestions.map((suggestion, index) => (
               // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
               <li
@@ -73,7 +68,7 @@ export function GeneSearch() {
         <Textarea
           ref={textareaRef}
           id='nodeSearchQuery'
-          placeholder='Search nodes...'
+          placeholder='Search Genes...'
           className='min-h-20 text-xs'
           value={nodeSearchQuery}
           onChange={e => setNodeSearchQuery(e.target.value)}

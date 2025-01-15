@@ -45,7 +45,7 @@ export function ForceLayout() {
       nodes.current = graph.mapNodes(node => ({
         ID: node,
       }));
-      edges.current = graph.mapEdges((__, _, source, target) => ({
+      edges.current = graph.mapEdges((_edge, _attr, source, target) => ({
         source,
         target,
       }));
@@ -57,8 +57,8 @@ export function ForceLayout() {
             .distance(20),
         )
         .force('charge', forceManyBody().strength(-200))
-        .force('center', forceCenter(0, 0))
-        .force('collide', forceCollide(10))
+        // .force('center', forceCenter(0, 0))
+        .force('collide', forceCollide(20))
         .on('tick', tick);
 
       useStore.setState({
@@ -82,8 +82,7 @@ export function ForceLayout() {
         .id(d => d.ID!)
         .distance(settings.linkDistance),
     );
-    simulation.current.force('charge', forceManyBody().strength(settings.chargeStrength));
-    simulation.current.alpha(0.3).restart();
+    simulation.current.alpha(1).restart();
   }, [settings]);
 
   return null;

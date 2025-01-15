@@ -4,19 +4,7 @@ export const forceLayoutOptions = [
     label: 'Link Distance',
     tooltip: 'Distance between connected nodes',
     min: 1,
-    max: 1000,
-    step: 10,
-  },
-  {
-    key: 'chargeStrength',
-    label: 'Charge Strength',
-    tooltip: (
-      <>
-        <b>Negative</b> is repulsion strength and <b>positive</b> is attraction strength between nodes
-      </>
-    ),
-    min: -2000,
-    max: 50,
-    step: 10,
+    max: 5000,
+    step: 100,
   },
 ] as const;

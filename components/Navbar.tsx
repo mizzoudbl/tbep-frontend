@@ -9,14 +9,17 @@ export default function Navbar() {
   return (
     <header className='bg-teal-800 text-white p-4'>
       <div className='container mx-auto flex justify-between items-center'>
-        <Link href={'/'} className='flex items-center gap-2'>
-          <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} className='aspect-square' />
-          <h1 className='text-lg md:text-xl font-bold flex items-end flex-wrap'>
-            <p className='text-2xl lg:text-3xl'>T</p>arget & <p className='lg:text-3xl text-2xl ml-1'>B</p>iomarker{' '}
-            <p className='text-2xl lg:text-3xl ml-1'>E</p>xploration <p className='lg:text-3xl text-2xl ml-1'>P</p>ortal{' '}
-            <p className='text-2xl lg:text-3xl ml-2 '>(TBEP)</p>
-          </h1>
-        </Link>
+        <div className='flex'>
+          <Link href={'/'} className='flex items-center gap-2'>
+            <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} className='aspect-square' />
+            <h1 className='text-lg md:text-xl font-bold flex items-end flex-wrap'>
+              <p className='text-2xl lg:text-3xl'>T</p>arget & <p className='lg:text-3xl text-2xl ml-1'>B</p>iomarker{' '}
+              <p className='text-2xl lg:text-3xl ml-1'>E</p>xploration <p className='lg:text-3xl text-2xl ml-1'>P</p>
+              ortal <p className='text-2xl lg:text-3xl ml-2 '>(TBEP)</p>
+            </h1>
+          </Link>
+          <p className='text-xs self-end'>Version: {process.env.NEXT_PUBLIC_VERSION || '1.0.0'}</p>
+        </div>
         <nav className='hidden md:flex space-x-4'>
           {links.map(link => (
             <Link

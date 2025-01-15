@@ -13,7 +13,6 @@ export const useStore = create<GraphStore>(set => ({
   defaultNodeColor: 'blue',
   // Select defaultValue best for viewing the graph
   forceSettings: {
-    chargeStrength: -200,
     linkDistance: 20,
   },
   defaultNodeSize: 5,

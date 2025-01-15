@@ -76,7 +76,7 @@ export function NetworkLayout() {
               max={option.max}
               step={option.step}
               value={forceSettings[option.key]}
-              onChange={e => updateForceSetting(e.target.value, option.key)}
+              onChange={e => e.target.value && updateForceSetting(e.target.value, option.key)}
             />
           </div>
         ))}
