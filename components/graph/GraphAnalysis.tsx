@@ -39,7 +39,10 @@ export function GraphAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     let nodeCount = 0;
-    const userOrDatabase = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty) ? 'user' : 'database';
+    // const userOrDatabase = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty) ? 'user' : 'database';
+    const userOrCommonIdentifier = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty)
+      ? 'user'
+      : 'common';
     graph.updateEachNodeAttributes((node, attr) => {
       if (nodeDegreeProperty === 'Gene Degree') {
         const degree = graph.degree(node);
@@ -50,7 +53,7 @@ export function GraphAnalysis() {
           attr.hidden = false;
         }
       } else {
-        const value = Number.parseFloat(universalData[userOrDatabase][node].common.TE[nodeDegreeProperty] ?? 'NaN');
+        const value = Number.parseFloat(universalData[node]?.[userOrCommonIdentifier]?.TE[nodeDegreeProperty] ?? 'NaN');
         if (value >= radialAnalysis.nodeDegreeCutOff) {
           nodeCount++;
           attr.hidden = false;

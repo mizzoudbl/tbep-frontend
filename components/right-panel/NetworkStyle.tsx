@@ -1,3 +1,4 @@
+import { useStore } from '@/lib/hooks';
 import type { GraphStore } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronsUpDown, Info } from 'lucide-react';
@@ -10,25 +11,25 @@ import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function NetworkStyle({
-  defaultNodeSize,
-  defaultLabelDensity,
-  defaultLabelSize,
-  showEdgeLabel,
-  showEdgeColor,
-  defaultNodeColor,
-  handleDefaultChange,
-  handleCheckBox,
-}: {
-  defaultNodeSize: number;
-  defaultLabelDensity: number;
-  defaultLabelSize: number;
-  showEdgeLabel: boolean;
-  showEdgeColor: boolean;
-  defaultNodeColor: string;
-  handleDefaultChange: (value: number | string, key: keyof GraphStore) => void;
-  handleCheckBox: (value: CheckedState, key: keyof GraphStore) => void;
-}) {
+export function NetworkStyle() {
+  const defaultNodeSize = useStore(state => state.defaultNodeSize);
+  const defaultNodeColor = useStore(state => state.defaultNodeColor);
+  const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
+  const defaultLabelSize = useStore(state => state.defaultLabelSize);
+  const showEdgeLabel = useStore(state => state.showEdgeLabel);
+  const showEdgeColor = useStore(state => state.showEdgeColor);
+  const edgeOpacity = useStore(state => state.edgeOpacity);
+  const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
+
+  const handleCheckBox = (checked: CheckedState, key: keyof GraphStore) => {
+    if (checked === 'indeterminate') return;
+    useStore.setState({ [key]: checked });
+  };
+
+  const handleDefaultChange = (value: number | string, key: keyof GraphStore) => {
+    useStore.setState({ [key]: value });
+  };
+
   return (
     <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
       <div className='flex items-center justify-between w-full'>
@@ -153,11 +154,55 @@ export function NetworkStyle({
               Show Edge Color
             </Label>
           </div>
+          <div className='flex items-center gap-2'>
+            <Checkbox
+              id='highlightNeighborNodes'
+              checked={highlightNeighborNodes}
+              onCheckedChange={checked => handleCheckBox(checked, 'highlightNeighborNodes')}
+            />
+            <Label htmlFor='highlightNeighborNodes' className='text-xs font-semibold flex gap-1 items-center'>
+              Highlight Neighbor Genes
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size={12} />
+                </TooltipTrigger>
+                <TooltipContent className='max-w-60' align='end'>
+                  Upon checked, Highlights the neighbors of the hovered genes
+                </TooltipContent>
+              </Tooltip>
+            </Label>
+          </div>
         </div>
-        <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
-          Node Color
-        </Label>
-        <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />
+        <div>
+          <Label htmlFor='edgeOpacity' className='text-xs font-semibold'>
+            Edge Opacity
+          </Label>
+          <div className='flex items-center text-xs space-x-2'>
+            <Slider
+              min={0}
+              max={1}
+              step={0.1}
+              id='edgeOpacity'
+              value={[edgeOpacity]}
+              onValueChange={e => handleDefaultChange(e[0], 'edgeOpacity')}
+            />
+            <Input
+              type='number'
+              min={0}
+              max={1}
+              step={10}
+              value={edgeOpacity}
+              onChange={e => handleDefaultChange(Number(e.target.value), 'edgeOpacity')}
+              className='w-16'
+            />
+          </div>
+        </div>
+        <div>
+          <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
+            Node Color
+          </Label>
+          <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );

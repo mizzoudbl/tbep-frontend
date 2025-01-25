@@ -34,10 +34,7 @@ export const useStore = create<GraphStore>(set => ({
   exportFormat: null,
   geneIDs: [],
   diseaseName: 'ALS',
-  universalData: {
-    database: {},
-    user: {},
-  },
+  universalData: {},
   radioOptions: {
     user: {
       DEG: [],
@@ -62,5 +59,6 @@ export const useStore = create<GraphStore>(set => ({
   selectedNodeColorProperty: '',
   geneNameToID: new Map(),
   graphConfig: null,
-  nodeSelectionEnabled: false,
+  edgeOpacity: 1,
+  highlightNeighborNodes: false,
 }));

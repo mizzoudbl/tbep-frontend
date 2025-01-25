@@ -15,13 +15,12 @@ import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
 
-export function GraphEvents() {
+export function GraphEvents({ clickedNodesRef }: { clickedNodesRef?: React.MutableRefObject<Set<string>> }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const searchNodeQuery = useStore(state => state.nodeSearchQuery);
   const highlightedNodesRef = useRef(new Set<string>());
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
   const totalNodes = useStore(state => state.totalNodes);
-  const nodeSelectionEnabled = useStore(state => state.nodeSelectionEnabled);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -228,10 +227,24 @@ export function GraphEvents() {
         } else if (isSelecting) {
           handleMouseUp();
         }
+        if (clickedNode) {
+          highlightedNodesRef.current.delete(clickedNode);
+          clickedNodesRef?.current.delete(clickedNode);
+          graph.forEachNeighbor(clickedNode, (neighbor, attr) => {
+            highlightedNodesRef.current.delete(neighbor);
+            clickedNodesRef?.current.delete(neighbor);
+            attr.type = 'circle';
+            attr.highlighted = false;
+          });
+          graph.setNodeAttribute(clickedNode, 'highlighted', false);
+          graph.setNodeAttribute(clickedNode, 'type', 'circle');
+          sigma.refresh();
+          setClickedNode(null);
+        }
       },
       // Disable the autoscale at the first down interaction
       mousedown: e => {
-        if (nodeSelectionEnabled || e.original.shiftKey) handleMouseDown(e.original);
+        if (e.original.shiftKey) handleMouseDown(e.original);
         else {
           for (const node of _selectedNodes) {
             if (highlightedNodesRef.current.has(node)) continue;
@@ -239,13 +252,35 @@ export function GraphEvents() {
           }
           setSelectedNodes([]);
           handleSelectedNodes([]);
-          if (clickedNode) graph.setNodeAttribute(clickedNode, 'type', 'circle');
-          setClickedNode(null);
         }
         if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
       },
       clickNode: e => {
-        if (!e.event.original.shiftKey) setClickedNode(e.node);
+        const graph = sigma.getGraph();
+        if (!e.event.original.shiftKey) e.event.original.stopPropagation();
+        setClickedNode(node => {
+          if (node) {
+            highlightedNodesRef.current.delete(node);
+            clickedNodesRef?.current.delete(node);
+            graph.forEachNeighbor(node, (neighbor, attr) => {
+              highlightedNodesRef.current.delete(neighbor);
+              clickedNodesRef?.current.delete(neighbor);
+              attr.type = 'circle';
+              attr.highlighted = false;
+            });
+          }
+          highlightedNodesRef.current.add(e.node);
+          clickedNodesRef?.current.add(e.node);
+          graph.setNodeAttribute(e.node, 'type', 'border');
+          graph.setNodeAttribute(e.node, 'highlighted', true);
+          graph.forEachNeighbor(e.node, (neighbor, attr) => {
+            highlightedNodesRef.current.add(neighbor);
+            clickedNodesRef?.current.add(neighbor);
+            attr.type = 'border';
+            attr.highlighted = true;
+          });
+          return e.node;
+        });
       },
     });
   }, [registerEvents, sigma, draggedNode, handleMouseUp, handleMouseDown, handleMouseMove]);
@@ -257,22 +292,24 @@ export function GraphEvents() {
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
   const diseaseName = useStore(state => state.diseaseName);
+  const radioOptions = useStore(state => state.radioOptions);
 
   const propertyResolve = useCallback(
     (node: string, selectedRadio: NodeColorType | NodeSizeType, selectedProperty: string) => {
       if (!selectedRadio) return;
-      const userOrDatabase = useStore.getState().radioOptions.user[selectedRadio].includes(selectedProperty)
-        ? 'user'
-        : 'database';
       return (
         (
-          universalData[userOrDatabase][node]?.[
-            DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties) ? diseaseName : 'common'
+          universalData[node]?.[
+            radioOptions.user[selectedRadio]?.includes(selectedProperty)
+              ? 'user'
+              : DISEASE_DEPENDENT_PROPERTIES?.includes(selectedRadio as DiseaseDependentProperties)
+                ? diseaseName
+                : 'common'
           ] as OtherSection & CommonSection
-        )[selectedRadio]?.[selectedProperty] || 'N/A'
+        )?.[selectedRadio]?.[selectedProperty] || 'N/A'
       );
     },
-    [diseaseName, universalData],
+    [diseaseName, universalData, radioOptions],
   );
 
   return (

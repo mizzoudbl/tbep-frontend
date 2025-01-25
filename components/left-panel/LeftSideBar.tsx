@@ -23,8 +23,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { NodeColor, NodeSize } from '.';
-import FileSheet from '../FileSheet';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
+import { FileSheet } from '../app';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Spinner } from '../ui/spinner';
@@ -102,14 +102,23 @@ export function LeftSideBar() {
     if (!geneIDs) return;
     const universalData = useStore.getState().universalData;
     for (const gene of geneIDs) {
-      if (universalData.database[gene] === undefined) {
-        universalData.database[gene] = {
+      if (universalData[gene] === undefined) {
+        universalData[gene] = {
           common: {
             Custom_Color: {},
             OT_Prioritization: {},
             Druggability: {},
             Pathway: {},
             TE: {},
+          },
+          user: {
+            DEG: {},
+            OpenTargets: {},
+            Custom_Color: {},
+            Druggability: {},
+            Pathway: {},
+            TE: {},
+            OT_Prioritization: {},
           },
         };
       }
@@ -154,19 +163,19 @@ export function LeftSideBar() {
       const universalData = useStore.getState().universalData;
       for (const gene of data ?? []) {
         for (const prop in gene.common) {
-          universalData.database[gene.ID].common[selectedRadio as DiseaseIndependentProperties][
+          universalData[gene.ID].common[selectedRadio as DiseaseIndependentProperties][
             prop.replace(new RegExp(`^${selectedRadio}_`), '')
           ] = gene.common[prop];
         }
         for (const prop in gene.disease?.[diseaseName]) {
-          const geneRecord = universalData.database[gene.ID];
+          const geneRecord = universalData[gene.ID];
           if (geneRecord[diseaseName] === undefined) {
             geneRecord[diseaseName] = {
               DEG: {},
               OpenTargets: {},
             } as OtherSection;
           }
-          (universalData.database[gene.ID][diseaseName] as OtherSection)[selectedRadio as DiseaseDependentProperties][
+          (universalData[gene.ID][diseaseName] as OtherSection)[selectedRadio as DiseaseDependentProperties][
             prop.replace(new RegExp(`^${selectedRadio}_`), '')
           ] = gene.disease[diseaseName][prop];
         }

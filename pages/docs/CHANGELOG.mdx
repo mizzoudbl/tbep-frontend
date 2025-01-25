@@ -1,0 +1,35 @@
+---
+title: CHANGELOG
+description: Summary of release highlights of TBEP tool
+---
+
+# CHANGELOG
+
+## v1.1.1
+
+### Bug Fixes
+
+- Fixed the issue of the network visualization page having unexplained client side errors when clicking those genes which do not have any values in the database.
+- Fixed Custom Upload Files not being reflected in their respective dropdown lists immediately after uploading.
+
+### Improvements
+
+- Added a new feature to change opacity of the network edges in the network visualization page to make the large network more readable.
+- Added a new feature to view neighbours of a selected node in the network visualization page when clicked.
+    > **Note**: You can also view the neighbours of a selected node by pressing <kbd>`Cmd/Ctrl (⌘) + Hover`</kbd> on the node.
+
+## v1.0.0
+
+First release of TBEP tool. The following features are included:
+
+- **Network Visualization**: Visualize the network of genes and their interactions.
+- **Network Analysis**: Modify the network parameters to focus on the key drivers of the network.
+- **Node Details & GSEA**: Show the details of the selected nodes and perform Gene Set Enrichment Analysis (GSEA).
+- **Gene Search**: Search for genes and visualize the network of the selected gene.
+- **Custom Upload Files**: Upload your own gene expression data and visualize the network of the uploaded data, by choosing the uploaded property in the dropdown list. For file format of the uploaded csv data, please refer to the [Custom Upload Files Format](network-visualization/left-panel.mdx#file-format) section.
+
+## Beta (β) Feature
+
+- **LLM ChatBot**: A chatbot to answer your queries related to the data uploaded with citations (Sometimes, the citations may not be accurate). You may track the citations and verify the information from the original source.
+    > **Note**: Currently, LLM ChatBot does note have the capability to gather context directly from the network or your data uploaded. It is a simple chatbot to answer your specific bio-medical queries. Efforts are being made to improve the chatbot capabilities.
+

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import { Spinner } from '@/components/ui/spinner';
 import { DEFAULT_EDGE_COLOR } from '@/lib/data';
@@ -29,7 +29,8 @@ export default function NetworkPage() {
         defaultEdgeColor: DEFAULT_EDGE_COLOR,
         labelSize: 10,
         defaultNodeColor: 'blue',
-        zoomingRatio: 1.4,
+        zoomingRatio: 1.2,
+        zIndex: true,
       }}
     />
   );

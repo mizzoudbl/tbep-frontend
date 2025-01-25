@@ -43,4 +43,9 @@ export interface EdgeAttributes extends Attributes {
    * defeault: line
    */
   type?: 'line' | 'rectangle';
+
+  /**
+   * z-index of the edge
+   */
+  zIndex?: number;
 }

@@ -7,14 +7,13 @@ export default function SliderWithInput({
   min,
   max,
   step,
-  name,
   id,
   defaultValue,
-}: { min?: number; max?: number; step?: number; name: string; id: string; defaultValue: number }) {
+}: { min?: number; max?: number; step?: number; id?: string; defaultValue: number }) {
   const [value, setValue] = useState(defaultValue);
   return (
     <div className='flex items-center text-xs space-x-2'>
-      <Slider min={min} max={max} step={step} name={name} id={id} value={[value]} onValueChange={e => setValue(e[0])} />
+      <Slider min={min} max={max} step={step} id={id} value={[value]} onValueChange={e => setValue(e[0])} />
       <Input
         type='number'
         min={min}

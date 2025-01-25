@@ -129,7 +129,6 @@ export interface GraphStore {
    * Options for radio buttons
    */
   radioOptions: RadioOptions;
-
   /**
    * Selected Node Size Property
    */
@@ -151,9 +150,14 @@ export interface GraphStore {
   graphConfig: GraphConfig | null;
 
   /**
-   * Node Selection Enabled
+   * Edge Opacity
    */
-  nodeSelectionEnabled: boolean;
+  edgeOpacity: number;
+
+  /**
+   * Highlight Neighbor Nodes
+   */
+  highlightNeighborNodes: boolean;
 }
 
 export type RadioOptions = Record<'user' | 'database', Record<GeneProperties, Array<string>>>;
@@ -166,14 +170,12 @@ export type RadioOptions = Record<'user' | 'database', Record<GeneProperties, Ar
  *    - DiseaseType/`ALS`
  */
 export type UniversalData = Record<
-  'database' | 'user',
-  Record<
-    string,
-    {
-      common: CommonSection;
-      [disease: string]: CommonSection | OtherSection;
-    }
-  >
+  string,
+  {
+    common: CommonSection;
+    user: CommonSection & OtherSection;
+    [disease: string]: CommonSection | OtherSection;
+  }
 >;
 
 export type CommonSection = Record<DiseaseIndependentProperties, Record<string, string>>;
