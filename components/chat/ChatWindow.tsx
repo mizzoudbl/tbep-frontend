@@ -7,12 +7,12 @@ import { ChevronDown, GripHorizontal, Info, MessageCircle, Send, Trash2, Triangl
 import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
-import { Markdown } from './Markdown';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Skeleton } from './ui/skeleton';
-import { Textarea } from './ui/textarea';
+import { Markdown } from '.';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Skeleton } from '../ui/skeleton';
+import { Textarea } from '../ui/textarea';
 
-export default function ChatWindow() {
+export function ChatWindow() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [inputValue, setInputValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);

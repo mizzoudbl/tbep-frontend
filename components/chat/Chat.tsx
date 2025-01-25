@@ -5,12 +5,12 @@ import { Send, Trash2 } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
-import { Markdown } from './Markdown';
-import { Button } from './ui/button';
-import { Skeleton } from './ui/skeleton';
-import { Textarea } from './ui/textarea';
+import { Markdown } from '.';
+import { Button } from '../ui/button';
+import { Skeleton } from '../ui/skeleton';
+import { Textarea } from '../ui/textarea';
 
-export default function Chat() {
+export function Chat() {
   const [inputValue, setInputValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [isChatOpen, setIsChatOpen] = React.useState(false);

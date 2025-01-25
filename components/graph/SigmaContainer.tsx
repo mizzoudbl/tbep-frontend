@@ -7,15 +7,22 @@ import { ControlsContainer, FullScreenControl, ZoomControl } from '@react-sigma/
 import { createNodeBorderProgram } from '@sigma/node-border';
 import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import type { Sigma } from 'sigma';
-import { EdgeLineProgram, EdgeRectangleProgram, drawDiscNodeHover } from 'sigma/rendering';
+import { EdgeLineProgram, NodeCircleProgram, drawDiscNodeHover } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, GraphSettings, LoadGraph, SizeAnalysis } from '.';
 
 export const SigmaContainer = React.forwardRef<
   Sigma<NodeAttributes, EdgeAttributes, Attributes>,
   SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes>
 >((props, ref) => {
+  const clickedNodesRef = React.useRef(new Set<string>());
+
+  useEffect(() => {
+    const sigmaContainer = document.querySelector('.sigma-container') as HTMLElement;
+    sigmaContainer.addEventListener('contextmenu', e => e.preventDefault());
+  }, []);
+
   return (
     <_SigmaContainer
       ref={ref}
@@ -33,6 +40,7 @@ export const SigmaContainer = React.forwardRef<
               { size: { fill: true }, color: { attribute: 'color' } },
             ],
           }),
+          normal: NodeCircleProgram,
         },
         edgeProgramClasses: {
           line: EdgeLineProgram,
@@ -43,9 +51,9 @@ export const SigmaContainer = React.forwardRef<
       <Suspense>
         <LoadGraph />
       </Suspense>
-      <GraphEvents />
+      <GraphEvents clickedNodesRef={clickedNodesRef} />
       <ForceLayout />
-      <GraphSettings />
+      <GraphSettings clickedNodesRef={clickedNodesRef} />
       <ColorAnalysis />
       <SizeAnalysis />
       <GraphAnalysis />

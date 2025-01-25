@@ -4,7 +4,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 
-export type HistoryItem = GraphConfigForm & { title: string; geneIDs: string[] };
+export type HistoryItem = GraphConfigForm & { title: string; geneIDs: string[]; createdAt?: number };
 
 export default function History({
   history,
@@ -37,7 +37,7 @@ export default function History({
         <ScrollArea className='h-full'>
           <div className='space-y-4 pr-2 flex flex-col'>
             {history.map((item, index) => (
-              <Card key={item.title}>
+              <Card key={`${item.title}-${item.createdAt ?? index}`}>
                 <CardHeader className='p-2'>
                   <CardTitle>
                     <Input

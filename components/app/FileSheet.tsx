@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -36,7 +35,7 @@ import React, { type ChangeEvent } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 
-export default function FileSheet() {
+export function FileSheet() {
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const [checkedOptions, setCheckedOptions] = React.useState<Record<string, boolean>>({});
@@ -138,10 +137,7 @@ export default function FileSheet() {
   };
 
   const handleUniversalUpdate = async () => {
-    const universalData: UniversalData = {
-      database: useStore.getState().universalData.database,
-      user: {},
-    };
+    const universalData: UniversalData = useStore.getState().universalData;
     const radioOptions: RadioOptions = {
       database: useStore.getState().radioOptions.database,
       user: {
@@ -189,57 +185,37 @@ export default function FileSheet() {
             const geneID = row[IDHeaderName].startsWith('ENSG')
               ? row[IDHeaderName]
               : geneNameToID.get(row[IDHeaderName]);
-            if (!geneID || !universalData.database[geneID]) continue;
-            if (universalData.user[geneID] === undefined) {
-              universalData.user[geneID] = {
-                common: {
-                  Custom_Color: {},
-                  Druggability: {},
-                  Pathway: {},
-                  TE: {},
-                  OT_Prioritization: {},
-                },
-              };
-            }
-            if (universalData.user[geneID][diseaseName] === undefined) {
-              universalData.user[geneID][diseaseName] = {
-                DEG: {},
-                OpenTargets: {},
-              };
-            }
+            if (!geneID || !universalData[geneID]) continue;
 
             outer: for (const prop in row) {
               if (prop === IDHeaderName) continue;
 
               for (const field of DISEASE_DEPENDENT_PROPERTIES) {
                 if (new RegExp(`^${field}_`, 'i').test(prop)) {
-                  (universalData.user[geneID][diseaseName] as OtherSection)[field][
-                    prop.replace(new RegExp(`^${field}_`, 'i'), '')
-                  ] = row[prop];
+                  universalData[geneID].user[field][prop.replace(new RegExp(`^${field}_`, 'i'), '')] = row[prop];
                   continue outer;
                 }
               }
 
               // LogFC alias of DEG
               if (/^LogFC_/i.test(prop)) {
-                (universalData.user[geneID][diseaseName] as OtherSection).DEG[prop.replace(/^LogFC_/i, '')] = row[prop];
+                universalData[geneID].user.DEG[prop.replace(/^LogFC_/i, '')] = row[prop];
                 continue;
               }
 
               // P_Val alias of DEG
               if (/^P_Val/i.test(prop)) {
-                (universalData.user[geneID][diseaseName] as OtherSection).DEG[prop] = row[prop];
+                universalData[geneID].user.DEG[prop] = row[prop];
               }
 
               for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
                 if (new RegExp(`^${field}_`, 'i').test(prop)) {
-                  universalData.user[geneID].common[field][prop.replace(new RegExp(`^${field}_`, 'i'), '')] = row[prop];
+                  universalData[geneID].user[field][prop.replace(new RegExp(`^${field}_`, 'i'), '')] = row[prop];
                   break;
                 }
               }
             }
           }
-
           for (const prop of parsedData.meta.fields ?? []) {
             if (prop === IDHeaderName) continue;
 
@@ -262,6 +238,7 @@ export default function FileSheet() {
               }
             }
           }
+          useStore.setState({ universalData, radioOptions });
         } catch (error) {
           console.error(error);
           toast.error('Error updating universal data', {
@@ -273,7 +250,6 @@ export default function FileSheet() {
         }
       };
     }
-    useStore.setState({ universalData, radioOptions });
     toast.success('Data updated successfully', {
       cancel: { label: 'Close', onClick() {} },
       position: 'top-center',
@@ -282,7 +258,7 @@ export default function FileSheet() {
     });
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     setCheckedOptions(value => {
       const updatedCheckedOptions = { ...value };
       for (const key in updatedCheckedOptions) {
@@ -291,10 +267,6 @@ export default function FileSheet() {
       return updatedCheckedOptions;
     });
     useStore.setState({
-      universalData: {
-        database: useStore.getState().universalData.database,
-        user: {},
-      },
       radioOptions: {
         database: useStore.getState().radioOptions.database,
         user: {

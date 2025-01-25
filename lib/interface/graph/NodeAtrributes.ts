@@ -71,4 +71,14 @@ export interface NodeAttributes extends Attributes, SimulationNodeDatum {
    * Community ID
    */
   community?: string;
+
+  /**
+   * z-index of the node
+   */
+  zIndex?: number;
+
+  /**
+   * boolean whether the node is clicked
+   */
+  clicked?: boolean;
 }

@@ -51,7 +51,6 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                               min={min}
                               max={max}
                               step={step}
-                              name={name}
                               id={name}
                               defaultValue={defaultValue as number}
                             />

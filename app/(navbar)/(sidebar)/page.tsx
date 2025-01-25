@@ -1,9 +1,9 @@
 'use client';
 
-import Chat from '@/components/Chat';
 import History, { type HistoryItem } from '@/components/History';
 import PopUpTable from '@/components/PopUpTable';
 import { VirtualizedCombobox } from '@/components/VirtualizedCombobox';
+import { Chat } from '@/components/chat';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +28,6 @@ import { distinct, envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { AlertTriangle, Info, Loader } from 'lucide-react';
 import { Link } from 'next-view-transitions';
-import Script from 'next/script';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
@@ -164,6 +163,7 @@ export default function Home() {
         order: +formData.order,
         interactionType: formData.interactionType,
         minScore: +formData.minScore,
+        createdAt: Date.now(),
       }),
     );
     const newHistory = [

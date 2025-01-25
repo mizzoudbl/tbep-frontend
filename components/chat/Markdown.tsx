@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export const Markdown = ({ children }: { children: string }) => {
+export function Markdown({ children }: { children: string }) {
   return (
     <ReactMarkdown
       components={{
@@ -19,4 +19,4 @@ export const Markdown = ({ children }: { children: string }) => {
       {children}
     </ReactMarkdown>
   );
-};
+}
