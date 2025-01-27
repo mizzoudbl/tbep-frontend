@@ -18,7 +18,9 @@ export default function Navbar() {
               ortal <p className='text-2xl lg:text-3xl ml-2 '>(TBEP)</p>
             </h1>
           </Link>
-          <p className='text-xs self-end'>Version: {process.env.NEXT_PUBLIC_VERSION || '1.0.0'}</p>
+          <Link href={'/docs/CHANGELOG'} className='text-xs self-end'>
+            Version: {process.env.NEXT_PUBLIC_VERSION || '1.0.0'}
+          </Link>
         </div>
         <nav className='hidden md:flex space-x-4'>
           {links.map(link => (

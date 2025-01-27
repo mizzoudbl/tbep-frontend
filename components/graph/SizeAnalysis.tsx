@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 export function SizeAnalysis() {
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
-  const sigma = useSigma<NodeAttributes, EdgeAttributes>();
+  const graph = useSigma<NodeAttributes, EdgeAttributes>().getGraph();
   const universalData = useStore(state => state.universalData);
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
   const diseaseName = useStore(state => state.diseaseName);
@@ -17,7 +17,6 @@ export function SizeAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const graph = sigma.getGraph();
     if (!selectedRadioNodeSize && graph) {
       useStore.setState({ selectedNodeSizeProperty: '' });
       graph.updateEachNodeAttributes((_node, attr) => {
@@ -29,7 +28,6 @@ export function SizeAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const graph = sigma.getGraph();
     if (!selectedNodeSizeProperty || !graph || !selectedRadioNodeSize) return;
     const isUserProperty = radioOptions.user[selectedRadioNodeSize].includes(selectedNodeSizeProperty);
     const userOrDiseaseIdentifier = isUserProperty ? 'user' : diseaseName;
@@ -127,7 +125,7 @@ export function SizeAnalysis() {
         return attr;
       });
     }
-  }, [selectedNodeSizeProperty, sigma, universalData, defaultNodeSize]);
+  }, [selectedNodeSizeProperty, graph, universalData, defaultNodeSize]);
 
   return null;
 }
