@@ -10,13 +10,14 @@ import { useEffect, useState } from 'react';
 export function ColorAnalysis() {
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
-  const sigma = useSigma<NodeAttributes, EdgeAttributes>();
+  const graph = useSigma<NodeAttributes, EdgeAttributes>().getGraph();
   const universalData = useStore(state => state.universalData);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const diseaseName = useStore(state => state.diseaseName);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const radioOptions = useStore(state => state.radioOptions);
   const [minScore, setMinScore] = useState(0);
+  const edgeOpacity = useStore(state => state.edgeOpacity);
 
   useEffect(() => {
     setMinScore(Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0);
@@ -24,11 +25,10 @@ export function ColorAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const graph = sigma.getGraph();
     const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
     if (showEdgeColor) {
       graph.updateEachEdgeAttributes((_edge, attr) => {
-        if (attr.score) attr.color = colorScale(attr.score);
+        if (attr.score) attr.color = colorScale(attr.score).replace(/^rgb/, 'rgba').replace(/\)/, `, ${edgeOpacity})`);
         return attr;
       });
     } else {
@@ -37,11 +37,10 @@ export function ColorAnalysis() {
         return attr;
       });
     }
-  }, [showEdgeColor, sigma]);
+  }, [showEdgeColor, graph, edgeOpacity]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const graph = sigma.getGraph();
     if (!selectedRadioNodeColor && graph) {
       useStore.setState({ selectedNodeColorProperty: '' });
       graph.updateEachNodeAttributes((_node, attr) => {
@@ -53,7 +52,6 @@ export function ColorAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const graph = sigma.getGraph();
     if (!selectedNodeColorProperty || !graph || !selectedRadioNodeColor) return;
     const isUserProperty = radioOptions.user[selectedRadioNodeColor].includes(selectedNodeColorProperty);
     const userOrDiseaseIdentifier = isUserProperty ? 'user' : diseaseName;
@@ -170,7 +168,7 @@ export function ColorAnalysis() {
         return attr;
       });
     }
-  }, [selectedNodeColorProperty, sigma, universalData]);
+  }, [selectedNodeColorProperty, graph, universalData]);
 
   return null;
 }
