@@ -142,7 +142,17 @@ export function GraphAnalysis() {
               };
             }
             map[comm].genes.push(node);
-            graph.setNodeAttribute(node, 'color', map[comm].color);
+          }
+          for (const { genes, color } of Object.values(map)) {
+            if (genes.length < +minCommunitySize) {
+              for (const gene of genes) {
+                graph.setNodeAttribute(gene, 'color', undefined);
+              }
+              continue;
+            }
+            for (const gene of genes) {
+              graph.setNodeAttribute(gene, 'color', color);
+            }
           }
           setCommunityMap(map);
           return;
@@ -187,7 +197,7 @@ export function GraphAnalysis() {
               cancel: { label: 'Close', onClick() {} },
               position: 'top-center',
               richColors: true,
-              description: 'Server not available,Please try again later',
+              description: 'Server not available,Please try again later. Graph must have relationships to run Leiden.',
             });
           }
         })();

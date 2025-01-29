@@ -288,114 +288,118 @@ export function FileSheet() {
   };
 
   return (
-    <div className='flex flex-col lg:flex-row gap-2 justify-between'>
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button size='sm' className='text-xs w-full'>
-            <Upload className='h-3 w-3 mr-1' />
-            Upload Files
-          </Button>
-        </SheetTrigger>
-        <SheetContent side='bottom'>
-          <SheetHeader>
-            <SheetTitle>Uploaded Files</SheetTitle>
-            <SheetDescription>
-              Manage your uploaded files here. <br />
-              To know more about the file format, click{' '}
-              <Link
-                className='font-semibold underline'
-                href='/docs/network-visualization/left-panel#file-format'
-                target='_blank'
-              >
-                here ↗
-              </Link>
-              .
-            </SheetDescription>
-          </SheetHeader>
-          <div className='py-4'>
-            {/* <div className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-4'> */}
-            <div
-              className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-4 cursor-pointer'
-              {...getRootProps()}
-            >
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <p>Drag 'n' drop some files here, or click to select files</p>
-              )}
-            </div>
-            <ScrollArea className='h-[200px]'>
-              {uploadedFiles.map(file => (
-                <div
-                  key={file.name}
-                  className='flex justify-between items-center mb-2 p-2 bg-primary-foreground shadow rounded'
+    <div>
+      <div className='flex flex-col lg:flex-row gap-2 justify-between'>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size='sm' className='text-xs w-full'>
+              <Upload className='h-3 w-3 mr-1' />
+              Upload Files
+            </Button>
+          </SheetTrigger>
+          <SheetContent side='bottom'>
+            <SheetHeader>
+              <SheetTitle>Uploaded Files</SheetTitle>
+              <SheetDescription>
+                Manage your uploaded files here. <br />
+                To know more about the file format, click{' '}
+                <Link
+                  className='font-semibold underline'
+                  href='/docs/network-visualization/left-panel#file-format'
+                  target='_blank'
                 >
-                  <div>
-                    <div className='text-sm font-medium flex gap-4'>
-                      <Checkbox
-                        id={file.name}
-                        checked={checkedOptions[file.name] || false}
-                        onCheckedChange={() => handleCheckboxChange(file.name)}
-                      />
-                      {file.name}
+                  here ↗
+                </Link>
+                .
+              </SheetDescription>
+            </SheetHeader>
+            <div className='py-4'>
+              <div
+                className='border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-4 cursor-pointer'
+                {...getRootProps()}
+              >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <p>Drop the files here ...</p>
+                ) : (
+                  <p>Drag 'n' drop some files here, or click to select files</p>
+                )}
+              </div>
+              <ScrollArea className='h-[200px]'>
+                {uploadedFiles.map(file => (
+                  <div
+                    key={file.name}
+                    className='flex justify-between items-center mb-2 p-2 bg-primary-foreground shadow rounded'
+                  >
+                    <div>
+                      <div className='text-sm font-medium flex gap-4'>
+                        <Checkbox
+                          id={file.name}
+                          checked={checkedOptions[file.name] || false}
+                          onCheckedChange={() => handleCheckboxChange(file.name)}
+                        />
+                        {file.name}
+                      </div>
+                      <span className='text-xs text-gray-500 ml-8'>
+                        Date: {new Date(file.lastModified).toLocaleString()} | Size: {formatBytes(file.size)}
+                      </span>
                     </div>
-                    <span className='text-xs text-gray-500 ml-8'>
-                      Date: {new Date(file.lastModified).toLocaleString()} | Size: {formatBytes(file.size)}
-                    </span>
+                    <AlertDialog open={showConfirmDialog}>
+                      <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={() => {
+                          if (sessionStorage.getItem('showConfirmDialog') === 'false') {
+                            removeFile(file.name);
+                          } else {
+                            setShowConfirmDialog(true);
+                          }
+                        }}
+                      >
+                        <Trash2 className='h-4 w-4' />
+                      </Button>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription className='text-black'>
+                            This action cannot be undone. This will permanently delete the file.
+                          </AlertDialogDescription>
+                          <div className='flex items-center space-x-2 mt-4'>
+                            <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
+                            <Label
+                              htmlFor='terms'
+                              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                            >
+                              Do not show again
+                            </Label>
+                          </div>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => removeFile(file.name)}>Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
-                  <AlertDialog open={showConfirmDialog}>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => {
-                        if (sessionStorage.getItem('showConfirmDialog') === 'false') {
-                          removeFile(file.name);
-                        } else {
-                          setShowConfirmDialog(true);
-                        }
-                      }}
-                    >
-                      <Trash2 className='h-4 w-4' />
-                    </Button>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription className='text-black'>
-                          This action cannot be undone. This will permanently delete the file.
-                        </AlertDialogDescription>
-                        <div className='flex items-center space-x-2 mt-4'>
-                          <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
-                          <Label
-                            htmlFor='terms'
-                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                          >
-                            Do not show again
-                          </Label>
-                        </div>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => removeFile(file.name)}>Continue</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              ))}
-            </ScrollArea>
-          </div>
-          <SheetFooter>
-            <SheetTrigger asChild>
-              <Button onClick={handleUniversalUpdate} className='w-full'>
-                Submit
-              </Button>
-            </SheetTrigger>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-      <Button variant={'destructive'} size={'sm'} className='text-xs' onClick={handleReset}>
-        Reset Uploads
-      </Button>
+                ))}
+              </ScrollArea>
+            </div>
+            <SheetFooter>
+              <SheetTrigger asChild>
+                <Button onClick={handleUniversalUpdate} className='w-full'>
+                  Submit
+                </Button>
+              </SheetTrigger>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+        <Button variant={'destructive'} size={'sm'} className='text-xs' onClick={handleReset}>
+          Reset Uploads
+        </Button>
+      </div>
+      <div className='text-xs text-gray-500 italic mt-2'>
+        <b>NOTE:</b> The uploaded files will be stored in your browser's local storage and is not shared with anyone.
+      </div>
     </div>
   );
 }
