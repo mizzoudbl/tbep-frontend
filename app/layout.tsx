@@ -61,7 +61,7 @@ export default function RootLayout({
         <ApolloWrapper>
           <NextTopLoader showSpinner={false} color='teal' />
           <ViewTransitions>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
           </ViewTransitions>
           <Toaster />
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || 'G-5EEGNR6YNF'} />

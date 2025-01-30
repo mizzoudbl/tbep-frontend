@@ -71,16 +71,16 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => voi
           (radioValue === 'TE' ? (
             <VirtualizedCombobox
               key={radioValue}
-              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
+              data={[...radioOptions.database[radioValue], ...radioOptions.user[radioValue]]}
               className='w-full mt-2'
               value={selectedNodeSizeProperty}
               setValue={onPropChange}
-              width='350px'
+              width='550px'
             />
           ) : (
             <Combobox
               key={radioValue}
-              data={radioOptions.database[radioValue].concat(radioOptions.user[radioValue])}
+              data={[...radioOptions.database[radioValue], ...radioOptions.user[radioValue]]}
               className='w-full mt-2'
               value={selectedNodeSizeProperty}
               onChange={onPropChange}

@@ -6,7 +6,6 @@ import type { RadialAnalysisProps, RadialAnalysisSetting } from '@/lib/interface
 import { Info } from 'lucide-react';
 import React from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
-import { Combobox } from '../ui/combobox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
@@ -52,7 +51,7 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
               {option.key === 'nodeDegreeCutOff' && (
                 <VirtualizedCombobox
                   data={['Gene Degree', ...radioOptions.database.TE, ...radioOptions.user.TE]}
-                  width='350px'
+                  width='550px'
                   align='end'
                   value={value.nodeDegreeProperty}
                   className='w-full'

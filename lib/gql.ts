@@ -53,11 +53,21 @@ export const GENE_UNIVERSAL_QUERY = gql`
   }
 `;
 
-export const GET_STATS_QUERY = (bringCommon = true) => gql`
-  query GetStats($disease: String!) {
+export const GET_HEADERS_QUERY = (bringCommon = true) => gql`
+  query GetHeaders($disease: String!) {
     headers(disease: $disease) {
-      ${bringCommon ? 'common' : ''}
-      disease
+      ${
+        bringCommon
+          ? `common {
+        name
+        description
+      }`
+          : ''
+      }
+      disease {
+        name
+        description
+      }
     }
   }
 `;

@@ -6,9 +6,8 @@ import type {
   NodeColorType,
   NodeSizeType,
 } from '@/lib/data';
-import type { RadialAnalysisSetting } from '.';
-import type { SelectedNodeProperty } from '../SelectedNodeProperty';
-import type { ForceSettings } from './ForceSettings';
+import type { ForceSettings, RadialAnalysisSetting } from '.';
+import type { GenePropertyMetadata, SelectedNodeProperty } from '..';
 
 /**
  * Store for Zustand
@@ -160,7 +159,10 @@ export interface GraphStore {
   highlightNeighborNodes: boolean;
 }
 
-export type RadioOptions = Record<'user' | 'database', Record<GeneProperties, Array<string>>>;
+export type RadioOptions = {
+  user: Record<GeneProperties, Array<string>>;
+  database: Record<GeneProperties, Array<GenePropertyMetadata>>;
+};
 
 /**
  * Universal Data of all the diseases to be mapped on left sidebar
