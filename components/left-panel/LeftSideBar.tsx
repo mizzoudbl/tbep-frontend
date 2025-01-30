@@ -6,14 +6,14 @@ import {
   type DiseaseDependentProperties,
   type DiseaseIndependentProperties,
 } from '@/lib/data';
-import { GENE_UNIVERSAL_QUERY, GET_STATS_QUERY } from '@/lib/gql';
+import { GENE_UNIVERSAL_QUERY, GET_HEADERS_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
 import type {
   GeneUniversalData,
   GeneUniversalDataVariables,
   GetDiseaseData,
-  GetStatsData,
-  GetStatsVariables,
+  GetHeadersData,
+  GetHeadersVariables,
   OtherSection,
   RadioOptions,
 } from '@/lib/interface';
@@ -22,13 +22,12 @@ import { useLazyQuery } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
-import { NodeColor, NodeSize } from '.';
+import { GeneSearch, NodeColor, NodeSize } from '.';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { FileSheet } from '../app';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Spinner } from '../ui/spinner';
-import { GeneSearch } from './GeneSearch';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
@@ -52,8 +51,8 @@ export function LeftSideBar() {
     })();
   }, []);
 
-  const [fetchHeader, { loading, called }] = useLazyQuery<GetStatsData, GetStatsVariables>(
-    GET_STATS_QUERY(bringCommon.current),
+  const [fetchHeader, { loading, called }] = useLazyQuery<GetHeadersData, GetHeadersVariables>(
+    GET_HEADERS_QUERY(bringCommon.current),
     { returnPartialData: true },
   );
 
@@ -77,17 +76,20 @@ export function LeftSideBar() {
           user: useStore.getState().radioOptions.user,
         };
         bringCommon.current = false;
-        for (const prop of data.common ?? []) {
+        for (const { name, description } of data.common ?? []) {
           for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
-            if (new RegExp(`^${field}_`, 'i').test(prop)) {
-              radioOptions.database[field].push(prop.replace(new RegExp(`^${field}_`, 'i'), ''));
+            if (new RegExp(`^${field}_`, 'i').test(name)) {
+              radioOptions.database[field].push({ description, name: name.replace(new RegExp(`^${field}_`, 'i'), '') });
             }
           }
         }
-        for (const prop of data.disease ?? []) {
+        for (const { name, description } of data.disease ?? []) {
           for (const field of DISEASE_DEPENDENT_PROPERTIES) {
-            if (new RegExp(`^${diseaseName}_${field}_`, 'i').test(prop)) {
-              radioOptions.database[field].push(prop.replace(new RegExp(`^${diseaseName}_${field}_`, 'i'), ''));
+            if (new RegExp(`^${diseaseName}_${field}_`, 'i').test(name)) {
+              radioOptions.database[field].push({
+                description,
+                name: name.replace(new RegExp(`^${diseaseName}_${field}_`, 'i'), ''),
+              });
             }
           }
         }

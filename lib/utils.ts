@@ -1,9 +1,14 @@
 import EventEmitter from 'events';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import type { GenePropertyMetadata } from './interface';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function getProperty(val: string | GenePropertyMetadata) {
+  return typeof val === 'string' ? val : val.name;
 }
 
 export async function openDB(name: string, mode: IDBTransactionMode) {

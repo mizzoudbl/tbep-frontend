@@ -1,14 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import type { GenePropertyMetadata } from '@/lib/interface';
+import { cn, getProperty } from '@/lib/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, Info } from 'lucide-react';
 import * as React from 'react';
 import { Spinner } from './ui/spinner';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 interface VirtualizedCommandProps {
-  options: string[];
+  options: (string | GenePropertyMetadata)[];
   placeholder: string;
   selectedOption: string;
   onSelectOption?: (option: string) => void;
@@ -24,7 +26,7 @@ const VirtualizedCommand = ({
   loading,
   width,
 }: VirtualizedCommandProps) => {
-  const [filteredOptions, setFilteredOptions] = React.useState<string[]>(options);
+  const [filteredOptions, setFilteredOptions] = React.useState<(string | GenePropertyMetadata)[]>(options);
   const parentRef = React.useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
@@ -37,7 +39,14 @@ const VirtualizedCommand = ({
   const virtualOptions = virtualizer.getVirtualItems();
 
   const handleSearch = (search: string) => {
-    setFilteredOptions(options.filter(option => option.toLowerCase().includes(search.toLowerCase() ?? [])));
+    setFilteredOptions(
+      options.filter(option => {
+        if (typeof option === 'string') {
+          return option.toLowerCase().includes(search.toLowerCase());
+        }
+        return option.name.toLowerCase().includes(search.toLowerCase());
+      }),
+    );
   };
 
   return (
@@ -53,25 +62,36 @@ const VirtualizedCommand = ({
               position: 'relative',
             }}
           >
-            {virtualOptions.map(virtualOption => (
-              <CommandItem
-                className={'absolute flex justify-between w-full'}
-                style={{
-                  transform: `translateY(${virtualOption.start}px)`,
-                }}
-                key={filteredOptions[virtualOption.index]}
-                value={filteredOptions[virtualOption.index]}
-                onSelect={onSelectOption}
-              >
-                {filteredOptions[virtualOption.index]}
-                <Check
-                  className={cn(
-                    'mr-2 h-4 w-4',
-                    selectedOption === filteredOptions[virtualOption.index] ? 'opacity-100' : 'opacity-0',
+            {virtualOptions.map(virtualOption => {
+              const option = filteredOptions[virtualOption.index];
+              const value = getProperty(option);
+              return (
+                <CommandItem
+                  className='absolute flex justify-between w-full overflow-visible'
+                  style={{
+                    transform: `translateY(${virtualOption.start}px)`,
+                  }}
+                  key={value}
+                  value={value}
+                  onSelect={onSelectOption}
+                >
+                  <div className='flex item-center'>
+                    <Check className={cn('mr-2 h-4 w-4', selectedOption === value ? 'opacity-100' : 'opacity-0')} />
+                    {value}
+                  </div>
+                  {typeof option !== 'string' && option.description && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className='h-4 w-4 ml-2 cursor-pointer' />
+                      </TooltipTrigger>
+                      <TooltipContent side='left' align='start' className='max-w-48'>
+                        {option.description}
+                      </TooltipContent>
+                    </Tooltip>
                   )}
-                />
-              </CommandItem>
-            ))}
+                </CommandItem>
+              );
+            })}
           </div>
         </CommandList>
       </CommandGroup>
@@ -82,7 +102,7 @@ const VirtualizedCommand = ({
 interface VirtualizedComboboxProps {
   loading?: boolean;
   className?: string;
-  data?: string[];
+  data?: (string | GenePropertyMetadata)[];
   searchPlaceholder?: string;
   value: string;
   width?: string;
@@ -111,7 +131,7 @@ export function VirtualizedCombobox({
           aria-expanded={open}
           className={cn('w-[200px] justify-between text-ellipsis text-wrap break-words h-9', className)}
         >
-          <span className='truncate'>{(!!value && data.find(option => option === value)) || searchPlaceholder}</span>
+          <span className='truncate'>{value || searchPlaceholder}</span>
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
