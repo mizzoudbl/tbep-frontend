@@ -52,7 +52,7 @@ export function AppBar() {
             <br />
             <li>
               • To highlight neighbors of a gene, either <kbd className='border rounded-md px-1'>Click</kbd> on the gene
-              node, or use the <kbd className='border rounded-md px-1'>Ctrl(⌘) + Hover</kbd> on the gene node
+              node, or use the <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover</kbd> on the gene node
             </li>
           </ol>
         </TooltipContent>
