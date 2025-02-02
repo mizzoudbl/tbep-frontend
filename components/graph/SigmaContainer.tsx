@@ -4,12 +4,12 @@ import NodeGradientProgram from '@/lib/NodeGradientProgram';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { type SigmaContainerProps, SigmaContainer as _SigmaContainer } from '@react-sigma/core';
 import { ControlsContainer, FullScreenControl, ZoomControl } from '@react-sigma/core';
-import { createNodeBorderProgram } from '@sigma/node-border';
+import { NodeBorderProgram, createNodeBorderProgram } from '@sigma/node-border';
 import type { Attributes } from 'graphology-types';
 import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import React, { Suspense, useEffect } from 'react';
 import type { Sigma } from 'sigma';
-import { EdgeLineProgram, NodeCircleProgram, drawDiscNodeHover } from 'sigma/rendering';
+import { EdgeLineProgram, drawDiscNodeHover } from 'sigma/rendering';
 import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, GraphSettings, LoadGraph, SizeAnalysis } from '.';
 
 export const SigmaContainer = React.forwardRef<
@@ -17,6 +17,7 @@ export const SigmaContainer = React.forwardRef<
   SigmaContainerProps<NodeAttributes, EdgeAttributes, Attributes>
 >((props, ref) => {
   const clickedNodesRef = React.useRef(new Set<string>());
+  const highlightedNodesRef = React.useRef(new Set<string>());
 
   useEffect(() => {
     const sigmaContainer = document.querySelector('.sigma-container') as HTMLElement;
@@ -34,13 +35,13 @@ export const SigmaContainer = React.forwardRef<
           border: createNodeBorderProgram({
             borders: [
               {
-                size: { attribute: 'borderSize', defaultValue: 0.5 },
+                size: { attribute: 'borderSize', defaultValue: 0.4 },
                 color: { attribute: 'borderColor' },
               },
               { size: { fill: true }, color: { attribute: 'color' } },
             ],
           }),
-          normal: NodeCircleProgram,
+          highlight: NodeBorderProgram,
         },
         edgeProgramClasses: {
           line: EdgeLineProgram,
@@ -51,12 +52,12 @@ export const SigmaContainer = React.forwardRef<
       <Suspense>
         <LoadGraph />
       </Suspense>
-      <GraphEvents clickedNodesRef={clickedNodesRef} />
+      <GraphEvents highlightedNodesRef={highlightedNodesRef} clickedNodesRef={clickedNodesRef} />
       <ForceLayout />
       <GraphSettings clickedNodesRef={clickedNodesRef} />
       <ColorAnalysis />
       <SizeAnalysis />
-      <GraphAnalysis />
+      <GraphAnalysis highlightedNodesRef={highlightedNodesRef} />
       <ControlsContainer position='bottom-right' style={{ zIndex: 0 }}>
         <ZoomControl labels={{ zoomIn: 'PLUS', zoomOut: 'MINUS', reset: 'RESET' }}>
           <ZoomIn />

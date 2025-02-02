@@ -6,7 +6,7 @@ export const nodeSize = [
     tooltipContent: (
       <>
         Differential Expression in Log2 fold change <br /> <b>Disclaimer:</b> We have provided this data for very few
-        diseases like ALS,PSP,FTD,OI. Users are encouraged to upload their own data through upload files button at the
+        diseases like ALS,PSP,FTD. Users are encouraged to upload their own data through upload files button at the
         bottom.
       </>
     ),

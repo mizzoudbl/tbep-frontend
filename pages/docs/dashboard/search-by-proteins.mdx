@@ -2,8 +2,11 @@
 description: This approach is based on the interactions existing in our database
 ---
 import Image from 'next/image';
+import { Steps } from 'nextra/components'
 
 # Search By Protiens
+
+**This approach is based on the interactions existing in our database**
 
 When you enter the main page of our website, simply click the tab "Search By Proteins" <Image width={200} height={80} src="/image/docs/search-by-protein-button.png" alt="Search By Proteins Button" className="inline aspect-auto"/> on the left panel, you will see the corresponding dashboard on the right as below:
 
@@ -11,16 +14,17 @@ When you enter the main page of our website, simply click the tab "Search By Pro
 
 There are 4 different sections on the dashboard, which corresponds to 4 steps to construct your network by using gene information.&#x20;
 
-### Step 1: Entering Seed Genes
+<Steps>
+### Entering Seed Genes
 
 You can either type into the "Seed Genes" textbox or upload a txt file.&#x20;
 
 * **Type into textbox**: Manually type in seed gene names or their Ensembl IDs to generate the network. You can also mix gene names and Ensembl IDs together. The format is line-separated.
 * **Upload a txt file**: The gene names or Ensembl IDs can also be uploaded as txt format. The format is the same as the "Seed Genes" textbox.
 
-The seed genes are the foundation of the network generation, your network will be expanded based on the seed genes you provided. Once you determine the seed genes, you can proceed to Step 2 to generate your own network.
+The seed genes are the foundation of the network generation, your network will be expanded based on the seed genes you provided. Once you determine the seed genes, you can proceed to [`Step 2`](search-by-proteins.mdx#clicking-submit-button) to generate your own network.
 
-### Step 2: Selecting Preferable Options
+### Selecting Preferable Options
 
 Now you can select different options from different parameters to integrate your own feature styles into your network. We offer 4 parameters here -- Disease Map, Order, Interaction Type and Min Interaction Score. Let's go through them one by one:
 
@@ -34,7 +38,7 @@ Now you can select different options from different parameters to integrate your
   * FunPPI: Functional protein-protein interactions.
 * **Min Interaction Score**: Each interaction has its own score, from computer science perspective, we also call it edge weight. You can select the cutoff here to make your network thinner or fatter. There are 4 different cutoff available: Low (0.15), Medium (0.4), High (0.7) and Highest (0.9).
 
-### Step 3: Clicking "Submit" Button
+### Clicking "Submit" Button
 
 After click "Submit", a confirmation page will pop up. There are 2 tabs available in the pop-up window: **Found** and **Not-Found**.
 
@@ -48,9 +52,10 @@ After click "Submit", a confirmation page will pop up. There are 2 tabs availabl
 
 You can also download the Found genes and/or Not-Found genes by clicking the download button <Image width={30} height={30} src="/image/docs/download-button.png" alt="Download" className="inline aspect-square"/> on the Results Preview window.
 
-### Step 4: History
+### History
 
 Once you generated your own network, you can find the record here and easily access that specific network again.
+</Steps>
 
 ### Knowledge bot
 

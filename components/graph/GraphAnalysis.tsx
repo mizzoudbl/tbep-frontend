@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 
-export function GraphAnalysis() {
+export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: React.MutableRefObject<Set<string>> }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const graph = sigma.getGraph();
   const radialAnalysis = useStore(state => state.radialAnalysis);
@@ -22,7 +22,7 @@ export function GraphAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     let edgeCount = 0;
-    graph.updateEachEdgeAttributes((edge, attr) => {
+    graph.updateEachEdgeAttributes((_edge, attr) => {
       if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
         attr.hidden = true;
       } else {
@@ -72,8 +72,12 @@ export function GraphAnalysis() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (radialAnalysis.hubGeneEdgeCount < 1) {
-      graph.updateEachNodeAttributes((_node, attr) => {
-        attr.type = 'circle';
+      graph.updateEachNodeAttributes((node, attr) => {
+        if (highlightedNodesRef?.current.has(node)) {
+          attr.type = 'highlight';
+        } else {
+          attr.type = 'circle';
+        }
         return attr;
       });
     } else {
@@ -81,13 +85,15 @@ export function GraphAnalysis() {
         const degree = graph.degree(node);
         if (degree >= radialAnalysis.hubGeneEdgeCount) {
           attr.type = 'border';
+        } else if (highlightedNodesRef?.current.has(node)) {
+          attr.type = 'highlight';
         } else {
           attr.type = 'circle';
         }
         return attr;
       });
     }
-  }, [radialAnalysis.hubGeneEdgeCount]);
+  }, [radialAnalysis.hubGeneEdgeCount, highlightedNodesRef?.current]);
 
   async function renewSession() {
     const res = await fetch(`${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/algorithm/renew-session`, {

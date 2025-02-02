@@ -15,10 +15,15 @@ import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
 
-export function GraphEvents({ clickedNodesRef }: { clickedNodesRef?: React.MutableRefObject<Set<string>> }) {
+export function GraphEvents({
+  clickedNodesRef,
+  highlightedNodesRef,
+}: {
+  clickedNodesRef?: React.MutableRefObject<Set<string>>;
+  highlightedNodesRef: React.MutableRefObject<Set<string>>;
+}) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const searchNodeQuery = useStore(state => state.nodeSearchQuery);
-  const highlightedNodesRef = useRef(new Set<string>());
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
   const totalNodes = useStore(state => state.totalNodes);
 
@@ -34,6 +39,7 @@ export function GraphEvents({ clickedNodesRef }: { clickedNodesRef?: React.Mutab
 
   const { gotoNode } = useCamera();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const graph = sigma.getGraph();
     if (trieRef.current.size === 0) return;
@@ -56,7 +62,7 @@ export function GraphEvents({ clickedNodesRef }: { clickedNodesRef?: React.Mutab
     for (const node of geneNames) {
       if (previousHighlightedNodes.has(node) || !graph.hasNode(node) || graph.getNodeAttribute(node, 'hidden') === true)
         continue;
-      graph.setNodeAttribute(node, 'type', 'border');
+      graph.setNodeAttribute(node, 'type', 'highlight');
       graph.setNodeAttribute(node, 'highlighted', true);
       if (++count === geneNames.size) gotoNode(node, { duration: 100 });
     }
@@ -144,7 +150,7 @@ export function GraphEvents({ clickedNodesRef }: { clickedNodesRef?: React.Mutab
         setSelectedNodes(selectedNodes);
       }
     },
-    [sigma, isSelecting, selectionBox],
+    [sigma, isSelecting, selectionBox, highlightedNodesRef],
   );
 
   const handleMouseUp = useCallback(() => {

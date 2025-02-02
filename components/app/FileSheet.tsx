@@ -204,7 +204,7 @@ export function FileSheet() {
               }
 
               // P_Val alias of DEG
-              if (/^P_Val/i.test(prop)) {
+              if (/^p[-_ ]?val(?:ue)?/i.test(prop)) {
                 universalData[geneID].user.DEG[prop] = row[prop];
               }
 
@@ -226,7 +226,7 @@ export function FileSheet() {
             }
 
             // P_Val alias of DEG
-            if (/^P_Val/i.test(prop)) {
+            if (/^p[-_ ]?val(?:ue)?/i.test(prop)) {
               radioOptions.user.DEG.push(prop);
               continue;
             }
