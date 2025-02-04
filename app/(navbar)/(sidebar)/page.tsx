@@ -359,6 +359,7 @@ FIG4`,
                       onClick={() => {
                         setShowAlert(false);
                         handleGenerateGraph(true);
+                        document.body.removeAttribute('style');
                       }}
                     >
                       Continue
