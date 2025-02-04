@@ -103,7 +103,6 @@ export default function PopUpTable({
               </Table>
             </TabsContent>
             <TabsContent value='not-found'>
-              {/* Write only those geneIDs which are not present in data.genes and present in geneIDs */}
               <Table>
                 <TableHeader>
                   <TableRow>

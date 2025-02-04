@@ -1,10 +1,13 @@
 'use client';
 
+import { GENE_UNIVERSAL_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
-import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
+import type { EdgeAttributes, GeneUniversalData, GeneUniversalDataVariables, NodeAttributes } from '@/lib/interface';
 import { type EventMessage, Events, envURL, eventEmitter } from '@/lib/utils';
+import { useLazyQuery } from '@apollo/client';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
+import { scaleLinear } from 'd3-scale';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -36,37 +39,63 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
 
   const nodeDegreeProperty = useStore(state => state.radialAnalysis.nodeDegreeProperty);
   const universalData = useStore(state => state.universalData);
+  const defaultNodeSize = useStore(state => state.defaultNodeSize);
+
+  const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    let nodeCount = 0;
-    // const userOrDatabase = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty) ? 'user' : 'database';
-    const userOrCommonIdentifier = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty)
-      ? 'user'
-      : 'common';
-    graph.updateEachNodeAttributes((node, attr) => {
-      if (nodeDegreeProperty === 'Gene Degree') {
-        const degree = graph.degree(node);
-        if (degree < radialAnalysis.nodeDegreeCutOff) {
-          attr.hidden = true;
-        } else {
-          nodeCount++;
-          attr.hidden = false;
-        }
+    (async () => {
+      let nodeCount = 0;
+      const userOrCommonIdentifier = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty)
+        ? 'user'
+        : 'common';
+      const isNodeDegree = nodeDegreeProperty === 'Gene Degree';
+      if (!isNodeDegree) {
+        await fetchUniversal({
+          variables: { geneIDs: graph.nodes(), config: [{ properties: [`TE_${nodeDegreeProperty}`] }] },
+        }).then(({ data }) => {
+          const minMax = [Number.POSITIVE_INFINITY, 0];
+          for (const gene of data?.genes ?? []) {
+            const value = gene.common?.[`TE_${nodeDegreeProperty}`]!;
+            if (value) {
+              universalData[gene.ID][userOrCommonIdentifier].TE[nodeDegreeProperty] = value;
+              const num = +value;
+              if (!Number.isNaN(num)) {
+                minMax[0] = Math.min(minMax[0], num);
+                minMax[1] = Math.max(minMax[1], num);
+              }
+            }
+          }
+          const sizeScale = scaleLinear<number, number>(minMax, [0, 1]);
+          graph.updateEachNodeAttributes((node, attr) => {
+            const value = +universalData[node]?.[userOrCommonIdentifier]?.TE[nodeDegreeProperty];
+            if (!Number.isNaN(value) && sizeScale(value) >= radialAnalysis.nodeDegreeCutOff) {
+              nodeCount++;
+              attr.hidden = false;
+            } else {
+              attr.hidden = true;
+            }
+            return attr;
+          });
+        });
       } else {
-        const value = Number.parseFloat(universalData[node]?.[userOrCommonIdentifier]?.TE[nodeDegreeProperty] ?? 'NaN');
-        if (value >= radialAnalysis.nodeDegreeCutOff) {
-          nodeCount++;
-          attr.hidden = false;
-        } else {
-          attr.hidden = true;
-        }
+        graph.updateEachNodeAttributes((node, attr) => {
+          const degree = graph.degree(node);
+          if (degree < radialAnalysis.nodeDegreeCutOff) {
+            attr.hidden = true;
+          } else {
+            nodeCount++;
+            attr.hidden = false;
+          }
+          return attr;
+        });
       }
-      return attr;
-    });
-    const edgeCount = graph.reduceEdges((count, _edge, _attr, _src, _tgt, srcAttr, tgtAttr) => {
-      return count + (srcAttr.hidden || tgtAttr.hidden ? 0 : 1);
-    }, 0);
-    useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
+      const edgeCount = graph.reduceEdges((count, _edge, _attr, _src, _tgt, srcAttr, tgtAttr) => {
+        return count + (srcAttr.hidden || tgtAttr.hidden ? 0 : 1);
+      }, 0);
+      useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
+    })();
   }, [radialAnalysis.nodeDegreeCutOff, nodeDegreeProperty]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

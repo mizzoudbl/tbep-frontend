@@ -37,6 +37,7 @@ Components Used:
 - [table](./table.tsx)
 - [tabs](./tabs.tsx)
 - [textarea](./textarea.tsx)
+- [toggle](./toggle.tsx)
 - [tooltip](./tooltip.tsx)
 
 ## shadcn-ui expansions

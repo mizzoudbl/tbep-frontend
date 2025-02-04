@@ -296,8 +296,8 @@ FIG4`,
                     <VirtualizedCombobox
                       data={diseaseData?.map(val => `${val.name} (${val.ID})`)}
                       value={formData.diseaseMap}
-                      setValue={val => handleSelect(val, 'diseaseMap')}
-                      searchPlaceholder='Search Disease...'
+                      onChange={val => typeof val === 'string' && handleSelect(val, 'diseaseMap')}
+                      placeholder='Search Disease...'
                       loading={diseaseData === null}
                       className='w-full'
                     />

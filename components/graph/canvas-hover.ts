@@ -69,11 +69,7 @@ export function drawHover(
   context.font = `${weight} ${subLabelSize}px ${font}`;
   const geneIDWidth = geneID ? context.measureText(geneID).width : 0;
   const descriptionWidth = description ? context.measureText(description).width : 0;
-  // const sizePropertyWidth = sizePropertyText ? context.measureText(sizePropertyText).width : 0;
-  // const colorPropertyWidth = colorPropertyText ? context.measureText(colorPropertyText).width : 0;
-
   const textWidth = Math.max(geneNameWidth, geneIDWidth, descriptionWidth);
-  // const textWidth = Math.max(geneNameWidth, geneIDWidth, descriptionWidth, sizePropertyWidth, colorPropertyWidth);
 
   const x = Math.round(data.x);
   const y = Math.round(data.y);
@@ -81,11 +77,8 @@ export function drawHover(
   const hGenename = Math.round(size / 2 + 4);
   const hGeneID = geneID ? Math.round(subLabelSize / 2 + 9) : 0;
   const hDescription = Math.round(subLabelSize / 2 + 9);
-  // const hSizeProperty = sizePropertyText ? Math.round(subLabelSize / 2 + 9) : 0;
-  // const hColorProperty = colorPropertyText ? Math.round(subLabelSize / 2 + 9) : 0;
 
   drawRoundRect(context, x, y - hGeneID - 12, w, hDescription + hGenename + hGeneID + 12, 5);
-  // drawRoundRect(context, x, y - hGeneID - 18, w, hDescription + hGenename + hGeneID + 18, 5);
   context.closePath();
   context.fill();
 
@@ -103,12 +96,4 @@ export function drawHover(
   context.fillText(geneID, data.x + data.size + 3, data.y - (2 * size) / 3 - 2);
 
   context.fillText(description, data.x + data.size + 3, data.y + size / 3 + 3 + subLabelSize);
-
-  // if (sizePropertyText) {
-  //   context.fillText(sizePropertyText, data.x + data.size + 3, data.y + size / 3 + 6 + 2 * subLabelSize);
-  // }
-
-  // if (colorPropertyText) {
-  //   context.fillText(colorPropertyText, data.x + data.size + 3, data.y + size / 3 + 9 + 3 * subLabelSize);
-  // }
 }

@@ -34,7 +34,7 @@ export function Legend() {
           selectedRadioNodeColor === 'Pathway' ? (
             <BinaryLegend />
           ) : selectedRadioNodeColor === 'DEG' ? (
-            /P_Val/i.test(selectedNodeColorProperty) ? (
+            typeof selectedNodeColorProperty === 'string' && /^p[-_ ]?val(?:ue)?/i.test(selectedNodeColorProperty) ? (
               <HeatmapLegend
                 title='P-Value'
                 range={[defaultNodeColor, 'red']}

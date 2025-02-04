@@ -1,6 +1,5 @@
 'use client';
 
-import { DISEASE_DEPENDENT_PROPERTIES, DiseaseDependentProperties } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
 import { useSigma } from '@react-sigma/core';
@@ -23,7 +22,7 @@ export function ColorAnalysis() {
     setMinScore(Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0);
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
     const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
     if (showEdgeColor) {
@@ -39,7 +38,7 @@ export function ColorAnalysis() {
     }
   }, [showEdgeColor, graph, edgeOpacity]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
     if (!selectedRadioNodeColor && graph) {
       useStore.setState({ selectedNodeColorProperty: '' });
@@ -50,41 +49,41 @@ export function ColorAnalysis() {
     }
   }, [selectedRadioNodeColor]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
     if (!selectedNodeColorProperty || !graph || !selectedRadioNodeColor) return;
-    const isUserProperty = radioOptions.user[selectedRadioNodeColor].includes(selectedNodeColorProperty);
+    const isUserProperty =
+      typeof selectedNodeColorProperty === 'string' &&
+      radioOptions.user[selectedRadioNodeColor].includes(selectedNodeColorProperty);
     const userOrDiseaseIdentifier = isUserProperty ? 'user' : diseaseName;
     const userOrCommonIdentifier = isUserProperty ? 'user' : 'common';
-    if (selectedRadioNodeColor === 'OpenTargets') {
+    if (selectedRadioNodeColor === 'OpenTargets' && typeof selectedNodeColorProperty === 'string') {
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
           const valString = (cur[userOrDiseaseIdentifier] as OtherSection).OpenTargets?.[selectedNodeColorProperty];
           if (!valString) return acc;
-          const value = Number.parseFloat(valString);
+          const value = +valString;
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [1, 0],
       );
       const colorScale = scaleLinear<string>(minMax, [defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = Number.parseFloat(
-          (universalData[node]?.[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeColor][
-            selectedNodeColorProperty
-          ] ?? Number.NaN,
-        );
+        const val = +(universalData[node]?.[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeColor][
+          selectedNodeColorProperty
+        ];
         if (!Number.isNaN(val)) attr.color = colorScale(val);
         else attr.color = undefined;
         return attr;
       });
-    } else if (selectedRadioNodeColor === 'DEG') {
-      const isPValue = /^P_Val/i.test(selectedNodeColorProperty);
+    } else if (selectedRadioNodeColor === 'DEG' && typeof selectedNodeColorProperty === 'string') {
+      const isPValue = /^p[-_ ]?val(?:ue)?/i.test(selectedNodeColorProperty);
 
       const [min, max] = Object.values(universalData).reduce(
         (acc, cur) => {
           const val = (cur[userOrDiseaseIdentifier] as OtherSection).DEG?.[selectedNodeColorProperty];
           if (!val) return acc;
-          const value = isPValue ? -Math.log10(Number.parseFloat(val)) : Number.parseFloat(val);
+          const value = isPValue ? -Math.log10(+val) : +val;
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY],
@@ -95,74 +94,76 @@ export function ColorAnalysis() {
         : scaleLinear<string>([min, 0, max], ['green', '#E2E2E2', 'red']);
 
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = Number.parseFloat(
-          (universalData[node]?.[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeColor][
-            selectedNodeColorProperty
-          ] ?? Number.NaN,
-        );
+        const val = +(universalData[node]?.[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeColor][
+          selectedNodeColorProperty
+        ];
         if (!Number.isNaN(val)) attr.color = colorScale(isPValue ? -Math.log10(val) : val);
         else attr.color = undefined;
         return attr;
       });
     } else if (selectedRadioNodeColor === 'Pathway') {
+      const propertyArray = Array.from(selectedNodeColorProperty);
+      const userPathwayArray = radioOptions.user.Pathway;
       graph.updateEachNodeAttributes((node, attr) => {
-        attr.color =
-          Number.parseInt(universalData[node]?.[userOrCommonIdentifier].Pathway[selectedNodeColorProperty] ?? 0) === 1
-            ? 'red'
-            : defaultNodeColor;
+        attr.color = propertyArray.some(
+          property => +universalData[node]?.[userPathwayArray.includes(property) ? 'user' : 'common'].Pathway[property],
+        )
+          ? 'red'
+          : defaultNodeColor;
         return attr;
       });
-    } else if (selectedRadioNodeColor === 'Druggability') {
+    } else if (selectedRadioNodeColor === 'Druggability' && typeof selectedNodeColorProperty === 'string') {
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
           const valString = cur[userOrCommonIdentifier].Druggability[selectedNodeColorProperty];
           if (!valString) return acc;
-          const value = Number.parseFloat(valString);
+          const value = +valString;
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [1, 0],
       );
       const colorScale = scaleLinear<string>(minMax, [defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = Number.parseFloat(
-          universalData[node]?.[userOrCommonIdentifier].Druggability[selectedNodeColorProperty] ?? Number.NaN,
-        );
+        const val = +universalData[node]?.[userOrCommonIdentifier].Druggability[selectedNodeColorProperty];
         if (!Number.isNaN(val)) attr.color = colorScale(val);
         else attr.color = undefined;
         return attr;
       });
     } else if (selectedRadioNodeColor === 'TE') {
+      const propertyArray = Array.from(selectedNodeColorProperty);
+      const userTEArray = radioOptions.user.TE;
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
-          const valString = cur?.[userOrCommonIdentifier].TE[selectedNodeColorProperty];
-          if (!valString) return acc;
-          const value = Number.parseFloat(valString);
+          const value = propertyArray.reduce((acc2, property) => {
+            const val = +cur[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
+            if (Number.isNaN(val)) return acc2;
+            return Math.max(acc2, val);
+          }, Number.NEGATIVE_INFINITY);
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [Number.POSITIVE_INFINITY, 0],
       );
       const colorScale = scaleLinear<string>(minMax, [defaultNodeColor, 'red']);
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = Number.parseFloat(
-          universalData[node]?.[userOrCommonIdentifier].TE[selectedNodeColorProperty] ?? Number.NaN,
-        );
-        if (!Number.isNaN(val)) attr.color = colorScale(val);
+        const val = propertyArray.reduce((acc, property) => {
+          const value = +universalData[node]?.[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
+          if (Number.isNaN(value)) return acc;
+          return Math.max(acc, value);
+        }, Number.NEGATIVE_INFINITY);
+        if (Number.isFinite(val)) attr.color = colorScale(val);
         else attr.color = undefined;
         return attr;
       });
-    } else if (selectedRadioNodeColor === 'Custom_Color') {
+    } else if (selectedRadioNodeColor === 'Custom_Color' && typeof selectedNodeColorProperty === 'string') {
       graph.updateEachNodeAttributes((node, attr) => {
         attr.color =
           universalData[node]?.[userOrCommonIdentifier].Custom_Color[selectedNodeColorProperty] || defaultNodeColor;
         return attr;
       });
-    } else if (selectedRadioNodeColor === 'OT_Prioritization') {
-      // TODO: Implement OT_Prioritization
+    } else if (selectedRadioNodeColor === 'OT_Prioritization' && typeof selectedNodeColorProperty === 'string') {
       const colorScale = scaleLinear<string>([-1, 0, 1], ['red', '#F0C584', 'green']);
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = Number.parseFloat(
-          universalData[node]?.[userOrCommonIdentifier].OT_Prioritization[selectedNodeColorProperty] ?? Number.NaN,
-        );
+        const val = +universalData[node]?.[userOrCommonIdentifier].OT_Prioritization[selectedNodeColorProperty];
         if (!Number.isNaN(val)) attr.color = colorScale(val);
         else attr.color = undefined;
         return attr;

@@ -57,7 +57,6 @@ export function ForceLayout() {
             .distance(20),
         )
         .force('charge', forceManyBody().strength(-200))
-        // .force('center', forceCenter(0, 0))
         .force('collide', forceCollide(20))
         .on('tick', tick);
 

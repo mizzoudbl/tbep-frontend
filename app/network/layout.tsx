@@ -18,33 +18,31 @@ export default function NetworkLayoutPage({
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
 
   return (
-    <>
-      <div className='h-screen flex flex-col bg-gray-100'>
-        <div className='bg-gray-200 h-8 flex items-center justify-between'>
-          <Button variant='ghost' size='icon' onClick={() => setLeftSidebar(!leftSidebar)}>
-            {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
-          </Button>
-          <AppBar />
-          <Button variant='ghost' size='icon' onClick={() => setRightSidebar(!rightSidebar)}>
-            {rightSidebar ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
-          </Button>
-        </div>
-
-        <ResizablePanelGroup direction='horizontal' className='flex flex-1'>
-          <ResizablePanel defaultSize={16} minSize={16} className={leftSidebar ? 'block' : 'hidden'}>
-            <LeftSideBar />
-          </ResizablePanel>
-          <ResizableHandle withHandle className={leftSidebar ? 'flex' : 'hidden'} />
-          <ResizablePanel defaultSize={68} className='bg-white h-full'>
-            <div className='bg-white h-[90%]'>{children}</div>
-            <ChatWindow />
-          </ResizablePanel>
-          <ResizableHandle withHandle className={rightSidebar ? 'flex' : 'hidden'} />
-          <ResizablePanel defaultSize={16} minSize={16} className={rightSidebar ? 'block' : 'hidden'}>
-            <RightSideBar />
-          </ResizablePanel>
-        </ResizablePanelGroup>
+    <div className='h-screen flex flex-col bg-gray-100'>
+      <div className='bg-gray-200 h-8 flex items-center justify-between'>
+        <Button variant='ghost' size='icon' onClick={() => setLeftSidebar(!leftSidebar)}>
+          {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
+        </Button>
+        <AppBar />
+        <Button variant='ghost' size='icon' onClick={() => setRightSidebar(!rightSidebar)}>
+          {rightSidebar ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
+        </Button>
       </div>
-    </>
+
+      <ResizablePanelGroup direction='horizontal' className='flex flex-1'>
+        <ResizablePanel defaultSize={16} minSize={16} className={leftSidebar ? 'block' : 'hidden'}>
+          <LeftSideBar />
+        </ResizablePanel>
+        <ResizableHandle withHandle className={leftSidebar ? 'flex' : 'hidden'} />
+        <ResizablePanel defaultSize={68} className='bg-white h-full'>
+          <div className='bg-white h-[90%]'>{children}</div>
+          <ChatWindow />
+        </ResizablePanel>
+        <ResizableHandle withHandle className={rightSidebar ? 'flex' : 'hidden'} />
+        <ResizablePanel defaultSize={16} minSize={16} className={rightSidebar ? 'block' : 'hidden'}>
+          <RightSideBar />
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 }
