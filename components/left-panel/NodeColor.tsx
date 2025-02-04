@@ -10,7 +10,7 @@ import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => void }) {
+export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<string>) => void }) {
   const radioValue = useStore(state => state.selectedRadioNodeColor);
   const radioOptions = useStore(state => state.radioOptions);
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
@@ -46,7 +46,9 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
       <CollapsibleContent className='mt-2'>
         <RadioGroup
           value={radioValue ?? ''}
-          onValueChange={value => useStore.setState({ selectedRadioNodeColor: value as NodeColorType })}
+          onValueChange={value =>
+            useStore.setState({ selectedRadioNodeColor: value as NodeColorType, selectedNodeColorProperty: '' })
+          }
         >
           {nodeColor.map(({ label, tooltipContent }) => (
             <Tooltip key={label}>
@@ -55,7 +57,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
                 <Label htmlFor={label} className='text-xs'>
                   {label}
                 </Label>
-                <TooltipTrigger asChild>{tooltipContent && <Info size={12} />}</TooltipTrigger>
+                <TooltipTrigger asChild>{tooltipContent && <Info size={12} className='shrink-0' />}</TooltipTrigger>
               </div>
               {tooltipContent && (
                 <TooltipContent align='start'>
@@ -72,8 +74,9 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string) => vo
               data={[...radioOptions.database[radioValue], ...radioOptions.user[radioValue]]}
               className='w-full mt-2'
               value={selectedNodeColorProperty}
-              setValue={onPropChange}
+              onChange={onPropChange}
               width={radioValue === 'TE' ? '550px' : '800px'}
+              multiselect
             />
           ) : (
             <Combobox

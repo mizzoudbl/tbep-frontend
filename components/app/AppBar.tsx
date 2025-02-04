@@ -1,28 +1,8 @@
-import { useStore } from '@/lib/hooks';
 import { SquareDashedMousePointer } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
-import { Export } from '.';
+import { Suspense, useState } from 'react';
+import { Export, FileName } from '.';
 import { Input } from '../ui/input';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-
-const FileName = () => {
-  const searchParams = useSearchParams();
-  const projectTitle = useStore(state => state.projectTitle);
-
-  useEffect(() => {
-    const fileName = searchParams?.get('file') ?? 'Untitled';
-    useStore.setState({ projectTitle: fileName });
-  }, [searchParams]);
-
-  return (
-    <Input
-      className='text-sm font-semibold max-w-fit'
-      value={projectTitle}
-      onChange={e => useStore.setState({ projectTitle: e.target.value })}
-    />
-  );
-};
 
 export function AppBar() {
   const [visible, setVisible] = useState(true);
@@ -39,7 +19,7 @@ export function AppBar() {
           )}
           <SquareDashedMousePointer className='h-4 w-4' />
         </TooltipTrigger>
-        <TooltipContent align='start' className='max-w-80'>
+        <TooltipContent align='start' className='max-w-96 text-sm'>
           <ol>
             <li>
               • To select multiple genes and export details or perform GSEA analysis, use the mouse to select the genes
@@ -51,8 +31,13 @@ export function AppBar() {
             </li>
             <br />
             <li>
-              • To highlight neighbors of a gene, either <kbd className='border rounded-md px-1'>Click</kbd> on the gene
-              node, or use the <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover</kbd> on the gene node
+              • To highlight neighbors of a gene, either check Highlight Neighbor Genes on Network Style section and
+              then hover/click the gene
+              <br />
+              <b>
+                <i>Shortcut:</i>
+              </b>{' '}
+              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover/Click</kbd>
             </li>
           </ol>
         </TooltipContent>

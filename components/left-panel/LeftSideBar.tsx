@@ -135,12 +135,18 @@ export function LeftSideBar() {
   const radioOptions = useStore(state => state.radioOptions);
   const queriedFieldSet = useRef<Set<string>>(new Set());
 
-  async function handlePropChange(val: string, type: 'color' | 'size') {
+  async function handlePropChange(val: string | Set<string>, type: 'color' | 'size') {
     const selectedRadio = type === 'color' ? selectedRadioNodeColor : selectedRadioNodeSize;
     if (!selectedRadio) return;
     const ddp = DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties);
-    const key = `${ddp ? diseaseName : ''}_${selectedRadio}_${val}`;
-    if (queriedFieldSet.current.has(key) || radioOptions.user[selectedRadio].includes(val)) {
+    const keys = (val instanceof Set ? Array.from(val) : [val]).reduce<string[]>((acc, v) => {
+      const key = `${ddp ? `${diseaseName}_` : ''}${selectedRadio}_${v}`;
+      if (!queriedFieldSet.current.has(key) && !radioOptions.user[selectedRadio].includes(key)) {
+        acc.push(ddp ? key.slice(diseaseName.length + 1) : key);
+      }
+      return acc;
+    }, []);
+    if (keys.length === 0) {
       useStore.setState({
         [type === 'color' ? 'selectedNodeColorProperty' : 'selectedNodeSizeProperty']: val,
       });
@@ -150,7 +156,7 @@ export function LeftSideBar() {
           geneIDs,
           config: [
             {
-              properties: [`${selectedRadio}_${val}`],
+              properties: keys,
               ...(ddp && { disease: diseaseName }),
             },
           ],
@@ -161,7 +167,7 @@ export function LeftSideBar() {
         return;
       }
       const data = result.data?.genes;
-      queriedFieldSet.current.add(key);
+      queriedFieldSet.current = new Set([...queriedFieldSet.current, ...keys]);
       const universalData = useStore.getState().universalData;
       for (const gene of data ?? []) {
         for (const prop in gene.common) {
@@ -202,8 +208,8 @@ export function LeftSideBar() {
           <motion.div layout transition={{ duration: 0.1, ease: 'easeInOut' }} initial={{ width: '100%' }} animate>
             <VirtualizedCombobox
               value={diseaseMap}
-              searchPlaceholder='Search Disease...'
-              setValue={handleDiseaseChange}
+              placeholder='Search Disease...'
+              onChange={d => typeof d === 'string' && handleDiseaseChange(d)}
               data={diseaseData?.map(val => `${val.name} (${val.ID})`)}
               loading={diseaseData === null}
               className='w-full'

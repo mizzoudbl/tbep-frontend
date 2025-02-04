@@ -17,13 +17,15 @@ export function Combobox({
   className,
   placeholder = 'Select...',
   align = 'start',
+  multiselect = false,
 }: {
   data: readonly (string | GenePropertyMetadata)[];
-  value: string;
-  onChange: (value: string) => void;
+  value: string | Set<string>;
+  onChange: (value: string | Set<string>) => void;
   className?: string;
   placeholder?: string;
   align?: 'start' | 'end' | 'center';
+  multiselect?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -36,7 +38,13 @@ export function Combobox({
           aria-expanded={open}
           className={cn('w-[200px] justify-between text-wrap break-words h-8', className)}
         >
-          <span className='truncate'>{value || placeholder}</span>
+          <span className='truncate'>
+            {multiselect && value instanceof Set
+              ? value.size
+                ? `${value.size} selected`
+                : placeholder
+              : value || placeholder}
+          </span>
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -53,13 +61,24 @@ export function Combobox({
                     key={propertyName}
                     value={propertyName}
                     onSelect={currentValue => {
-                      onChange(currentValue);
-                      setOpen(false);
+                      if (multiselect) {
+                        onChange(value instanceof Set ? new Set([...value, currentValue]) : new Set([currentValue]));
+                      } else {
+                        onChange(currentValue);
+                        setOpen(false);
+                      }
                     }}
                     className='flex justify-between w-full'
                   >
                     <div className='flex items-center'>
-                      <Check className={cn('mr-2 h-4 w-4', value === propertyName ? 'opacity-100' : 'opacity-0')} />
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          (multiselect && value instanceof Set ? value.has(propertyName) : value === propertyName)
+                            ? 'opacity-100'
+                            : 'opacity-0',
+                        )}
+                      />
                       {propertyName}
                     </div>
                     {typeof item !== 'string' && item.description && (

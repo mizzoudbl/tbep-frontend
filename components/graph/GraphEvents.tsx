@@ -279,18 +279,21 @@ export function GraphEvents({
           clickedNodesRef?.current.add(e.node);
           graph.setNodeAttribute(e.node, 'type', 'border');
           graph.setNodeAttribute(e.node, 'highlighted', true);
-          graph.forEachNeighbor(e.node, (neighbor, attr) => {
-            highlightedNodesRef.current.add(neighbor);
-            clickedNodesRef?.current.add(neighbor);
-            attr.type = 'border';
-            attr.highlighted = true;
-          });
+          if (highlightNeighborNodes || e.event.original.ctrlKey) {
+            graph.forEachNeighbor(e.node, (neighbor, attr) => {
+              highlightedNodesRef.current.add(neighbor);
+              clickedNodesRef?.current.add(neighbor);
+              attr.type = 'border';
+              attr.highlighted = true;
+            });
+          }
           return e.node;
         });
       },
     });
   }, [registerEvents, sigma, draggedNode, handleMouseUp, handleMouseDown, handleMouseMove]);
 
+  const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
   const [clickedNode, setClickedNode] = useState<string | null>(null);
   const universalData = useStore(state => state.universalData);
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
@@ -301,19 +304,40 @@ export function GraphEvents({
   const radioOptions = useStore(state => state.radioOptions);
 
   const propertyResolve = useCallback(
-    (node: string, selectedRadio: NodeColorType | NodeSizeType, selectedProperty: string) => {
-      if (!selectedRadio) return;
-      return (
-        (
+    (node: string, selectedRadio: NodeColorType | NodeSizeType | undefined, selectedProperty: string | Set<string>) => {
+      if (!selectedRadio || !selectedProperty) return <></>;
+      const diseaseNameOrCommon = DISEASE_DEPENDENT_PROPERTIES?.includes(selectedRadio as DiseaseDependentProperties)
+        ? diseaseName
+        : 'common';
+      const userRadioArr = radioOptions.user[selectedRadio];
+      if (typeof selectedProperty === 'string') {
+        const value = (
           universalData[node]?.[
-            radioOptions.user[selectedRadio]?.includes(selectedProperty)
-              ? 'user'
-              : DISEASE_DEPENDENT_PROPERTIES?.includes(selectedRadio as DiseaseDependentProperties)
-                ? diseaseName
-                : 'common'
+            userRadioArr?.includes(selectedProperty) ? 'user' : diseaseNameOrCommon
           ] as OtherSection & CommonSection
-        )?.[selectedRadio]?.[selectedProperty] || 'N/A'
-      );
+        )?.[selectedRadio]?.[selectedProperty];
+        return (
+          <div>
+            <h3 className='font-bold break-words'>{selectedProperty}</h3>
+            <p className={cn(value ? 'italic' : '')}>{value || 'N/A'}</p>
+          </div>
+        );
+      }
+      const values = selectedProperty.size
+        ? Array.from(selectedProperty).map(prop => {
+            const value = (
+              universalData[node]?.[userRadioArr?.includes(prop) ? 'user' : diseaseNameOrCommon] as OtherSection &
+                CommonSection
+            )?.[selectedRadio]?.[prop];
+            return (
+              <div key={prop}>
+                <h3 className='font-bold break-words'>{prop}</h3>
+                <p className={cn(value ? 'italic' : '')}>{value || 'N/A'}</p>
+              </div>
+            );
+          })
+        : null;
+      return values;
     },
     [diseaseName, universalData, radioOptions],
   );
@@ -321,7 +345,7 @@ export function GraphEvents({
   return (
     <>
       {clickedNode && (
-        <div className='absolute top-0 right-0 space-y-1 text-xs shadow rounded border backdrop-blur p-1 m-1 w-40'>
+        <div className='absolute top-0 right-0 space-y-1 text-xs shadow rounded border backdrop-blur p-1 m-1 w-80 max-h-[80vh] overflow-y-auto'>
           <div>
             <h3 className='font-bold'>Ensembl ID</h3>
             <p>{clickedNode}</p>
@@ -334,27 +358,8 @@ export function GraphEvents({
             <h3 className='font-bold'>Description</h3>
             <p>{clickedNode ? sigma.getGraph().getNodeAttribute(clickedNode, 'description') : 'No Node Selected'}</p>
           </div>
-          <div>
-            <h3 className={cn('font-bold break-words', selectedNodeColorProperty ? '' : 'italic')}>
-              {selectedNodeColorProperty || 'Node Color Property Not Selected'}
-            </h3>
-            {selectedRadioNodeColor && selectedNodeColorProperty ? (
-              <p>{propertyResolve(clickedNode, selectedRadioNodeColor, selectedNodeColorProperty)}</p>
-            ) : (
-              <p className='italic'>null</p>
-            )}
-          </div>
-          <div>
-            <h3 className={cn('font-bold break-words', selectedNodeSizeProperty ? '' : 'italic')}>
-              {selectedNodeSizeProperty || 'Node Size Property Not Selected'}
-            </h3>
-
-            {selectedRadioNodeSize && selectedNodeSizeProperty ? (
-              <p>{propertyResolve(clickedNode, selectedRadioNodeSize, selectedNodeSizeProperty)}</p>
-            ) : (
-              <p className='italic'>null</p>
-            )}
-          </div>
+          {propertyResolve(clickedNode, selectedRadioNodeColor, selectedNodeColorProperty)}
+          {propertyResolve(clickedNode, selectedRadioNodeSize, selectedNodeSizeProperty)}
         </div>
       )}
     </>

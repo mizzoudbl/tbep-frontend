@@ -2,7 +2,7 @@
 
 import { radialAnalysisOptions } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
-import type { RadialAnalysisProps, RadialAnalysisSetting } from '@/lib/interface';
+import type { RadialAnalysisSetting } from '@/lib/interface';
 import { Info } from 'lucide-react';
 import React from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
@@ -11,16 +11,22 @@ import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
+export function RadialAnalysis() {
   const [minScore, setMinScore] = React.useState(0);
   const [isGeneDegree, setIsGeneDegree] = React.useState(true);
   const radioOptions = useStore(state => state.radioOptions);
+
+  const radialAnalysis = useStore(state => state.radialAnalysis);
+
+  const updateRadialAnalysis = (value: number | string, key: keyof RadialAnalysisSetting) => {
+    useStore.setState({ radialAnalysis: { ...radialAnalysis, [key]: value } });
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     const minScore = Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0;
     setMinScore(minScore);
-    onChange(minScore, 'edgeWeightCutOff');
+    updateRadialAnalysis(minScore, 'edgeWeightCutOff');
   }, []);
 
   return (
@@ -45,19 +51,20 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
                 min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
                 max={option.key === 'nodeDegreeCutOff' && !isGeneDegree ? 1 : option.max}
                 step={option.key === 'nodeDegreeCutOff' && !isGeneDegree ? 0.01 : option.step}
-                value={[value[option.key]]}
-                onValueChange={value => onChange(value[0], option.key as keyof RadialAnalysisSetting)}
+                value={[radialAnalysis[option.key]]}
+                onValueChange={value => updateRadialAnalysis(value[0], option.key as keyof RadialAnalysisSetting)}
               />
               {option.key === 'nodeDegreeCutOff' && (
                 <VirtualizedCombobox
                   data={['Gene Degree', ...radioOptions.database.TE, ...radioOptions.user.TE]}
                   width='550px'
                   align='end'
-                  value={value.nodeDegreeProperty}
+                  value={radialAnalysis.nodeDegreeProperty}
                   className='w-full'
-                  setValue={value => {
+                  onChange={value => {
+                    if (typeof value !== 'string') return;
                     setIsGeneDegree(value === 'Gene Degree');
-                    onChange(value, 'nodeDegreeProperty');
+                    updateRadialAnalysis(value, 'nodeDegreeProperty');
                   }}
                 />
               )}
@@ -68,8 +75,10 @@ export function RadialAnalysis({ value, onChange }: RadialAnalysisProps) {
               min={option.min}
               max={option.max}
               step={option.step}
-              value={value[option.key]}
-              onChange={e => onChange(Number.parseFloat(e.target.value), option.key as keyof RadialAnalysisSetting)}
+              value={radialAnalysis[option.key]}
+              onChange={e =>
+                updateRadialAnalysis(Number.parseFloat(e.target.value), option.key as keyof RadialAnalysisSetting)
+              }
             />
           </div>
           {idx !== radialAnalysisOptions.length - 1 && <hr />}

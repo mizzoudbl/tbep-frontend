@@ -10,7 +10,7 @@ import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => void }) {
+export function NodeSize({ onPropChange }: { onPropChange: (prop: string | Set<string>) => void }) {
   const radioValue = useStore(state => state.selectedRadioNodeSize);
   const radioOptions = useStore(state => state.radioOptions);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
@@ -46,7 +46,9 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => voi
       <CollapsibleContent className='mt-2'>
         <RadioGroup
           value={radioValue ?? ''}
-          onValueChange={value => useStore.setState({ selectedRadioNodeSize: value as NodeSizeType })}
+          onValueChange={value =>
+            useStore.setState({ selectedRadioNodeSize: value as NodeSizeType, selectedNodeSizeProperty: '' })
+          }
         >
           {nodeSize.map(({ label, tooltipContent }) => {
             return (
@@ -56,7 +58,7 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => voi
                   <Label htmlFor={label} className='text-xs'>
                     {label}
                   </Label>
-                  <TooltipTrigger asChild>{tooltipContent && <Info size={12} />}</TooltipTrigger>
+                  <TooltipTrigger asChild>{tooltipContent && <Info size={12} className='shrink-0' />}</TooltipTrigger>
                 </div>
                 {tooltipContent && (
                   <TooltipContent align='start'>
@@ -74,8 +76,9 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string) => voi
               data={[...radioOptions.database[radioValue], ...radioOptions.user[radioValue]]}
               className='w-full mt-2'
               value={selectedNodeSizeProperty}
-              setValue={onPropChange}
+              onChange={onPropChange}
               width='550px'
+              multiselect
             />
           ) : (
             <Combobox

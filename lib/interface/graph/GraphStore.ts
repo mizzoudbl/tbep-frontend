@@ -131,12 +131,12 @@ export interface GraphStore {
   /**
    * Selected Node Size Property
    */
-  selectedNodeSizeProperty: string;
+  selectedNodeSizeProperty: string | Set<string>;
 
   /**
    * Selected Node Color Property
    */
-  selectedNodeColorProperty: string;
+  selectedNodeColorProperty: string | Set<string>;
 
   /**
    * Map of Gene Name to Gene ID
