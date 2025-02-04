@@ -39,7 +39,6 @@ export function FileSheet() {
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const [checkedOptions, setCheckedOptions] = React.useState<Record<string, boolean>>({});
-  const diseaseName = useStore(state => state.diseaseName);
   const geneNameToID = useStore(state => state.geneNameToID);
 
   React.useEffect(() => {
@@ -113,11 +112,10 @@ export function FileSheet() {
       [fileName]: !checkedOptions[fileName],
     };
     setCheckedOptions(updatedCheckedOptions);
-    sessionStorage.setItem('checkedOptions', JSON.stringify(updatedCheckedOptions));
   };
 
-  const removeFile = async (name: string) => {
-    setUploadedFiles(uploadedFiles.filter(file => file.name !== name));
+  const removeFile = async (name?: string) => {
+    setUploadedFiles(name ? uploadedFiles.filter(file => file.name !== name) : []);
     setShowConfirmDialog(false);
     const store = await openDB('files', 'readwrite');
     if (!store) {
@@ -129,7 +127,10 @@ export function FileSheet() {
       });
       return;
     }
-    store.delete(name).onerror = ev => console.error(ev);
+    if (name) store.delete(name).onerror = ev => console.error(ev);
+    else {
+      store.clear().onerror = ev => console.error(ev);
+    }
   };
 
   const handleConfirmDialogChange = (checked: CheckedState) => {
@@ -184,7 +185,7 @@ export function FileSheet() {
           for (const row of parsedData.data as any[]) {
             const geneID = row[IDHeaderName].startsWith('ENSG')
               ? row[IDHeaderName]
-              : geneNameToID.get(row[IDHeaderName]);
+              : geneNameToID.get(row[IDHeaderName]?.toUpperCase());
             if (!geneID || !universalData[geneID]) continue;
 
             outer: for (const prop in row) {
@@ -250,12 +251,14 @@ export function FileSheet() {
         }
       };
     }
-    toast.success('Data updated successfully', {
-      cancel: { label: 'Close', onClick() {} },
-      position: 'top-center',
-      richColors: true,
-      description: 'You can now play your uploaded data!',
-    });
+    if (uploadedFiles.length) {
+      toast.success('Data updated successfully', {
+        cancel: { label: 'Close', onClick() {} },
+        position: 'top-center',
+        richColors: true,
+        description: 'You can now play your uploaded data!',
+      });
+    }
   };
 
   const handleReset = async () => {
@@ -325,6 +328,36 @@ export function FileSheet() {
                   <p>Drag 'n' drop some files here, or click to select files</p>
                 )}
               </div>
+              {uploadedFiles.length ? (
+                <div className='flex flex-row-reverse'>
+                  <Button size='sm' className='mb-2' variant='destructive' onClick={() => setShowConfirmDialog(true)}>
+                    Delete ALL
+                  </Button>
+                </div>
+              ) : null}
+              <AlertDialog open={showConfirmDialog}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription className='text-black'>
+                      This action cannot be undone. This will permanently delete all the files.
+                    </AlertDialogDescription>
+                    <div className='flex items-center space-x-2 mt-4'>
+                      <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
+                      <Label
+                        htmlFor='terms'
+                        className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                      >
+                        Do not show again
+                      </Label>
+                    </div>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => removeFile()}>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <ScrollArea className='h-[200px]'>
                 {uploadedFiles.map(file => (
                   <div
@@ -344,42 +377,9 @@ export function FileSheet() {
                         Date: {new Date(file.lastModified).toLocaleString()} | Size: {formatBytes(file.size)}
                       </span>
                     </div>
-                    <AlertDialog open={showConfirmDialog}>
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        onClick={() => {
-                          if (sessionStorage.getItem('showConfirmDialog') === 'false') {
-                            removeFile(file.name);
-                          } else {
-                            setShowConfirmDialog(true);
-                          }
-                        }}
-                      >
-                        <Trash2 className='h-4 w-4' />
-                      </Button>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription className='text-black'>
-                            This action cannot be undone. This will permanently delete the file.
-                          </AlertDialogDescription>
-                          <div className='flex items-center space-x-2 mt-4'>
-                            <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
-                            <Label
-                              htmlFor='terms'
-                              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                            >
-                              Do not show again
-                            </Label>
-                          </div>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => removeFile(file.name)}>Continue</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <Button variant='ghost' size='icon' onClick={() => removeFile(file.name)}>
+                      <Trash2 className='h-4 w-4' />
+                    </Button>
                   </div>
                 ))}
               </ScrollArea>
