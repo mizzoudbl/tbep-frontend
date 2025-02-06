@@ -21,8 +21,11 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Mut
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
   const edgeOpacity = useStore(state => state.edgeOpacity);
+  const showEdgeColor = useStore(state => state.showEdgeColor);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (showEdgeColor) return;
     const opacityChangedColor = DEFAULT_EDGE_COLOR.replace(/[\d.]+\)$/, `${edgeOpacity})`);
     setSettings({
       defaultEdgeColor: opacityChangedColor,

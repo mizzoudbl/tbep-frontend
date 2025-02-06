@@ -1,7 +1,22 @@
 import type { GraphConfigForm } from '@/lib/interface';
-import { ExternalLink, Eye, Trash2 } from 'lucide-react';
+import type { CheckedState } from '@radix-ui/react-checkbox';
+import { ExternalLink, Eye, Trash, Trash2 } from 'lucide-react';
+import React from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './ui/alert-dialog';
+import { Button } from './ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Checkbox } from './ui/checkbox';
 import { Input } from './ui/input';
+import { Label } from './ui/label';
 import { ScrollArea } from './ui/scroll-area';
 
 export type HistoryItem = GraphConfigForm & { title: string; geneIDs: string[]; createdAt?: number };
@@ -30,9 +45,56 @@ export default function History({
     window.open('/network', '_blank', 'noopener,noreferrer');
   };
 
+  const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
+  const handleConfirmDialogChange = (checked: CheckedState) => {
+    sessionStorage.setItem('showConfirmDialog', JSON.stringify(!checked));
+  };
+
+  const removeHistory = (title?: string) => {
+    if (title) {
+      const newHistory = history.filter(item => item.title !== title);
+      setHistory(newHistory);
+      localStorage.setItem('history', JSON.stringify(newHistory));
+    } else {
+      setHistory([]);
+      localStorage.removeItem('history');
+      setShowConfirmDialog(false);
+    }
+  };
+
   return (
     <div className='h-[92%]'>
-      <h3 className='text-2xl font-semibold mb-1'>History</h3>
+      <div className='flex justify-between'>
+        <h3 className='text-2xl font-semibold mb-1'>History</h3>
+        {history.length ? (
+          <Button size='icon' className='mb-2 bg-red-700 hover:bg-red-800' onClick={() => setShowConfirmDialog(true)}>
+            <Trash2 size={20} />
+          </Button>
+        ) : null}
+      </div>
+      <AlertDialog open={showConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription className='text-black'>
+              This action cannot be undone. This will permanently delete all the files.
+            </AlertDialogDescription>
+            <div className='flex items-center space-x-2 mt-4'>
+              <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
+              <Label
+                htmlFor='terms'
+                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+              >
+                Do not show again
+              </Label>
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => removeHistory()}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {history.length > 0 ? (
         <ScrollArea className='h-full'>
           <div className='space-y-4 pr-2 flex flex-col'>
@@ -66,11 +128,7 @@ export default function History({
                   <button
                     type='button'
                     className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
-                    onClick={() => {
-                      const newHistory = history.filter(({ title }) => title !== item.title);
-                      setHistory(newHistory);
-                      localStorage.setItem('history', JSON.stringify(newHistory));
-                    }}
+                    onClick={() => removeHistory(item.title)}
                   >
                     <Trash2 size={20} />
                   </button>

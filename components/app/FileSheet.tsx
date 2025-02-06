@@ -26,7 +26,7 @@ import {
 import { DISEASE_DEPENDENT_PROPERTIES, DISEASE_INDEPENDENT_PROPERTIES } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { OtherSection, RadioOptions, UniversalData } from '@/lib/interface';
-import { formatBytes, openDB } from '@/lib/utils';
+import { LOGFC_REGEX, P_VALUE_REGEX, formatBytes, initRadioOptions, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Trash2, Upload } from 'lucide-react';
 import { Link } from 'next-view-transitions';
@@ -88,7 +88,14 @@ export function FileSheet() {
 
           // Check if all files have been processed
           if (filesToAdd.length === acceptedFiles.length) {
-            setUploadedFiles(prev => [...prev, ...filesToAdd]);
+            setUploadedFiles(prev => {
+              const seen = new Set();
+              return [...filesToAdd, ...prev].filter(file => {
+                if (seen.has(file.name)) return false;
+                seen.add(file.name);
+                return true;
+              });
+            });
             setCheckedOptions(prev => ({ ...prev, ...newCheckedOptions }));
           }
         };
@@ -141,15 +148,7 @@ export function FileSheet() {
     const universalData: UniversalData = useStore.getState().universalData;
     const radioOptions: RadioOptions = {
       database: useStore.getState().radioOptions.database,
-      user: {
-        DEG: [],
-        OpenTargets: [],
-        OT_Prioritization: [],
-        Pathway: [],
-        Druggability: [],
-        TE: [],
-        Custom_Color: [],
-      },
+      user: initRadioOptions(),
     };
     for (const file of uploadedFiles) {
       if (!checkedOptions[file.name]) continue;
@@ -166,7 +165,7 @@ export function FileSheet() {
       const request = store.get(file.name);
       request.onsuccess = async () => {
         const data = await (request.result as File).text();
-        const parsedData = Papa.parse(data, {
+        const parsedData = Papa.parse<Record<string, string>>(data, {
           header: true,
           skipEmptyLines: true,
         });
@@ -181,37 +180,30 @@ export function FileSheet() {
           return;
         }
         try {
-          // biome-ignore lint/suspicious/noExplicitAny: TODO: Make this type-safe
-          for (const row of parsedData.data as any[]) {
-            const geneID = row[IDHeaderName].startsWith('ENSG')
-              ? row[IDHeaderName]
-              : geneNameToID.get(row[IDHeaderName]?.toUpperCase());
+          for (const row of parsedData.data) {
+            const firstValue = row[IDHeaderName];
+            const geneID = firstValue.startsWith('ENSG') ? firstValue : geneNameToID.get(firstValue?.toUpperCase());
             if (!geneID || !universalData[geneID]) continue;
 
-            outer: for (const prop in row) {
+            for (const prop in row) {
               if (prop === IDHeaderName) continue;
 
-              for (const field of DISEASE_DEPENDENT_PROPERTIES) {
-                if (new RegExp(`^${field}_`, 'i').test(prop)) {
-                  universalData[geneID].user[field][prop.replace(new RegExp(`^${field}_`, 'i'), '')] = row[prop];
-                  continue outer;
-                }
-              }
-
               // LogFC alias of DEG
-              if (/^LogFC_/i.test(prop)) {
-                universalData[geneID].user.DEG[prop.replace(/^LogFC_/i, '')] = row[prop];
+              if (LOGFC_REGEX.test(prop)) {
+                universalData[geneID].user.DEG[prop.replace(LOGFC_REGEX, '')] = row[prop];
                 continue;
               }
 
               // P_Val alias of DEG
-              if (/^p[-_ ]?val(?:ue)?/i.test(prop)) {
+              if (P_VALUE_REGEX.test(prop)) {
                 universalData[geneID].user.DEG[prop] = row[prop];
+                continue;
               }
 
-              for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
-                if (new RegExp(`^${field}_`, 'i').test(prop)) {
-                  universalData[geneID].user[field][prop.replace(new RegExp(`^${field}_`, 'i'), '')] = row[prop];
+              for (const field of [...DISEASE_DEPENDENT_PROPERTIES, ...DISEASE_DEPENDENT_PROPERTIES]) {
+                const fieldRegex = new RegExp(`^${field}_`, 'i');
+                if (fieldRegex.test(prop)) {
+                  universalData[geneID].user[field][prop.replace(fieldRegex, '')] = row[prop];
                   break;
                 }
               }
@@ -221,13 +213,13 @@ export function FileSheet() {
             if (prop === IDHeaderName) continue;
 
             // LogFC alias of DEG
-            if (/^LogFC_/i.test(prop)) {
-              radioOptions.user.DEG.push(prop.replace(/^LogFC_/i, ''));
+            if (LOGFC_REGEX.test(prop)) {
+              radioOptions.user.DEG.push(prop.replace(LOGFC_REGEX, ''));
               continue;
             }
 
             // P_Val alias of DEG
-            if (/^p[-_ ]?val(?:ue)?/i.test(prop)) {
+            if (P_VALUE_REGEX.test(prop)) {
               radioOptions.user.DEG.push(prop);
               continue;
             }
@@ -272,15 +264,7 @@ export function FileSheet() {
     useStore.setState({
       radioOptions: {
         database: useStore.getState().radioOptions.database,
-        user: {
-          DEG: [],
-          OpenTargets: [],
-          OT_Prioritization: [],
-          Pathway: [],
-          Druggability: [],
-          TE: [],
-          Custom_Color: [],
-        },
+        user: initRadioOptions(),
       },
     });
     toast.info('Data reset successfully', {
@@ -331,7 +315,7 @@ export function FileSheet() {
               {uploadedFiles.length ? (
                 <div className='flex flex-row-reverse'>
                   <Button size='sm' className='mb-2' variant='destructive' onClick={() => setShowConfirmDialog(true)}>
-                    Delete ALL
+                    Delete All
                   </Button>
                 </div>
               ) : null}
