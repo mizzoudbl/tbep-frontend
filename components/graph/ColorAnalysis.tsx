@@ -2,6 +2,7 @@
 
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
+import { P_VALUE_REGEX } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { scaleLinear } from 'd3-scale';
 import { useEffect, useState } from 'react';
@@ -24,9 +25,12 @@ export function ColorAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
-    const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
     if (showEdgeColor) {
+      const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
       graph.updateEachEdgeAttributes((_edge, attr) => {
+        console.log(_edge);
+        console.log(attr);
+
         if (attr.score) attr.color = colorScale(attr.score).replace(/^rgb/, 'rgba').replace(/\)/, `, ${edgeOpacity})`);
         return attr;
       });
@@ -36,7 +40,7 @@ export function ColorAnalysis() {
         return attr;
       });
     }
-  }, [showEdgeColor, graph, edgeOpacity]);
+  }, [showEdgeColor, edgeOpacity]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
@@ -77,7 +81,7 @@ export function ColorAnalysis() {
         return attr;
       });
     } else if (selectedRadioNodeColor === 'DEG' && typeof selectedNodeColorProperty === 'string') {
-      const isPValue = /^p[-_ ]?val(?:ue)?/i.test(selectedNodeColorProperty);
+      const isPValue = P_VALUE_REGEX.test(selectedNodeColorProperty);
 
       const [min, max] = Object.values(universalData).reduce(
         (acc, cur) => {

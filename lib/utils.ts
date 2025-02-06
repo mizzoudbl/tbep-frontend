@@ -67,3 +67,18 @@ export type EventMessage = {
 export function envURL(env?: string) {
   return (env || 'https://pdnet.missouri.edu').replace(/\/$/, '');
 }
+
+export function initRadioOptions() {
+  return {
+    DEG: [],
+    Pathway: [],
+    Druggability: [],
+    TE: [],
+    Custom_Color: [],
+    OpenTargets: [],
+    OT_Prioritization: [],
+  };
+}
+
+export const P_VALUE_REGEX = /^p[-_ ]?val(?:ue)?/i;
+export const LOGFC_REGEX = /^LogFC_/i;

@@ -59,18 +59,12 @@ const VirtualizedCommand = ({
         {multiselect && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Toggle
-                id='select-all-virtualized-combobox'
-                data-state='off'
-                onPressedChange={pressed => {
-                  document
-                    .getElementById('select-all-virtualized-combobox')
-                    ?.setAttribute('data-state', pressed ? 'on' : 'off');
-                  onSelectOption?.(pressed ? filteredOptions.slice(0, 50).map(getProperty) : []);
-                }}
+              <Button
+                className='bg-transparent  hover:bg-muted cursor-pointer p-2 rounded border shadow'
+                onClick={() => onSelectOption?.(filteredOptions.slice(0, 50).map(getProperty))}
               >
-                <ListCheck className='h-4 w-4 shrink-0' />
-              </Toggle>
+                <ListCheck className='h-4 w-4 text-black' />
+              </Button>
             </TooltipTrigger>
             <TooltipContent>Select all (only first 50 items are selected at max)</TooltipContent>
           </Tooltip>

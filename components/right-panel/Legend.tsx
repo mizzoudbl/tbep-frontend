@@ -2,6 +2,7 @@
 
 import { PROPERTY_TYPE_LABEL_MAPPING } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
+import { P_VALUE_REGEX } from '@/lib/utils';
 import { ChevronsUpDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BinaryLegend, HeatmapLegend } from '../legends';
@@ -34,7 +35,7 @@ export function Legend() {
           selectedRadioNodeColor === 'Pathway' ? (
             <BinaryLegend />
           ) : selectedRadioNodeColor === 'DEG' ? (
-            typeof selectedNodeColorProperty === 'string' && /^p[-_ ]?val(?:ue)?/i.test(selectedNodeColorProperty) ? (
+            typeof selectedNodeColorProperty === 'string' && P_VALUE_REGEX.test(selectedNodeColorProperty) ? (
               <HeatmapLegend
                 title='P-Value'
                 range={[defaultNodeColor, 'red']}

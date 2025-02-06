@@ -195,10 +195,13 @@ export function GraphEvents({
           return attr;
         });
         for (const node of graph.extremities(e.edge)) {
-          if (highlightedNodesRef.current.has(node)) continue;
           graph.updateNodeAttributes(node, attr => {
-            attr.type = 'circle';
-            attr.highlighted = false;
+            if (highlightedNodesRef.current.has(node)) {
+              attr.type = 'highlight';
+            } else {
+              attr.type = 'circle';
+              attr.highlighted = false;
+            }
             return attr;
           });
         }
