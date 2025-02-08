@@ -2,13 +2,20 @@ import { links } from '@/lib/data';
 import { Menu } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
+import { Banner } from './ui/banner';
 import { Button, buttonVariants } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export default function Navbar() {
   return (
-    <header className='bg-teal-800 text-white p-4'>
-      <div className='container mx-auto flex justify-between items-center'>
+    <header className='bg-teal-800 text-white'>
+      <Banner>
+        This website is for <b className='font-semibold'>academic use</b> only. Please refer to the
+        <Link href='/docs/LICENSE' className='underline ml-1'>
+          LICENSE
+        </Link>
+      </Banner>
+      <div className='container mx-auto flex justify-between items-center p-4'>
         <div className='flex'>
           <Link href={'/'} className='flex items-center gap-2'>
             <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} className='aspect-square' />
@@ -19,7 +26,7 @@ export default function Navbar() {
             </h1>
           </Link>
           <Link href={'/docs/CHANGELOG'} className='text-xs self-end'>
-            Version: {process.env.NEXT_PUBLIC_VERSION || '1.0.0'}
+            Version: {process.env.NEXT_PUBLIC_VERSION || '1.1.4'}
           </Link>
         </div>
         <nav className='hidden md:flex space-x-4'>
