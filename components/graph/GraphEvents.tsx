@@ -237,18 +237,21 @@ export function GraphEvents({
           handleMouseUp();
         }
         if (clickedNode) {
-          highlightedNodesRef.current.delete(clickedNode);
           clickedNodesRef?.current.delete(clickedNode);
           graph.forEachNeighbor(clickedNode, (neighbor, attr) => {
-            highlightedNodesRef.current.delete(neighbor);
             clickedNodesRef?.current.delete(neighbor);
+            if (highlightedNodesRef.current.has(neighbor)) return;
             attr.type = 'circle';
             attr.highlighted = false;
           });
-          graph.setNodeAttribute(clickedNode, 'highlighted', false);
-          graph.setNodeAttribute(clickedNode, 'type', 'circle');
-          sigma.refresh();
+          if (highlightedNodesRef.current.has(clickedNode)) {
+            graph.setNodeAttribute(clickedNode, 'type', 'highlight');
+          } else {
+            graph.setNodeAttribute(clickedNode, 'highlighted', false);
+            graph.setNodeAttribute(clickedNode, 'type', 'circle');
+          }
           setClickedNode(null);
+          sigma.refresh();
         }
       },
       // Disable the autoscale at the first down interaction
@@ -269,22 +272,19 @@ export function GraphEvents({
         if (!e.event.original.shiftKey) e.event.original.stopPropagation();
         setClickedNode(node => {
           if (node) {
-            highlightedNodesRef.current.delete(node);
             clickedNodesRef?.current.delete(node);
             graph.forEachNeighbor(node, (neighbor, attr) => {
-              highlightedNodesRef.current.delete(neighbor);
               clickedNodesRef?.current.delete(neighbor);
+              if (highlightedNodesRef.current.has(neighbor)) return;
               attr.type = 'circle';
               attr.highlighted = false;
             });
           }
-          highlightedNodesRef.current.add(e.node);
           clickedNodesRef?.current.add(e.node);
           graph.setNodeAttribute(e.node, 'type', 'border');
           graph.setNodeAttribute(e.node, 'highlighted', true);
           if (highlightNeighborNodes || e.event.original.ctrlKey) {
             graph.forEachNeighbor(e.node, (neighbor, attr) => {
-              highlightedNodesRef.current.add(neighbor);
               clickedNodesRef?.current.add(neighbor);
               attr.type = 'border';
               attr.highlighted = true;

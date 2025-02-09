@@ -28,15 +28,7 @@ export function ColorAnalysis() {
     if (showEdgeColor) {
       const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
       graph.updateEachEdgeAttributes((_edge, attr) => {
-        console.log(_edge);
-        console.log(attr);
-
         if (attr.score) attr.color = colorScale(attr.score).replace(/^rgb/, 'rgba').replace(/\)/, `, ${edgeOpacity})`);
-        return attr;
-      });
-    } else {
-      graph.updateEachEdgeAttributes((_edge, attr) => {
-        attr.color = undefined;
         return attr;
       });
     }

@@ -128,7 +128,7 @@ export function LeftSideBar() {
   }, [geneIDs]);
 
   const [fetchUniversal, { loading: universalLoading }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
-    GENE_UNIVERSAL_QUERY,
+    GENE_UNIVERSAL_QUERY(),
   );
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
