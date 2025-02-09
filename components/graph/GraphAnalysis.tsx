@@ -39,9 +39,8 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
 
   const nodeDegreeProperty = useStore(state => state.radialAnalysis.nodeDegreeProperty);
   const universalData = useStore(state => state.universalData);
-  const defaultNodeSize = useStore(state => state.defaultNodeSize);
 
-  const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY);
+  const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY());
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

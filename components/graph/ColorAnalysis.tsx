@@ -31,11 +31,6 @@ export function ColorAnalysis() {
         if (attr.score) attr.color = colorScale(attr.score).replace(/^rgb/, 'rgba').replace(/\)/, `, ${edgeOpacity})`);
         return attr;
       });
-    } else {
-      graph.updateEachEdgeAttributes((_edge, attr) => {
-        attr.color = undefined;
-        return attr;
-      });
     }
   }, [showEdgeColor, edgeOpacity]);
 

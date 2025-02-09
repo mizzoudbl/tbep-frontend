@@ -43,12 +43,20 @@ export const GENE_GRAPH_QUERY = gql`
   }
 `;
 
-export const GENE_UNIVERSAL_QUERY = gql`
+export const GENE_UNIVERSAL_QUERY = (bringMeta = false) => gql`
   query GeneUniversalData($config: [DataRequired!], $geneIDs: [String!]!) {
     genes(geneIDs: $geneIDs, config: $config) {
       ID
       disease
       common
+      ${
+        bringMeta
+          ? `Gene_name
+      Description
+      Aliases
+      hgnc_gene_id`
+          : ''
+      }
     }
   }
 `;

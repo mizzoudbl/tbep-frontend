@@ -22,7 +22,7 @@ export interface Gene {
   /**
    * Alias for Gene_name
    */
-  Aliases?: string[];
+  Aliases?: string;
 
   /**
    * HGNC gene ID
