@@ -7,7 +7,6 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { Check, ChevronsUpDown, Info, ListCheck } from 'lucide-react';
 import * as React from 'react';
 import { Spinner } from './ui/spinner';
-import { Toggle } from './ui/toggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 interface VirtualizedCommandProps {

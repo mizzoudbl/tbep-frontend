@@ -40,8 +40,6 @@ export function Chat() {
       if (!response.ok) {
         toast.error('Failed to fetch response from LLM', {
           cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
           description: 'LLM server is not responding. Please try again later.',
         });
         return;

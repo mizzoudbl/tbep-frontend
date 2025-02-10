@@ -1,13 +1,13 @@
 import { type NodeSizeType, PROPERTY_LABEL_TYPE_MAPPING, nodeSize } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { ChevronsUpDown, Info, RefreshCcw } from 'lucide-react';
-import React from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Slider } from '../ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function NodeSize({ onPropChange }: { onPropChange: (prop: string | Set<string>) => void }) {
@@ -18,7 +18,7 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string | Set<s
   return (
     <Collapsible defaultOpen className='border p-2 rounded shadow'>
       <div className='flex items-center justify-between w-full'>
-        <Label className='font-bold cursor-pointer hover:underline'>Node Size</Label>
+        <Label className='font-bold'>Node Size</Label>
         <div className='space-x-1 flex items-center'>
           <Tooltip>
             <TooltipTrigger asChild>

@@ -2,15 +2,29 @@
 
 import NodeGradientProgram from '@/lib/NodeGradientProgram';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import { type SigmaContainerProps, SigmaContainer as _SigmaContainer } from '@react-sigma/core';
-import { ControlsContainer, FullScreenControl, ZoomControl } from '@react-sigma/core';
+import {
+  ControlsContainer,
+  FullScreenControl,
+  type SigmaContainerProps,
+  SigmaContainer as _SigmaContainer,
+} from '@react-sigma/core';
 import { NodeBorderProgram, createNodeBorderProgram } from '@sigma/node-border';
 import type { Attributes } from 'graphology-types';
-import { Focus, Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
+import { Maximize, Minimize } from 'lucide-react';
 import React, { Suspense, useEffect } from 'react';
 import type { Sigma } from 'sigma';
 import { EdgeLineProgram, drawDiscNodeHover } from 'sigma/rendering';
-import { ColorAnalysis, ForceLayout, GraphAnalysis, GraphEvents, GraphSettings, LoadGraph, SizeAnalysis } from '.';
+import {
+  ColorAnalysis,
+  ForceLayout,
+  GraphAnalysis,
+  GraphEvents,
+  GraphExport,
+  GraphSettings,
+  LoadGraph,
+  SizeAnalysis,
+  ZoomControl,
+} from '.';
 
 export const SigmaContainer = React.forwardRef<
   Sigma<NodeAttributes, EdgeAttributes, Attributes>,
@@ -52,6 +66,7 @@ export const SigmaContainer = React.forwardRef<
       <Suspense>
         <LoadGraph />
       </Suspense>
+      <GraphExport highlightedNodesRef={highlightedNodesRef} />
       <GraphEvents highlightedNodesRef={highlightedNodesRef} clickedNodesRef={clickedNodesRef} />
       <ForceLayout />
       <GraphSettings clickedNodesRef={clickedNodesRef} />
@@ -59,11 +74,7 @@ export const SigmaContainer = React.forwardRef<
       <SizeAnalysis />
       <GraphAnalysis highlightedNodesRef={highlightedNodesRef} />
       <ControlsContainer position='bottom-right' style={{ zIndex: 0 }}>
-        <ZoomControl labels={{ zoomIn: 'PLUS', zoomOut: 'MINUS', reset: 'RESET' }}>
-          <ZoomIn />
-          <ZoomOut />
-          <Focus />
-        </ZoomControl>
+        <ZoomControl />
         <FullScreenControl labels={{ enter: 'ENTER', exit: 'EXIT' }}>
           <Maximize />
           <Minimize />

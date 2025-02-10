@@ -1,6 +1,5 @@
 'use client';
-import { ApolloProvider } from '@apollo/client';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { envURL } from './utils';
 
 const client = new ApolloClient({

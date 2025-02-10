@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_EDGE_COLOR } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
 import { P_VALUE_REGEX } from '@/lib/utils';
@@ -25,10 +26,17 @@ export function ColorAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
+    if (!graph) return;
     if (showEdgeColor) {
       const colorScale = scaleLinear<string>([minScore, 1], ['yellow', 'red']);
       graph.updateEachEdgeAttributes((_edge, attr) => {
         if (attr.score) attr.color = colorScale(attr.score).replace(/^rgb/, 'rgba').replace(/\)/, `, ${edgeOpacity})`);
+        return attr;
+      });
+    } else {
+      const opacityChangedColor = DEFAULT_EDGE_COLOR.replace(/[\d.]+\)$/, `${edgeOpacity})`);
+      graph.updateEachEdgeAttributes((_edge, attr) => {
+        attr.color = opacityChangedColor;
         return attr;
       });
     }

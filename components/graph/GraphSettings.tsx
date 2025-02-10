@@ -1,11 +1,10 @@
 'use client';
 
-import { DEFAULT_EDGE_COLOR, FADED_EDGE_COLOR, HIGHLIGHTED_EDGE_COLOR } from '@/lib/data';
+import { FADED_EDGE_COLOR, HIGHLIGHTED_EDGE_COLOR } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useSetSettings, useSigma } from '@react-sigma/core';
-import { downloadAsImage } from '@sigma/export-image';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.MutableRefObject<Set<string>> }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
@@ -20,17 +19,6 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Mut
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
-  const edgeOpacity = useStore(state => state.edgeOpacity);
-  const showEdgeColor = useStore(state => state.showEdgeColor);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (showEdgeColor) return;
-    const opacityChangedColor = DEFAULT_EDGE_COLOR.replace(/[\d.]+\)$/, `${edgeOpacity})`);
-    setSettings({
-      defaultEdgeColor: opacityChangedColor,
-    });
-  }, [edgeOpacity, setSettings]);
 
   useEffect(() => {
     sigma.on('enterNode', e => setHoveredNode({ node: e.node, ctrlKey: e.event.original.ctrlKey }));
@@ -116,32 +104,6 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Mut
       },
     });
   }, [hoveredNode, setSettings, sigma]);
-
-  const exportFormat = useStore(state => state.exportFormat);
-  const projectTitle = useStore(state => state.projectTitle);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!exportFormat || !sigma) return;
-    if (exportFormat === 'json') {
-      const serializedGraph = sigma.getGraph().export();
-      const json = JSON.stringify(serializedGraph, null, 2);
-      const element = document.createElement('a');
-      const file = new Blob([json], { type: 'application/json' });
-      element.href = URL.createObjectURL(file);
-      element.download = projectTitle;
-      document.body.appendChild(element);
-      element.click();
-      URL.revokeObjectURL(element.href);
-      element.remove();
-      return;
-    }
-    downloadAsImage(sigma, {
-      format: exportFormat,
-      fileName: projectTitle,
-      backgroundColor: 'white',
-    });
-  }, [exportFormat]);
 
   return null;
 }

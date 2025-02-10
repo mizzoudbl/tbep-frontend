@@ -25,13 +25,13 @@ import {
 } from '@/components/ui/sheet';
 import { DISEASE_DEPENDENT_PROPERTIES, DISEASE_INDEPENDENT_PROPERTIES } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
-import type { OtherSection, RadioOptions, UniversalData } from '@/lib/interface';
+import type { RadioOptions, UniversalData } from '@/lib/interface';
 import { LOGFC_REGEX, P_VALUE_REGEX, formatBytes, initRadioOptions, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Trash2, Upload } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import Papa from 'papaparse';
-import React, { type ChangeEvent } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 
@@ -46,8 +46,6 @@ export function FileSheet() {
       if (!store) {
         toast.error('Failed to open IndexedDB database', {
           cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
           description: 'Please make sure you have enabled IndexedDB in your browser',
         });
         return;
@@ -70,8 +68,6 @@ export function FileSheet() {
       if (!store) {
         toast.error('Failed to open IndexedDB database', {
           cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
           description: 'Please make sure you have enabled IndexedDB in your browser',
         });
         return;
@@ -104,8 +100,6 @@ export function FileSheet() {
         const rejectedFiles = fileRejections.map(r => r.file.name).join(', ');
         toast.error(`Files rejected: ${rejectedFiles}`, {
           cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
           description: 'Please make sure files are in CSV format',
         });
       }
@@ -128,8 +122,6 @@ export function FileSheet() {
     if (!store) {
       toast.error('Failed to open IndexedDB database', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'Please make sure you have enabled IndexedDB in your browser',
       });
       return;
@@ -156,8 +148,6 @@ export function FileSheet() {
       if (!store) {
         toast.error('Failed to open IndexedDB database', {
           cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
           description: 'Please make sure you have enabled IndexedDB in your browser',
         });
         return;
@@ -173,8 +163,6 @@ export function FileSheet() {
         if (!IDHeaderName) {
           toast.error(`Invalid file: ${file.name}`, {
             cancel: { label: 'Close', onClick() {} },
-            position: 'top-center',
-            richColors: true,
             description: 'Please check the file and try again',
           });
           return;
@@ -236,8 +224,6 @@ export function FileSheet() {
           console.error(error);
           toast.error('Error updating universal data', {
             cancel: { label: 'Close', onClick() {} },
-            position: 'top-center',
-            richColors: true,
           });
           return;
         }
@@ -246,8 +232,6 @@ export function FileSheet() {
     if (uploadedFiles.length) {
       toast.success('Data updated successfully', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'You can now play your uploaded data!',
       });
     }
@@ -269,8 +253,6 @@ export function FileSheet() {
     });
     toast.info('Data reset successfully', {
       cancel: { label: 'Close', onClick() {} },
-      position: 'top-center',
-      richColors: true,
     });
   };
 

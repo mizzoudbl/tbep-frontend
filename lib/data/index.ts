@@ -1,12 +1,12 @@
+export * from './algorithm';
+export * from './datatable-column';
+export * from './forceLayoutOptions';
 export * from './graphConfig';
+export * from './navBarLinks';
 export * from './nodeColor';
 export * from './nodeSize';
-export * from './navBarLinks';
 export * from './radialAnalysisOptions';
 export * from './team';
-export * from './datatable-column';
-export * from './algorithm';
-export * from './forceLayoutOptions';
 /**
  * Default edge color
  * PS: Use rgba color format only for this variable

@@ -5,20 +5,19 @@ import { initRadioOptions } from '../utils';
 export const useStore = create<GraphStore>(set => ({
   projectTitle: 'Untitled',
   nodeSearchQuery: '',
-  setNodeSearchQuery: val => set({ nodeSearchQuery: val }),
   nodeSuggestions: [],
   forceWorker: {
     start() {},
     stop() {},
   },
-  defaultNodeColor: 'blue',
+  defaultNodeColor: 'skyblue',
   // Select defaultValue best for viewing the graph
   forceSettings: {
-    linkDistance: 20,
+    linkDistance: 30,
   },
   defaultNodeSize: 5,
-  defaultLabelDensity: 1,
-  defaultLabelSize: 10,
+  defaultLabelDensity: 3,
+  defaultLabelSize: 8,
   selectedNodes: [],
   selectedRadioNodeColor: undefined,
   selectedRadioNodeSize: undefined,
@@ -32,7 +31,6 @@ export const useStore = create<GraphStore>(set => ({
     hubGeneEdgeCount: 0,
     nodeDegreeProperty: 'Gene Degree',
   },
-  exportFormat: null,
   geneIDs: [],
   diseaseName: 'ALS',
   universalData: {},

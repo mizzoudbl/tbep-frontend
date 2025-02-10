@@ -56,11 +56,16 @@ export function formatBytes(bytes: number | string, decimals = 2): string {
 export const eventEmitter = new EventEmitter();
 export enum Events {
   ALGORITHM = 'algorithm',
+  EXPORT = 'export',
 }
 export type EventMessage = {
   [Events.ALGORITHM]: {
     name: string;
     parameters: Record<string, string>;
+  };
+  [Events.EXPORT]: {
+    format: 'png' | 'json' | 'csv';
+    all?: boolean;
   };
 };
 

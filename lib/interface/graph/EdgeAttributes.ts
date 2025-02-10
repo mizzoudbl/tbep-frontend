@@ -1,6 +1,4 @@
-import type { SimulationLinkDatum, SimulationNodeDatum } from 'd3-force';
 import type { Attributes } from 'graphology-types';
-import type { NodeAttributes } from './NodeAtrributes';
 
 /**
  * Edge attributes used in the graph

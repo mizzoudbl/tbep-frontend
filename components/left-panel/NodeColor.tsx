@@ -1,7 +1,6 @@
 import { type NodeColorType, PROPERTY_LABEL_TYPE_MAPPING, nodeColor } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { ChevronsUpDown, Info, RefreshCcw } from 'lucide-react';
-import React from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
