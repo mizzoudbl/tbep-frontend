@@ -28,8 +28,6 @@ export default function UploadFile() {
     if (file?.name.split('.').pop() !== fileType) {
       toast.error('Invalid file type', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: `Please upload a ${fileType.toUpperCase()} file`,
       });
       return;
@@ -41,8 +39,6 @@ export default function UploadFile() {
     if (!file) {
       toast.error('Please upload a file', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
       });
       return;
     }
@@ -66,8 +62,6 @@ export default function UploadFile() {
     if (distinctSeedGenes.length < 2) {
       toast.error('Please provide at least 2 valid genes', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'Seed genes should be either ENSG IDs or gene names',
       });
       return;
@@ -79,8 +73,6 @@ export default function UploadFile() {
       console.error(error);
       toast.error('Error fetching data', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'Server not available,Please try again later',
       });
       return;
@@ -94,8 +86,6 @@ export default function UploadFile() {
     if (!store) {
       toast.error('Failed to open IndexedDB database', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'Please make sure you have enabled IndexedDB in your browser',
       });
       return;
@@ -103,8 +93,6 @@ export default function UploadFile() {
     store.put(file, file?.name);
     toast.success('File uploaded successfully', {
       cancel: { label: 'Close', onClick() {} },
-      position: 'top-center',
-      richColors: true,
     });
     window.open(`/network?file=${encodeURIComponent(file?.name as string)}`, '_blank', 'noopener,noreferrer');
   };

@@ -25,8 +25,8 @@ export function AppBar() {
               • To select multiple genes and export details or perform GSEA analysis, use the mouse to select the genes
               <br />
               <b>
-                <i>Shortcut:</i>
-              </b>{' '}
+                <i>Shortcut: </i>
+              </b>
               <kbd className='border rounded-md px-1'> Shift(⇧) + Click</kbd> & Drag
             </li>
             <br />
@@ -35,9 +35,18 @@ export function AppBar() {
               then hover/click the gene
               <br />
               <b>
-                <i>Shortcut:</i>
-              </b>{' '}
-              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover/Click</kbd>
+                <i>Shortcut: </i>
+              </b>
+              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover</kbd>
+            </li>
+            <br />
+            <li>
+              • To highlight a gene via appending it to search textbox, click the gene while holding the Cmd/Ctrl(⌘) key
+              <br />
+              <b>
+                <i>Shortcut: </i>
+              </b>
+              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Click</kbd>
             </li>
           </ol>
         </TooltipContent>

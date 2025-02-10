@@ -23,7 +23,6 @@ export interface GraphStore {
    * Node textarea tearch query value
    */
   nodeSearchQuery: string;
-  setNodeSearchQuery: (nodeSearchQuery: string) => void;
 
   /**
    * Node suggestions
@@ -103,11 +102,6 @@ export interface GraphStore {
    * Radial Analysis settings
    */
   radialAnalysis: RadialAnalysisSetting;
-
-  /**
-   * Graph Export format
-   */
-  exportFormat: 'jpeg' | 'png' | 'json' | null;
 
   /**
    * ENSG IDs of all the nodes in Graph

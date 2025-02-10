@@ -18,7 +18,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
   return (
     <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
       <div className='flex items-center justify-between w-full'>
-        <p className='font-bold cursor-pointer hover:underline'>Network Analysis</p>
+        <p className='font-bold'>Network Analysis</p>
         <CollapsibleTrigger asChild>
           <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
             <ChevronsUpDown size={15} />

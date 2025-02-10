@@ -221,16 +221,12 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
                 loading: 'Session expired, renewing...',
                 error: 'Failed to renew session',
                 description: 'This may take a while, please be patient',
-                position: 'top-center',
-                richColors: true,
                 cancel: { label: 'Close', onClick() {} },
               },
             );
           } else {
             toast.error('Failed to fetch Leiden data', {
               cancel: { label: 'Close', onClick() {} },
-              position: 'top-center',
-              richColors: true,
               description: 'Server not available,Please try again later. Graph must have relationships to run Leiden.',
             });
           }

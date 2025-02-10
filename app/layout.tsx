@@ -1,13 +1,13 @@
-import type { Metadata } from 'next';
-import localFont from 'next/font/local';
-import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ApolloWrapper } from '@/lib/apolloWrapper';
 import { envURL } from '@/lib/utils';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import type { Metadata } from 'next';
 import { ViewTransitions } from 'next-view-transitions';
+import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
+import './globals.css';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

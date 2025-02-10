@@ -23,7 +23,7 @@ export function GraphEvents({
   highlightedNodesRef: React.MutableRefObject<Set<string>>;
 }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
-  const searchNodeQuery = useStore(state => state.nodeSearchQuery);
+  const nodeSearchQuery = useStore(state => state.nodeSearchQuery);
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
   const totalNodes = useStore(state => state.totalNodes);
 
@@ -44,12 +44,13 @@ export function GraphEvents({
     const graph = sigma.getGraph();
     if (trieRef.current.size === 0) return;
     const geneNames = new Set(
-      searchNodeQuery
+      nodeSearchQuery
         .toUpperCase()
         .split(/[\n,]/)
         .map(s => s.trim())
         .filter(s => s.length > 0)
-        .map(s => trieRef.current.get(s)?.value || s),
+        .map(s => trieRef.current.get(s)?.value || s)
+        .filter(s => graph.hasNode(s)),
     ) as Set<string>;
 
     const previousHighlightedNodes = highlightedNodesRef.current;
@@ -67,15 +68,15 @@ export function GraphEvents({
       if (++count === geneNames.size) gotoNode(node, { duration: 100 });
     }
     highlightedNodesRef.current = geneNames;
-  }, [searchNodeQuery, gotoNode, sigma]);
+  }, [nodeSearchQuery, gotoNode, sigma]);
 
   useEffect(() => {
     if (trieRef.current.size === 0) return;
-    const prefix = searchNodeQuery.split(/[\n,]/).pop()?.trim() || '';
+    const prefix = nodeSearchQuery.split(/[\n,]/).pop()?.trim() || '';
     if (prefix.length === 0) return;
     const suggestions = trieRef.current.search(prefix.toUpperCase()).map(s => s.key);
     useStore.setState({ nodeSuggestions: suggestions });
-  }, [searchNodeQuery]);
+  }, [nodeSearchQuery]);
 
   const registerEvents = useRegisterEvents();
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
@@ -270,6 +271,13 @@ export function GraphEvents({
       clickNode: e => {
         const graph = sigma.getGraph();
         if (!e.event.original.shiftKey) e.event.original.stopPropagation();
+        if (e.event.original.ctrlKey) {
+          highlightedNodesRef.current.add(e.node);
+          const trimmedQuery = nodeSearchQuery.trim();
+          const node = graph.getNodeAttribute(e.node, 'label');
+          const appendedQuery = trimmedQuery ? trimmedQuery.replace(/[,\s]*$/, `, ${node},`) : `${node},`;
+          useStore.setState({ nodeSearchQuery: appendedQuery });
+        }
         setClickedNode(node => {
           if (node) {
             clickedNodesRef?.current.delete(node);
@@ -283,7 +291,7 @@ export function GraphEvents({
           clickedNodesRef?.current.add(e.node);
           graph.setNodeAttribute(e.node, 'type', 'border');
           graph.setNodeAttribute(e.node, 'highlighted', true);
-          if (highlightNeighborNodes || e.event.original.ctrlKey) {
+          if (highlightNeighborNodes) {
             graph.forEachNeighbor(e.node, (neighbor, attr) => {
               clickedNodesRef?.current.add(neighbor);
               attr.type = 'border';

@@ -1,6 +1,6 @@
 import type { GraphConfigForm } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { ExternalLink, Eye, Trash, Trash2 } from 'lucide-react';
+import { ExternalLink, Eye, Trash2 } from 'lucide-react';
 import React from 'react';
 import {
   AlertDialog,

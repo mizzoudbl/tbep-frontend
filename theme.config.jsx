@@ -79,7 +79,7 @@ export default {
       <span className="ml-2 font-bold">TBEP Help Manual</span>
     </>
   ),
-  logoLink: "/docs",
+  logoLink: "/",
   darkMode: true,
   nextThemes: {
     defaultTheme: 'light',

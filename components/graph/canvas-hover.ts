@@ -1,6 +1,6 @@
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import type { Settings } from 'sigma/settings';
-import type { NodeDisplayData, PartialButFor, PlainObject } from 'sigma/types';
+import type { NodeDisplayData, PartialButFor } from 'sigma/types';
 
 const TEXT_COLOR = '#000000';
 

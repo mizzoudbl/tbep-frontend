@@ -3,7 +3,7 @@
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
-import { ChevronDown, GripHorizontal, Info, MessageCircle, Send, Trash2, TriangleAlert, X } from 'lucide-react';
+import { ChevronDown, GripHorizontal, MessageCircle, Send, Trash2, TriangleAlert, X } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
@@ -51,8 +51,6 @@ export function ChatWindow() {
       if (!response.ok) {
         toast.error('Failed to fetch response from LLM', {
           cancel: { label: 'Close', onClick() {} },
-          position: 'top-center',
-          richColors: true,
           description: 'LLM server is not responding. Please try again later.',
         });
         return;

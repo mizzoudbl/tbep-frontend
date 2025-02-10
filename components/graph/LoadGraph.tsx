@@ -67,8 +67,6 @@ export function LoadGraph() {
         const store = await openDB('network', 'readonly');
         if (!store) {
           toast.error('Error opening IndexedDB!', {
-            position: 'top-center',
-            richColors: true,
             description: 'Please check your browser settings and try again',
             cancel: {
               label: 'Close',
@@ -92,8 +90,6 @@ export function LoadGraph() {
           }
           if (fields.length < 3) {
             toast.error('There must be atleast 3 fields in csv/json!', {
-              position: 'top-center',
-              richColors: true,
               description: 'Fields more than 3 are ignored. Please check the file and try again',
               cancel: {
                 label: 'Close',
@@ -115,8 +111,6 @@ export function LoadGraph() {
           });
           if (result.error) {
             toast.warning("Server can't verify the geneIDs!", {
-              position: 'top-center',
-              richColors: true,
               description: 'Please try again after some time',
               cancel: {
                 label: 'Close',
@@ -159,8 +153,6 @@ export function LoadGraph() {
           const { genes, links, graphName } = response.getGeneInteractions;
           if (genes.length > 5000 || links.length > 50000) {
             toast.warning('Large graph detected!', {
-              position: 'top-center',
-              richColors: true,
               description: 'Computation is stopped. Auto closing the graph in 3 seconds to prevent browser crash',
               cancel: {
                 label: 'Close',

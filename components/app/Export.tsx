@@ -1,10 +1,10 @@
-import { useStore } from '@/lib/hooks';
+import { Events, eventEmitter } from '@/lib/utils';
 import { DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
 import { FolderUp } from 'lucide-react';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
-const exportOptions: Array<'json' | 'jpeg' | 'png'> = ['json', 'jpeg', 'png'];
+const exportOptions: Array<'json' | 'csv' | 'png'> = ['json', 'csv', 'png'];
 
 export function Export() {
   return (
@@ -23,7 +23,7 @@ export function Export() {
         {exportOptions.map(val => (
           <DropdownMenuItem
             key={val}
-            onClick={() => useStore.setState({ exportFormat: val })}
+            onClick={() => eventEmitter.emit(Events.EXPORT, { format: val, all: true })}
             className='cursor-pointer'
           >
             {val.toUpperCase()}

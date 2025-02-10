@@ -84,8 +84,6 @@ export default function Home() {
       console.error(error);
       toast.error('Error fetching data', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'Server not available,Please try again later',
       });
       return;
@@ -102,8 +100,6 @@ export default function Home() {
     if (file?.type !== 'text/plain') {
       toast.error('Invalid file type', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
       });
       return;
     }
@@ -113,8 +109,6 @@ export default function Home() {
     } else {
       toast.error('Error reading file', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
       });
     }
   };
@@ -133,8 +127,6 @@ export default function Home() {
       if (seedCount > maxGenes) {
         toast.error('Too many seed genes', {
           description: `Maximum ${maxGenes} genes allowed for ${orderNum === 0 ? 'zero' : 'first/second'} order networks`,
-          position: 'top-center',
-          richColors: true,
           cancel: { label: 'Close', onClick() {} },
         });
         return;
@@ -149,8 +141,6 @@ export default function Home() {
     if (!seedGenes) {
       toast.error('There is no valid gene in the list', {
         cancel: { label: 'Close', onClick() {} },
-        position: 'top-center',
-        richColors: true,
         description: 'Please enter valid gene names',
       });
       return;

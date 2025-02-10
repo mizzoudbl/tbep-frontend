@@ -7,7 +7,6 @@ import { useSigma } from '@react-sigma/core';
 import {
   type Simulation,
   type SimulationLinkDatum,
-  forceCenter,
   forceCollide,
   forceLink,
   forceManyBody,
@@ -22,6 +21,7 @@ export function ForceLayout() {
   const simulation = useRef<Simulation<NodeAttributes, SimulationLinkDatum<NodeAttributes>>>();
   const graph = sigma.getGraph();
   const settings = useStore(state => state.forceSettings);
+  const defaultNodeSize = useStore(state => state.defaultNodeSize);
 
   const tick = useCallback(() => {
     if (!graph || !nodes.current.length) return;
@@ -38,6 +38,7 @@ export function ForceLayout() {
     });
   }, [sigma]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!sigma) return;
     (sigma as EventEmitter).once('loaded', () => {
@@ -54,10 +55,10 @@ export function ForceLayout() {
           'link',
           forceLink<NodeAttributes, SimulationLinkDatum<NodeAttributes>>(edges.current)
             .id(d => d.ID!)
-            .distance(20),
+            .distance(settings.linkDistance),
         )
-        .force('charge', forceManyBody().strength(-200))
-        .force('collide', forceCollide(20))
+        .force('charge', forceManyBody().strength(-200).theta(0.8))
+        .force('collide', forceCollide(defaultNodeSize * 8))
         .on('tick', tick);
 
       useStore.setState({
@@ -73,6 +74,7 @@ export function ForceLayout() {
     });
   }, [sigma, tick]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!simulation.current || !edges.current) return;
     simulation.current.force(
@@ -81,7 +83,8 @@ export function ForceLayout() {
         .id(d => d.ID!)
         .distance(settings.linkDistance),
     );
-    simulation.current.alpha(1).restart();
+    simulation.current.force('collide', forceCollide(defaultNodeSize * 8));
+    simulation.current.alpha(0.3).restart();
   }, [settings]);
 
   return null;
