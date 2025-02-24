@@ -64,7 +64,9 @@ export default function RootLayout({
             <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
           </ViewTransitions>
           <Toaster />
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || 'G-5EEGNR6YNF'} />
+          {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
+          )}
         </ApolloWrapper>
       </body>
     </html>

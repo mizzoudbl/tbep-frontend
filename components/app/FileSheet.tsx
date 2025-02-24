@@ -294,13 +294,13 @@ export function FileSheet() {
                   <p>Drag 'n' drop some files here, or click to select files</p>
                 )}
               </div>
-              {uploadedFiles.length ? (
+              {(uploadedFiles.length || null) && (
                 <div className='flex flex-row-reverse'>
                   <Button size='sm' className='mb-2' variant='destructive' onClick={() => setShowConfirmDialog(true)}>
                     Delete All
                   </Button>
                 </div>
-              ) : null}
+              )}
               <AlertDialog open={showConfirmDialog}>
                 <AlertDialogContent>
                   <AlertDialogHeader>

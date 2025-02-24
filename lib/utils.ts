@@ -56,6 +56,7 @@ export function formatBytes(bytes: number | string, decimals = 2): string {
 export const eventEmitter = new EventEmitter();
 export enum Events {
   ALGORITHM = 'algorithm',
+  ALGORITHM_RESULTS = 'algorithm-results',
   EXPORT = 'export',
 }
 export type EventMessage = {
@@ -66,6 +67,18 @@ export type EventMessage = {
   [Events.EXPORT]: {
     format: 'png' | 'json' | 'csv';
     all?: boolean;
+  };
+  [Events.ALGORITHM_RESULTS]: {
+    modularity: number;
+    communities: Array<{
+      name: string;
+      genes: string[];
+      color: string;
+      percentage: number;
+      averageDegree: number;
+      degreeCentralGene: string;
+    }>;
+    resolution: number;
   };
 };
 
@@ -87,3 +100,14 @@ export function initRadioOptions() {
 
 export const P_VALUE_REGEX = /^p[-_ ]?val(?:ue)?/i;
 export const LOGFC_REGEX = /^LogFC_/i;
+
+export function downloadFile(content: string, filename: string, type = 'text/csv') {
+  const element = document.createElement('a');
+  const file = new Blob([content], { type });
+  element.href = URL.createObjectURL(file);
+  element.download = filename;
+  document.body.appendChild(element);
+  element.click();
+  URL.revokeObjectURL(element.href);
+  element.remove();
+}

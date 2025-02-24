@@ -1,5 +1,6 @@
+import { useStore } from '@/lib/hooks';
 import type { PopUpDataTableProps } from '@/lib/interface';
-import { cn } from '@/lib/utils';
+import { cn, downloadFile } from '@/lib/utils';
 import { Download } from 'lucide-react';
 import { unparse } from 'papaparse';
 import React from 'react';
@@ -23,15 +24,9 @@ export default function PopUpDataTable<E, F>({
    * Function to download the selected genes data as a CSV file
    */
   const handleDownload = (fileName?: string) => {
+    const projectTitle = useStore.getState().projectTitle;
     const csv = unparse<E | F>(data[tabsTitle?.indexOf(fileName ?? tabsTitle[0]) ?? 0]);
-    const element = document.createElement('a');
-    const file = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    element.href = URL.createObjectURL(file);
-    if (fileName) element.download = `${fileName}.csv`;
-    document.body.appendChild(element);
-    element.click();
-    URL.revokeObjectURL(element.href);
-    element.remove();
+    downloadFile(csv, `${projectTitle === 'Untitled' ? '' : `${projectTitle}_`}${fileName}.csv`);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

@@ -216,40 +216,42 @@ export function LoadGraph() {
             Loading...
           </div>
         </div>
-      ) : showWarning ? (
-        <AlertDialog open={showWarning}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className='text-red-500 flex items-center'>
-                <AlertTriangle size={24} className='mr-2' />
-                Warning!
-              </AlertDialogTitle>
-              <AlertDialogDescription className='text-black'>
-                You are about to generate a graph with a large number of nodes/edges. You may face difficulties in
-                analyzing the graph.
-              </AlertDialogDescription>
-              <p className='text-black font-semibold'>Are you sure you want to proceed?</p>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel
-                onClick={() => {
-                  setShowWarning(false);
-                  window.close();
-                }}
-              >
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  setShowWarning(false);
-                }}
-              >
-                Continue
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      ) : null}
+      ) : (
+        (showWarning || null) && (
+          <AlertDialog open={showWarning}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className='text-red-500 flex items-center'>
+                  <AlertTriangle size={24} className='mr-2' />
+                  Warning!
+                </AlertDialogTitle>
+                <AlertDialogDescription className='text-black'>
+                  You are about to generate a graph with a large number of nodes/edges. You may face difficulties in
+                  analyzing the graph.
+                </AlertDialogDescription>
+                <p className='text-black font-semibold'>Are you sure you want to proceed?</p>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  onClick={() => {
+                    setShowWarning(false);
+                    window.close();
+                  }}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    setShowWarning(false);
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      )}
     </>
   );
 }

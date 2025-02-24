@@ -194,7 +194,7 @@ export default function Home() {
           </Link>
         </div>
       )}
-      <div className='mx-auto rounded-lg shadow-md p-4 min-h-[70vh]'>
+      <div className='mx-auto rounded-lg shadow-md p-4 min-h-[60vh]'>
         <h2 className='text-2xl font-semibold mb-6'>Search by Multiple Proteins</h2>
         <ResizablePanelGroup direction='horizontal' className='gap-4'>
           <ResizablePanel defaultSize={75} minSize={65}>
@@ -360,7 +360,7 @@ FIG4`,
             </form>
           </ResizablePanel>
           <ResizableHandle withHandle className='hidden md:flex' />
-          <ResizablePanel className='h-[60vh] hidden md:block' defaultSize={25} minSize={15}>
+          <ResizablePanel className='h-[55vh] hidden md:block' defaultSize={25} minSize={15}>
             <History history={history} setHistory={setHistory} setFormData={setFormData} />
           </ResizablePanel>
         </ResizablePanelGroup>
