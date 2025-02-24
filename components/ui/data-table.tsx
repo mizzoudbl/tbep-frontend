@@ -20,9 +20,16 @@ interface DataTableProps<TData> {
   data: TData[];
   filterColumnName: string;
   loading?: boolean;
+  placeholder?: string;
 }
 
-export function DataTable<TData>({ columns, data, filterColumnName, loading = false }: DataTableProps<TData>) {
+export function DataTable<TData>({
+  columns,
+  data,
+  placeholder,
+  filterColumnName,
+  loading = false,
+}: DataTableProps<TData>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
@@ -43,7 +50,7 @@ export function DataTable<TData>({ columns, data, filterColumnName, loading = fa
     <div>
       <div className='flex justify-between items-center py-4 p-2'>
         <Input
-          placeholder={`Filter ${filterColumnName.replace('_', ' ')}s...`}
+          placeholder={placeholder ?? `Filter ${filterColumnName.replace('_', ' ')}s...`}
           value={(table.getColumn(filterColumnName)?.getFilterValue() as string) ?? ''}
           onChange={event => table.getColumn(filterColumnName)?.setFilterValue(event.target.value)}
           className='max-w-sm'

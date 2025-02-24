@@ -8,7 +8,7 @@ import {
 } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
-import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
+import { type EventMessage, Events, downloadFile, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { downloadAsImage } from '@sigma/export-image';
 import { unparse } from 'papaparse';
@@ -19,17 +19,6 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
   const projectTitle = useStore(state => state.projectTitle);
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
 
-  function downloadFile(content: string, type: string, filename: string) {
-    const element = document.createElement('a');
-    const file = new Blob([content], { type });
-    element.href = URL.createObjectURL(file);
-    element.download = filename;
-    document.body.appendChild(element);
-    element.click();
-    URL.revokeObjectURL(element.href);
-    element.remove();
-  }
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     eventEmitter.on(Events.EXPORT, ({ format, all }: EventMessage[Events.EXPORT]) => {
@@ -37,7 +26,7 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
         case 'json': {
           const serializedGraph = sigma.getGraph().export();
           const data = JSON.stringify(serializedGraph, null, 2);
-          downloadFile(data, 'application/json', projectTitle);
+          downloadFile(data, projectTitle);
           break;
         }
         case 'csv': {
@@ -111,7 +100,7 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
               };
             }),
           );
-          downloadFile(data, 'application/csv;charset=utf-8', `${projectTitle}-selected.csv`);
+          downloadFile(data, `${projectTitle}-selected.csv`);
           break;
         }
         default: {

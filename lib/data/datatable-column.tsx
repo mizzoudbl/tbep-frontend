@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import type { Gsea, SelectedNodeProperty } from '@/lib/interface';
-import type { Column, ColumnDef } from '@tanstack/react-table';
+import type { CellContext, Column, ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 function headerHelper<TData>(columnName: string) {
@@ -13,6 +13,52 @@ function headerHelper<TData>(columnName: string) {
     );
   };
 }
+
+export const columnLeidenResults: ColumnDef<Record<string, string>>[] = [
+  {
+    accessorKey: 'name',
+    header: headerHelper('Cluster'),
+    cell: ({ cell }: CellContext<Record<string, string>, string>) => (
+      <div className='inline-flex gap-2 items-center'>
+        <span
+          className='rounded-full w-4 h-4 border'
+          style={{ backgroundColor: cell.row.original.color, borderColor: cell.row.original.color }}
+        />
+        {cell.getValue()}
+      </div>
+    ),
+    meta: { width: '8rem' },
+  },
+  {
+    accessorKey: 'numberOfGenes',
+    header: headerHelper('Number of Genes'),
+    sortingFn: (a, b) => Number(a.original.numberOfGenes) - Number(b.original.numberOfGenes),
+    meta: { textAlign: 'center' },
+  },
+  {
+    accessorKey: 'percentage',
+    header: headerHelper('Percentage'),
+    sortingFn: (a, b) => Number(a.original.percentage) - Number(b.original.percentage),
+    meta: { textAlign: 'center' },
+  },
+  {
+    accessorKey: 'averageDegree',
+    header: headerHelper('Average Degree'),
+    sortingFn: (a, b) => Number(a.original.averageDegree) - Number(b.original.averageDegree),
+    meta: { textAlign: 'center' },
+  },
+  {
+    accessorKey: 'degreeCentralGene',
+    header: headerHelper('Degree Central Gene'),
+    meta: { textAlign: 'center' },
+  },
+  {
+    accessorKey: 'genes',
+    header: headerHelper('Genes'),
+    meta: { wordBreak: 'break-word' },
+  },
+];
+
 export const columnSelectedNodes: ColumnDef<SelectedNodeProperty>[] = [
   {
     accessorKey: 'Gene_Name',

@@ -41,15 +41,11 @@ export function NetworkInfo() {
           <span>Total Nodes: {totalNodes}</span>
           <span>Total Edges: {totalEdges}</span>
         </div>
-        <Button
-          disabled={selectedNodes.length === 0}
-          variant='outline'
-          size='sm'
-          className='font-semibold'
-          onClick={() => setShowTable(true)}
-        >
-          Show Details
-        </Button>
+        {(selectedNodes.length || null) && (
+          <Button variant='outline' size='sm' className='font-semibold text-wrap' onClick={() => setShowTable(true)}>
+            Selected Genes Details ({selectedNodes.length})
+          </Button>
+        )}
         <PopUpDataTable
           data={[selectedNodes, gseaData]}
           columns={[columnSelectedNodes, columnGseaResults]}

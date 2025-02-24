@@ -1,4 +1,6 @@
+import { useStore } from '@/lib/hooks';
 import type { PopUpTableProps } from '@/lib/interface';
+import { downloadFile } from '@/lib/utils';
 import { Download } from 'lucide-react';
 import { unparse } from 'papaparse';
 import { Button } from './ui/button';
@@ -31,14 +33,11 @@ export default function PopUpTable({
         geneIDs.filter(gene => !data?.genes.find(g => g.Input === gene || g.ID === gene)).map(gene => ({ Gene: gene })),
       );
     }
-    const element = document.createElement('a');
-    const file = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    element.href = URL.createObjectURL(file);
-    element.download = foundGenes ? 'found_genes.csv' : 'not_found_genes.csv';
-    document.body.appendChild(element);
-    element.click();
-    URL.revokeObjectURL(element.href);
-    element.remove();
+    const projectTitle = useStore.getState().projectTitle;
+    downloadFile(
+      csv,
+      `${projectTitle === 'Untitled' ? '' : `${projectTitle}_`}${foundGenes ? 'found_genes' : 'not_found_genes'}.csv`,
+    );
   };
 
   const notFoundFilteredGeneIDs = geneIDs.filter(gene => !data?.genes.find(g => g.Gene_name === gene || g.ID === gene));

@@ -66,11 +66,11 @@ export default function History({
     <div className='h-[92%]'>
       <div className='flex justify-between'>
         <h3 className='text-2xl font-semibold mb-1'>History</h3>
-        {history.length ? (
+        {(history.length || null) && (
           <Button size='icon' className='mb-2 bg-red-700 hover:bg-red-800' onClick={() => setShowConfirmDialog(true)}>
             <Trash2 size={20} />
           </Button>
-        ) : null}
+        )}
       </div>
       <AlertDialog open={showConfirmDialog}>
         <AlertDialogContent>

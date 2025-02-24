@@ -1,3 +1,5 @@
+'use client';
+
 import { SquareDashedMousePointer } from 'lucide-react';
 import { Suspense, useState } from 'react';
 import { Export, FileName } from '.';

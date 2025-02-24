@@ -161,13 +161,13 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
             };
             return `#${f(0)}${f(8)}${f(4)}`;
           };
-          const res = louvain(graph, {
+          const res = louvain.detailed(graph, {
             resolution: +resolution,
             getEdgeWeight: weighted ? 'score' : null,
           });
           const map: Record<string, { name: string; genes: string[]; color: string }> = {};
           let count = 0;
-          for (const [node, comm] of Object.entries(res)) {
+          for (const [node, comm] of Object.entries(res.communities)) {
             if (!map[comm]) {
               map[comm] = {
                 name: '',
@@ -175,7 +175,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
                 color: hslToHex(count++ * 137.508, 75, 50),
               };
             }
-            map[comm].genes.push(node);
+            map[comm].genes.push(graph.getNodeAttribute(node, 'label') ?? 'N/A');
           }
           for (const { genes, color } of Object.values(map)) {
             if (genes.length < +minCommunitySize) {
@@ -189,6 +189,20 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
             }
           }
           setCommunityMap(map);
+          eventEmitter.emit(Events.ALGORITHM_RESULTS, {
+            modularity: res.modularity,
+            resolution,
+            communities: Object.values(map).map(({ name, genes, color }) => ({
+              name,
+              genes: genes.map(v => graph.getNodeAttribute(v, 'label')),
+              color,
+              percentage: (genes.length / graph.order) * 100,
+              averageDegree: genes.reduce((acc, gene) => acc + graph.degree(gene), 0) / genes.length,
+              degreeCentralGene: genes.find(
+                gene => graph.degree(gene) === genes.reduce((acc, gene) => Math.max(acc, graph.degree(gene)), 0),
+              ),
+            })),
+          });
           return;
         }
         (async function leiden() {
@@ -198,13 +212,37 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
           );
           if (res.ok) {
-            const data: Record<string, { name: string; genes: string[]; color: string }> = await res.json();
-            setCommunityMap(data);
-            for (const community of Object.values(data)) {
+            const {
+              communities,
+              modularity,
+            }: {
+              modularity: number;
+              communities: Record<string, { name: string; genes: string[]; color: string }>;
+            } = await res.json();
+
+            setCommunityMap(communities);
+            for (const community of Object.values(communities)) {
               for (const gene of community.genes) {
                 graph.setNodeAttribute(gene, 'color', community.color);
               }
             }
+            eventEmitter.emit(Events.ALGORITHM_RESULTS, {
+              modularity,
+              resolution,
+              communities: Object.values(communities).map(({ name, genes, color }) => ({
+                name,
+                genes: genes.map(v => graph.getNodeAttribute(v, 'label')),
+                color,
+                percentage: ((genes.length / graph.order) * 100).toFixed(2),
+                averageDegree: (genes.reduce((acc, gene) => acc + graph.degree(gene), 0) / genes.length).toFixed(2),
+                degreeCentralGene: graph.getNodeAttribute(
+                  genes.find(
+                    gene => graph.degree(gene) === genes.reduce((acc, gene) => Math.max(acc, graph.degree(gene)), 0),
+                  ),
+                  'label',
+                ),
+              })),
+            });
           } else if (res.status === 404) {
             toast.promise(
               new Promise<void>(async (resolve, reject) => {
@@ -255,7 +293,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
                 className='h-5 w-30'
                 onClick={() => fitViewportToNodes(sigma, val.genes, { animate: true })}
               >
-                Community {idx + 1}
+                {val.name}
               </Button>
             </div>
           ))}
