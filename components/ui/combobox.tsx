@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronsUpDown, Info } from 'lucide-react';
+import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,7 @@ export function Combobox({
                 : placeholder
               : value || placeholder}
           </span>
-          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className={cn('w-[200px] p-0', className)}>
@@ -71,7 +71,7 @@ export function Combobox({
                     className='flex justify-between w-full'
                   >
                     <div className='flex items-center'>
-                      <Check
+                      <CheckIcon
                         className={cn(
                           'mr-2 h-4 w-4',
                           (multiselect && value instanceof Set ? value.has(propertyName) : value === propertyName)
@@ -84,7 +84,7 @@ export function Combobox({
                     {typeof item !== 'string' && item.description && (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Info className='h-4 w-4 ml-4 cursor-pointer' />
+                          <InfoIcon className='h-4 w-4 ml-4 cursor-pointer' />
                         </TooltipTrigger>
                         <TooltipContent side='right' align='start' className='max-w-80'>
                           {item.description}

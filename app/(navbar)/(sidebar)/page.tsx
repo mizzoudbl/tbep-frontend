@@ -26,7 +26,7 @@ import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables, GetDiseaseData, GraphConfigForm } from '@/lib/interface';
 import { distinct, envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
-import { AlertTriangle, Info, Loader } from 'lucide-react';
+import { AlertTriangleIcon, InfoIcon, LoaderIcon } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
@@ -222,12 +222,12 @@ export default function Home() {
                         onClick={() => {
                           setFormData({
                             ...formData,
-                            seedGenes: `ENSG00000122359
-ENSG00000100823
-ENSG00000214944
-ENSG00000172995
-ENSG00000147894
-ENSG00000162063`,
+                            seedGenes: `ENSG00000185013
+ENSG00000076685
+ENSG00000166548
+ENSG00000156136
+ENSG00000114956
+ENSG00000116981`,
                           });
                         }}
                       >
@@ -239,12 +239,12 @@ ENSG00000162063`,
                         onClick={() => {
                           setFormData({
                             ...formData,
-                            seedGenes: `DCTN1
-DNAJC7
-ERBB4
-ERLIN1
-EWSR1
-FIG4`,
+                            seedGenes: `NT5C1B
+NT5C2
+TK2
+DCK
+DGUOK
+NT5C1A`,
                           });
                         }}
                       >
@@ -278,7 +278,7 @@ FIG4`,
                       <Label htmlFor='diseaseMap'>Disease Map</Label>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Info size={12} />
+                          <InfoIcon size={12} />
                         </TooltipTrigger>
                         <TooltipContent>To search disease with its ID, type disease ID in parentheses.</TooltipContent>
                       </Tooltip>
@@ -314,7 +314,7 @@ FIG4`,
                   <Button type='submit' className='w-3/4 bg-teal-600 hover:bg-teal-700 text-white'>
                     {loading ? (
                       <>
-                        <Loader className='animate-spin mr-2' size={20} />
+                        <LoaderIcon className='animate-spin mr-2' size={20} />
                         Verifying {geneIDs.length} genes...
                       </>
                     ) : (
@@ -334,7 +334,7 @@ FIG4`,
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className='text-red-500 flex items-center'>
-                      <AlertTriangle size={24} className='mr-2' />
+                      <AlertTriangleIcon size={24} className='mr-2' />
                       Warning!
                     </AlertDialogTitle>
                     <AlertDialogDescription className='text-black'>

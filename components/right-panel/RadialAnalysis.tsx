@@ -3,7 +3,7 @@
 import { radialAnalysisOptions } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { RadialAnalysisSetting } from '@/lib/interface';
-import { Info } from 'lucide-react';
+import { InfoIcon } from 'lucide-react';
 import React from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Input } from '../ui/input';
@@ -39,7 +39,7 @@ export function RadialAnalysis() {
                 {option.label}
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info size={12} />
+                    <InfoIcon size={12} />
                   </TooltipTrigger>
                   <TooltipContent align='end'>
                     <p className='max-w-60'>{option.tooltip}</p>

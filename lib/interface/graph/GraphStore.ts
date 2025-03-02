@@ -89,14 +89,29 @@ export interface GraphStore {
   showEdgeColor: boolean;
 
   /**
-   * Total number of nodes in the graph
+   * Network Statistics for 2nd Tab in network page
    */
-  totalNodes: number;
+  networkStatistics: {
+    totalNodes: number;
+    totalEdges: number;
+    avgDegree: number;
+    density: number;
+    diameter: number;
+    averageClusteringCoefficient: number;
+    degreeDistribution: Array<{ degree: number; count: number }> | null;
+    edgeScoreDistribution: Array<{ score: number; count: number }> | null;
+    top10ByDegree: Array<Record<'ID' | 'geneName' | 'description' | 'degree', string>> | null;
+    top10ByBetweenness: Array<Record<'ID' | 'geneName' | 'description' | 'betweenness', string>> | null;
+    top10ByCloseness: Array<Record<'ID' | 'geneName' | 'description' | 'closeness', string>> | null;
+    top10ByEigenvector: Array<Record<'ID' | 'geneName' | 'description' | 'eigenvector', string>> | null;
+    top10ByPageRank: Array<Record<'ID' | 'geneName' | 'description' | 'pagerank', string>> | null;
+  };
 
   /**
-   * Total number of edges in the graph
+   * Set Network Statistics
+   * @param stats Partial<GraphStore['networkStatistics']>
    */
-  totalEdges: number;
+  setNetworkStatistics: (stats: Partial<GraphStore['networkStatistics']>) => void;
 
   /**
    * Radial Analysis settings

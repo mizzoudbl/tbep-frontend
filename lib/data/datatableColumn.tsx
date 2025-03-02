@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button';
 import type { Gsea, SelectedNodeProperty } from '@/lib/interface';
 import type { CellContext, Column, ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDownIcon } from 'lucide-react';
 
 function headerHelper<TData>(columnName: string) {
   return ({ column }: { column: Column<TData> }) => {
     return (
       <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         {columnName}
-        <ArrowUpDown className='ml-2 h-4 w-4' />
+        <ArrowUpDownIcon className='ml-2 h-4 w-4' />
       </Button>
     );
   };
@@ -107,5 +107,110 @@ export const columnGseaResults: ColumnDef<Gsea>[] = [
     accessorKey: 'Genes',
     header: headerHelper('Genes'),
     meta: { wordBreak: 'break-word' },
+  },
+];
+
+export const columnTop10ByDegree: ColumnDef<Record<string, string>>[] = [
+  {
+    accessorKey: 'ID',
+    header: headerHelper('ENSG ID'),
+  },
+  {
+    accessorKey: 'geneName',
+    header: headerHelper('Gene Name'),
+  },
+  {
+    accessorKey: 'description',
+    header: headerHelper('Description'),
+  },
+  {
+    accessorKey: 'degree',
+    header: headerHelper('Degree'),
+    sortingFn: (a, b) => Number(a.original.Degree) - Number(b.original.Degree),
+    meta: { textAlign: 'center' },
+  },
+];
+
+export const columnTop10ByBetweenness: ColumnDef<Record<string, string>>[] = [
+  {
+    accessorKey: 'ID',
+    header: headerHelper('ENSG ID'),
+  },
+  {
+    accessorKey: 'geneName',
+    header: headerHelper('Gene Name'),
+  },
+  {
+    accessorKey: 'description',
+    header: headerHelper('Description'),
+  },
+  {
+    accessorKey: 'betweenness',
+    header: headerHelper('Betweenness'),
+    sortingFn: (a, b) => Number(a.original.Betweenness) - Number(b.original.Betweenness),
+    meta: { textAlign: 'center' },
+  },
+];
+
+export const columnTop10ByCloseness: ColumnDef<Record<string, string>>[] = [
+  {
+    accessorKey: 'ID',
+    header: headerHelper('ENSG ID'),
+  },
+  {
+    accessorKey: 'geneName',
+    header: headerHelper('Gene Name'),
+  },
+  {
+    accessorKey: 'description',
+    header: headerHelper('Description'),
+  },
+  {
+    accessorKey: 'closeness',
+    header: headerHelper('Closeness'),
+    sortingFn: (a, b) => Number(a.original.Closeness) - Number(b.original.Closeness),
+    meta: { textAlign: 'center' },
+  },
+];
+
+export const columnTop10ByEigenvector: ColumnDef<Record<string, string>>[] = [
+  {
+    accessorKey: 'ID',
+    header: headerHelper('ENSG ID'),
+  },
+  {
+    accessorKey: 'geneName',
+    header: headerHelper('Gene Name'),
+  },
+  {
+    accessorKey: 'description',
+    header: headerHelper('Description'),
+  },
+  {
+    accessorKey: 'eigenvector',
+    header: headerHelper('Eigenvector'),
+    sortingFn: (a, b) => Number(a.original.Eigenvector) - Number(b.original.Eigenvector),
+    meta: { textAlign: 'center' },
+  },
+];
+
+export const columnTop10ByPageRank: ColumnDef<Record<string, string>>[] = [
+  {
+    accessorKey: 'ID',
+    header: headerHelper('ENSG ID'),
+  },
+  {
+    accessorKey: 'geneName',
+    header: headerHelper('Gene Name'),
+  },
+  {
+    accessorKey: 'description',
+    header: headerHelper('Description'),
+  },
+  {
+    accessorKey: 'pagerank',
+    header: headerHelper('PageRank'),
+    sortingFn: (a, b) => Number(a.original.PageRank) - Number(b.original.PageRank),
+    meta: { textAlign: 'center' },
   },
 ];

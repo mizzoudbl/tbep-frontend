@@ -18,23 +18,24 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const graph = sigma.getGraph();
   const radialAnalysis = useStore(state => state.radialAnalysis);
+  const setNetworkStatistics = useStore(state => state.setNetworkStatistics);
   const [communityMap, setCommunityMap] = useState<Record<string, { name: string; genes: string[]; color: string }>>(
     {},
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    let edgeCount = 0;
+    let totalEdges = 0;
     graph.updateEachEdgeAttributes((_edge, attr) => {
       if (attr.score && attr.score < radialAnalysis.edgeWeightCutOff) {
         attr.hidden = true;
       } else {
         attr.hidden = false;
-        edgeCount++;
+        totalEdges++;
       }
       return attr;
     });
-    useStore.setState({ totalEdges: edgeCount });
+    setNetworkStatistics({ totalEdges });
   }, [radialAnalysis.edgeWeightCutOff]);
 
   const nodeDegreeProperty = useStore(state => state.radialAnalysis.nodeDegreeProperty);
@@ -45,7 +46,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     (async () => {
-      let nodeCount = 0;
+      let totalNodes = 0;
       const userOrCommonIdentifier = useStore.getState().radioOptions.user.TE.includes(nodeDegreeProperty)
         ? 'user'
         : 'common';
@@ -70,7 +71,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
           graph.updateEachNodeAttributes((node, attr) => {
             const value = +universalData[node]?.[userOrCommonIdentifier]?.TE[nodeDegreeProperty];
             if (!Number.isNaN(value) && sizeScale(value) >= radialAnalysis.nodeDegreeCutOff) {
-              nodeCount++;
+              totalNodes++;
               attr.hidden = false;
             } else {
               attr.hidden = true;
@@ -84,16 +85,16 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
           if (degree < radialAnalysis.nodeDegreeCutOff) {
             attr.hidden = true;
           } else {
-            nodeCount++;
+            totalNodes++;
             attr.hidden = false;
           }
           return attr;
         });
       }
-      const edgeCount = graph.reduceEdges((count, _edge, _attr, _src, _tgt, srcAttr, tgtAttr) => {
+      const totalEdges = graph.reduceEdges((count, _edge, _attr, _src, _tgt, srcAttr, tgtAttr) => {
         return count + (srcAttr.hidden || tgtAttr.hidden ? 0 : 1);
       }, 0);
-      useStore.setState({ totalNodes: nodeCount, totalEdges: edgeCount });
+      setNetworkStatistics({ totalEdges, totalNodes });
     })();
   }, [radialAnalysis.nodeDegreeCutOff, nodeDegreeProperty]);
 
@@ -146,7 +147,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
           return attr;
         });
       } else if (name === 'Leiden') {
-        const { resolution, weighted, minCommunitySize } = parameters;
+        const { resolution, weighted, minCommunitySize } = parameters!;
         if (searchParams?.get('file')) {
           const louvain = await import('graphology-communities-louvain').then(lib => lib.default);
           const hslToHex = (h: number, s: number, l: number) => {
@@ -170,9 +171,9 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
           for (const [node, comm] of Object.entries(res.communities)) {
             if (!map[comm]) {
               map[comm] = {
-                name: '',
+                name: `Community ${count++}`,
                 genes: [],
-                color: hslToHex(count++ * 137.508, 75, 50),
+                color: hslToHex(count * 137.508, 75, 50),
               };
             }
             map[comm].genes.push(graph.getNodeAttribute(node, 'label') ?? 'N/A');
@@ -191,18 +192,28 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
           setCommunityMap(map);
           eventEmitter.emit(Events.ALGORITHM_RESULTS, {
             modularity: res.modularity,
-            resolution,
-            communities: Object.values(map).map(({ name, genes, color }) => ({
-              name,
-              genes: genes.map(v => graph.getNodeAttribute(v, 'label')),
-              color,
-              percentage: (genes.length / graph.order) * 100,
-              averageDegree: genes.reduce((acc, gene) => acc + graph.degree(gene), 0) / genes.length,
-              degreeCentralGene: genes.find(
-                gene => graph.degree(gene) === genes.reduce((acc, gene) => Math.max(acc, graph.degree(gene)), 0),
-              ),
-            })),
-          });
+            resolution: +resolution,
+            communities: Object.values(map).map(({ name, genes, color }) => {
+              const [degreeSum, maxDegree] = genes.reduce(
+                ([acc, max], gene) => {
+                  const degree = graph.degree(gene);
+                  return [acc + degree, Math.max(max, degree)];
+                },
+                [0, 0],
+              );
+              return {
+                name,
+                genes: genes.map(v => graph.getNodeAttribute(v, 'label')!),
+                color,
+                percentage: ((genes.length / graph.order) * 100).toFixed(2),
+                averageDegree: (degreeSum / genes.length).toFixed(2),
+                degreeCentralGene: graph.getNodeAttribute(
+                  genes.find(gene => graph.degree(gene) === maxDegree),
+                  'label',
+                )!,
+              };
+            }),
+          } satisfies EventMessage[Events.ALGORITHM_RESULTS]);
           return;
         }
         (async function leiden() {
@@ -228,21 +239,28 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
             }
             eventEmitter.emit(Events.ALGORITHM_RESULTS, {
               modularity,
-              resolution,
-              communities: Object.values(communities).map(({ name, genes, color }) => ({
-                name,
-                genes: genes.map(v => graph.getNodeAttribute(v, 'label')),
-                color,
-                percentage: ((genes.length / graph.order) * 100).toFixed(2),
-                averageDegree: (genes.reduce((acc, gene) => acc + graph.degree(gene), 0) / genes.length).toFixed(2),
-                degreeCentralGene: graph.getNodeAttribute(
-                  genes.find(
-                    gene => graph.degree(gene) === genes.reduce((acc, gene) => Math.max(acc, graph.degree(gene)), 0),
-                  ),
-                  'label',
-                ),
-              })),
-            });
+              resolution: +resolution,
+              communities: Object.values(communities).map(({ name, genes, color }) => {
+                const [degreeSum, maxDegree] = genes.reduce(
+                  ([acc, max], gene) => {
+                    const degree = graph.degree(gene);
+                    return [acc + degree, Math.max(max, degree)];
+                  },
+                  [0, 0],
+                );
+                return {
+                  name,
+                  genes: genes.map(v => graph.getNodeAttribute(v, 'label')!),
+                  color,
+                  percentage: ((genes.length / graph.order) * 100).toFixed(2),
+                  averageDegree: (degreeSum / genes.length).toFixed(2),
+                  degreeCentralGene: graph.getNodeAttribute(
+                    genes.find(gene => graph.degree(gene) === maxDegree),
+                    'label',
+                  )!,
+                };
+              }),
+            } satisfies EventMessage[Events.ALGORITHM_RESULTS]);
           } else if (res.status === 404) {
             toast.promise(
               new Promise<void>(async (resolve, reject) => {

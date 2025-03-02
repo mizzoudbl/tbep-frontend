@@ -3,7 +3,7 @@
 import { forceLayoutOptions } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { ForceSettings } from '@/lib/interface';
-import { ChevronsUpDown, Info } from 'lucide-react';
+import { ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Input } from '../ui/input';
@@ -34,7 +34,7 @@ export function NetworkLayout() {
         <p className='font-bold'>Network Layout</p>
         <CollapsibleTrigger asChild>
           <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
-            <ChevronsUpDown size={15} />
+            <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>
@@ -52,7 +52,7 @@ export function NetworkLayout() {
                 {option.label}
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info size={12} />
+                    <InfoIcon size={12} />
                   </TooltipTrigger>
                   <TooltipContent className='max-w-60' align='end'>
                     {option.tooltip}

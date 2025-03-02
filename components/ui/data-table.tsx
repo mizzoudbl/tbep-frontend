@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -18,7 +19,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
-  filterColumnName: string;
+  filterColumnName?: string;
   loading?: boolean;
   placeholder?: string;
 }
@@ -48,14 +49,16 @@ export function DataTable<TData>({
 
   return (
     <div>
-      <div className='flex justify-between items-center py-4 p-2'>
-        <Input
-          placeholder={placeholder ?? `Filter ${filterColumnName.replace('_', ' ')}s...`}
-          value={(table.getColumn(filterColumnName)?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn(filterColumnName)?.setFilterValue(event.target.value)}
-          className='max-w-sm'
-        />
-        <span className='font-semibold italic'>Rows : {table.getFilteredRowModel().rows.length}</span>
+      <div className={cn('flex items-center py-4 p-2', filterColumnName ? 'justify-between' : 'justify-end')}>
+        {filterColumnName && (
+          <Input
+            placeholder={placeholder ?? `Filter ${filterColumnName.replace('_', ' ')}s...`}
+            value={(table.getColumn(filterColumnName)?.getFilterValue() as string) ?? ''}
+            onChange={event => table.getColumn(filterColumnName)?.setFilterValue(event.target.value)}
+            className='max-w-sm'
+          />
+        )}
+        <div className='flex font-semibold italic'>Rows : {table.getFilteredRowModel().rows.length}</div>
       </div>
       <div className='rounded-md border'>
         <Table>

@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import type { GenePropertyMetadata } from '@/lib/interface';
 import { cn, getProperty } from '@/lib/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Check, ChevronsUpDown, Info, ListCheck } from 'lucide-react';
+import { CheckIcon, ChevronsUpDownIcon, InfoIcon, ListCheckIcon } from 'lucide-react';
 import * as React from 'react';
 import { Spinner } from './ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -62,7 +62,7 @@ const VirtualizedCommand = ({
                 className='bg-transparent  hover:bg-muted cursor-pointer p-2 rounded border shadow'
                 onClick={() => onSelectOption?.(filteredOptions.slice(0, 50).map(getProperty))}
               >
-                <ListCheck className='h-4 w-4 text-black' />
+                <ListCheckIcon className='h-4 w-4 text-black' />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Select all (only first 50 items are selected at max)</TooltipContent>
@@ -93,7 +93,7 @@ const VirtualizedCommand = ({
                   onSelect={onSelectOption}
                 >
                   <div className='flex item-center'>
-                    <Check
+                    <CheckIcon
                       className={cn(
                         'mr-2 h-4 w-4',
                         (selectedOption instanceof Set ? selectedOption.has(value) : selectedOption === value)
@@ -106,7 +106,7 @@ const VirtualizedCommand = ({
                   {typeof option !== 'string' && option.description && (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Info className='h-4 w-4 ml-2 cursor-pointer' />
+                        <InfoIcon className='h-4 w-4 ml-2 cursor-pointer' />
                       </TooltipTrigger>
                       <TooltipContent side='left' align='start' className='max-w-48'>
                         {option.description}
@@ -164,7 +164,7 @@ export function VirtualizedCombobox({
                 : searchPlaceholder
               : value || searchPlaceholder}
           </span>
-          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className={cn('w-[200px] p-0', className)}>

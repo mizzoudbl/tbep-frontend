@@ -64,5 +64,10 @@ export interface GeneGraphData {
      * Name of the graph
      */
     graphName: string;
+
+    /**
+     * Global Clustering Coefficient of the graph
+     */
+    averageClusteringCoefficient: number;
   };
 }

@@ -28,7 +28,7 @@ import { useStore } from '@/lib/hooks';
 import type { RadioOptions, UniversalData } from '@/lib/interface';
 import { LOGFC_REGEX, P_VALUE_REGEX, formatBytes, initRadioOptions, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { Trash2, Upload } from 'lucide-react';
+import { Trash2Icon, UploadIcon } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import Papa from 'papaparse';
 import React from 'react';
@@ -262,7 +262,7 @@ export function FileSheet() {
         <Sheet>
           <SheetTrigger asChild>
             <Button size='sm' className='text-xs w-full'>
-              <Upload className='h-3 w-3 mr-1' />
+              <UploadIcon className='h-3 w-3 mr-1' />
               Upload Files
             </Button>
           </SheetTrigger>
@@ -344,7 +344,7 @@ export function FileSheet() {
                       </span>
                     </div>
                     <Button variant='ghost' size='icon' onClick={() => removeFile(file.name)}>
-                      <Trash2 className='h-4 w-4' />
+                      <Trash2Icon className='h-4 w-4' />
                     </Button>
                   </div>
                 ))}

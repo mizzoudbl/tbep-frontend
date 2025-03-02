@@ -1,6 +1,6 @@
 import { type NodeColorType, PROPERTY_LABEL_TYPE_MAPPING, nodeColor } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
-import { ChevronsUpDown, Info, RefreshCcw } from 'lucide-react';
+import { ChevronsUpDownIcon, InfoIcon, RefreshCcwIcon } from 'lucide-react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
@@ -28,7 +28,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
                 size='icon'
                 className='w-6 h-6'
               >
-                <RefreshCcw size={15} />
+                <RefreshCcwIcon size={15} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -37,7 +37,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
           </Tooltip>
           <CollapsibleTrigger asChild>
             <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
-              <ChevronsUpDown size={15} />
+              <ChevronsUpDownIcon size={15} />
             </Button>
           </CollapsibleTrigger>
         </div>
@@ -56,7 +56,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
                 <Label htmlFor={label} className='text-xs'>
                   {label}
                 </Label>
-                <TooltipTrigger asChild>{tooltipContent && <Info size={12} className='shrink-0' />}</TooltipTrigger>
+                <TooltipTrigger asChild>{tooltipContent && <InfoIcon size={12} className='shrink-0' />}</TooltipTrigger>
               </div>
               {tooltipContent && (
                 <TooltipContent align='start'>

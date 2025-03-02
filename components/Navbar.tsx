@@ -1,5 +1,5 @@
 import { links } from '@/lib/data';
-import { Menu } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { Banner } from './ui/banner';
@@ -43,7 +43,7 @@ export default function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' size='icon' className='md:hidden hover:bg-teal-600 ml-2'>
-              <Menu className='h-6 w-6' />
+              <MenuIcon className='h-6 w-6' />
               <span className='sr-only'>Open menu</span>
             </Button>
           </DropdownMenuTrigger>

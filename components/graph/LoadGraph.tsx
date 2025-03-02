@@ -1,5 +1,6 @@
 'use client';
 
+import { statisticsGenerator } from '@/lib/analytics';
 /******** only for testing with sample graph **************/
 // import { data as response } from '@/lib/data/sample-graph.json';
 import { GENE_GRAPH_QUERY, GENE_VERIFICATION_QUERY } from '@/lib/gql';
@@ -10,15 +11,17 @@ import type {
   GeneGraphVariables,
   GeneVerificationData,
   GeneVerificationVariables,
+  GraphStore,
   NodeAttributes,
 } from '@/lib/interface';
 import { openDB } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
-import { useLoadGraph } from '@react-sigma/core';
+import { useLoadGraph, useSigma } from '@react-sigma/core';
 import Graph from 'graphology';
 import { circlepack } from 'graphology-layout';
+import { density, diameter } from 'graphology-metrics/graph';
 import type { SerializedGraph } from 'graphology-types';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangleIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Papa from 'papaparse';
 import React from 'react';
@@ -37,8 +40,8 @@ import { Spinner } from '../ui/spinner';
 
 export function LoadGraph() {
   const searchParams = useSearchParams();
-
-  const loadGraph = useLoadGraph();
+  const sigma = useSigma();
+  const loadGraph = useLoadGraph<NodeAttributes, EdgeAttributes>();
   const variable = JSON.parse(localStorage.getItem('graphConfig') || '{}');
   const [fetchData, { data: response, loading, error }] = useLazyQuery<GeneGraphData, GeneGraphVariables>(
     GENE_GRAPH_QUERY,
@@ -58,7 +61,9 @@ export function LoadGraph() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
-      type: 'directed',
+      type: 'undirected',
+      multi: true,
+      allowSelfLoops: false,
     });
     const fileName = searchParams?.get('file');
     (async () => {
@@ -140,7 +145,17 @@ export function LoadGraph() {
           }
           circlepack.assign(graph);
           loadGraph(graph);
-          useStore.setState({ geneIDs: geneIDArray, totalNodes: geneIDs.size, totalEdges: fileData.length });
+          const avgDegree = graph.order ? (2 * graph.size) / graph.order : 0;
+          useStore.setState({
+            geneIDs: geneIDArray,
+            geneNameToID,
+            networkStatistics: {
+              totalNodes: geneIDs.size,
+              totalEdges: fileData.length,
+              averageClusteringCoefficient: Number.NaN,
+              ...statisticsGenerator(graph),
+            },
+          });
         };
       } else {
         await fetchData();
@@ -150,7 +165,7 @@ export function LoadGraph() {
           return;
         }
         if (response) {
-          const { genes, links, graphName } = response.getGeneInteractions;
+          const { genes, links, graphName, averageClusteringCoefficient } = response.getGeneInteractions;
           if (genes.length > 5000 || links.length > 50000) {
             toast.warning('Large graph detected!', {
               description: 'Computation is stopped. Auto closing the graph in 3 seconds to prevent browser crash',
@@ -190,22 +205,27 @@ export function LoadGraph() {
           if (transformedData) {
             graph.import(transformedData);
             circlepack.assign(graph);
-            loadGraph(graph);
+            sigma.getGraph().import(graph, true);
             const geneNameToID = new Map<string, string>();
             for (const gene of genes) {
               if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             }
+
             useStore.setState({
               geneIDs: transformedData.nodes?.map(node => node.key) || [],
-              totalNodes: graph.order || 0,
-              totalEdges: graph.directedSize || 0,
+              networkStatistics: {
+                totalNodes: graph.order || 0,
+                totalEdges: graph.size || 0,
+                averageClusteringCoefficient,
+                ...statisticsGenerator(graph),
+              },
               geneNameToID,
             });
           }
         }
       }
     })();
-  }, [loadGraph, loading, error, fetchData]);
+  }, [loading]);
 
   return (
     <>
@@ -222,7 +242,7 @@ export function LoadGraph() {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className='text-red-500 flex items-center'>
-                  <AlertTriangle size={24} className='mr-2' />
+                  <AlertTriangleIcon size={24} className='mr-2' />
                   Warning!
                 </AlertDialogTitle>
                 <AlertDialogDescription className='text-black'>

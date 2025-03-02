@@ -4,23 +4,37 @@ import { algorithms, columnLeidenResults } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { type EventMessage, Events, downloadFile, eventEmitter } from '@/lib/utils';
 import { Label } from '@radix-ui/react-label';
-import { ChevronsUpDown, Download } from 'lucide-react';
+import { ChevronsUpDownIcon, DownloadIcon } from 'lucide-react';
 import Papa from 'papaparse';
 import { useEffect, useState } from 'react';
+import { LeidenPieChart } from '../statistics';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { DataTable } from '../ui/data-table';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import SliderWithInput from './SliderWithInput';
 
 export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
   const handleAlgoQuery = (name: string, formData?: FormData) => {
-    if (formData) eventEmitter.emit(Events.ALGORITHM, { name, parameters: Object.fromEntries(formData.entries()) });
+    if (formData)
+      eventEmitter.emit(Events.ALGORITHM, {
+        name,
+        parameters: Object.fromEntries(formData.entries()) as EventMessage[Events.ALGORITHM]['parameters'],
+      } satisfies EventMessage[Events.ALGORITHM]);
     else {
-      eventEmitter.emit(Events.ALGORITHM, { name });
+      eventEmitter.emit(Events.ALGORITHM, { name } satisfies EventMessage[Events.ALGORITHM]);
       setAlgorithmResults(null);
     }
   };
@@ -61,7 +75,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
         <p className='font-bold'>Network Analysis</p>
         <CollapsibleTrigger asChild>
           <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
-            <ChevronsUpDown size={15} />
+            <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>
@@ -136,27 +150,53 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
               <Dialog open={showTable}>
                 <DialogContent className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'>
                   <DialogTitle>Leiden Communities</DialogTitle>
-                  <div className='overflow-y-scroll'>
-                    <DataTable
-                      data={algorithmResults.communities.map((c, i) => ({
-                        ...c,
-                        averageDegree: c.averageDegree.toString(),
-                        percentage: c.percentage.toString(),
-                        genes: c.genes.join(', '),
-                        numberOfGenes: c.genes.length.toString(),
-                      }))}
-                      columns={columnLeidenResults}
-                      filterColumnName={'genes'}
-                      placeholder='Search by gene name'
-                    />
-                  </div>
+                  <Tabs defaultValue='table' className='w-full'>
+                    <div className='flex justify-center'>
+                      <TabsList className='w-1/2 gap-2'>
+                        <TabsTrigger className='w-full' value='table'>
+                          Table
+                        </TabsTrigger>
+                        <TabsTrigger className='w-full' value='chart'>
+                          Chart
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
+                    <TabsContent value='table' className='flex flex-col max-h-[65vh]'>
+                      <div className='overflow-y-scroll'>
+                        <DataTable
+                          data={algorithmResults.communities.map((c, i) => ({
+                            ...c,
+                            averageDegree: c.averageDegree.toString(),
+                            percentage: c.percentage.toString(),
+                            genes: c.genes.join(', '),
+                            numberOfGenes: c.genes.length.toString(),
+                          }))}
+                          columns={columnLeidenResults}
+                          filterColumnName={'genes'}
+                          placeholder='Search by gene name'
+                        />
+                      </div>
+                    </TabsContent>
+                    <TabsContent value='chart' className='flex'>
+                      <span>
+                        <p>
+                          <b>Resolution:</b> {algorithmResults.resolution}
+                        </p>
+                        <p>
+                          <b>Modularity:</b> {algorithmResults.modularity}
+                        </p>
+                        <p className='text-xs'>*Hover for more information</p>
+                      </span>
+                      <LeidenPieChart data={algorithmResults.communities} />
+                    </TabsContent>
+                  </Tabs>
                   <DialogFooter className='gap-2 w-full'>
                     <Button
                       size={'icon'}
                       variant={'outline'}
                       onClick={() => handleExport(algorithmResults.communities)}
                     >
-                      <Download size={20} />
+                      <DownloadIcon size={20} />
                     </Button>
                     <DialogClose asChild>
                       <Button type='button' variant={'secondary'} onClick={() => setShowTable(false)}>

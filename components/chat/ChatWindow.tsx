@@ -3,7 +3,15 @@
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
-import { ChevronDown, GripHorizontal, MessageCircle, Send, Trash2, TriangleAlert, X } from 'lucide-react';
+import {
+  ChevronDownIcon,
+  GripHorizontalIcon,
+  MessageCircleIcon,
+  SendIcon,
+  Trash2Icon,
+  TriangleAlertIcon,
+  XIcon,
+} from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
@@ -131,7 +139,7 @@ export function ChatWindow() {
               dragElastic={0}
               className='cursor-ns-resize h-4 w-full bg-gray-200 flex items-center justify-center'
             >
-              <GripHorizontal className='w-4 h-4 text-gray-400' />
+              <GripHorizontalIcon className='w-4 h-4 text-gray-400' />
             </motion.div>
             <div className='flex justify-between items-center p-4 bg-gray-100 border-b'>
               <div className='flex items-center gap-4'>
@@ -139,14 +147,14 @@ export function ChatWindow() {
               </div>
               <div className='flex items-center space-x-8'>
                 <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
-                  <Trash2 className='w-5 h-5' />
+                  <Trash2Icon className='w-5 h-5' />
                 </button>
                 <button
                   type='button'
                   onClick={() => setIsChatOpen(false)}
                   className='text-gray-500 hover:text-gray-700'
                 >
-                  <ChevronDown className='w-6 h-6' />
+                  <ChevronDownIcon className='w-6 h-6' />
                 </button>
               </div>
             </div>
@@ -177,10 +185,10 @@ export function ChatWindow() {
             {showAlert && (
               <center>
                 <Alert className='w-3/4'>
-                  <TriangleAlert size={20} />
+                  <TriangleAlertIcon size={20} />
                   <AlertTitle className='font-bold flex w-full justify-between items-center'>
                     Disclaimer{' '}
-                    <X
+                    <XIcon
                       size={15}
                       className='hover:border rounded m-2'
                       onClick={() => {
@@ -223,10 +231,10 @@ export function ChatWindow() {
             onChange={e => setInputValue(e.target.value)}
             placeholder='To chat with LLM, Type your message...'
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSubmit(e)}
-            className='px-4 py-2 rounded-md backdrop-blur resize-none ml-2'
+            className='px-4 py-2 rounded-md resize-none ml-2'
           />
           <button type='submit' className='relative right-8  text-blue-500 hover:text-blue-600'>
-            <Send className='w-5 h-5' />
+            <SendIcon className='w-5 h-5' />
           </button>
         </div>
         {!isChatOpen && isChatInitiated && (
@@ -237,7 +245,7 @@ export function ChatWindow() {
             onClick={() => setIsChatOpen(true)}
             className='relative self-end h-10 bg-blue-500 text-white rounded-full p-2 right-4 shadow-lg hover:bg-blue-600 transition-colors duration-200'
           >
-            <MessageCircle className='w-6 h-6' />
+            <MessageCircleIcon className='w-6 h-6' />
           </motion.button>
         )}
       </div>
