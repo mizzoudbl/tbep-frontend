@@ -1,7 +1,9 @@
+'use client';
+
 import { useStore } from '@/lib/hooks';
 import type { GraphStore } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { ChevronsUpDown, Info } from 'lucide-react';
+import { ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
@@ -36,7 +38,7 @@ export function NetworkStyle() {
         <p className='font-bold'>Network Style</p>
         <CollapsibleTrigger asChild>
           <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
-            <ChevronsUpDown size={15} />
+            <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>
@@ -97,7 +99,7 @@ export function NetworkStyle() {
               Label Density
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={12} />
+                  <InfoIcon size={12} />
                 </TooltipTrigger>
                 <TooltipContent className='max-w-60' align='end'>
                   Change the density of the node/edge labels in the network
@@ -136,7 +138,7 @@ export function NetworkStyle() {
               Show Edge Label
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={12} />
+                  <InfoIcon size={12} />
                 </TooltipTrigger>
                 <TooltipContent className='max-w-60' align='end'>
                   For larger graphs, it is recommended to zoom before turn on edge labels to improve performance
@@ -164,7 +166,7 @@ export function NetworkStyle() {
               Highlight Neighbor Genes
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={12} />
+                  <InfoIcon size={12} />
                 </TooltipTrigger>
                 <TooltipContent className='max-w-60' align='end'>
                   Upon checked, Highlights the neighbors of the hovered genes

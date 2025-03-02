@@ -20,14 +20,17 @@ import type {
 import { envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
+import { SquareDashedMousePointerIcon } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { GeneSearch, NodeColor, NodeSize } from '.';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { FileSheet } from '../app';
+import { Export, MouseControlMessage } from '../app';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Spinner } from '../ui/spinner';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
@@ -201,7 +204,45 @@ export function LeftSideBar() {
   }
 
   return (
-    <ScrollArea className='border-r p-2 flex flex-col h-[98vh]'>
+    <ScrollArea className='border-r p-2 flex flex-col h-[calc(96vh-1.5px)]'>
+      <Export />
+      <Tooltip>
+        <TooltipTrigger className='relative'>
+          <MouseControlMessage />
+          <SquareDashedMousePointerIcon className='h-4 w-4' />
+        </TooltipTrigger>
+        <TooltipContent align='start' className='max-w-96 text-sm'>
+          <ol>
+            <li>
+              • To select multiple genes and export details or perform GSEA analysis, use the mouse to select the genes
+              <br />
+              <b>
+                <i>Shortcut: </i>
+              </b>
+              <kbd className='border rounded-md px-1'> Shift(⇧) + Click</kbd> & Drag
+            </li>
+            <br />
+            <li>
+              • To highlight neighbors of a gene, either check Highlight Neighbor Genes on Network Style section and
+              then hover/click the gene
+              <br />
+              <b>
+                <i>Shortcut: </i>
+              </b>
+              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover</kbd>
+            </li>
+            <br />
+            <li>
+              • To highlight a gene via appending it to search textbox, click the gene while holding the Cmd/Ctrl(⌘) key
+              <br />
+              <b>
+                <i>Shortcut: </i>
+              </b>
+              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Click</kbd>
+            </li>
+          </ol>
+        </TooltipContent>
+      </Tooltip>
       <div className='flex flex-col'>
         <Label className='font-bold mb-2'>Disease Map</Label>
         <div className='flex items-center gap-2'>

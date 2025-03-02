@@ -1,6 +1,6 @@
 import type { GraphConfigForm } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
-import { ExternalLink, Eye, Trash2 } from 'lucide-react';
+import { ExternalLinkIcon, EyeIcon, Trash2Icon } from 'lucide-react';
 import React from 'react';
 import {
   AlertDialog,
@@ -63,12 +63,12 @@ export default function History({
   };
 
   return (
-    <div className='h-[92%]'>
+    <div className='h-[89%]'>
       <div className='flex justify-between'>
         <h3 className='text-2xl font-semibold mb-1'>History</h3>
         {(history.length || null) && (
           <Button size='icon' className='mb-2 bg-red-700 hover:bg-red-800' onClick={() => setShowConfirmDialog(true)}>
-            <Trash2 size={20} />
+            <Trash2Icon size={20} />
           </Button>
         )}
       </div>
@@ -130,14 +130,14 @@ export default function History({
                     className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
                     onClick={() => removeHistory(item.title)}
                   >
-                    <Trash2 size={20} />
+                    <Trash2Icon size={20} />
                   </button>
                   <button
                     type='button'
                     className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
                     onClick={() => handleGenerateGraph(index)}
                   >
-                    <ExternalLink size={20} />
+                    <ExternalLinkIcon size={20} />
                   </button>
                   <button
                     type='button'
@@ -152,7 +152,7 @@ export default function History({
                       })
                     }
                   >
-                    <Eye size={20} />
+                    <EyeIcon size={20} />
                   </button>
                 </CardFooter>
               </Card>

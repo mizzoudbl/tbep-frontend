@@ -1,5 +1,5 @@
 import { links } from '@/lib/data';
-import { Menu } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { Button, buttonVariants } from './ui/button';
@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 export default function Navbar() {
   return (
-    <header className='bg-teal-800 text-white p-4'>
+    <header className='bg-teal-800 text-white p-2'>
       <div className='container mx-auto flex justify-between items-center'>
         <div className='flex'>
           <Link href={'/'} className='flex items-center gap-2'>
@@ -36,7 +36,7 @@ export default function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' size='icon' className='md:hidden hover:bg-teal-600 ml-2'>
-              <Menu className='h-6 w-6' />
+              <MenuIcon className='h-6 w-6' />
               <span className='sr-only'>Open menu</span>
             </Button>
           </DropdownMenuTrigger>

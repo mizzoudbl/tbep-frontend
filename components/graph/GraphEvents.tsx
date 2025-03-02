@@ -25,7 +25,7 @@ export function GraphEvents({
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const nodeSearchQuery = useStore(state => state.nodeSearchQuery);
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
-  const totalNodes = useStore(state => state.totalNodes);
+  const totalNodes = useStore(state => state.networkStatistics.totalNodes);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

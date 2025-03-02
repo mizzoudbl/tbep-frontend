@@ -62,7 +62,7 @@ export enum Events {
 export type EventMessage = {
   [Events.ALGORITHM]: {
     name: string;
-    parameters: Record<string, string>;
+    parameters?: Record<string, string>;
   };
   [Events.EXPORT]: {
     format: 'png' | 'json' | 'csv';
@@ -74,8 +74,8 @@ export type EventMessage = {
       name: string;
       genes: string[];
       color: string;
-      percentage: number;
-      averageDegree: number;
+      percentage: string;
+      averageDegree: string;
       degreeCentralGene: string;
     }>;
     resolution: number;

@@ -8,7 +8,7 @@ import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
 import type { GeneVerificationData, GeneVerificationVariables } from '@/lib/interface';
 import { distinct, openDB } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
-import { Loader } from 'lucide-react';
+import { LoaderIcon } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 import { toast } from 'sonner';
@@ -98,7 +98,7 @@ export default function UploadFile() {
   };
 
   return (
-    <div className='mx-auto bg-white rounded-lg shadow-md p-4'>
+    <div className='mx-auto rounded-lg shadow-md p-4'>
       <h2 className='text-2xl font-semibold mb-6'>Upload your Network</h2>
       <form action={handleSubmit}>
         <div className='space-y-4'>
@@ -140,7 +140,7 @@ export default function UploadFile() {
             />
           </div>
           <Button type='submit' className='w-full bg-teal-600 hover:bg-teal-700 text-white'>
-            {loading && <Loader className='animate-spin mr-2' size={20} />} Submit
+            {loading && <LoaderIcon className='animate-spin mr-2' size={20} />} Submit
           </Button>
         </div>
       </form>
@@ -151,14 +151,14 @@ export default function UploadFile() {
         data={data}
         handleGenerateGraph={handleGenerateGraph}
       />
-      <div className='mt-6'>
+      <div className='mt-10'>
         <h3 className='text-lg font-semibold mb-2'>File Format</h3>
         <Image
           src={'/image/uploadFormat.png'}
           width={400}
           height={400}
           alt='CSV file format example'
-          className='w-full max-w-3xl mx-auto'
+          className='w-full max-w-3xl mx-auto mix-blend-multiply'
         />
       </div>
     </div>

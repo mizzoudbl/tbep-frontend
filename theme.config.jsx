@@ -114,7 +114,7 @@ export default {
           CC BY-NC 4.0
           <img
             style={{
-              height: "22px!important",
+              height: "22px",
               marginLeft: "3px",
               verticalAlign: "text-bottom",
             }}
@@ -123,7 +123,7 @@ export default {
           />
           <img
             style={{
-              height: "22px!important",
+              height: "22px",
               marginLeft: "3px",
               verticalAlign: "text-bottom",
             }}
@@ -132,7 +132,7 @@ export default {
           />
           <img
             style={{
-              height: "22px!important",
+              height: "22px",
               marginLeft: "3px",
               verticalAlign: "text-bottom",
             }}

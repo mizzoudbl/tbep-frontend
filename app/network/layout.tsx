@@ -1,48 +1,59 @@
 'use client';
 
-import { AppBar } from '@/components/app';
-import { ChatWindow } from '@/components/chat';
-import { LeftSideBar } from '@/components/left-panel';
-import { RightSideBar } from '@/components/right-panel';
-import { Button } from '@/components/ui/button';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { FileName } from '@/components/app';
+import { StatisticsTab } from '@/components/statistics';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
+import { FileTextIcon, HomeIcon } from 'lucide-react';
+import { Link } from 'next-view-transitions';
 import React from 'react';
+import { Suspense } from 'react';
 
-export default function NetworkLayoutPage({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
-  const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
+export default function NetworkLayoutPage({ children }: { children: React.ReactNode }) {
+  const [tab, setTab] = React.useState('Network');
 
   return (
-    <div className='h-screen flex flex-col bg-gray-100'>
-      <div className='bg-gray-200 h-8 flex items-center justify-between'>
-        <Button variant='ghost' size='icon' onClick={() => setLeftSidebar(!leftSidebar)}>
-          {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
-        </Button>
-        <AppBar />
-        <Button variant='ghost' size='icon' onClick={() => setRightSidebar(!rightSidebar)}>
-          {rightSidebar ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
-        </Button>
+    <Tabs value={tab} onValueChange={setTab} className='h-screen flex flex-col bg-gray-100'>
+      <div className='flex justify-between px-10 bg-muted h-8'>
+        <div className='flex gap-2'>
+          <Suspense fallback={<Input className='text-sm font-semibold max-w-fit h-8' value={'Untitled'} />}>
+            <FileName />
+          </Suspense>
+        </div>
+        <TabsList className='flex items-center gap-4 h-8 w-1/2'>
+          <TabsTrigger className='w-full' value='Network'>
+            Network Visualization
+          </TabsTrigger>
+          <TabsTrigger className='w-full' value='Statistics'>
+            Graph Statistics
+          </TabsTrigger>
+        </TabsList>
+        <div className='flex items-center gap-4'>
+          <Link
+            href={'/'}
+            className='inline-flex p-2 items-center h-full transition-colors text-xs border-none rounded-sm hover:bg-opacity-20 hover:text-black hover:underline'
+          >
+            <HomeIcon className='h-3 w-3 mr-1' /> Home
+          </Link>
+          <Link
+            href={'/docs'}
+            className='inline-flex p-2 items-center h-full transition-colors text-xs border-none rounded-sm hover:bg-opacity-20 hover:text-black hover:underline'
+          >
+            <FileTextIcon className='h-3 w-3 mr-1' /> Docs
+          </Link>
+        </div>
       </div>
-
-      <ResizablePanelGroup direction='horizontal' className='flex flex-1'>
-        <ResizablePanel defaultSize={16} minSize={16} className={leftSidebar ? 'block' : 'hidden'}>
-          <LeftSideBar />
-        </ResizablePanel>
-        <ResizableHandle withHandle className={leftSidebar ? 'flex' : 'hidden'} />
-        <ResizablePanel defaultSize={68} className='bg-white h-full'>
-          <div className='bg-white h-[90%]'>{children}</div>
-          <ChatWindow />
-        </ResizablePanel>
-        <ResizableHandle withHandle className={rightSidebar ? 'flex' : 'hidden'} />
-        <ResizablePanel defaultSize={16} minSize={16} className={rightSidebar ? 'block' : 'hidden'}>
-          <RightSideBar />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+      <TabsContent
+        forceMount
+        value='Network'
+        className={cn('h-full mt-0', tab === 'Network' ? 'visible' : 'invisible absolute')}
+      >
+        {children}
+      </TabsContent>
+      <TabsContent value='Statistics' className={'mx-auto container h-full mt-0'}>
+        <StatisticsTab />
+      </TabsContent>
+    </Tabs>
   );
 }

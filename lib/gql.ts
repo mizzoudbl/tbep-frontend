@@ -39,6 +39,7 @@ export const GENE_GRAPH_QUERY = gql`
         score
       }
       graphName
+      averageClusteringCoefficient
     }
   }
 `;

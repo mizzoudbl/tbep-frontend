@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useStore } from '@/lib/hooks';
 import type { GraphStore } from '@/lib/interface';
 import { cn } from '@/lib/utils';
-import { Paintbrush } from 'lucide-react';
+import { PaintbrushIcon } from 'lucide-react';
 import React from 'react';
 
 export function ColorPicker({
@@ -41,7 +41,7 @@ export function ColorPicker({
             {color ? (
               <div className='h-4 w-4 rounded !bg-center !bg-cover transition-all' style={{ background: color }} />
             ) : (
-              <Paintbrush className='h-4 w-4' />
+              <PaintbrushIcon className='h-4 w-4' />
             )}
             <span className='truncate flex-1'>{color ? color : 'Pick a color'}</span>
           </div>

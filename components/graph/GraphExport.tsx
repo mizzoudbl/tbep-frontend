@@ -16,17 +16,21 @@ import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: React.MutableRefObject<Set<string>> }) {
-  const projectTitle = useStore(state => state.projectTitle);
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     eventEmitter.on(Events.EXPORT, ({ format, all }: EventMessage[Events.EXPORT]) => {
+      const projectTitle = useStore.getState().projectTitle;
       switch (format) {
         case 'json': {
           const serializedGraph = sigma.getGraph().export();
+          serializedGraph.attributes = {
+            ...serializedGraph.attributes,
+            projectTitle,
+          };
           const data = JSON.stringify(serializedGraph, null, 2);
-          downloadFile(data, projectTitle);
+          downloadFile(data, `${projectTitle}.json`, 'text/json');
           break;
         }
         case 'csv': {
@@ -100,7 +104,7 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
               };
             }),
           );
-          downloadFile(data, `${projectTitle}-selected.csv`);
+          downloadFile(data, `${projectTitle}${all ? '' : '-selected'}.csv`);
           break;
         }
         default: {

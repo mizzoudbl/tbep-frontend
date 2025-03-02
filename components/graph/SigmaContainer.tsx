@@ -1,6 +1,7 @@
 'use client';
 
 import NodeGradientProgram from '@/lib/NodeGradientProgram';
+import { DEFAULT_EDGE_COLOR } from '@/lib/data';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import {
   ControlsContainer,
@@ -10,7 +11,7 @@ import {
 } from '@react-sigma/core';
 import { NodeBorderProgram, createNodeBorderProgram } from '@sigma/node-border';
 import type { Attributes } from 'graphology-types';
-import { Maximize, Minimize } from 'lucide-react';
+import { MaximizeIcon, MinimizeIcon } from 'lucide-react';
 import React, { Suspense, useEffect } from 'react';
 import type { Sigma } from 'sigma';
 import { EdgeLineProgram, drawDiscNodeHover } from 'sigma/rendering';
@@ -43,7 +44,16 @@ export const SigmaContainer = React.forwardRef<
       ref={ref}
       className={props.className}
       settings={{
-        ...props.settings,
+        allowInvalidContainer: true,
+        enableEdgeEvents: true,
+        defaultNodeType: 'circle',
+        labelRenderedSizeThreshold: 0.75,
+        labelDensity: 0.2,
+        defaultEdgeColor: DEFAULT_EDGE_COLOR,
+        labelSize: 10,
+        defaultNodeColor: 'blue',
+        zoomingRatio: 1.2,
+        zIndex: true,
         nodeProgramClasses: {
           circle: NodeGradientProgram,
           border: createNodeBorderProgram({
@@ -76,8 +86,8 @@ export const SigmaContainer = React.forwardRef<
       <ControlsContainer position='bottom-right' style={{ zIndex: 0 }}>
         <ZoomControl />
         <FullScreenControl labels={{ enter: 'ENTER', exit: 'EXIT' }}>
-          <Maximize />
-          <Minimize />
+          <MaximizeIcon />
+          <MinimizeIcon />
         </FullScreenControl>
       </ControlsContainer>
     </_SigmaContainer>

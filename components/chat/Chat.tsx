@@ -1,7 +1,7 @@
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { Send, Trash2 } from 'lucide-react';
+import { SendIcon, Trash2Icon } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
@@ -99,7 +99,7 @@ export function Chat() {
             <div className='flex justify-between pb-2 border-b'>
               Chat with LLM
               <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
-                <Trash2 className='w-5 h-5' />
+                <Trash2Icon className='w-5 h-5' />
               </button>
             </div>
             <div ref={chatRef} className='max-h-[70vh] overflow-y-scroll p-2 space-y-2'>
@@ -142,7 +142,7 @@ export function Chat() {
           className='px-4 py-2 min-h-10 rounded-md'
         />
         <Button type='submit' size='icon' disabled={isLoading || inputValue.trim() === ''} onClick={handleSubmit}>
-          <Send className='w-5 h-5' />
+          <SendIcon className='w-5 h-5' />
         </Button>
       </div>
       <center className='text-sm text-gray-500'>

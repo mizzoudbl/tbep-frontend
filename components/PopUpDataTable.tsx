@@ -1,7 +1,7 @@
 import { useStore } from '@/lib/hooks';
 import type { PopUpDataTableProps } from '@/lib/interface';
 import { cn, downloadFile } from '@/lib/utils';
-import { Download } from 'lucide-react';
+import { DownloadIcon } from 'lucide-react';
 import { unparse } from 'papaparse';
 import React from 'react';
 import { Button } from './ui/button';
@@ -74,7 +74,7 @@ export default function PopUpDataTable<E, F>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size={'icon'} variant={'outline'}>
-                <Download size={20} />
+                <DownloadIcon size={20} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

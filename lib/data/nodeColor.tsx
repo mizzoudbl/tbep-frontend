@@ -44,7 +44,7 @@ export const nodeColor = [
           KEGG
         </a>{' '}
         and{' '}
-        <a href='http://www.genome.jp/kegg' className='underline'>
+        <a href='https://reactome.org/' className='underline'>
           Reactome
         </a>{' '}
         databases
@@ -90,7 +90,7 @@ export const nodeColor = [
     tooltipContent: (
       <>
         Custom information <br />
-        <b>Disclaimer:</b> This information is provided by the user. <br />
+        <b>Disclaimer:</b> This information should provided by the user through custom upload. <br />
         <b>Column Prefix:</b> <i>Custom_Color</i>
       </>
     ),

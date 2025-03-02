@@ -3,7 +3,7 @@
 import { PROPERTY_TYPE_LABEL_MAPPING } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { P_VALUE_REGEX } from '@/lib/utils';
-import { ChevronsUpDown } from 'lucide-react';
+import { ChevronsUpDownIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BinaryLegend, HeatmapLegend } from '../legends';
 import { Button } from '../ui/button';
@@ -26,7 +26,7 @@ export function Legend() {
         <p className='font-bold'>Legends</p>
         <CollapsibleTrigger asChild>
           <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
-            <ChevronsUpDown size={15} />
+            <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>

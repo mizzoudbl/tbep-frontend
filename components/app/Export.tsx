@@ -1,6 +1,6 @@
-import { Events, eventEmitter } from '@/lib/utils';
+import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
-import { FolderUp } from 'lucide-react';
+import { FolderUpIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
@@ -13,9 +13,9 @@ export function Export() {
         <Button
           variant='outline'
           size='sm'
-          className='text-xs hover:bg-zinc-300 border-none bg-zinc-200 hover:text-black rounded-sm '
+          className='w-[calc(100%-1.5rem)] mb-2 mr-2 text-xs hover:bg-zinc-300 border-none bg-zinc-200 hover:text-black rounded-sm '
         >
-          <FolderUp className='h-3 w-3 mr-1' />
+          <FolderUpIcon className='h-3 w-3 mr-1' />
           Export
         </Button>
       </DropdownMenuTrigger>
@@ -23,7 +23,9 @@ export function Export() {
         {exportOptions.map(val => (
           <DropdownMenuItem
             key={val}
-            onClick={() => eventEmitter.emit(Events.EXPORT, { format: val, all: true })}
+            onClick={() =>
+              eventEmitter.emit(Events.EXPORT, { format: val, all: true } satisfies EventMessage[Events.EXPORT])
+            }
             className='cursor-pointer'
           >
             {val.toUpperCase()}

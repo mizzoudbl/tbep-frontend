@@ -9,8 +9,8 @@ import PopUpDataTable from '../PopUpDataTable';
 import { Button } from '../ui/button';
 
 export function NetworkInfo() {
-  const totalNodes = useStore(state => state.totalNodes);
-  const totalEdges = useStore(state => state.totalEdges);
+  const totalNodes = useStore(state => state.networkStatistics.totalNodes);
+  const totalEdges = useStore(state => state.networkStatistics.totalEdges);
   const selectedNodes = useStore(state => state.selectedNodes);
   const [showTable, setShowTable] = React.useState(false);
   const [gseaData, setGseaData] = React.useState<Array<Gsea>>([]);

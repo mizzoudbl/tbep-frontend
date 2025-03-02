@@ -1,8 +1,8 @@
 'use client';
 
 import { useStore } from '@/lib/hooks';
-import { Events, eventEmitter } from '@/lib/utils';
-import { SquareArrowOutUpRight } from 'lucide-react';
+import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
+import { SquareArrowOutUpRightIcon } from 'lucide-react';
 import React, { createRef, useEffect } from 'react';
 import { Textarea } from '../ui/textarea';
 
@@ -56,9 +56,9 @@ export function GeneSearch() {
           type='button'
           className='inline-flex text-xs underline cursor-pointer text-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed'
           disabled={nodeSearchQuery.length === 0}
-          onClick={() => eventEmitter.emit(Events.EXPORT, { format: 'csv' })}
+          onClick={() => eventEmitter.emit(Events.EXPORT, { format: 'csv' } satisfies EventMessage[Events.EXPORT])}
         >
-          Export <SquareArrowOutUpRight size={10} className='mt-1 ml-0.5' />
+          Export <SquareArrowOutUpRightIcon size={10} className='mt-1 ml-0.5' />
         </button>
       </div>
       <div className='relative w-full'>
