@@ -7,6 +7,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { CheckCircle, CircleX } from 'lucide-react';
+import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -22,7 +23,7 @@ export default function AboutPage() {
     email: false,
     feedback: false,
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean | 'failed'>(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -73,20 +74,33 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent className='pt-6'>
             {submitted ? (
-              <div className='flex flex-col items-center justify-center py-6 text-center space-y-4'>
-                <div className='rounded-full bg-teal-100 p-3 dark:bg-teal-900/30'>
-                  <CheckCircle className='h-8 w-8 text-teal-600 dark:text-teal-400' />
+              submitted !== 'failed' ? (
+                <div className='flex flex-col items-center justify-center py-6 text-center space-y-4'>
+                  <div className='rounded-full bg-teal-100 p-3 dark:bg-teal-900/30'>
+                    <CheckCircle className='h-8 w-8 text-teal-600 dark:text-teal-400' />
+                  </div>
+                  <h3 className='text-xl font-medium'>Thank You!</h3>
+                  <p className='text-muted-foreground'>Your feedback has been submitted successfully.</p>
+                  <Button
+                    variant='outline'
+                    className='mt-4 border hover:text-gray-600 text-teal-700 hover:bg-teal-50 dark:text-teal-300 dark:hover:bg-teal-900/20'
+                    onClick={() => setSubmitted(false)}
+                  >
+                    Submit Another Response
+                  </Button>
                 </div>
-                <h3 className='text-xl font-medium'>Thank You!</h3>
-                <p className='text-muted-foreground'>Your feedback has been submitted successfully.</p>
-                <Button
-                  variant='outline'
-                  className='mt-4 border hover:text-gray-600 text-teal-700 hover:bg-teal-50 dark:text-teal-300 dark:hover:bg-teal-900/20'
-                  onClick={() => setSubmitted(false)}
-                >
-                  Submit Another Response
-                </Button>
-              </div>
+              ) : (
+                <div className='flex flex-col items-center justify-center py-6 text-center space-y-4'>
+                  <div className='rounded-full bg-red-100 p-3 dark:bg-red-900/30'>
+                    <CircleX className='h-8 w-8 text-red-600 dark:text-red-400' />
+                  </div>
+                  <h3 className='text-xl font-medium'>Submission Failed</h3>
+                  <p>Please try submitting your feedback using the alternative form.</p>
+                  <Link href='https://forms.gle/qtNssDeVEW24gRVg8' target='_blank' className='text-accent underline'>
+                    Open Alternative Form
+                  </Link>
+                </div>
+              )
             ) : (
               <form onSubmit={handleSubmit} className='space-y-4'>
                 <div className='space-y-2'>
