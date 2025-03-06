@@ -14,7 +14,7 @@ import React from 'react';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from '../ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 import { DataTable } from '../ui/data-table';
 import { Skeleton } from '../ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
