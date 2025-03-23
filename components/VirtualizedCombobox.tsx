@@ -167,7 +167,7 @@ export function VirtualizedCombobox({
           <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align={align} className={cn('w-[200px] p-0', className)}>
+      <PopoverContent align={align} className={cn(`w-[${width || '200px'}] p-0`, className)}>
         <VirtualizedCommand
           multiselect={multiselect}
           options={data}

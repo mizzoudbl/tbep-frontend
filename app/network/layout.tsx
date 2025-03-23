@@ -1,8 +1,12 @@
 'use client';
 
 import { FileName } from '@/components/app';
+import { LeftSideBar } from '@/components/left-panel';
+import { RightSideBar } from '@/components/right-panel';
 import { StatisticsTab } from '@/components/statistics';
 import { Input } from '@/components/ui/input';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { FileTextIcon, HomeIcon } from 'lucide-react';
@@ -44,16 +48,30 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
           </Link>
         </div>
       </div>
-      <TabsContent
-        forceMount
-        value='Network'
-        className={cn('h-full mt-0', tab === 'Network' ? 'visible' : 'invisible absolute')}
-      >
-        {children}
-      </TabsContent>
-      <TabsContent value='Statistics' className={'mx-auto container h-full mt-0'}>
-        <StatisticsTab />
-      </TabsContent>
+      <ResizablePanelGroup direction='horizontal' className='flex flex-1'>
+        <ResizablePanel defaultSize={16} minSize={16}>
+          <LeftSideBar />
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={68} className='h-full bg-white'>
+          <TabsContent
+            forceMount
+            value='Network'
+            className={cn('h-full mt-0', tab === 'Network' ? 'visible' : 'invisible absolute')}
+          >
+            {children}
+          </TabsContent>
+          <TabsContent value='Statistics' className='h-full mt-0'>
+            <ScrollArea className='h-screen'>
+              <StatisticsTab />
+            </ScrollArea>
+          </TabsContent>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={16} minSize={16}>
+          <RightSideBar />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </Tabs>
   );
 }
