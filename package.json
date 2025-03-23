@@ -57,7 +57,7 @@
     "graphology-metrics": "^2.3.1",
     "graphology-types": "^0.24.7",
     "lucide-react": "^0.446.0",
-    "next": "14.2.13",
+    "next": "14.2.24",
     "next-view-transitions": "^0.3.2",
     "nextjs-toploader": "^3.6.15",
     "nextra": "^3.3.1",
@@ -75,7 +75,6 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.6.2",
     "zustand": "5.0.0-rc.2"
   },
   "lint-staged": {
@@ -100,11 +99,21 @@
     "lint-staged": "^15.2.10",
     "next-sitemap": "^4.2.3",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.6.2"
   },
   "config": {
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "cross-spawn@>=7.0.0 <7.0.5": ">=7.0.5",
+      "nanoid@<3.3.8": ">=3.3.8",
+      "katex@>=0.12.0 <=0.16.20": ">=0.16.21",
+      "dompurify@<3.2.4": ">=3.2.4",
+      "@babel/runtime@<7.26.10": ">=7.26.10"
     }
   }
 }

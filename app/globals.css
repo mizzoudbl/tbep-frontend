@@ -80,18 +80,8 @@
   }
 }
 
-/* Add this to your global CSS */
-@media not all and (min-resolution:.001dpcm) {
-  @supports (-webkit-appearance:none) {
-    .recharts-wrapper {
-      width: 100% !important;
-      height: 100% !important;
-      max-width: 100%;
-      overflow: visible;
-    }
-    
-    .recharts-surface {
-      overflow: visible;
-    }
+@supports (-webkit-backdrop-filter: blur(0)) {
+  .safari-only-svg-fix {
+    @apply h-[200px] md:h-[300px] lg:h-[400px];
   }
 }

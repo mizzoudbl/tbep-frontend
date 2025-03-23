@@ -61,12 +61,12 @@ export function StatisticsTab() {
   };
 
   return (
-    <div className='flex flex-col my-6 pb-6 gap-4'>
+    <div className='flex flex-col my-6 pb-6 gap-4 mx-4'>
       <h1 className='text-center text-4xl font-bold w-full'>Network Info</h1>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-2'>
+      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2'>
         <Card>
           <CardHeader>
-            <CardTitle>Total Genes</CardTitle>
+            <CardTitle className='pb-4'>Total Genes</CardTitle>
             <b className='text-4xl'>{networkStatistics.totalNodes.toLocaleString()}</b>
           </CardHeader>
         </Card>
@@ -114,9 +114,9 @@ export function StatisticsTab() {
           <CardTitle>Gene Degree Distribution</CardTitle>
           <CardDescription>Histogram showing the frequency of node degrees</CardDescription>
         </CardHeader>
-        <CardContent className='h-[400px] justify-center flex'>
+        <CardContent className='justify-center flex'>
           {networkStatistics.degreeDistribution ? (
-            <ChartContainer className='max-h-[400px] w-full' config={{}}>
+            <ChartContainer className='max-h-[400px] w-full safari-only-svg-fix' config={{}}>
               <BarChart data={networkStatistics.degreeDistribution}>
                 <CartesianGrid strokeDasharray='3 3' />
                 <XAxis
@@ -188,7 +188,7 @@ export function StatisticsTab() {
                     </TabsContent>
                     <TabsContent value='chart'>
                       {data ? (
-                        <ChartContainer className='max-h-[400px] w-full' config={{}}>
+                        <ChartContainer className='max-h-[400px] w-full safari-only-svg-fix' config={{}}>
                           <BarChart data={data}>
                             <CartesianGrid strokeDasharray='3 3' />
                             <XAxis dataKey='geneName' label={{ value: 'Gene', position: 'insideBottom', offset: -5 }} />
@@ -226,9 +226,9 @@ export function StatisticsTab() {
             greater than or equal to a certain value.
           </CardDescription>
         </CardHeader>
-        <CardContent className='h-[400px] justify-center flex'>
+        <CardContent className='justify-center flex'>
           {networkStatistics.edgeScoreDistribution ? (
-            <ChartContainer className='max-h-[400px] w-full' config={{}}>
+            <ChartContainer className='max-h-[400px] w-full safari-only-svg-fix' config={{}}>
               <AreaChart data={networkStatistics.edgeScoreDistribution}>
                 <CartesianGrid strokeDasharray='3 3' />
                 <XAxis dataKey='score' label={{ value: 'Interaction Score', position: 'insideBottom', offset: -5 }} />

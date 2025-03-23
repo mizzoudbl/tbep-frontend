@@ -15,7 +15,6 @@ export function Chat() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
-  const [isTyping, setIsTyping] = React.useState(false);
   const chatRef = createRef<HTMLDivElement>();
 
   const handleSubmit = async (
@@ -53,7 +52,6 @@ export function Chat() {
           sender: 'llm',
         };
         setIsLoading(false);
-        setIsTyping(true);
         setMessages(prevMessages => [...prevMessages, llmResponse]);
       };
 
@@ -68,7 +66,6 @@ export function Chat() {
       };
 
       event.onerror = () => {
-        setIsTyping(false);
         event.close();
       };
     } catch (error) {
@@ -80,16 +77,7 @@ export function Chat() {
   const handleDeleteMessages = () => {
     setMessages([]);
     setIsChatOpen(false);
-    setIsTyping(false);
   };
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  React.useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-      window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
-    }
-  }, [isTyping]);
 
   return (
     <div className='rounded-lg shadow-md mt-4 p-4 flex flex-col'>
