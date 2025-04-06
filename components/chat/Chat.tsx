@@ -1,3 +1,4 @@
+import { LLM_MODELS } from '@/lib/data';
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -7,11 +8,14 @@ import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from '.';
 import { Button } from '../ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import { Textarea } from '../ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function Chat() {
   const [inputValue, setInputValue] = React.useState('');
+  const [model, setModel] = React.useState<(typeof LLM_MODELS)[number]['value']>(LLM_MODELS[0].value);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
@@ -31,7 +35,7 @@ export function Chat() {
     try {
       const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/chat`, {
         method: 'POST',
-        body: JSON.stringify({ question: inputValue }),
+        body: JSON.stringify({ question: inputValue, model }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -133,18 +137,37 @@ export function Chat() {
           <SendIcon className='w-5 h-5' />
         </Button>
       </div>
-      <center className='text-sm text-gray-500'>
-        This AI assistant may occasionally generate incorrect or misleading information. We are not responsible for any
-        decisions made based on the generated content. By using this service, you agree to our{' '}
-        <Link href='/docs/terms-of-use' className='font-medium underline underline-offset-4 hover:text-primary'>
-          Terms of Use
-        </Link>{' '}
-        and{' '}
-        <Link href='/docs/privacy-policy' className='font-medium underline underline-offset-4 hover:text-primary'>
-          Privacy Policy
-        </Link>
-        .
-      </center>
+      <div className='flex mt-2'>
+        <Select value={model} onValueChange={value => setModel(value as typeof model)}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <SelectTrigger className='w-[110px] flex-shrink-0'>
+                <SelectValue placeholder='Select model' />
+              </SelectTrigger>
+            </TooltipTrigger>
+            <TooltipContent> Choose a model to interact with</TooltipContent>
+          </Tooltip>
+          <SelectContent>
+            {LLM_MODELS.map(model => (
+              <SelectItem key={model.value} value={model.value}>
+                {model.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <center className='text-sm ml-0.5 text-gray-500'>
+          This AI assistant may occasionally generate incorrect or misleading information. We are not responsible for
+          any decisions made based on the generated content. By using this service, you agree to our{' '}
+          <Link href='/docs/terms-of-use' className='font-medium underline underline-offset-4 hover:text-primary'>
+            Terms of Use
+          </Link>{' '}
+          and{' '}
+          <Link href='/docs/privacy-policy' className='font-medium underline underline-offset-4 hover:text-primary'>
+            Privacy Policy
+          </Link>
+          .
+        </center>
+      </div>
     </div>
   );
 }

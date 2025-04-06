@@ -49,12 +49,12 @@ export function RadialAnalysis() {
               <Slider
                 id={option.key}
                 min={option.key === 'edgeWeightCutOff' ? minScore : option.min}
-                max={option.key === 'nodeDegreeCutOff' && !isGeneDegree ? 1 : option.max}
-                step={option.key === 'nodeDegreeCutOff' && !isGeneDegree ? 0.01 : option.step}
+                max={option.key === 'candidatePrioritizationCutOff' && !isGeneDegree ? 1 : option.max}
+                step={option.key === 'candidatePrioritizationCutOff' && !isGeneDegree ? 0.01 : option.step}
                 value={[radialAnalysis[option.key]]}
                 onValueChange={value => updateRadialAnalysis(value[0], option.key as keyof RadialAnalysisSetting)}
               />
-              {option.key === 'nodeDegreeCutOff' && (
+              {option.key === 'candidatePrioritizationCutOff' && (
                 <VirtualizedCombobox
                   data={['Gene Degree', ...radioOptions.database.TE, ...radioOptions.user.TE]}
                   width='550px'

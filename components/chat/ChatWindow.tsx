@@ -1,5 +1,6 @@
 'use client';
 
+import { LLM_MODELS } from '@/lib/data';
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
 import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
@@ -17,12 +18,15 @@ import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from '.';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import { Textarea } from '../ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function ChatWindow() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [inputValue, setInputValue] = React.useState('');
+  const [model, setModel] = React.useState<(typeof LLM_MODELS)[number]['value']>(LLM_MODELS[0].value);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
@@ -51,11 +55,18 @@ export function ChatWindow() {
     try {
       const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/chat`, {
         method: 'POST',
-        body: JSON.stringify({ question: inputValue }),
+        body: JSON.stringify({ question: inputValue, model }),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      if (response.status === 400) {
+        toast.error(await response.json().then(r => r.message ?? 'Error'), {
+          cancel: { label: 'Close', onClick() {} },
+          description: 'Please use another model or try again later.',
+        });
+        return;
+      }
       if (!response.ok) {
         toast.error('Failed to fetch response from LLM', {
           cancel: { label: 'Close', onClick() {} },
@@ -225,7 +236,24 @@ export function ChatWindow() {
         )}
       </AnimatePresence>
       <div className='flex w-full h-full mb-4' ref={textAreaRef}>
-        <div className='flex w-[97%]'>
+        <div className='relative flex w-[97%]'>
+          <Select value={model} onValueChange={value => setModel(value as typeof model)}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SelectTrigger className='w-[110px] backdrop-blur-sm absolute -top-10 right-5 flex-shrink-0'>
+                  <SelectValue placeholder='Select model' />
+                </SelectTrigger>
+              </TooltipTrigger>
+              <TooltipContent> Choose a model to interact with</TooltipContent>
+            </Tooltip>
+            <SelectContent>
+              {LLM_MODELS.map(model => (
+                <SelectItem key={model.value} value={model.value}>
+                  {model.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Textarea
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}

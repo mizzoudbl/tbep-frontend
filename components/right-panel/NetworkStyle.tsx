@@ -18,7 +18,6 @@ export function NetworkStyle() {
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
   const defaultLabelSize = useStore(state => state.defaultLabelSize);
-  const showEdgeLabel = useStore(state => state.showEdgeLabel);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const edgeOpacity = useStore(state => state.edgeOpacity);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
@@ -128,24 +127,6 @@ export function NetworkStyle() {
         </div>
         <hr />
         <div className='flex flex-col gap-2'>
-          <div className='flex items-center gap-2'>
-            <Checkbox
-              id='showEdgeLabel'
-              checked={showEdgeLabel}
-              onCheckedChange={checked => handleCheckBox(checked, 'showEdgeLabel')}
-            />
-            <Label htmlFor='showEdgeLabel' className='text-xs font-semibold flex gap-1 items-center'>
-              Show Edge Label
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <InfoIcon size={12} />
-                </TooltipTrigger>
-                <TooltipContent className='max-w-60' align='end'>
-                  For larger graphs, it is recommended to zoom before turn on edge labels to improve performance
-                </TooltipContent>
-              </Tooltip>
-            </Label>
-          </div>
           <div className='flex items-center gap-2'>
             <Checkbox
               id='showEdgeColor'

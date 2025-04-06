@@ -2,8 +2,8 @@ import { type NodeHoverDrawingFunction, NodeProgram, type ProgramInfo } from 'si
 import type { NodeDisplayData, RenderParams } from 'sigma/types';
 import { floatColor } from 'sigma/utils';
 
-import { drawHover } from '@/components/graph/canvas-hover';
 import type { Attributes } from 'graphology-types';
+import { drawHover } from './canvas-hover';
 import FRAGMENT_SHADER_SOURCE from './node-gradient-frag.glsl';
 import VERTEX_SHADER_SOURCE from './node-gradient-vert.glsl';
 

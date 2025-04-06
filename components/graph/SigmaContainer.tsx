@@ -1,7 +1,7 @@
 'use client';
 
-import NodeGradientProgram from '@/lib/NodeGradientProgram';
 import { DEFAULT_EDGE_COLOR } from '@/lib/data';
+import { NodeGradientProgram } from '@/lib/graph';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import {
   ControlsContainer,
@@ -51,7 +51,6 @@ export const SigmaContainer = React.forwardRef<
         labelDensity: 0.2,
         defaultEdgeColor: DEFAULT_EDGE_COLOR,
         labelSize: 10,
-        defaultNodeColor: 'blue',
         zoomingRatio: 1.2,
         zIndex: true,
         nodeProgramClasses: {

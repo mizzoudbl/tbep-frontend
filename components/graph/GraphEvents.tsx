@@ -7,13 +7,14 @@ import {
   type NodeColorType,
   type NodeSizeType,
 } from '@/lib/data';
+import drawEdgeHover from '@/lib/graph/canvas-edge-hover';
 import { useStore } from '@/lib/hooks';
 import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection, SelectionBox } from '@/lib/interface';
 import { Trie } from '@/lib/trie';
 import { cn } from '@/lib/utils';
 import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { drawSelectionBox, findNodesInSelection } from './canvas-brush';
+import { drawSelectionBox, findNodesInSelection } from '../../lib/graph/canvas-brush';
 
 export function GraphEvents({
   clickedNodesRef,
@@ -170,7 +171,9 @@ export function GraphEvents({
   //   biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!canvasRef.current) canvasRef.current = sigma.getCanvases().mouse;
+    const context = canvasRef.current?.getContext('2d');
     const graph = sigma.getGraph();
+    const wasNodeTypeBorderBefore = [false, false];
     registerEvents({
       /* Node Hover Program */
       enterEdge: e => {
@@ -178,33 +181,56 @@ export function GraphEvents({
           attr.altColor = attr.color;
           attr.color = HIGHLIGHTED_EDGE_COLOR;
           attr.forceLabel = true;
-
           return attr;
         });
+        let count = 0;
         for (const node of graph.extremities(e.edge)) {
           graph.updateNodeAttributes(node, attr => {
+            if (attr.type === 'border') wasNodeTypeBorderBefore[count++] = true;
             attr.type = 'border';
             attr.highlighted = true;
             return attr;
           });
         }
+        if (context) {
+          context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+          const edgeAttr = graph.getEdgeAttributes(e.edge);
+          const [source, target] = graph.extremities(e.edge);
+          drawEdgeHover(
+            context,
+            {
+              key: e.edge,
+              ...edgeAttr,
+              hidden:
+                edgeAttr.hidden || graph.getNodeAttribute(source, 'hidden') || graph.getNodeAttribute(target, 'hidden'),
+              x: e.event.x,
+              y: e.event.y,
+            },
+            sigma.getSettings(),
+          );
+        }
       },
       leaveEdge: e => {
+        context?.clearRect(0, 0, context.canvas.width, context.canvas.height);
         graph.updateEdgeAttributes(e.edge, attr => {
           attr.color = attr.altColor;
           attr.forceLabel = false;
           return attr;
         });
+        let count = 0;
         for (const node of graph.extremities(e.edge)) {
           graph.updateNodeAttributes(node, attr => {
             if (highlightedNodesRef.current.has(node)) {
               attr.type = 'highlight';
+            } else if (wasNodeTypeBorderBefore[count]) {
+              attr.highlighted = false;
             } else {
               attr.type = 'circle';
               attr.highlighted = false;
             }
             return attr;
           });
+          wasNodeTypeBorderBefore[count++] = false;
         }
       },
       /* Drag'n'Drop Program */

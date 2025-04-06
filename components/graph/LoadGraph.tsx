@@ -11,7 +11,6 @@ import type {
   GeneGraphVariables,
   GeneVerificationData,
   GeneVerificationVariables,
-  GraphStore,
   NodeAttributes,
 } from '@/lib/interface';
 import { openDB } from '@/lib/utils';
@@ -19,7 +18,6 @@ import { useLazyQuery } from '@apollo/client';
 import { useLoadGraph, useSigma } from '@react-sigma/core';
 import Graph from 'graphology';
 import { circlepack } from 'graphology-layout';
-import { density, diameter } from 'graphology-metrics/graph';
 import type { SerializedGraph } from 'graphology-types';
 import { AlertTriangleIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -57,7 +55,7 @@ export function LoadGraph() {
 
   const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
   const [showWarning, setShowWarning] = React.useState<boolean>(false);
-
+  const setNetworkStatistics = useStore(state => state.setNetworkStatistics);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
@@ -145,16 +143,13 @@ export function LoadGraph() {
           }
           circlepack.assign(graph);
           loadGraph(graph);
-          const avgDegree = graph.order ? (2 * graph.size) / graph.order : 0;
+          setNetworkStatistics({
+            totalNodes: graph.order,
+            totalEdges: graph.size,
+          });
           useStore.setState({
             geneIDs: geneIDArray,
             geneNameToID,
-            networkStatistics: {
-              totalNodes: geneIDs.size,
-              totalEdges: fileData.length,
-              averageClusteringCoefficient: Number.NaN,
-              ...statisticsGenerator(graph),
-            },
           });
         };
       } else {
@@ -211,14 +206,13 @@ export function LoadGraph() {
               if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             }
 
+            setNetworkStatistics({
+              totalNodes: graph.order,
+              totalEdges: graph.size,
+              averageClusteringCoefficient,
+            });
             useStore.setState({
               geneIDs: transformedData.nodes?.map(node => node.key) || [],
-              networkStatistics: {
-                totalNodes: graph.order || 0,
-                totalEdges: graph.size || 0,
-                averageClusteringCoefficient,
-                ...statisticsGenerator(graph),
-              },
               geneNameToID,
             });
           }

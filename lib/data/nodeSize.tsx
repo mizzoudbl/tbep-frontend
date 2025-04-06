@@ -43,10 +43,6 @@ export const nodeSize = [
         <a href='https://astrazeneca-cgr-publications.github.io/DrugnomeAI/index.html' className='underline'>
           DrugnomeAI
         </a>
-        /
-        <a href='https://public.cgr.astrazeneca.com/mantisml/v2/index.html' className='underline'>
-          Mantis-ML
-        </a>
       </>
     ),
   },

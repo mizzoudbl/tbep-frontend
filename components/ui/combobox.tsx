@@ -28,6 +28,15 @@ export function Combobox({
   multiselect?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const val = data.find(item => getProperty(item) === value);
+
+  const filteredData = React.useMemo(() => {
+    return data.filter(item => {
+      const text = typeof item === 'string' ? item : item.label || item.name || '';
+      return text.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+  }, [data, searchTerm]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -43,18 +52,20 @@ export function Combobox({
               ? value.size
                 ? `${value.size} selected`
                 : placeholder
-              : value || placeholder}
+              : typeof val === 'string'
+                ? val
+                : val?.label || val?.name || placeholder}
           </span>
           <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className={cn('w-[200px] p-0', className)}>
-        <Command>
-          <CommandInput placeholder={placeholder} />
+        <Command shouldFilter={false}>
+          <CommandInput placeholder={placeholder} value={searchTerm} onValueChange={setSearchTerm} />
           <CommandList>
             <CommandEmpty>No Result Found.</CommandEmpty>
             <CommandGroup>
-              {data?.map(item => {
+              {filteredData.map(item => {
                 const propertyName = getProperty(item);
                 return (
                   <CommandItem
@@ -79,7 +90,7 @@ export function Combobox({
                             : 'opacity-0',
                         )}
                       />
-                      {propertyName}
+                      {typeof item === 'string' ? item : item.label || item.name}
                     </div>
                     {typeof item !== 'string' && item.description && (
                       <Tooltip>

@@ -9,7 +9,7 @@ import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
 import { scaleLinear } from 'd3-scale';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -22,6 +22,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
   const [communityMap, setCommunityMap] = useState<Record<string, { name: string; genes: string[]; color: string }>>(
     {},
   );
+  const { geneIDs: seedGeneIDs }: { geneIDs: string[] } = useStore(state => state.graphConfig) ?? { geneIDs: [] };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -70,7 +71,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
           const sizeScale = scaleLinear<number, number>(minMax, [0, 1]);
           graph.updateEachNodeAttributes((node, attr) => {
             const value = +universalData[node]?.[userOrCommonIdentifier]?.TE[nodeDegreeProperty];
-            if (!Number.isNaN(value) && sizeScale(value) >= radialAnalysis.nodeDegreeCutOff) {
+            if (!Number.isNaN(value) && sizeScale(value) >= radialAnalysis.candidatePrioritizationCutOff) {
               totalNodes++;
               attr.hidden = false;
             } else {
@@ -82,7 +83,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
       } else {
         graph.updateEachNodeAttributes((node, attr) => {
           const degree = graph.degree(node);
-          if (degree < radialAnalysis.nodeDegreeCutOff) {
+          if (degree < radialAnalysis.candidatePrioritizationCutOff) {
             attr.hidden = true;
           } else {
             totalNodes++;
@@ -96,11 +97,11 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
       }, 0);
       setNetworkStatistics({ totalEdges, totalNodes });
     })();
-  }, [radialAnalysis.nodeDegreeCutOff, nodeDegreeProperty]);
+  }, [radialAnalysis.candidatePrioritizationCutOff, nodeDegreeProperty]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (radialAnalysis.hubGeneEdgeCount < 1) {
+    if (radialAnalysis.hubGeneCutOff < 1) {
       graph.updateEachNodeAttributes((node, attr) => {
         if (highlightedNodesRef?.current.has(node)) {
           attr.type = 'highlight';
@@ -111,8 +112,8 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
       });
     } else {
       graph.updateEachNodeAttributes((node, attr) => {
-        const degree = graph.degree(node);
-        if (degree >= radialAnalysis.hubGeneEdgeCount) {
+        const degree = graph.neighbors(node).filter(neighbor => seedGeneIDs.includes(neighbor)).length;
+        if (degree >= radialAnalysis.hubGeneCutOff) {
           attr.type = 'border';
         } else if (highlightedNodesRef?.current.has(node)) {
           attr.type = 'highlight';
@@ -122,7 +123,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
         return attr;
       });
     }
-  }, [radialAnalysis.hubGeneEdgeCount, highlightedNodesRef?.current]);
+  }, [radialAnalysis.hubGeneCutOff, highlightedNodesRef?.current]);
 
   async function renewSession() {
     const res = await fetch(`${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/algorithm/renew-session`, {
@@ -230,12 +231,19 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
               modularity: number;
               communities: Record<string, { name: string; genes: string[]; color: string }>;
             } = await res.json();
-
             setCommunityMap(communities);
+            let count = 0;
             for (const community of Object.values(communities)) {
+              count++;
               for (const gene of community.genes) {
                 graph.setNodeAttribute(gene, 'color', community.color);
               }
+            }
+            if (count > 100) {
+              toast.error('Too many communities, please increase the minimum community size or decrease resolution', {
+                cancel: { label: 'Close', onClick() {} },
+                description: 'This helps to reduce the number of communities',
+              });
             }
             eventEmitter.emit(Events.ALGORITHM_RESULTS, {
               modularity,
@@ -291,10 +299,16 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
     });
   }, []);
 
+  const getReadableTextColor = useCallback((hex: string) => {
+    const [r, g, b] = hex.match(/\w\w/g)!.map(v => Number.parseInt(v, 16));
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 140 ? '#000' : '#fff';
+  }, []);
+
   return (
     <>
       {Object.keys(communityMap).length > 0 && (
-        <div className='absolute bottom-2 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
+        <div className='absolute bottom-1 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
           {Object.entries(communityMap).map(([id, val], idx) => (
             <div key={id} className='flex items-center gap-1'>
               <Checkbox
@@ -307,8 +321,8 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
                 }}
               />
               <Button
-                style={{ backgroundColor: val.color }}
-                className='h-5 w-30'
+                style={{ backgroundColor: val.color, color: getReadableTextColor(val.color) }}
+                className='h-5 w-32'
                 onClick={() => fitViewportToNodes(sigma, val.genes, { animate: true })}
               >
                 {val.name}
