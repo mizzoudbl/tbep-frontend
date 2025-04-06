@@ -7,12 +7,12 @@ export interface RadialAnalysisSetting {
   /**
    * Node Degree Cut-off
    */
-  nodeDegreeCutOff: number;
+  candidatePrioritizationCutOff: number;
 
   /**
    * Hub Node Degree Cut-off
    */
-  hubGeneEdgeCount: number;
+  hubGeneCutOff: number;
 
   /**
    * Node Degree Cut-off Property

@@ -20,7 +20,6 @@ export function statisticsGenerator(
         description: graph.getNodeAttribute(node, 'description')!,
         degree: degree.toString(),
       });
-      ('');
       acc[degree] = (acc[degree] || 0) + 1;
       return acc;
     }, {}),

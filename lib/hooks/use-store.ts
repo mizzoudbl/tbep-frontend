@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { TEMP_OPENTARGETS_PROPERTY_MAPPING } from '../data';
 import type { GraphStore } from '../interface';
 import { initRadioOptions } from '../utils';
 
@@ -21,7 +22,6 @@ export const useStore = create<GraphStore>(set => ({
   selectedNodes: [],
   selectedRadioNodeColor: undefined,
   selectedRadioNodeSize: undefined,
-  showEdgeLabel: false,
   showEdgeColor: false,
 
   networkStatistics: {
@@ -49,16 +49,24 @@ export const useStore = create<GraphStore>(set => ({
   },
   radialAnalysis: {
     edgeWeightCutOff: 0.4,
-    nodeDegreeCutOff: 0,
-    hubGeneEdgeCount: 0,
+    candidatePrioritizationCutOff: 0,
+    hubGeneCutOff: 0,
     nodeDegreeProperty: 'Gene Degree',
   },
   geneIDs: [],
-  diseaseName: 'ALS',
+  diseaseName: '',
   universalData: {},
   radioOptions: {
     user: initRadioOptions(),
-    database: initRadioOptions(),
+    database: {
+      DEG: [],
+      Pathway: [],
+      Druggability: [],
+      TE: [],
+      Custom_Color: [],
+      OpenTargets: TEMP_OPENTARGETS_PROPERTY_MAPPING,
+      OT_Prioritization: [],
+    },
   },
   selectedNodeSizeProperty: '',
   selectedNodeColorProperty: '',

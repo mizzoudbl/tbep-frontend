@@ -5,6 +5,18 @@ description: Summary of release highlights of TBEP tool
 
 # CHANGELOG
 
+## v1.2.2
+
+- **[FEATURE]** Added additional provider for the LLM Chatbot from "OpenAI" to improve the response time and accuracy of the answers. You can choose between tuned "Gpt-4o" and "Llama 3.1" models in the chatbot.
+- **[FEATURE|IMPROVEMENT]** Now, only hovering over the edge will show the scores of the edge in the tooltip. This reduces the clutter and effort to show the edge scores without hovering over the edge. This also removes the requriement to have a checkbox to show the edge scores.
+- **[IMPROVEMENT]** Clustering algorithm's colors are now more distinct and easy to distinguish. The colors are now more vibrant and have a better contrast with the background.
+- **[IMPROVEMENT]** Hub Genes Identification feature now shows cut-off on number of edges which is shared with seed genes, enhancing the usability of the feature showing more connected genes with the seed genes.
+- **[IMPROVEMENT]** Added some help tooltip Content in the dropdown menu.
+- **[IMPROVEMENT|BUG]** Fixed redundancy of few diseases in the dropdown list of diseases in the left panel. Also, Target Disease Association properties is now shown in consistent according to the order that was present in OpenTargets Portal.
+- **[BUG]** UI fix which makes it appear that hidden nodes are also selected using selection box (while in actual, it was not being selected).
+- **[BUG]** Fixed the issue where on using Hub Genes Identification feature, upon hovering edge or node, the highlight (using border) of the hub genes disappears.
+- **[CHANGE]** "Node Degree Cut-off" is now "Candidate Prioritization Cut-off" as it does not only consider the node degree but can also consider tissue specificity for cut-off.
+
 ## v1.2.1
 
 - **[IMPROVEMENT]** Removed auto-scrolling when LLM answers a query in the chatbot.

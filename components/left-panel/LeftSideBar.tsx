@@ -37,7 +37,7 @@ export function LeftSideBar() {
   const geneIDs = useStore(state => state.geneIDs);
   const bringCommon = useRef<boolean>(true);
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | null>(null);
-  const [diseaseMap, setDiseaseMap] = React.useState<string>('amyotrophic lateral sclerosis (ALS)');
+  const [diseaseMap, setDiseaseMap] = React.useState<string>('amyotrophic lateral sclerosis (MONDO_0004976)');
 
   useEffect(() => {
     const graphConfig = localStorage.getItem('graphConfig');
@@ -63,6 +63,7 @@ export function LeftSideBar() {
   useEffect(() => {
     if (!diseaseName) return;
     fetchHeader({
+      query: GET_HEADERS_QUERY(bringCommon.current),
       variables: {
         disease: diseaseName,
       },
@@ -74,20 +75,26 @@ export function LeftSideBar() {
           database: {
             ...useStore.getState().radioOptions.database,
             DEG: [],
-            OpenTargets: [],
+            // OpenTargets: [],
           },
           user: useStore.getState().radioOptions.user,
         };
-        bringCommon.current = false;
-        for (const { name, description } of data.common ?? []) {
-          for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
-            if (new RegExp(`^${field}_`, 'i').test(name)) {
-              radioOptions.database[field].push({ description, name: name.replace(new RegExp(`^${field}_`, 'i'), '') });
+        if (bringCommon.current) {
+          for (const { name, description } of data.common ?? []) {
+            for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
+              if (new RegExp(`^${field}_`, 'i').test(name)) {
+                radioOptions.database[field].push({
+                  description,
+                  name: name.replace(new RegExp(`^${field}_`, 'i'), ''),
+                });
+              }
             }
           }
         }
+        bringCommon.current = false;
         for (const { name, description } of data.disease ?? []) {
           for (const field of DISEASE_DEPENDENT_PROPERTIES) {
+            if (field === 'OpenTargets') continue;
             if (new RegExp(`^${diseaseName}_${field}_`, 'i').test(name)) {
               radioOptions.database[field].push({
                 description,

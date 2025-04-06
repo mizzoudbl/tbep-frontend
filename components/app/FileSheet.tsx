@@ -188,7 +188,7 @@ export function FileSheet() {
                 continue;
               }
 
-              for (const field of [...DISEASE_DEPENDENT_PROPERTIES, ...DISEASE_DEPENDENT_PROPERTIES]) {
+              for (const field of [...DISEASE_DEPENDENT_PROPERTIES, ...DISEASE_INDEPENDENT_PROPERTIES]) {
                 const fieldRegex = new RegExp(`^${field}_`, 'i');
                 if (fieldRegex.test(prop)) {
                   universalData[geneID].user[field][prop.replace(fieldRegex, '')] = row[prop];

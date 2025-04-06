@@ -81,11 +81,6 @@ export interface GraphStore {
   /**
    * Whether to show the edge label or not
    */
-  showEdgeLabel: boolean;
-
-  /**
-   * Whether to show the edge label or not
-   */
   showEdgeColor: boolean;
 
   /**

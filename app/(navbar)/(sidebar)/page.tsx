@@ -47,7 +47,7 @@ export default function Home() {
 
   const [formData, setFormData] = React.useState<GraphConfigForm>({
     seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
-    diseaseMap: 'amyotrophic lateral sclerosis (ALS)',
+    diseaseMap: 'amyotrophic lateral sclerosis (MONDO_0004976)',
     order: '0',
     interactionType: 'PPI',
     minScore: '0.9',
@@ -273,14 +273,17 @@ NT5C1A`,
                   />
                 </div>
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
-                  <div className='space-y-1' style={{ marginTop: 5.5 }}>
-                    <div className='flex items items-end gap-1'>
+                  <div className='space-y-1'>
+                    <div className='flex items-end gap-1'>
                       <Label htmlFor='diseaseMap'>Disease Map</Label>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <InfoIcon size={12} />
                         </TooltipTrigger>
-                        <TooltipContent>To search disease with its ID, type disease ID in parentheses.</TooltipContent>
+                        <TooltipContent>
+                          Contains the disease name to be mapped taken from OpenTargets Portal. <br />
+                          <b>Note:</b> To search disease using its ID, type disease ID in parentheses.
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                     <VirtualizedCombobox
@@ -293,8 +296,16 @@ NT5C1A`,
                     />
                   </div>
                   {graphConfig.map(config => (
-                    <div key={config.id}>
-                      <Label htmlFor={config.id}>{config.name}</Label>
+                    <div key={config.id} className='space-y-1'>
+                      <div className='flex items-end gap-1'>
+                        <Label htmlFor={config.id}>{config.name}</Label>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <InfoIcon size={12} />
+                          </TooltipTrigger>
+                          <TooltipContent>{config.tooltipContent}</TooltipContent>
+                        </Tooltip>
+                      </div>
                       <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
                         <SelectTrigger id={config.id}>
                           <SelectValue placeholder='Select...' />

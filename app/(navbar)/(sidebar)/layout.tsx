@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function SideBarLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='container mx-auto p-4'>
+    <div className='container mx-auto'>
       <div className='flex flex-col gap-4 md:flex-row'>
         <div className='flex flex-col gap-4 md:w-[25%] '>
           <div className='relative shadow-teal-900 shadow-md rounded-md'>
@@ -17,14 +17,14 @@ export default function SideBarLayout({ children }: { children: React.ReactNode 
           </div>
           <div className='flex h-full flex-col gap-4 rounded-md shadow-md p-4 border'>
             <i className='font-semibold text-2xl w-full text-center'>Database Statistics</i>
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-1'>
+            <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-1'>
               {databaseStats.map(item => (
                 <div key={item.count} className='flex flex-col items-center'>
                   <span className='bg-gradient-to-r from-teal-800 via-teal-600 to-teal-800 bg-clip-text text-transparent font-bold sm:text-sm md:text-base lg:text-3xl'>
                     {item.count}
                   </span>
                   <span className='font-light text-center sm:text-sm lg:text-lg'>{item.label}</span>
-                  {item.note && <p className='text-xs font-thin'>{item.note}</p>}
+                  {item.note && <center className='text-xs font-thin'>{item.note}</center>}
                 </div>
               ))}
             </div>

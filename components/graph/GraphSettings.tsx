@@ -15,7 +15,6 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Mut
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
   const defaultLabelDensity = useStore(state => state.defaultLabelDensity);
   const defaultLabelSize = useStore(state => state.defaultLabelSize);
-  const showEdgeLabel = useStore(state => state.showEdgeLabel);
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
@@ -30,12 +29,6 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Mut
       labelDensity: defaultLabelDensity,
     });
   }, [defaultLabelDensity, setSettings]);
-
-  useEffect(() => {
-    setSettings({
-      renderEdgeLabels: showEdgeLabel,
-    });
-  }, [showEdgeLabel, setSettings]);
 
   useEffect(() => {
     setSettings({
