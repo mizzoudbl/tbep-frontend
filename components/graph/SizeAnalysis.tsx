@@ -74,7 +74,8 @@ export function SizeAnalysis() {
           if (value == null || Number.isNaN(+value)) return acc;
           return Math.max(acc, +value);
         }, Number.NEGATIVE_INFINITY);
-        if (!Number.isFinite(val)) attr.size = sizeScale(val);
+        console.log(val);
+        if (Number.isFinite(val)) attr.size = sizeScale(val);
         else attr.size = 0.5;
         return attr;
       });
