@@ -154,7 +154,7 @@ export function ColorAnalysis() {
       graph.updateEachNodeAttributes((node, attr) => {
         const val = propertyArray.reduce((acc, property) => {
           const value = universalData[node]?.[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
-          if (val == null && Number.isNaN(+value)) return acc;
+          if (value == null && Number.isNaN(+value)) return acc;
           return Math.max(acc, +value);
         }, Number.NEGATIVE_INFINITY);
         if (Number.isFinite(val)) attr.color = colorScale(val);
