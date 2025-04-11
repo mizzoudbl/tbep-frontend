@@ -81,6 +81,10 @@ export const graphConfig = [
         value: 'FUN_PPI',
         label: 'FunPPI',
       },
+      {
+        value: 'INT_ACT',
+        label: 'IntAct',
+      },
     ],
   },
   {

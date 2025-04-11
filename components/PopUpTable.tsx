@@ -40,7 +40,7 @@ export default function PopUpTable({
     );
   };
 
-  const notFoundFilteredGeneIDs = geneIDs.filter(gene => !data?.genes.find(g => g.Gene_name === gene || g.ID === gene));
+  const notFoundFilteredGeneIDs = geneIDs.filter(gene => !data?.genes.find(g => g.Input === gene || g.ID === gene));
 
   return (
     <Dialog open={tableOpen}>
