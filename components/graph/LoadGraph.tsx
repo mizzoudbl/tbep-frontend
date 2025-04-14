@@ -17,7 +17,6 @@ import { openDB } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { useLoadGraph, useSigma } from '@react-sigma/core';
 import Graph from 'graphology';
-import { circlepack } from 'graphology-layout';
 import type { SerializedGraph } from 'graphology-types';
 import { AlertTriangleIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -38,7 +37,6 @@ import { Spinner } from '../ui/spinner';
 
 export function LoadGraph() {
   const searchParams = useSearchParams();
-  const sigma = useSigma();
   const loadGraph = useLoadGraph<NodeAttributes, EdgeAttributes>();
   const variable = JSON.parse(localStorage.getItem('graphConfig') || '{}');
   const [fetchData, { data: response, loading, error }] = useLazyQuery<GeneGraphData, GeneGraphVariables>(
@@ -55,13 +53,10 @@ export function LoadGraph() {
 
   const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
   const [showWarning, setShowWarning] = React.useState<boolean>(false);
-  const setNetworkStatistics = useStore(state => state.setNetworkStatistics);
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
       type: 'undirected',
-      multi: true,
-      allowSelfLoops: false,
     });
     const fileName = searchParams?.get('file');
     (async () => {
@@ -141,15 +136,16 @@ export function LoadGraph() {
               label: gene[fields?.[2]].toString(),
             });
           }
-          circlepack.assign(graph);
           loadGraph(graph);
-          setNetworkStatistics({
-            totalNodes: graph.order,
-            totalEdges: graph.size,
-          });
           useStore.setState({
             geneIDs: geneIDArray,
             geneNameToID,
+            networkStatistics: {
+              totalNodes: graph.order,
+              totalEdges: graph.size,
+              averageClusteringCoefficient: Number.NaN,
+              ...statisticsGenerator(graph),
+            },
           });
         };
       } else {
@@ -199,21 +195,21 @@ export function LoadGraph() {
           };
           if (transformedData) {
             graph.import(transformedData);
-            circlepack.assign(graph);
-            sigma.getGraph().import(graph, true);
+            loadGraph(graph);
             const geneNameToID = new Map<string, string>();
             for (const gene of genes) {
               if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             }
 
-            setNetworkStatistics({
-              totalNodes: graph.order,
-              totalEdges: graph.size,
-              averageClusteringCoefficient,
-            });
             useStore.setState({
               geneIDs: transformedData.nodes?.map(node => node.key) || [],
               geneNameToID,
+              networkStatistics: {
+                totalNodes: graph.order,
+                totalEdges: graph.size,
+                averageClusteringCoefficient,
+                ...statisticsGenerator(graph),
+              },
             });
           }
         }
