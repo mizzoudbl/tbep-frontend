@@ -111,9 +111,6 @@ importers:
       graphology-communities-louvain:
         specifier: ^2.0.1
         version: 2.0.1(graphology-types@0.24.7)
-      graphology-layout:
-        specifier: ^0.6.1
-        version: 0.6.1(graphology-types@0.24.7)
       graphology-metrics:
         specifier: ^2.3.1
         version: 2.3.1(graphology-types@0.24.7)
@@ -2676,11 +2673,6 @@ packages:
     resolution: {integrity: sha512-A7RXuKQvdqSWOpn7ZVQo4S33O0vCfPBnUSf7FwE0zNCasqwZVUaCXePuWo5HBpWw68KJcwObZDHpFk6HKH6MYQ==}
     peerDependencies:
       graphology-types: '>=0.20.0'
-
-  graphology-layout@0.6.1:
-    resolution: {integrity: sha512-m9aMvbd0uDPffUCFPng5ibRkb2pmfNvdKjQWeZrf71RS1aOoat5874+DcyNfMeCT4aQguKC7Lj9eCbqZj/h8Ag==}
-    peerDependencies:
-      graphology-types: '>=0.19.0'
 
   graphology-metrics@2.3.1:
     resolution: {integrity: sha512-131GRSKUR8DrGkLZSYKM3cwxEg+jqXvv1yLh/KgO0My7BOiuo80r0Qrsnv2N3ZjcOlh8namUS4sSk+cCVnTgKA==}
@@ -6960,12 +6952,6 @@ snapshots:
       graphology-types: 0.24.7
       graphology-utils: 2.5.2(graphology-types@0.24.7)
       mnemonist: 0.39.8
-
-  graphology-layout@0.6.1(graphology-types@0.24.7):
-    dependencies:
-      graphology-types: 0.24.7
-      graphology-utils: 2.5.2(graphology-types@0.24.7)
-      pandemonium: 2.4.1
 
   graphology-metrics@2.3.1(graphology-types@0.24.7):
     dependencies:
