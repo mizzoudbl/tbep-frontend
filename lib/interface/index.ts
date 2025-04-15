@@ -12,12 +12,12 @@ export interface Message {
   /**
    * Message text
    */
-  text: string;
+  content: string;
 
   /**
    * Message sender
    */
-  sender: 'user' | 'llm';
+  role: 'user' | 'assistant';
 }
 
 /**

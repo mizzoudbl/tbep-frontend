@@ -46,7 +46,7 @@ export function ChatWindow() {
     e.preventDefault();
     if (inputValue.trim() === '') return;
 
-    const newMessage: Message = { text: inputValue, sender: 'user' };
+    const newMessage: Message = { content: inputValue, role: 'user' };
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setInputValue('');
     setIsLoading(true);
@@ -79,8 +79,8 @@ export function ChatWindow() {
       const event = new EventSource(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/stream?sid=${streamID}`);
       event.onopen = () => {
         const llmResponse: Message = {
-          text: '',
-          sender: 'llm',
+          content: '',
+          role: 'assistant',
         };
         setIsLoading(false);
         setIsTyping(true);
@@ -91,8 +91,8 @@ export function ChatWindow() {
         setMessages(prevMessages => [
           ...prevMessages.slice(0, -1),
           {
-            sender: 'llm',
-            text: prevMessages[prevMessages.length - 1].text + e.data,
+            role: 'assistant',
+            content: prevMessages[prevMessages.length - 1].content + e.data,
           },
         ]);
       };
@@ -172,15 +172,15 @@ export function ChatWindow() {
             <div ref={chatRef} className='max-h-[87%] overflow-y-scroll p-2 space-y-2'>
               {messages.map(message => (
                 <div
-                  key={`${message.text}-${message.sender}`}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  key={`${message.content}-${message.role}`}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
                     className={`max-w-full px-4 py-1 rounded-lg ${
-                      message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                      message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   >
-                    <Markdown>{message.text}</Markdown>
+                    <Markdown>{message.content}</Markdown>
                   </div>
                 </div>
               ))}
