@@ -26,7 +26,7 @@ export function Chat() {
   ) => {
     e.preventDefault();
     if (inputValue.trim() === '') return;
-    const newMessage: Message = { text: inputValue, sender: 'user' };
+    const newMessage: Message = { content: inputValue, role: 'user' };
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setIsLoading(true);
     setInputValue('');
@@ -52,8 +52,8 @@ export function Chat() {
       const event = new EventSource(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/stream?sid=${streamID}`);
       event.onopen = () => {
         const llmResponse: Message = {
-          text: '',
-          sender: 'llm',
+          content: '',
+          role: 'assistant',
         };
         setIsLoading(false);
         setMessages(prevMessages => [...prevMessages, llmResponse]);
@@ -63,8 +63,8 @@ export function Chat() {
         setMessages(prevMessages => [
           ...prevMessages.slice(0, -1),
           {
-            sender: 'llm',
-            text: prevMessages[prevMessages.length - 1].text + e.data,
+            role: 'assistant',
+            content: prevMessages[prevMessages.length - 1].content + e.data,
           },
         ]);
       };
@@ -97,18 +97,18 @@ export function Chat() {
             <div ref={chatRef} className='max-h-[70vh] overflow-y-scroll p-2 space-y-2'>
               {messages.map(message => (
                 <div
-                  key={`${message.text}-${message.sender}`}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  key={`${message.content}-${message.role}`}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
                     className={`max-w-full px-4 py-1 rounded-lg ${
-                      message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                      message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   >
-                    {message.sender === 'llm' ? (
-                      <Markdown>{message.text}</Markdown>
+                    {message.role === 'assistant' ? (
+                      <Markdown>{message.content}</Markdown>
                     ) : (
-                      <pre className='whitespace-pre-wrap'>{message.text}</pre>
+                      <pre className='whitespace-pre-wrap'>{message.content}</pre>
                     )}
                   </div>
                 </div>

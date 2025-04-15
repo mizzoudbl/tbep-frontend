@@ -85,6 +85,10 @@ export const graphConfig = [
         value: 'INT_ACT',
         label: 'IntAct',
       },
+      {
+        value: 'BIO_GRID',
+        label: 'BioGrid',
+      },
     ],
   },
   {
