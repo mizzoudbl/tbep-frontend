@@ -13,11 +13,6 @@ export type GenePropertyMetadata = {
    * Property description
    */
   description?: React.ReactNode;
-  /**
-   * Property label
-   * Used for display purposes (TEMP feature)
-   */
-  label?: string;
 };
 
 /**

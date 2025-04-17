@@ -31,8 +31,7 @@ export const LLM_MODELS = [
 
 export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
   {
-    name: 'overall_score_direct',
-    label: 'Association Score',
+    name: 'Overall_Association Score',
     description: (
       <>
         Overall score for the association, calculated from the evidence scores. <br /> Learn More:{' '}
@@ -48,8 +47,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'ot_genetics_portal_score',
-    label: 'GWAS Associations',
+    name: 'GWAS Associations',
     description: (
       <>
         It aggregates target-disease relationships supported by significant genome-wide associations (GWAS) in the
@@ -67,8 +65,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'gene_burden_score',
-    label: 'Gene Burden',
+    name: 'Gene Burden',
     description: (
       <>
         It comprises gene–phenotype relationships observed in gene-level association tests using rare variant collapsing
@@ -86,8 +83,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'eva_score',
-    label: 'ClinVar',
+    name: 'ClinVar',
     description: (
       <>
         It is an NIH public archive of reports of the relationships among human variations and phenotypes, with
@@ -105,8 +101,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'genomics_england_score',
-    label: 'GEL PanelApp',
+    name: 'GEL PanelApp',
     description: (
       <>
         It is a knowledge base that combines crowdsourced expertise with curation to provide gene–disease relationships.{' '}
@@ -124,8 +119,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'gene2phenotype_score',
-    label: 'Gene2phenotype',
+    name: 'Gene2phenotype',
     description: (
       <>
         It is produced and curated from the literature by different sets of panels formed by consultant clinical
@@ -143,8 +137,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'uniprot_literature_score',
-    label: 'UniProt literature',
+    name: 'UniProt literature',
     description: (
       <>
         It provides a large compendium of sequence and functional information at the protein level. <br />
@@ -161,8 +154,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'uniprot_variants_score',
-    label: 'UniProt curated variants',
+    name: 'UniProt curated variants',
     description: (
       <>
         It curates variants supported by publications that are known to alter protein function on disease. <br />
@@ -179,8 +171,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'orphanet_score',
-    label: 'Orphanet',
+    name: 'Orphanet',
     description: (
       <>
         It is an international network that offers a range of resources to improve the understanding of rare disorders
@@ -198,8 +189,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'clingen_score',
-    label: 'Clingen',
+    name: 'Clingen',
     description: (
       <>
         The Clinical Genome Resource (ClinGen) Gene–Disease Validity Curation aims to evaluate the strength of evidence
@@ -217,8 +207,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'cancer_gene_census_score',
-    label: 'Cancer Gene Census',
+    name: 'Cancer Gene Census',
     description: (
       <>
         Cancer Gene Census (CGC) is an effort to catalogue genes which contain mutations that have been causally
@@ -236,8 +225,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'intogen_score',
-    label: 'IntOGen',
+    name: 'IntOGen',
     description: (
       <>
         IntOGen is a framework that identifies potential cancer driver genes by analyzing large-scale mutational data
@@ -255,8 +243,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'eva_somatic_score',
-    label: 'ClinVar (somatic)',
+    name: 'ClinVar (somatic)',
     description: (
       <>
         ClinVar is an NIH public archive that catalogs the relationship between human variations and phenotypes,
@@ -274,8 +261,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'cancer_biomarkers_score',
-    label: 'Cancer Biomarkers',
+    name: 'Cancer Biomarkers',
     description: (
       <>
         The Cancer Genome Interpreter aims to understand how tumour genome variations affect responses to anti-cancer
@@ -294,8 +280,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'chembl_score',
-    label: 'ChEMBL',
+    name: 'ChEMBL',
     description: (
       <>
         ChEMBL is a database of bioactive molecules, including FDA-approved drugs and clinical candidates, with
@@ -313,8 +298,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'crispr_screen_score',
-    label: 'CRISPR Screens',
+    name: 'CRISPR Screens',
     description: (
       <>
         CRISPRbrain is a database for functional genomics screens in differentiated human brain cell types. <br />
@@ -331,8 +315,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'sysbio_score',
-    label: 'Project Score',
+    name: 'Project Score',
     description: (
       <>
         Project Score is a Wellcome Sanger Institute resource that aims to identify dependencies in cancer cell lines to
@@ -350,8 +333,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'slapenrich_score',
-    label: 'SLAPenrich',
+    name: 'SLAPenrich',
     description: (
       <>
         SLAPenrich (Sample-population Level Analysis of Pathway enrichments) is a novel statistical framework for the
@@ -370,8 +352,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'progeny_score',
-    label: 'PROGENy',
+    name: 'PROGENy',
     description: (
       <>
         PROGENy (Pathway RespOnsive GENes) is a linear regression model that calculates pathway activity estimates based
@@ -389,8 +370,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'reactome_score',
-    label: 'Reactome',
+    name: 'Reactome',
     description: (
       <>
         The Reactome database curates reaction pathways affected by diseases, providing information on causal
@@ -408,8 +388,25 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'europepmc_score',
-    label: 'Europe PMC',
+    name: 'Gene signatures',
+    description: (
+      <>
+        Gene signatures provides information about key driver genes for specific diseases that have been curated from
+        Systems Biology analysis. <br />
+        Learn More:{' '}
+        <a
+          target='_blank'
+          className='underline'
+          href='https://platform-docs.opentargets.org/evidence#gene-signatures'
+          rel='noreferrer'
+        >
+          Gene Signatures Documentation
+        </a>
+      </>
+    ),
+  },
+  {
+    name: 'Europe PMC',
     description: (
       <>
         The EMBL-EBI's Europe PMC enables access to a worldwide collection of life science publications and preprints
@@ -427,8 +424,7 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
     ),
   },
   {
-    name: 'expression_atlas_score',
-    label: 'Expression Atlas',
+    name: 'Expression Atlas',
     description: (
       <>
         The EMBL-EBI Expression Atlas provides a differential expression pipeline aiming to identify genes that are
@@ -441,6 +437,24 @@ export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
           rel='noreferrer'
         >
           Expression Atlas Documentation
+        </a>
+      </>
+    ),
+  },
+  {
+    name: 'IMPC',
+    description: (
+      <>
+        The genotype–phenotype associations made available by the International Mouse Phenotypes Consortium (IMPC) are
+        used to identify models of human disease based on phenotypic similarity scores. <br />
+        Learn More:{' '}
+        <a
+          target='_blank'
+          className='underline'
+          href='https://platform-docs.opentargets.org/evidence#impc'
+          rel='noreferrer'
+        >
+          IMPC Documentation
         </a>
       </>
     ),
