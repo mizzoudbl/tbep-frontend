@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { TEMP_OPENTARGETS_PROPERTY_MAPPING } from '../data';
+import { OPENTARGETS_PROPERTY_MAPPING } from '../data';
 import type { GraphStore } from '../interface';
 import { initRadioOptions } from '../utils';
 
@@ -64,7 +64,7 @@ export const useStore = create<GraphStore>(set => ({
       Druggability: [],
       TE: [],
       Custom_Color: [],
-      OpenTargets: TEMP_OPENTARGETS_PROPERTY_MAPPING,
+      OpenTargets: OPENTARGETS_PROPERTY_MAPPING,
       OT_Prioritization: [],
     },
   },

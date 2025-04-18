@@ -11,12 +11,12 @@ export function ZoomControl() {
   return (
     <>
       <div className='react-sigma-control'>
-        <button type='button' onClick={() => zoomIn} title='Zoom In'>
+        <button type='button' onClick={() => zoomIn()} title='Zoom In'>
           <ZoomInIcon />
         </button>
       </div>
       <div className='react-sigma-control'>
-        <button type='button' onClick={() => zoomOut} title='Zoom Out'>
+        <button type='button' onClick={() => zoomOut()} title='Zoom Out'>
           <ZoomOutIcon />
         </button>
       </div>

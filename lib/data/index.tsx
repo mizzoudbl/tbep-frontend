@@ -29,7 +29,7 @@ export const LLM_MODELS = [
   },
 ] as const;
 
-export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
+export const OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
   {
     name: 'Overall_Association Score',
     description: (
