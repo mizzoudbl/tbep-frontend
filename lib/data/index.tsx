@@ -31,7 +31,7 @@ export const LLM_MODELS = [
 
 export const TEMP_OPENTARGETS_PROPERTY_MAPPING: GenePropertyMetadata[] = [
   {
-    name: 'Association Score',
+    name: 'Overall_Association Score',
     description: (
       <>
         Overall score for the association, calculated from the evidence scores. <br /> Learn More:{' '}
