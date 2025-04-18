@@ -77,7 +77,7 @@ export default function Home() {
     const { seedGenes } = formData;
     const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim().toUpperCase())).filter(Boolean);
     setGeneIDs(geneIDs);
-    const { data, error } = await verifyGenes({
+    const { error } = await verifyGenes({
       variables: { geneIDs },
     });
     if (error) {
