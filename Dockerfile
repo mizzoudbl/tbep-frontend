@@ -6,7 +6,7 @@
 # COPY . .
 # RUN npm run build
 
-FROM nginx:1.15-alpine
+FROM nginx:1.28-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
@@ -24,5 +24,7 @@ COPY ./out/*.xml /usr/share/nginx/html/
 COPY ./out/favicon.ico /usr/share/nginx/html/
 
 EXPOSE 80
+
+LABEL org.opencontainers.image.source="https://github.com/mizzoudbl/tbep"
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

@@ -35,7 +35,7 @@ export default {
         property="og:description"
         content="Help Manual for Drug Target Discovery Platform for Homo-sapiens"
       />
-      <meta property="og:url" content="https://pdnet.missouri.edu" />
+      <meta property="og:url" content="https://tbep.missouri.edu" />
       <meta
         property="og:site_name"
         content="Target &amp; Biomarker Exploration Portal"
@@ -43,7 +43,7 @@ export default {
       <meta property="og:locale" content="en_US" />
       <meta
         property="og:image"
-        content="https://pdnet.missouri.edu/image/open-graph.png"
+        content="https://tbep.missouri.edu/image/open-graph.png"
       />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
@@ -63,7 +63,7 @@ export default {
       />
       <meta
         name="twitter:image"
-        content="https://pdnet.missouri.edu/image/open-graph.png"
+        content="https://tbep.missouri.edu/image/open-graph.png"
       />
       <meta name="twitter:image:width" content="1200" />
       <meta name="twitter:image:height" content="630" />
