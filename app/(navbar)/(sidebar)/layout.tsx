@@ -15,12 +15,12 @@ export default function SideBarLayout({ children }: { children: React.ReactNode 
               <SideBar />
             </div>
           </div>
-          <div className='flex h-full flex-col gap-4 rounded-md shadow-md p-4 border'>
-            <i className='font-semibold text-2xl w-full text-center'>Database Statistics</i>
+          <div className='flex h-full flex-col rounded-md shadow-md p-2 border'>
+            <i className='font-semibold text-xl w-full text-center'>Database Statistics</i>
             <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-1'>
               {databaseStats.map(item => (
                 <div key={item.count} className='flex flex-col items-center'>
-                  <span className='bg-gradient-to-r from-teal-800 via-teal-600 to-teal-800 bg-clip-text text-transparent font-bold sm:text-sm md:text-base lg:text-3xl'>
+                  <span className='bg-gradient-to-r from-teal-800 via-teal-600 to-teal-800 bg-clip-text text-transparent font-bold sm:text-sm md:text-base xl:text-2xl'>
                     {item.count}
                   </span>
                   <span className='font-light text-center sm:text-sm lg:text-lg'>{item.label}</span>
