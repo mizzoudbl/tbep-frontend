@@ -53,8 +53,15 @@ export function SizeAnalysis() {
         else attr.size = 0.5;
         return attr;
       });
-    } else if (selectedRadioNodeSize === 'TE') {
+    } else if (selectedRadioNodeSize === 'TE' && typeof selectedNodeSizeProperty !== 'string') {
       const propertyArray = Array.from(selectedNodeSizeProperty);
+      if (propertyArray.length === 0) {
+        graph.updateEachNodeAttributes((node, attr) => {
+          attr.size = defaultNodeSize;
+          return attr;
+        });
+        return;
+      }
       const userTEArray = radioOptions.user.TE;
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
@@ -62,7 +69,7 @@ export function SizeAnalysis() {
             const val = cur[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
             if (val == null || Number.isNaN(val)) return acc2;
             return Math.max(acc2, +val);
-          }, Number.NEGATIVE_INFINITY);
+          }, 0);
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [Number.POSITIVE_INFINITY, 0],

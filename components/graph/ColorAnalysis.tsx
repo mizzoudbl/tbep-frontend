@@ -136,8 +136,15 @@ export function ColorAnalysis() {
         else attr.color = undefined;
         return attr;
       });
-    } else if (selectedRadioNodeColor === 'TE') {
+    } else if (selectedRadioNodeColor === 'TE' && typeof selectedNodeColorProperty !== 'string') {
       const propertyArray = Array.from(selectedNodeColorProperty);
+      if (propertyArray.length === 0) {
+        graph.updateEachNodeAttributes((_node, attr) => {
+          attr.color = defaultNodeColor;
+          return attr;
+        });
+        return;
+      }
       const userTEArray = radioOptions.user.TE;
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
@@ -145,7 +152,7 @@ export function ColorAnalysis() {
             const val = cur[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
             if (val == null || Number.isNaN(+val)) return acc2;
             return Math.max(acc2, +val);
-          }, Number.NEGATIVE_INFINITY);
+          }, 0);
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [Number.POSITIVE_INFINITY, 0],
