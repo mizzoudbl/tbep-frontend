@@ -11,7 +11,7 @@ export const databaseStats = [
   { count: '21,800+', label: 'Diseases' },
   { count: '82,500+', label: 'Genes + its Alias Names' },
   { count: '*6,40,400+', label: 'PPI Interactions' },
-  { count: '*56,95,700+', label: 'FunPPI Interactions' },
+  // { count: '*56,95,700+', label: 'FunPPI Interactions' },
   { count: '*4,79,800+', label: 'IntAct Interactions' },
   { count: '*2,22,000+', label: 'BioGrid Interactions', note: '*After removing redundant connections' },
 ];

@@ -46,9 +46,11 @@ export default function UploadFile() {
     if (fileType === 'json') {
       const data = JSON.parse(await file.text());
       distinctSeedGenes = distinct(
-        data.flatMap((gene: Record<string, string | number>) => {
-          return Object.values(gene).filter(val => Number.isNaN(Number(val)));
-        }),
+        data
+          .flatMap((gene: Record<string, string | number>) => {
+            return Object.values(gene).filter(val => Number.isNaN(Number(val)));
+          })
+          .map((gene: string) => gene.trim().toUpperCase()),
       );
     } else {
       const data = await file.text();
@@ -56,7 +58,8 @@ export default function UploadFile() {
         data
           .split('\n')
           .slice(1)
-          .flatMap(line => line.split(',').slice(0, 2)),
+          .flatMap(line => line.split(',').slice(0, 2))
+          .map(gene => gene.trim().toUpperCase()),
       );
     }
     if (distinctSeedGenes.length < 2) {
