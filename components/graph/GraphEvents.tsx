@@ -89,12 +89,13 @@ export function GraphEvents({
   const handleSelectedNodes = useCallback(
     (_selectedNodes: string[]) => {
       const graph = sigma.getGraph();
-      const temp = _selectedNodes.map(node => ({
-        Gene_Name: graph.getNodeAttribute(node, 'label') as string,
-        ID: node,
-        Description: graph.getNodeAttribute(node, 'description') as string,
-      }));
-      useStore.setState({ selectedNodes: temp });
+      useStore.setState({
+        selectedNodes: _selectedNodes.map(node => ({
+          Gene_Name: graph.getNodeAttribute(node, 'label') as string,
+          ID: node,
+          Description: graph.getNodeAttribute(node, 'description') as string,
+        })),
+      });
     },
     [sigma],
   );
@@ -164,7 +165,12 @@ export function GraphEvents({
     if (!canvas) return;
     canvas.style.cursor = 'default';
     const ctx = canvas.getContext('2d');
-    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+
+    /* Fix for Chromium-based browsers for clearing the canvas */
+    requestAnimationFrame(() => {
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    });
+    // End of fix
     if (_selectedNodes.length) handleSelectedNodes(_selectedNodes);
   }, [handleSelectedNodes, _selectedNodes]);
 

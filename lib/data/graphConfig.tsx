@@ -67,7 +67,7 @@ export const graphConfig = [
       <>
         <u>Interaction Database to generate the graph</u>
         <br />
-        <b>PPI:</b> Protein-Protein Interactions
+        <b>STRING:</b> Protein-Protein Interactions
         <br />
         <b>IntAct:</b> Molecular Interaction Database
         <br />
@@ -77,7 +77,7 @@ export const graphConfig = [
     options: [
       {
         value: 'PPI',
-        label: 'PPI',
+        label: 'STRING',
       },
       {
         value: 'INT_ACT',
