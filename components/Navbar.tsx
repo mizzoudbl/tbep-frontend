@@ -1,4 +1,5 @@
 import { links } from '@/lib/data';
+import { getLatestVersionFromChangelog } from '@/lib/getChangelogVersion';
 import { MenuIcon } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
@@ -7,6 +8,8 @@ import { Button, buttonVariants } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export default function Navbar() {
+  const version = getLatestVersionFromChangelog();
+
   return (
     <header className='bg-teal-800 text-white'>
       <Banner>
@@ -26,7 +29,7 @@ export default function Navbar() {
             </h1>
           </Link>
           <Link href={'/docs/CHANGELOG'} className='text-xs self-end'>
-            Version: {process.env.NEXT_PUBLIC_VERSION || '1.1.4'}
+            Version: {version ?? 'unknown'}
           </Link>
         </div>
         <nav className='hidden md:flex space-x-4'>

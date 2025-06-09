@@ -1,5 +1,6 @@
 'use client';
 
+import { DiseaseMapCombobox } from '@/components/DiseaseMapCombobox';
 import History, { type HistoryItem } from '@/components/History';
 import PopUpTable from '@/components/PopUpTable';
 import { VirtualizedCombobox } from '@/components/VirtualizedCombobox';
@@ -35,7 +36,7 @@ export default function Home() {
   const [verifyGenes, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
     GENE_VERIFICATION_QUERY,
   );
-  const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | null>(null);
+  const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
 
   React.useEffect(() => {
     (async () => {
@@ -286,12 +287,10 @@ NT5C1A`,
                         </TooltipContent>
                       </Tooltip>
                     </div>
-                    <VirtualizedCombobox
-                      data={diseaseData?.map(val => `${val.name} (${val.ID})`)}
+                    <DiseaseMapCombobox
+                      data={diseaseData}
                       value={formData.diseaseMap}
                       onChange={val => typeof val === 'string' && handleSelect(val, 'diseaseMap')}
-                      placeholder='Search Disease...'
-                      loading={diseaseData === null}
                       className='w-full'
                     />
                   </div>

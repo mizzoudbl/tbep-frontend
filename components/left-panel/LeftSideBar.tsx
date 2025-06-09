@@ -24,6 +24,7 @@ import { SquareDashedMousePointerIcon } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { GeneSearch, NodeColor, NodeSize } from '.';
+import { DiseaseMapCombobox } from '../DiseaseMapCombobox';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { FileSheet } from '../app';
 import { Export, MouseControlMessage } from '../app';
@@ -36,7 +37,7 @@ export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
   const geneIDs = useStore(state => state.geneIDs);
   const bringCommon = useRef<boolean>(true);
-  const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | null>(null);
+  const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
   const [diseaseMap, setDiseaseMap] = React.useState<string>('amyotrophic lateral sclerosis (MONDO_0004976)');
 
   useEffect(() => {
@@ -254,17 +255,15 @@ export function LeftSideBar() {
         <Label className='font-bold mb-2'>Disease Map</Label>
         <div className='flex items-center gap-2'>
           <motion.div layout transition={{ duration: 0.1, ease: 'easeInOut' }} initial={{ width: '100%' }} animate>
-            <VirtualizedCombobox
+            <DiseaseMapCombobox
               value={diseaseMap}
-              placeholder='Search Disease...'
               onChange={d => typeof d === 'string' && handleDiseaseChange(d)}
-              data={diseaseData?.map(val => `${val.name} (${val.ID})`)}
-              loading={diseaseData === null}
+              data={diseaseData}
               className='w-full'
             />
           </motion.div>
           <AnimatePresence>
-            {(!called || (called && loading) || diseaseData === null || universalLoading) && (
+            {(!called || (called && loading) || diseaseData === undefined || universalLoading) && (
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
