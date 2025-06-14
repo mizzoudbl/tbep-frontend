@@ -7,9 +7,13 @@ description: Summary of release highlights of TBEP tool
 
 ## v1.2.5
 
+- **[FEATURE]** Added autofill seed genes based on overall association scores from the [Open Targets](https://platform.opentargets.org/) platform to help users quickly start analysis with top-ranked genes.
+- **[BUG]** Fixed the issue where unexpectedly bordered genes loose its bordered ring when Seed Proximity Cut-off (previously known Hub Genes) feature is being used.
 - **[BUG]** Fixed the issue where for chromium (Chrome, Edge, Brave etc.) users, the bounding box was not being cleared properly.
 - **[BUG]** Fixed the issue where even upon hiding a cluster, the nodes of the cluster were being highlighted when visible when they shouldn't have been.
 - **[IMPROVEMENT]** Disease dropdown search algorithm improved to show the most relevant diseases at the top of the list.
+- **[IMPROVEMENT]** Now, result table stays in the sorting order of the searchbox input.
+- **[IMPROVEMENT]** Enhanced export system: exporting to CSV now includes gene universal data along with their interaction data (edges).
 
 ## v1.2.4
 

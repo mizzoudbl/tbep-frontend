@@ -56,7 +56,12 @@ export function GeneSearch() {
           type='button'
           className='inline-flex text-xs underline cursor-pointer text-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed'
           disabled={nodeSearchQuery.length === 0}
-          onClick={() => eventEmitter.emit(Events.EXPORT, { format: 'csv' } satisfies EventMessage[Events.EXPORT])}
+          onClick={() =>
+            eventEmitter.emit(Events.EXPORT, {
+              format: 'csv',
+              csvType: 'universal',
+            } satisfies EventMessage[Events.EXPORT])
+          }
         >
           Export <SquareArrowOutUpRightIcon size={10} className='mt-1 ml-0.5' />
         </button>

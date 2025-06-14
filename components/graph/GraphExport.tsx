@@ -11,6 +11,7 @@ import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection } from
 import { type EventMessage, Events, downloadFile, eventEmitter } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { downloadAsImage } from '@sigma/export-image';
+import { strToU8, zipSync } from 'fflate';
 import { unparse } from 'papaparse';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -20,19 +21,9 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    eventEmitter.on(Events.EXPORT, ({ format, all }: EventMessage[Events.EXPORT]) => {
+    eventEmitter.on(Events.EXPORT, ({ format, all, csvType }: EventMessage[Events.EXPORT]) => {
       const projectTitle = useStore.getState().projectTitle;
       switch (format) {
-        case 'json': {
-          const serializedGraph = sigma.getGraph().export();
-          serializedGraph.attributes = {
-            ...serializedGraph.attributes,
-            projectTitle,
-          };
-          const data = JSON.stringify(serializedGraph, null, 2);
-          downloadFile(data, `${projectTitle}.json`, 'text/json');
-          break;
-        }
         case 'csv': {
           if (!all && (!highlightedNodesRef || highlightedNodesRef.current.size === 0)) {
             toast.warning('No nodes selected', {
@@ -59,8 +50,9 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
                 ? diseaseName
                 : 'common';
 
-          const data = unparse(
-            (all ? sigma.getGraph().nodes() : Array.from(highlightedNodesRef?.current!)).map(nodeId => {
+          const nodeIds = all ? sigma.getGraph().nodes() : Array.from(highlightedNodesRef?.current ?? []);
+          const universalCsv = unparse(
+            nodeIds.map(nodeId => {
               const universalProperties: Record<string, string> = {};
               if (selectedRadioNodeColor) {
                 if (typeof selectedNodeColorProperty === 'string') {
@@ -104,7 +96,47 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
               };
             }),
           );
-          downloadFile(data, `${projectTitle}${all ? '' : '-selected'}.csv`);
+          const nodeSet = new Set(nodeIds);
+          const interactionCsv = unparse(
+            graph.reduceEdges(
+              (acc, _edgeId, attributes, source, target) => {
+                if (nodeSet.has(source) && nodeSet.has(target)) {
+                  acc.push({
+                    Source: source,
+                    Target: target,
+                    Score: attributes.score ?? 0,
+                  });
+                }
+                return acc;
+              },
+              [] as { Source: string; Target: string; Score: number }[],
+            ),
+          );
+          // Handle csvType
+          if (csvType === 'universal') {
+            downloadFile(universalCsv, `${projectTitle}-universal${all ? '' : '-selected'}.csv`);
+          } else if (csvType === 'interaction') {
+            if (interactionCsv) {
+              downloadFile(interactionCsv, `${projectTitle}-interaction${all ? '' : '-selected'}.csv`);
+            } else {
+              toast.info('No interactions found for selected nodes.', {
+                cancel: { label: 'Close', onClick() {} },
+              });
+            }
+          } else if (csvType === 'both') {
+            // Zip both files
+            const zippedFile = zipSync({
+              'universal.csv': strToU8(universalCsv),
+              'interaction.csv': strToU8(interactionCsv),
+            });
+            const element = document.createElement('a');
+            element.href = URL.createObjectURL(new Blob([zippedFile], { type: 'application/zip' }));
+            element.download = `${projectTitle}-csv${all ? '' : '-selected'}.zip`;
+            document.body.appendChild(element);
+            element.click();
+            URL.revokeObjectURL(element.href);
+            element.remove();
+          }
           break;
         }
         default: {

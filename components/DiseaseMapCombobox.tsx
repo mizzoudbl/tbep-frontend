@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { GetDiseaseData } from '@/lib/interface';
-import { OptimizedMedicalSearch, type SearchItem, useOptimizedSearch } from '@/lib/search';
+import { OptimizedMedicalSearch, type SearchItem } from '@/lib/search';
 import { cn } from '@/lib/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
@@ -14,10 +14,9 @@ interface VirtualizedCommandProps {
   options: SearchItem[];
   selectedOption: string;
   onSelectOption?: (option: string) => void;
-  loading?: boolean;
 }
 
-const VirtualizedCommand = ({ options, selectedOption, onSelectOption, loading }: VirtualizedCommandProps) => {
+const VirtualizedCommand = ({ options, selectedOption, onSelectOption }: VirtualizedCommandProps) => {
   // Create a memoized search engine to avoid recreating on renders
   const searchEngine = React.useMemo(() => {
     return new OptimizedMedicalSearch(options);
@@ -35,15 +34,6 @@ const VirtualizedCommand = ({ options, selectedOption, onSelectOption, loading }
 
   const virtualOptions = virtualizer.getVirtualItems();
 
-  // Memoize the ID-to-option lookup for faster filtering
-  const optionsMap = React.useMemo(() => {
-    const map = new Map<string, SearchItem>();
-    for (const option of options) {
-      map.set(option.id, option);
-    }
-    return map;
-  }, [options]);
-
   const handleSearch = React.useCallback(
     (search: string) => {
       if (!search || search.length < 2) {
@@ -51,25 +41,15 @@ const VirtualizedCommand = ({ options, selectedOption, onSelectOption, loading }
         return;
       }
       // Use the optimized search engine for searching with debouncing
-      searchEngine.debouncedSearch(search, results => {
-        setFilteredOptions(
-          results.reduce((acc, result) => {
-            const option = optionsMap.get(result.id);
-            if (option) {
-              acc.push(option);
-            }
-            return acc;
-          }, [] as SearchItem[]),
-        );
-      });
+      searchEngine.debouncedSearch(search, results => setFilteredOptions(results));
     },
-    [options, searchEngine, optionsMap],
+    [options, searchEngine],
   );
 
   return (
     <Command style={{ width: '800px' }} shouldFilter={false}>
       <CommandInput onValueChange={handleSearch} placeholder={'Search Disease...'} />
-      {loading ? <Spinner variant={1} size={'small'} /> : <CommandEmpty>No Result Found.</CommandEmpty>}
+      {options.length === 0 ? <Spinner variant={1} size={'small'} /> : <CommandEmpty>No Result Found.</CommandEmpty>}
       <CommandGroup>
         <CommandList ref={parentRef}>
           <div
@@ -120,11 +100,9 @@ const VirtualizedCommand = ({ options, selectedOption, onSelectOption, loading }
 interface DiseaseMapComboboxProps {
   className?: string;
   data?: GetDiseaseData;
-  placeholder?: string;
   value: string;
   onChange: (value: string) => void;
   align?: 'start' | 'end' | 'center';
-  multiselect?: boolean;
 }
 
 export function DiseaseMapCombobox({
@@ -146,18 +124,13 @@ export function DiseaseMapCombobox({
     [data],
   );
 
-  const { isSearching, addSearchData } = useOptimizedSearch(searchItems);
-
-  // Determine if we should show loading state
-  const loading = data.length === 0 || isSearching;
-
-  // Update search data when props change
-  React.useEffect(() => {
-    if (data.length > 0) {
-      // The hook already has initial data, but we need to handle updates
-      addSearchData(searchItems);
+  const optionsMap = React.useMemo(() => {
+    const map = new Map<string, SearchItem>();
+    for (const option of searchItems) {
+      map.set(option.id, option);
     }
-  }, [data, addSearchData, searchItems]);
+    return map;
+  }, [searchItems]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -168,7 +141,7 @@ export function DiseaseMapCombobox({
           aria-expanded={open}
           className={cn('w-[200px] justify-between text-ellipsis text-wrap break-words h-9', className)}
         >
-          <span className='truncate'>{value || 'Search Disease...'}</span>
+          <span className='truncate'>{optionsMap.get(value)?.label || 'Search Disease...'}</span>
           <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -180,7 +153,6 @@ export function DiseaseMapCombobox({
             onChange(currentValue);
             setOpen(false);
           }}
-          loading={loading}
         />
       </PopoverContent>
     </Popover>

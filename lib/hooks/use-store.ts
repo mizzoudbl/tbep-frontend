@@ -50,7 +50,7 @@ export const useStore = create<GraphStore>(set => ({
   radialAnalysis: {
     edgeWeightCutOff: 0.4,
     candidatePrioritizationCutOff: 0,
-    hubGeneCutOff: 0,
+    seedGeneProximityCutOff: 0,
     nodeDegreeProperty: 'Gene Degree',
   },
   geneIDs: [],

@@ -12,7 +12,7 @@ export interface RadialAnalysisSetting {
   /**
    * Hub Node Degree Cut-off
    */
-  hubGeneCutOff: number;
+  seedGeneProximityCutOff: number;
 
   /**
    * Node Degree Cut-off Property

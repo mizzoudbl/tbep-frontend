@@ -14,7 +14,13 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 
-export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: React.MutableRefObject<Set<string>> }) {
+export function GraphAnalysis({
+  highlightedNodesRef,
+  seedProximityNodesRef,
+}: {
+  highlightedNodesRef?: React.MutableRefObject<Set<string>>;
+  seedProximityNodesRef: React.MutableRefObject<Set<string>>;
+}) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const graph = sigma.getGraph();
   const radialAnalysis = useStore(state => state.radialAnalysis);
@@ -101,7 +107,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (radialAnalysis.hubGeneCutOff < 1) {
+    if (radialAnalysis.seedGeneProximityCutOff < 1) {
       graph.updateEachNodeAttributes((node, attr) => {
         if (highlightedNodesRef?.current.has(node)) {
           attr.type = 'highlight';
@@ -113,8 +119,9 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
     } else {
       graph.updateEachNodeAttributes((node, attr) => {
         const degree = graph.neighbors(node).filter(neighbor => seedGeneIDs.includes(neighbor)).length;
-        if (degree >= radialAnalysis.hubGeneCutOff) {
+        if (degree >= radialAnalysis.seedGeneProximityCutOff) {
           attr.type = 'border';
+          seedProximityNodesRef.current.add(node);
         } else if (highlightedNodesRef?.current.has(node)) {
           attr.type = 'highlight';
         } else {
@@ -123,7 +130,7 @@ export function GraphAnalysis({ highlightedNodesRef }: { highlightedNodesRef?: R
         return attr;
       });
     }
-  }, [radialAnalysis.hubGeneCutOff, highlightedNodesRef?.current]);
+  }, [radialAnalysis.seedGeneProximityCutOff]);
 
   async function renewSession() {
     const res = await fetch(`${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/algorithm/renew-session`, {

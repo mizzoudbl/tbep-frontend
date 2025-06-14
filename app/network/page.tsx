@@ -1,7 +1,7 @@
 'use client';
 
 import { Spinner } from '@/components/ui/spinner';
-import '@react-sigma/core/lib/react-sigma.min.css';
+import '@react-sigma/core/lib/style.css';
 import { ChatWindow } from '@/components/chat';
 import dynamic from 'next/dynamic';
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {

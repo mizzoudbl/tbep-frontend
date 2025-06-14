@@ -38,14 +38,14 @@ export function LeftSideBar() {
   const geneIDs = useStore(state => state.geneIDs);
   const bringCommon = useRef<boolean>(true);
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
-  const [diseaseMap, setDiseaseMap] = React.useState<string>('amyotrophic lateral sclerosis (MONDO_0004976)');
+  const [diseaseMap, setDiseaseMap] = React.useState<string>('MONDO_0004976');
 
   useEffect(() => {
     const graphConfig = localStorage.getItem('graphConfig');
     if (!graphConfig) redirect('/');
     const diseaseMap = JSON.parse(graphConfig).diseaseMap;
     useStore.setState({
-      diseaseName: diseaseMap?.split(' ')?.at(-1)?.slice(1, -1),
+      diseaseName: diseaseMap || 'MONDO_0004976',
     });
     setDiseaseMap(diseaseMap);
     (async () => {

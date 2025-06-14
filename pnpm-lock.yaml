@@ -20,7 +20,7 @@ importers:
         version: 3.11.8(@types/react@18.3.10)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@next/third-parties':
         specifier: ^15.1.3
-        version: 15.1.3(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 15.1.3(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -70,17 +70,17 @@ importers:
         specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@18.3.0)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-sigma/core':
-        specifier: ^4.0.3
-        version: 4.0.3(graphology@0.25.4(graphology-types@0.24.7))(react@18.3.1)(sigma@3.0.0-beta.32(graphology-types@0.24.7))
+        specifier: ^5.0.4
+        version: 5.0.4(graphology@0.26.0(graphology-types@0.24.7))(react@18.3.1)(sigma@3.0.2(graphology-types@0.24.7))
       '@sigma/export-image':
-        specifier: 3.0.0-beta.1
-        version: 3.0.0-beta.1(sigma@3.0.0-beta.32(graphology-types@0.24.7))
+        specifier: 3.0.0
+        version: 3.0.0(sigma@3.0.2(graphology-types@0.24.7))
       '@sigma/node-border':
-        specifier: 3.0.0-beta.7
-        version: 3.0.0-beta.7(sigma@3.0.0-beta.32(graphology-types@0.24.7))
+        specifier: 3.0.0
+        version: 3.0.0(sigma@3.0.2(graphology-types@0.24.7))
       '@sigma/utils':
-        specifier: 3.0.0-beta.6
-        version: 3.0.0-beta.6(sigma@3.0.0-beta.32(graphology-types@0.24.7))
+        specifier: 3.0.0
+        version: 3.0.0(sigma@3.0.2(graphology-types@0.24.7))
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -102,12 +102,15 @@ importers:
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
+      fflate:
+        specifier: ^0.8.2
+        version: 0.8.2
       framer-motion:
         specifier: ^11.11.1
         version: 11.11.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       graphology:
-        specifier: ^0.25.4
-        version: 0.25.4(graphology-types@0.24.7)
+        specifier: ^0.26.0
+        version: 0.26.0(graphology-types@0.24.7)
       graphology-communities-louvain:
         specifier: ^2.0.1
         version: 2.0.1(graphology-types@0.24.7)
@@ -121,23 +124,23 @@ importers:
         specifier: ^0.446.0
         version: 0.446.0(react@18.3.1)
       next:
-        specifier: 14.2.24
-        version: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 14.2.28
+        version: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-view-transitions:
         specifier: ^0.3.2
-        version: 0.3.2(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.3.2(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nextjs-toploader:
         specifier: ^3.6.15
-        version: 3.6.15(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 3.6.15(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nextra:
         specifier: ^3.3.1
-        version: 3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
+        version: 3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
       nextra-theme-docs:
         specifier: ^3.3.1
-        version: 3.3.1(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nextra@3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 3.3.1(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nextra@3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       papaparse:
-        specifier: ^5.4.1
-        version: 5.4.1
+        specifier: ^5.5.3
+        version: 5.5.3
       react:
         specifier: ^18
         version: 18.3.1
@@ -163,8 +166,8 @@ importers:
         specifier: ^0.33.5
         version: 0.33.5
       sigma:
-        specifier: 3.0.0-beta.32
-        version: 3.0.0-beta.32(graphology-types@0.24.7)
+        specifier: 3.0.2
+        version: 3.0.2(graphology-types@0.24.7)
       sonner:
         specifier: ^1.5.0
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -175,8 +178,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.13)
       zustand:
-        specifier: 5.0.0-rc.2
-        version: 5.0.0-rc.2(@types/react@18.3.10)(immer@10.1.1)(react@18.3.1)
+        specifier: 5.0.5
+        version: 5.0.5(@types/react@18.3.10)(immer@10.1.1)(react@18.3.1)
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.2
@@ -222,7 +225,7 @@ importers:
         version: 15.2.10
       next-sitemap:
         specifier: ^4.2.3
-        version: 4.2.3(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 4.2.3(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       postcss:
         specifier: ^8
         version: 8.4.47
@@ -708,59 +711,59 @@ packages:
   '@next/env@13.5.8':
     resolution: {integrity: sha512-YmiG58BqyZ2FjrF2+5uZExL2BrLr8RTQzLXNDJ8pJr0O+rPlOeDPXp1p1/4OrR3avDidzZo3D8QO2cuDv1KCkw==}
 
-  '@next/env@14.2.24':
-    resolution: {integrity: sha512-LAm0Is2KHTNT6IT16lxT+suD0u+VVfYNQqM+EJTKuFRRuY2z+zj01kueWXPCxbMBDt0B5vONYzabHGUNbZYAhA==}
+  '@next/env@14.2.28':
+    resolution: {integrity: sha512-PAmWhJfJQlP+kxZwCjrVd9QnR5x0R3u0mTXTiZDgSd4h5LdXmjxCCWbN9kq6hkZBOax8Rm3xDW5HagWyJuT37g==}
 
-  '@next/swc-darwin-arm64@14.2.24':
-    resolution: {integrity: sha512-7Tdi13aojnAZGpapVU6meVSpNzgrFwZ8joDcNS8cJVNuP3zqqrLqeory9Xec5TJZR/stsGJdfwo8KeyloT3+rQ==}
+  '@next/swc-darwin-arm64@14.2.28':
+    resolution: {integrity: sha512-kzGChl9setxYWpk3H6fTZXXPFFjg7urptLq5o5ZgYezCrqlemKttwMT5iFyx/p1e/JeglTwDFRtb923gTJ3R1w==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@14.2.24':
-    resolution: {integrity: sha512-lXR2WQqUtu69l5JMdTwSvQUkdqAhEWOqJEYUQ21QczQsAlNOW2kWZCucA6b3EXmPbcvmHB1kSZDua/713d52xg==}
+  '@next/swc-darwin-x64@14.2.28':
+    resolution: {integrity: sha512-z6FXYHDJlFOzVEOiiJ/4NG8aLCeayZdcRSMjPDysW297Up6r22xw6Ea9AOwQqbNsth8JNgIK8EkWz2IDwaLQcw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@14.2.24':
-    resolution: {integrity: sha512-nxvJgWOpSNmzidYvvGDfXwxkijb6hL9+cjZx1PVG6urr2h2jUqBALkKjT7kpfurRWicK6hFOvarmaWsINT1hnA==}
+  '@next/swc-linux-arm64-gnu@14.2.28':
+    resolution: {integrity: sha512-9ARHLEQXhAilNJ7rgQX8xs9aH3yJSj888ssSjJLeldiZKR4D7N08MfMqljk77fAwZsWwsrp8ohHsMvurvv9liQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-arm64-musl@14.2.24':
-    resolution: {integrity: sha512-PaBgOPhqa4Abxa3y/P92F3kklNPsiFjcjldQGT7kFmiY5nuFn8ClBEoX8GIpqU1ODP2y8P6hio6vTomx2Vy0UQ==}
+  '@next/swc-linux-arm64-musl@14.2.28':
+    resolution: {integrity: sha512-p6gvatI1nX41KCizEe6JkF0FS/cEEF0u23vKDpl+WhPe/fCTBeGkEBh7iW2cUM0rvquPVwPWdiUR6Ebr/kQWxQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-x64-gnu@14.2.24':
-    resolution: {integrity: sha512-vEbyadiRI7GOr94hd2AB15LFVgcJZQWu7Cdi9cWjCMeCiUsHWA0U5BkGPuoYRnTxTn0HacuMb9NeAmStfBCLoQ==}
+  '@next/swc-linux-x64-gnu@14.2.28':
+    resolution: {integrity: sha512-nsiSnz2wO6GwMAX2o0iucONlVL7dNgKUqt/mDTATGO2NY59EO/ZKnKEr80BJFhuA5UC1KZOMblJHWZoqIJddpA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-linux-x64-musl@14.2.24':
-    resolution: {integrity: sha512-df0FC9ptaYsd8nQCINCzFtDWtko8PNRTAU0/+d7hy47E0oC17tI54U/0NdGk7l/76jz1J377dvRjmt6IUdkpzQ==}
+  '@next/swc-linux-x64-musl@14.2.28':
+    resolution: {integrity: sha512-+IuGQKoI3abrXFqx7GtlvNOpeExUH1mTIqCrh1LGFf8DnlUcTmOOCApEnPJUSLrSbzOdsF2ho2KhnQoO0I1RDw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-win32-arm64-msvc@14.2.24':
-    resolution: {integrity: sha512-ZEntbLjeYAJ286eAqbxpZHhDFYpYjArotQ+/TW9j7UROh0DUmX7wYDGtsTPpfCV8V+UoqHBPU7q9D4nDNH014Q==}
+  '@next/swc-win32-arm64-msvc@14.2.28':
+    resolution: {integrity: sha512-l61WZ3nevt4BAnGksUVFKy2uJP5DPz2E0Ma/Oklvo3sGj9sw3q7vBWONFRgz+ICiHpW5mV+mBrkB3XEubMrKaA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-ia32-msvc@14.2.24':
-    resolution: {integrity: sha512-9KuS+XUXM3T6v7leeWU0erpJ6NsFIwiTFD5nzNg8J5uo/DMIPvCp3L1Ao5HjbHX0gkWPB1VrKoo/Il4F0cGK2Q==}
+  '@next/swc-win32-ia32-msvc@14.2.28':
+    resolution: {integrity: sha512-+Kcp1T3jHZnJ9v9VTJ/yf1t/xmtFAc/Sge4v7mVc1z+NYfYzisi8kJ9AsY8itbgq+WgEwMtOpiLLJsUy2qnXZw==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@14.2.24':
-    resolution: {integrity: sha512-cXcJ2+x0fXQ2CntaE00d7uUH+u1Bfp/E0HsNQH79YiLaZE5Rbm7dZzyAYccn3uICM7mw+DxoMqEfGXZtF4Fgaw==}
+  '@next/swc-win32-x64-msvc@14.2.28':
+    resolution: {integrity: sha512-1gCmpvyhz7DkB1srRItJTnmR2UwQPAUXXIg9r0/56g3O8etGmwlX68skKXJOp9EejW3hhv7nSQUJ2raFiz4MoA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -1542,12 +1545,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-sigma/core@4.0.3':
-    resolution: {integrity: sha512-/y/U1GH18xjGYMWNYXXqHGJ+8tHf+e4z1i0gNSm9iuhch8sGFJooO3VfyPJlBox42Wl4/gCapQhOHAfVW0pRtw==}
+  '@react-sigma/core@5.0.4':
+    resolution: {integrity: sha512-C0hjr069x9oLlVe7t+Y1vE8Qi9UV1dhvrwxNi96TWxrFcTSHO5ntduj5yKTGnUF4SiIszAz6Xmjga8SHT/836Q==}
     peerDependencies:
-      graphology: ^0.25.4
-      react: ^18.0.0
-      sigma: ^3.0.0-beta.24
+      graphology: ^0.26.0
+      react: ^18.0.0 || ^19.0.0
+      sigma: ^3.0.2
 
   '@react-stately/utils@3.10.5':
     resolution: {integrity: sha512-iMQSGcpaecghDIh3mZEpZfoFH3ExBwTtuBEcvZ2XnGzCgQjeYXcMdIUwAfVQLXFTdHUHGF6Gu6/dFrYsCzySBQ==}
@@ -1577,18 +1580,18 @@ packages:
   '@shikijs/vscode-textmate@9.3.1':
     resolution: {integrity: sha512-79QfK1393x9Ho60QFyLti+QfdJzRQCVLFb97kOIV7Eo9vQU/roINgk7m24uv0a7AUvN//RDH36FLjjK48v0s9g==}
 
-  '@sigma/export-image@3.0.0-beta.1':
-    resolution: {integrity: sha512-ku2n6WFDCX6XZF9by8Nq1paljCKfNJ4CkLvnUJVnxE0vowlAatUXB7HAPrCw5tvoLdmrMRredDNJ15MmcKFWPA==}
+  '@sigma/export-image@3.0.0':
+    resolution: {integrity: sha512-6JmWle7byUzAOGE3P3ttDqn2PbdnNETyFU13i4R0G3PIZcIiVqPRpRWBkz11E89oxKEzEf1XdwQKa9VxHDMD0w==}
     peerDependencies:
       sigma: '>=3.0.0-beta.10'
 
-  '@sigma/node-border@3.0.0-beta.7':
-    resolution: {integrity: sha512-M4ivn9H5BNMZudeQJ63Kfngu4Uwn0QM3qXZeWjDKp/X6c1Bsf44furMf2EmMbBmGYvYS5ummi03CQ33lh//DeQ==}
+  '@sigma/node-border@3.0.0':
+    resolution: {integrity: sha512-mE3zUfjvJVuAMhSjiP/zdlkqe0OVTETxd04XHUwof01YqdzTk0OB4ACJIhWrwgsBXl7tTd9lPuKoroafLh8MtQ==}
     peerDependencies:
       sigma: '>=3.0.0-beta.17'
 
-  '@sigma/utils@3.0.0-beta.6':
-    resolution: {integrity: sha512-CKu0BvSKPKr0CVTfR+1tyqs9xtZ7VlHqtoPuzybGj4DqhwD3ysfa+32x5QWwy3ocNwFl9WmW7n4hGAvZGtuF/w==}
+  '@sigma/utils@3.0.0':
+    resolution: {integrity: sha512-JCMjj3CHpA8yh8HcWm1YBs4Zdo2s0YUR2YKZ2NUlM2Purkdd8odLuaGQ/R/guSrBz/y+tOLSaQX7hKF6fkUG1g==}
     peerDependencies:
       sigma: '>=3.0.0-beta.29'
 
@@ -2536,6 +2539,9 @@ packages:
   fault@2.0.1:
     resolution: {integrity: sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==}
 
+  fflate@0.8.2:
+    resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
+
   figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
@@ -2692,8 +2698,8 @@ packages:
     peerDependencies:
       graphology-types: '>=0.23.0'
 
-  graphology@0.25.4:
-    resolution: {integrity: sha512-33g0Ol9nkWdD6ulw687viS8YJQBxqG5LWII6FI6nul0pq6iM2t5EKquOTFDbyTblRB3O9I+7KX4xI8u5ffekAQ==}
+  graphology@0.26.0:
+    resolution: {integrity: sha512-8SSImzgUUYC89Z042s+0r/vMibY7GX/Emz4LDO5e7jYXhuoWfHISPFJYjpRLUSJGq6UQ6xlenvX1p/hJdfXuXg==}
     peerDependencies:
       graphology-types: '>=0.24.0'
 
@@ -3392,8 +3398,8 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
 
-  next@14.2.24:
-    resolution: {integrity: sha512-En8VEexSJ0Py2FfVnRRh8gtERwDRaJGNvsvad47ShkC2Yi8AXQPXEA2vKoDJlGFSj5WE5SyF21zNi4M5gyi+SQ==}
+  next@14.2.28:
+    resolution: {integrity: sha512-QLEIP/kYXynIxtcKB6vNjtWLVs3Y4Sb+EClTC/CSVzdLD1gIuItccpu/n1lhmduffI32iPGEK2cLLxxt28qgYA==}
     engines: {node: '>=18.17.0'}
     hasBin: true
     peerDependencies:
@@ -3512,8 +3518,8 @@ packages:
   pandemonium@2.4.1:
     resolution: {integrity: sha512-wRqjisUyiUfXowgm7MFH2rwJzKIr20rca5FsHXCMNm1W5YPP1hCtrZfgmQ62kP7OZ7Xt+cR858aB28lu5NX55g==}
 
-  papaparse@5.4.1:
-    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
+  papaparse@5.5.3:
+    resolution: {integrity: sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -3974,8 +3980,8 @@ packages:
   shiki@1.24.4:
     resolution: {integrity: sha512-aVGSFAOAr1v26Hh/+GBIsRVDWJ583XYV7CuNURKRWh9gpGv4OdbisZGq96B9arMYTZhTQkmRF5BrShOSTvNqhw==}
 
-  sigma@3.0.0-beta.32:
-    resolution: {integrity: sha512-6GMxvE/1VKJa9ZhGUXbOKcpWmBZCcJsXMAdsqf9btFxAQuqCT9My074aY6e9rG1A1VZVGIZ6A/FriEnzatkZGA==}
+  sigma@3.0.2:
+    resolution: {integrity: sha512-/BUbeOwPGruiBOm0YQQ6ZMcLIZ6tf/W+Jcm7dxZyAX0tK3WP9/sq7/NAWBxPIxVahdGjCJoGwej0Gdrv0DxlQQ==}
 
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
@@ -4418,8 +4424,8 @@ packages:
   zod@3.24.1:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
 
-  zustand@5.0.0-rc.2:
-    resolution: {integrity: sha512-o2Nwuvnk8vQBX7CcHL8WfFkZNJdxB/VKeWw0tNglw8p4cypsZ3tRT7rTRTDNeUPFS0qaMBRSKe+fVwL5xpcE3A==}
+  zustand@5.0.5:
+    resolution: {integrity: sha512-mILtRfKW9xM47hqxGIxCv12gXusoY/xTSHBYApXozR0HmQv299whhBeeAcRy+KrPPybzosvJBCOmVjq6x12fCg==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=18.0.0'
@@ -4937,38 +4943,38 @@ snapshots:
 
   '@next/env@13.5.8': {}
 
-  '@next/env@14.2.24': {}
+  '@next/env@14.2.28': {}
 
-  '@next/swc-darwin-arm64@14.2.24':
+  '@next/swc-darwin-arm64@14.2.28':
     optional: true
 
-  '@next/swc-darwin-x64@14.2.24':
+  '@next/swc-darwin-x64@14.2.28':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@14.2.24':
+  '@next/swc-linux-arm64-gnu@14.2.28':
     optional: true
 
-  '@next/swc-linux-arm64-musl@14.2.24':
+  '@next/swc-linux-arm64-musl@14.2.28':
     optional: true
 
-  '@next/swc-linux-x64-gnu@14.2.24':
+  '@next/swc-linux-x64-gnu@14.2.28':
     optional: true
 
-  '@next/swc-linux-x64-musl@14.2.24':
+  '@next/swc-linux-x64-musl@14.2.28':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@14.2.24':
+  '@next/swc-win32-arm64-msvc@14.2.28':
     optional: true
 
-  '@next/swc-win32-ia32-msvc@14.2.24':
+  '@next/swc-win32-ia32-msvc@14.2.28':
     optional: true
 
-  '@next/swc-win32-x64-msvc@14.2.24':
+  '@next/swc-win32-x64-msvc@14.2.28':
     optional: true
 
-  '@next/third-parties@15.1.3(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@next/third-parties@15.1.3(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
-      next: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       third-party-capital: 1.0.20
 
@@ -5757,11 +5763,11 @@ snapshots:
       clsx: 2.1.1
       react: 18.3.1
 
-  '@react-sigma/core@4.0.3(graphology@0.25.4(graphology-types@0.24.7))(react@18.3.1)(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
+  '@react-sigma/core@5.0.4(graphology@0.26.0(graphology-types@0.24.7))(react@18.3.1)(sigma@3.0.2(graphology-types@0.24.7))':
     dependencies:
-      graphology: 0.25.4(graphology-types@0.24.7)
+      graphology: 0.26.0(graphology-types@0.24.7)
       react: 18.3.1
-      sigma: 3.0.0-beta.32(graphology-types@0.24.7)
+      sigma: 3.0.2(graphology-types@0.24.7)
 
   '@react-stately/utils@3.10.5(react@18.3.1)':
     dependencies:
@@ -5808,18 +5814,18 @@ snapshots:
 
   '@shikijs/vscode-textmate@9.3.1': {}
 
-  '@sigma/export-image@3.0.0-beta.1(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
+  '@sigma/export-image@3.0.0(sigma@3.0.2(graphology-types@0.24.7))':
     dependencies:
       file-saver: 2.0.5
-      sigma: 3.0.0-beta.32(graphology-types@0.24.7)
+      sigma: 3.0.2(graphology-types@0.24.7)
 
-  '@sigma/node-border@3.0.0-beta.7(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
+  '@sigma/node-border@3.0.0(sigma@3.0.2(graphology-types@0.24.7))':
     dependencies:
-      sigma: 3.0.0-beta.32(graphology-types@0.24.7)
+      sigma: 3.0.2(graphology-types@0.24.7)
 
-  '@sigma/utils@3.0.0-beta.6(sigma@3.0.0-beta.32(graphology-types@0.24.7))':
+  '@sigma/utils@3.0.0(sigma@3.0.2(graphology-types@0.24.7))':
     dependencies:
-      sigma: 3.0.0-beta.32(graphology-types@0.24.7)
+      sigma: 3.0.2(graphology-types@0.24.7)
 
   '@swc/counter@0.1.3': {}
 
@@ -6811,6 +6817,8 @@ snapshots:
     dependencies:
       format: 0.2.2
 
+  fflate@0.8.2: {}
+
   figures@3.2.0:
     dependencies:
       escape-string-regexp: 1.0.5
@@ -6975,11 +6983,10 @@ snapshots:
     dependencies:
       graphology-types: 0.24.7
 
-  graphology@0.25.4(graphology-types@0.24.7):
+  graphology@0.26.0(graphology-types@0.24.7):
     dependencies:
       events: 3.3.0
       graphology-types: 0.24.7
-      obliterator: 2.0.4
 
   graphql-tag@2.12.6(graphql@16.9.0):
     dependencies:
@@ -8032,28 +8039,28 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-sitemap@4.2.3(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
+  next-sitemap@4.2.3(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
       '@corex/deepmerge': 4.0.43
       '@next/env': 13.5.8
       fast-glob: 3.3.2
       minimist: 1.2.8
-      next: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   next-themes@0.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  next-view-transitions@0.3.2(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-view-transitions@0.3.2(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      next: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@next/env': 14.2.24
+      '@next/env': 14.2.28
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
       caniuse-lite: 1.0.30001707
@@ -8063,43 +8070,43 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       styled-jsx: 5.1.1(react@18.3.1)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.24
-      '@next/swc-darwin-x64': 14.2.24
-      '@next/swc-linux-arm64-gnu': 14.2.24
-      '@next/swc-linux-arm64-musl': 14.2.24
-      '@next/swc-linux-x64-gnu': 14.2.24
-      '@next/swc-linux-x64-musl': 14.2.24
-      '@next/swc-win32-arm64-msvc': 14.2.24
-      '@next/swc-win32-ia32-msvc': 14.2.24
-      '@next/swc-win32-x64-msvc': 14.2.24
+      '@next/swc-darwin-arm64': 14.2.28
+      '@next/swc-darwin-x64': 14.2.28
+      '@next/swc-linux-arm64-gnu': 14.2.28
+      '@next/swc-linux-arm64-musl': 14.2.28
+      '@next/swc-linux-x64-gnu': 14.2.28
+      '@next/swc-linux-x64-musl': 14.2.28
+      '@next/swc-win32-arm64-msvc': 14.2.28
+      '@next/swc-win32-ia32-msvc': 14.2.28
+      '@next/swc-win32-x64-msvc': 14.2.28
       '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-toploader@3.6.15(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  nextjs-toploader@3.6.15(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      next: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress: 0.2.0
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  nextra-theme-docs@3.3.1(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nextra@3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  nextra-theme-docs@3.3.1(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nextra@3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@headlessui/react': 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 2.1.1
       escape-string-regexp: 5.0.0
       flexsearch: 0.7.43
-      next: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-themes: 0.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      nextra: 3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
+      nextra: 3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       scroll-into-view-if-needed: 3.1.0
       zod: 3.24.1
 
-  nextra@3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2):
+  nextra@3.3.1(@types/react@18.3.10)(acorn@8.14.0)(next@14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.9
       '@headlessui/react': 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -8122,7 +8129,7 @@ snapshots:
       mdast-util-gfm: 3.0.0
       mdast-util-to-hast: 13.2.0
       negotiator: 1.0.0
-      next: 14.2.24(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.28(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       p-limit: 6.2.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -8232,7 +8239,7 @@ snapshots:
     dependencies:
       mnemonist: 0.39.8
 
-  papaparse@5.4.1: {}
+  papaparse@5.5.3: {}
 
   parent-module@1.0.1:
     dependencies:
@@ -8821,7 +8828,7 @@ snapshots:
       '@shikijs/vscode-textmate': 9.3.1
       '@types/hast': 3.0.4
 
-  sigma@3.0.0-beta.32(graphology-types@0.24.7):
+  sigma@3.0.2(graphology-types@0.24.7):
     dependencies:
       events: 3.3.0
       graphology-utils: 2.5.2(graphology-types@0.24.7)
@@ -9283,7 +9290,7 @@ snapshots:
 
   zod@3.24.1: {}
 
-  zustand@5.0.0-rc.2(@types/react@18.3.10)(immer@10.1.1)(react@18.3.1):
+  zustand@5.0.5(@types/react@18.3.10)(immer@10.1.1)(react@18.3.1):
     optionalDependencies:
       '@types/react': 18.3.10
       immer: 10.1.1

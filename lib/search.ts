@@ -1,5 +1,3 @@
-import { useCallback, useMemo, useState } from 'react';
-
 /**
  * Represents a search item with id and label.
  */
@@ -258,52 +256,4 @@ export class OptimizedMedicalSearch {
       callback(results);
     }, delay);
   }
-}
-
-/**
- * React hook for integrating the optimized search into components
- * @param initialData Optional initial search data
- * @returns Search state and handlers for React components
- */
-export function useOptimizedSearch(initialData: SearchItem[]) {
-  const [results, setResults] = useState<SearchItem[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-
-  // Create or use component-specific search engine if initialData is provided
-  const searchEngine = useMemo(() => new OptimizedMedicalSearch(initialData), [initialData]);
-
-  // Add data to search engine if provided after initialization
-  const addSearchData = useCallback(
-    (data: SearchItem[]) => {
-      if (data && data.length > 0) {
-        searchEngine.addItems(data);
-      }
-    },
-    [searchEngine],
-  );
-
-  // Debounced search handler
-  const handleSearch = useCallback(
-    (searchTerm: string) => {
-      if (!searchTerm || searchTerm.length < 2) {
-        setResults([]);
-        return;
-      }
-
-      setIsSearching(true);
-      searchEngine.debouncedSearch(searchTerm, searchResults => {
-        setResults(searchResults);
-        setIsSearching(false);
-      });
-    },
-    [searchEngine],
-  );
-
-  return {
-    results,
-    isSearching,
-    handleSearch,
-    addSearchData,
-    searchEngine,
-  };
 }
