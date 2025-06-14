@@ -16,8 +16,8 @@ export const radialAnalysisOptions = [
     step: 1,
   },
   {
-    key: 'hubGeneCutOff',
-    label: 'Hub Genes',
+    key: 'seedGeneProximityCutOff',
+    label: 'Seed Proximity Cut-off',
     tooltip: 'Highlights nodes with degree greater than the cut-off value calculated interactions among seed genes',
     min: 0,
     max: 50,

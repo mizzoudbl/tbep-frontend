@@ -65,8 +65,9 @@ export type EventMessage = {
     parameters?: Record<string, string>;
   };
   [Events.EXPORT]: {
-    format: 'png' | 'json' | 'csv';
+    format: 'png' | 'csv';
     all?: boolean;
+    csvType?: 'universal' | 'interaction' | 'both';
   };
   [Events.ALGORITHM_RESULTS]: {
     modularity: number;

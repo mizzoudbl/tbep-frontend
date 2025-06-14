@@ -19,9 +19,11 @@ import { drawSelectionBox, findNodesInSelection } from '../../lib/graph/canvas-b
 export function GraphEvents({
   clickedNodesRef,
   highlightedNodesRef,
+  seedProximityNodesRef,
 }: {
   clickedNodesRef?: React.MutableRefObject<Set<string>>;
   highlightedNodesRef: React.MutableRefObject<Set<string>>;
+  seedProximityNodesRef: React.MutableRefObject<Set<string>>;
 }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const nodeSearchQuery = useStore(state => state.nodeSearchQuery);
@@ -179,7 +181,6 @@ export function GraphEvents({
     if (!canvasRef.current) canvasRef.current = sigma.getCanvases().mouse;
     const context = canvasRef.current?.getContext('2d');
     const graph = sigma.getGraph();
-    const wasNodeTypeBorderBefore = [false, false];
     registerEvents({
       /* Node Hover Program */
       enterEdge: e => {
@@ -189,11 +190,9 @@ export function GraphEvents({
           attr.forceLabel = true;
           return attr;
         });
-        let count = 0;
         for (const node of graph.extremities(e.edge)) {
           graph.updateNodeAttributes(node, attr => {
-            if (attr.type === 'border') wasNodeTypeBorderBefore[count++] = true;
-            attr.type = 'border';
+            attr.type = 'normal';
             attr.highlighted = true;
             return attr;
           });
@@ -223,12 +222,15 @@ export function GraphEvents({
           attr.forceLabel = false;
           return attr;
         });
-        let count = 0;
+        const count = 0;
         for (const node of graph.extremities(e.edge)) {
           graph.updateNodeAttributes(node, attr => {
             if (highlightedNodesRef.current.has(node)) {
               attr.type = 'highlight';
-            } else if (wasNodeTypeBorderBefore[count]) {
+            } else if (clickedNodesRef?.current.has(node)) {
+              attr.type = 'border';
+            } else if (seedProximityNodesRef?.current.has(node)) {
+              attr.type = 'border';
               attr.highlighted = false;
             } else {
               attr.type = 'circle';
@@ -236,7 +238,6 @@ export function GraphEvents({
             }
             return attr;
           });
-          wasNodeTypeBorderBefore[count++] = false;
         }
       },
       /* Drag'n'Drop Program */
@@ -250,7 +251,7 @@ export function GraphEvents({
       mousemovebody: e => {
         if (!isSelecting && !draggedNode) return;
         if (isSelecting) {
-          handleMouseMove(e.original);
+          handleMouseMove(e.original as MouseEvent);
         } else if (draggedNode) {
           const pos = sigma.viewportToGraph(e);
           // Get new position of node
@@ -268,17 +269,20 @@ export function GraphEvents({
           setDraggedNode(null);
         } else if (isSelecting) {
           handleMouseUp();
-        }
-        if (clickedNode) {
+        } else if (clickedNode) {
           clickedNodesRef?.current.delete(clickedNode);
           graph.forEachNeighbor(clickedNode, (neighbor, attr) => {
             clickedNodesRef?.current.delete(neighbor);
-            if (highlightedNodesRef.current.has(neighbor)) return;
+            if (highlightedNodesRef.current.has(neighbor) || seedProximityNodesRef.current.has(neighbor)) return;
             attr.type = 'circle';
             attr.highlighted = false;
           });
+
           if (highlightedNodesRef.current.has(clickedNode)) {
             graph.setNodeAttribute(clickedNode, 'type', 'highlight');
+          } else if (seedProximityNodesRef.current.has(clickedNode)) {
+            graph.setNodeAttribute(clickedNode, 'highlighted', false);
+            graph.setNodeAttribute(clickedNode, 'type', 'border');
           } else {
             graph.setNodeAttribute(clickedNode, 'highlighted', false);
             graph.setNodeAttribute(clickedNode, 'type', 'circle');
@@ -289,11 +293,11 @@ export function GraphEvents({
       },
       // Disable the autoscale at the first down interaction
       mousedown: e => {
-        if (e.original.shiftKey) handleMouseDown(e.original);
+        if (e.original.shiftKey) handleMouseDown(e.original as MouseEvent);
         else {
           for (const node of _selectedNodes) {
-            if (highlightedNodesRef.current.has(node)) continue;
-            graph.setNodeAttribute(node, 'type', 'circle');
+            if (highlightedNodesRef.current.has(node)) graph.setNodeAttribute(node, 'type', 'highlight');
+            else graph.setNodeAttribute(node, 'type', 'circle');
           }
           setSelectedNodes([]);
           handleSelectedNodes([]);

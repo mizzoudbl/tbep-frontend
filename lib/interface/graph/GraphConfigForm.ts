@@ -12,7 +12,7 @@ export interface GraphConfigForm {
 
   /**
    * @description Disease data which is used to get property dropdown options.
-   * @example "amyotrophic Lateral Sclerosis (MONDO_0004976)"
+   * @example "MONDO_0004976"
    */
   diseaseMap: string;
 

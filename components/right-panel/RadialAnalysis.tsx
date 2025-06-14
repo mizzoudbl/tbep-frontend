@@ -39,7 +39,7 @@ export function RadialAnalysis() {
                 {option.label}
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <InfoIcon size={12} />
+                    <InfoIcon className='shrink-0' size={12} />
                   </TooltipTrigger>
                   <TooltipContent align='end'>
                     <p className='max-w-60'>{option.tooltip}</p>
