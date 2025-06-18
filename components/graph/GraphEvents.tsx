@@ -273,9 +273,17 @@ export function GraphEvents({
           clickedNodesRef?.current.delete(clickedNode);
           graph.forEachNeighbor(clickedNode, (neighbor, attr) => {
             clickedNodesRef?.current.delete(neighbor);
-            if (highlightedNodesRef.current.has(neighbor) || seedProximityNodesRef.current.has(neighbor)) return;
-            attr.type = 'circle';
-            attr.highlighted = false;
+            // if (highlightedNodesRef.current.has(neighbor) || seedProximityNodesRef.current.has(neighbor)) return;
+            if (highlightedNodesRef.current.has(neighbor)) {
+              attr.type = 'highlight';
+              attr.highlighted = true;
+            } else if (seedProximityNodesRef.current.has(neighbor)) {
+              attr.type = 'border';
+              attr.highlighted = false;
+            } else {
+              attr.type = 'circle';
+              attr.highlighted = false;
+            }
           });
 
           if (highlightedNodesRef.current.has(clickedNode)) {

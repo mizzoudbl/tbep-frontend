@@ -208,7 +208,7 @@ export function LeftSideBar() {
 
   async function handleDiseaseChange(disease: string) {
     setDiseaseMap(disease);
-    useStore.setState({ diseaseName: disease.split(' ').at(-1)?.slice(1, -1) });
+    useStore.setState({ diseaseName: disease });
   }
 
   return (

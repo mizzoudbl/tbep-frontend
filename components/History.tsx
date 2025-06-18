@@ -117,10 +117,9 @@ export default function History({
                     />
                   </CardTitle>
                   <div className='pl-1 text-xs text-muted-foreground'>
-                    <p>{item.seedGenes.slice(0, 30) + (item.seedGenes.length > 30 && '...')}</p>
+                    <p>{item.seedGenes.length > 30 ? `${item.seedGenes.slice(0, 30)}...` : item.seedGenes}</p>
                     <p>
-                      {item.diseaseMap.split(' ').at(-1)?.slice(1, -1)} : Order - {item.order} : {item.interactionType}{' '}
-                      : {item.minScore}
+                      {item.diseaseMap} : Order - {item.order} : {item.interactionType} : {item.minScore}
                     </p>
                   </div>
                 </CardHeader>
