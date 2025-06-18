@@ -8,6 +8,8 @@ description: Summary of release highlights of TBEP tool
 ## v1.2.5
 
 - **[FEATURE]** Added autofill seed genes based on overall association scores from the [Open Targets](https://platform.opentargets.org/) platform to help users quickly start analysis with top-ranked genes.
+- **[BUG]** Fixed the issue of reported bug where 2nd order of MAPT doesn't show GSK3B but same configuration network of GSK3B shows MAPT.
+- **[BUG]** Fixed the issue where utilizing various features doesn't update the network view properly when used with searchbox input.
 - **[BUG]** Fixed the issue where unexpectedly bordered genes loose its bordered ring when Seed Proximity Cut-off (previously known Hub Genes) feature is being used.
 - **[BUG]** Fixed the issue where for chromium (Chrome, Edge, Brave etc.) users, the bounding box was not being cleared properly.
 - **[BUG]** Fixed the issue where even upon hiding a cluster, the nodes of the cluster were being highlighted when visible when they shouldn't have been.
