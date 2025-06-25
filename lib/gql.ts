@@ -18,7 +18,7 @@ export const GENE_GRAPH_QUERY = gql`
     $geneIDs: [String!]!
     $minScore: Float!
     $order: Int!
-    $interactionType: String!
+    $interactionType: [String!]!
   ) {
     getGeneInteractions(
       input: {
@@ -37,6 +37,7 @@ export const GENE_GRAPH_QUERY = gql`
         gene1
         gene2
         score
+        typeScores
       }
       graphName
       averageClusteringCoefficient
@@ -77,6 +78,14 @@ export const GET_HEADERS_QUERY = (bringCommon = true) => gql`
         name
         description
       }
+    }
+  }
+`;
+
+export const TOP_GENES_QUERY = gql`
+  query TopGenesByDisease($diseaseId: String!, $limit: Int!) {
+    topGenesByDisease(diseaseId: $diseaseId, limit: $limit) {
+      gene_name
     }
   }
 `;

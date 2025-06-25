@@ -190,6 +190,7 @@ export function LoadGraph() {
               attributes: {
                 score: link.score,
                 label: link.score.toString(),
+                ...(link.typeScores ? { typeScores: link.typeScores } : {}),
               },
             })),
           };

@@ -27,7 +27,7 @@ export interface GraphConfigForm {
   /**
    * @description Gene interaction type is used to filter the datasource used to generate the graph.
    */
-  interactionType: GeneInteractionType;
+  interactionType: GeneInteractionType[];
 
   /**
    * @description The cut-off value for the minimum score of the edges in the graph.
