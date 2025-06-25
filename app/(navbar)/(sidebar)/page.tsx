@@ -17,14 +17,22 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { MultiSelect } from '@/components/ui/multiselect';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { graphConfig } from '@/lib/data';
-import { GENE_VERIFICATION_QUERY } from '@/lib/gql';
-import type { GeneVerificationData, GeneVerificationVariables, GetDiseaseData, GraphConfigForm } from '@/lib/interface';
+import { GENE_VERIFICATION_QUERY, TOP_GENES_QUERY } from '@/lib/gql';
+import type {
+  GeneVerificationData,
+  GeneVerificationVariables,
+  GetDiseaseData,
+  GraphConfigForm,
+  TopGeneData,
+  TopGeneVariables,
+} from '@/lib/interface';
 import { distinct, envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { AlertTriangleIcon, InfoIcon, LoaderIcon } from 'lucide-react';
@@ -36,6 +44,7 @@ export default function Home() {
   const [verifyGenes, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
     GENE_VERIFICATION_QUERY,
   );
+  const [fetchTopGenes, { loading: topGenesLoading }] = useLazyQuery<TopGeneData, TopGeneVariables>(TOP_GENES_QUERY);
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
 
   React.useEffect(() => {
@@ -50,7 +59,7 @@ export default function Home() {
     seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
     diseaseMap: 'MONDO_0004976',
     order: '0',
-    interactionType: 'PPI',
+    interactionType: ['PPI'],
     minScore: '0.9',
   });
   const [history, setHistory] = React.useState<HistoryItem[]>([]);
@@ -83,13 +92,17 @@ export default function Home() {
     const num = Number.parseInt(fd.get('autofill-num') as string, 10);
     setAutofillLoading(true);
     try {
-      const res = await fetch(
-        `${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/clickhouse/top-genes?diseaseId=${encodeURIComponent(
-          formData.diseaseMap,
-        )}&limit=${num}`,
-      );
-      const genes: string[] = await res.json();
-      setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));
+      const { data } = await fetchTopGenes({
+        variables: {
+          diseaseId: formData.diseaseMap,
+          limit: num,
+        },
+      });
+      if (data?.topGenesByDisease) {
+        const genes: string[] = data.topGenesByDisease.map((g: { gene_name: string }) => g.gene_name);
+        setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));
+        setAutofillLoading(false);
+      }
     } catch {
       toast.error('Failed to autofill genes from API', {
         cancel: { label: 'Close', onClick() {} },
@@ -100,8 +113,22 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
-    const { seedGenes } = formData;
+    const { seedGenes, interactionType } = formData;
+    if (interactionType.length === 0) {
+      toast.error('Please select at least one interaction type', {
+        cancel: { label: 'Close', onClick() {} },
+        description: 'Interaction type is required to generate the graph',
+      });
+      return;
+    }
     const geneIDs = distinct(seedGenes.split(/[,|\n]/).map(gene => gene.trim().toUpperCase())).filter(Boolean);
+    if (geneIDs.length === 0) {
+      toast.error('Please enter valid seed genes', {
+        cancel: { label: 'Close', onClick() {} },
+        description: 'Seed genes cannot be empty',
+      });
+      return;
+    }
     setGeneIDs(geneIDs);
     const { error } = await verifyGenes({
       variables: { geneIDs },
@@ -119,6 +146,10 @@ export default function Home() {
 
   const handleSelect = (val: string, key: string) => {
     setFormData({ ...formData, [key]: val });
+  };
+
+  const handleMultiSelect = (vals: string[], key: string) => {
+    setFormData({ ...formData, [key]: vals });
   };
 
   const handleFileRead = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -267,10 +298,10 @@ export default function Home() {
                       className='w-20 h-8'
                       placeholder='e.g. 25'
                       defaultValue={25}
-                      disabled={autofillLoading}
+                      disabled={autofillLoading || topGenesLoading}
                     />
-                    <Button type='submit' disabled={autofillLoading} className='h-8 text-sm px-3'>
-                      {autofillLoading ? (
+                    <Button type='submit' disabled={autofillLoading || topGenesLoading} className='h-8 text-sm px-3'>
+                      {autofillLoading || topGenesLoading ? (
                         <>
                           <LoaderIcon className='animate-spin mr-1' size={14} />
                           Auto-filling...
@@ -388,18 +419,27 @@ NT5C1A`,
                         <TooltipContent>{config.tooltipContent}</TooltipContent>
                       </Tooltip>
                     </div>
-                    <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
-                      <SelectTrigger id={config.id}>
-                        <SelectValue placeholder='Select...' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {config.options.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {config.id === 'interactionType' ? (
+                      <MultiSelect
+                        options={[...config.options]}
+                        selectedValues={formData[config.id] || []}
+                        onChange={values => handleMultiSelect(values, config.id)}
+                        placeholder='Select...'
+                      />
+                    ) : (
+                      <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
+                        <SelectTrigger id={config.id}>
+                          <SelectValue placeholder='Select...' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {config.options.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
                 ))}
               </div>
