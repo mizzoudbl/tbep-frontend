@@ -108,6 +108,7 @@ export function GraphAnalysis({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (radialAnalysis.seedGeneProximityCutOff < 1) {
+      seedProximityNodesRef.current.clear();
       graph.updateEachNodeAttributes((node, attr) => {
         if (highlightedNodesRef?.current.has(node)) {
           attr.type = 'highlight';
