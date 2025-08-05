@@ -125,12 +125,21 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
             }
           } else if (csvType === 'both') {
             // Zip both files
-            const zippedFile = zipSync({
+            const zippedData = zipSync({
               'universal.csv': strToU8(universalCsv),
               'interaction.csv': strToU8(interactionCsv),
             });
+
+            const zippedArrayBuffer =
+              zippedData.buffer instanceof ArrayBuffer ? zippedData.buffer : zippedData.slice().buffer; // fallback, but zipSync should return ArrayBuffer-backed Uint8Array
+
+            // Slice the ArrayBuffer to match zippedData's actual length
+            const zippedBlob = new Blob(
+              [zippedArrayBuffer.slice(zippedData.byteOffset, zippedData.byteOffset + zippedData.byteLength)],
+              { type: 'application/zip' },
+            );
             const element = document.createElement('a');
-            element.href = URL.createObjectURL(new Blob([zippedFile], { type: 'application/zip' }));
+            element.href = URL.createObjectURL(zippedBlob);
             element.download = `${projectTitle}-csv${all ? '' : '-selected'}.zip`;
             document.body.appendChild(element);
             element.click();
