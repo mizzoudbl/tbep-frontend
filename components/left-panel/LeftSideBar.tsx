@@ -19,13 +19,13 @@ import type {
 } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
-import { AnimatePresence, motion } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { GeneSearch, NodeColor, NodeSize } from '.';
 import { DiseaseMapCombobox } from '../DiseaseMapCombobox';
-import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { FileSheet } from '../app';
 import { Export, MouseControlMessage } from '../app';
 import { Label } from '../ui/label';
@@ -35,7 +35,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
-  const geneIDs = useStore(state => state.geneIDs);
+  const geneIDs = useStore(useShallow(state => state.geneNames.map(g => state.geneNameToID.get(g) ?? g)));
   const bringCommon = useRef<boolean>(true);
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
   const [diseaseMap, setDiseaseMap] = React.useState<string>('MONDO_0004976');

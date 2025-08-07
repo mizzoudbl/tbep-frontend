@@ -1,9 +1,9 @@
 import { LLM_MODELS } from '@/lib/data';
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import { SendIcon, Trash2Icon } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import { motion } from 'motion/react';
+import Link from 'next/link';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from '.';

@@ -7,8 +7,8 @@ import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { CheckCircle, CircleX } from 'lucide-react';
-import { Link } from 'next-view-transitions';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 

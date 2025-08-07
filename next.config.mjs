@@ -7,6 +7,7 @@ const nextConfig = {
     unoptimized: true,
     dangerouslyAllowSVG: true,
   },
+  turbopack: {}
 };
 
 const withNextra = nextra({

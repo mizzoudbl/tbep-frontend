@@ -21,9 +21,9 @@ export function GraphEvents({
   highlightedNodesRef,
   seedProximityNodesRef,
 }: {
-  clickedNodesRef?: React.MutableRefObject<Set<string>>;
-  highlightedNodesRef: React.MutableRefObject<Set<string>>;
-  seedProximityNodesRef: React.MutableRefObject<Set<string>>;
+  clickedNodesRef?: React.RefObject<Set<string>>;
+  highlightedNodesRef: React.RefObject<Set<string>>;
+  seedProximityNodesRef: React.RefObject<Set<string>>;
 }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const nodeSearchQuery = useStore(state => state.nodeSearchQuery);

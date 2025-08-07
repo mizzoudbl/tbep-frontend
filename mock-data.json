@@ -1,0 +1,210 @@
+{
+  "data": {
+    "targetDiseaseAssociationTable": [
+      {
+        "target": {
+          "name": "SOD1",
+          "prioritization": [
+            { "key": "Target in clinic", "score": 0.9 },
+            { "key": "Membrane protein", "score": 0.2 },
+            { "key": "Secreted protein", "score": 0.2 },
+            { "key": "Ligand binder", "score": 0.2 },
+            { "key": "Small molecule binder", "score": 0.9 },
+            { "key": "Predicted pockets", "score": 0.9 },
+            { "key": "Mouse ortholog identity", "score": 0.6 },
+            { "key": "Chemical probes", "score": 0.2 },
+            { "key": "Genetic constraint", "score": 0.6 },
+            { "key": "Mouse models", "score": 1.0 },
+            { "key": "Gene essentiality", "score": 1.0 },
+            { "key": "Known safety events", "score": 0.0 },
+            { "key": "Cancer driver gene", "score": 0.0 },
+            { "key": "Paralogues", "score": 0.2 },
+            { "key": "Tissue specificity", "score": 0.6 },
+            { "key": "Tissue distribution", "score": 1.0 }
+          ]
+        },
+        "datasourceScores": [
+          { "key": "UniProt curated variants", "score": 0.99272555 },
+          { "key": "ClinVar", "score": 0.9479924 },
+          { "key": "Clingen", "score": 0.82746136 },
+          { "key": "ChEMBL", "score": 0.7881992 },
+          { "key": "GEL PanelApp", "score": 0.7599135 },
+          { "key": "GWAS Associations", "score": 0.73962545 },
+          { "key": "Orphanet", "score": 0.6079308 },
+          { "key": "UniProt literature", "score": 0.6079308 },
+          { "key": "IMPC", "score": 0.4594883 },
+          { "key": "Europe PMC", "score": 0.40999272 }
+        ],
+        "overall_score": 0.8789027
+      },
+      {
+        "target": {
+          "name": "TARDBP",
+          "prioritization": [
+            { "key": "Target in clinic", "score": 0.0 },
+            { "key": "Membrane protein", "score": 0.2 },
+            { "key": "Secreted protein", "score": 0.2 },
+            { "key": "Ligand binder", "score": 0.2 },
+            { "key": "Small molecule binder", "score": 0.9 },
+            { "key": "Predicted pockets", "score": 0.2 },
+            { "key": "Mouse ortholog identity", "score": 0.0 },
+            { "key": "Chemical probes", "score": 0.2 },
+            { "key": "Genetic constraint", "score": 0.8 },
+            { "key": "Mouse models", "score": 1.0 },
+            { "key": "Gene essentiality", "score": 1.0 },
+            { "key": "Known safety events", "score": 0.0 },
+            { "key": "Cancer driver gene", "score": 0.0 },
+            { "key": "Paralogues", "score": 0.2 },
+            { "key": "Tissue specificity", "score": 1.0 },
+            { "key": "Tissue distribution", "score": 1.0 }
+          ]
+        },
+        "datasourceScores": [
+          { "key": "UniProt curated variants", "score": 0.975196 },
+          { "key": "ClinVar", "score": 0.94042456 },
+          { "key": "GEL PanelApp", "score": 0.86545706 },
+          { "key": "Clingen", "score": 0.7599135 },
+          { "key": "Orphanet", "score": 0.6079308 },
+          { "key": "UniProt literature", "score": 0.6079308 },
+          { "key": "IMPC", "score": 0.5884861 },
+          { "key": "Europe PMC", "score": 0.1523877 }
+        ],
+        "overall_score": 0.8499122
+      },
+      {
+        "target": {
+          "name": "FUS",
+          "prioritization": [
+            { "key": "Target in clinic", "score": 0.0 },
+            { "key": "Membrane protein", "score": 0.2 },
+            { "key": "Secreted protein", "score": 0.2 },
+            { "key": "Ligand binder", "score": 0.2 },
+            { "key": "Small molecule binder", "score": 0.9 },
+            { "key": "Predicted pockets", "score": 0.2 },
+            { "key": "Mouse ortholog identity", "score": 0.0 },
+            { "key": "Chemical probes", "score": 0.2 },
+            { "key": "Genetic constraint", "score": 0.8 },
+            { "key": "Mouse models", "score": 1.0 },
+            { "key": "Gene essentiality", "score": 1.0 },
+            { "key": "Known safety events", "score": 0.0 },
+            { "key": "Cancer driver gene", "score": 0.0 },
+            { "key": "Paralogues", "score": 0.2 },
+            { "key": "Tissue specificity", "score": 1.0 },
+            { "key": "Tissue distribution", "score": 1.0 }
+          ]
+        },
+        "datasourceScores": [
+          { "key": "UniProt curated variants", "score": 0.96715295 },
+          { "key": "ClinVar", "score": 0.9376747 },
+          { "key": "Orphanet", "score": 0.7599135 },
+          { "key": "Clingen", "score": 0.7599135 },
+          { "key": "IMPC", "score": 0.619212 },
+          { "key": "UniProt literature", "score": 0.6079308 },
+          { "key": "GEL PanelApp", "score": 0.6079308 },
+          { "key": "Europe PMC", "score": 0.3950657 }
+        ],
+        "overall_score": 0.8380127
+      },
+      {
+        "target": {
+          "name": "TBK1",
+          "prioritization": [
+            { "key": "Target in clinic", "score": 0.0 },
+            { "key": "Membrane protein", "score": 0.2 },
+            { "key": "Secreted protein", "score": 0.2 },
+            { "key": "Ligand binder", "score": 0.9 },
+            { "key": "Small molecule binder", "score": 0.9 },
+            { "key": "Predicted pockets", "score": 0.2 },
+            { "key": "Mouse ortholog identity", "score": 0.6 },
+            { "key": "Chemical probes", "score": 0.9 },
+            { "key": "Genetic constraint", "score": 0.8 },
+            { "key": "Mouse models", "score": 1.0 },
+            { "key": "Gene essentiality", "score": 1.0 },
+            { "key": "Known safety events", "score": 0.0 },
+            { "key": "Cancer driver gene", "score": 0.0 },
+            { "key": "Paralogues", "score": 0.2 },
+            { "key": "Tissue specificity", "score": 1.0 },
+            { "key": "Tissue distribution", "score": 1.0 }
+          ]
+        },
+        "datasourceScores": [
+          { "key": "ClinVar", "score": 0.94012237 },
+          { "key": "UniProt curated variants", "score": 0.93607223 },
+          { "key": "GEL PanelApp", "score": 0.88977426 },
+          { "key": "GWAS Associations", "score": 0.79595333 },
+          { "key": "UniProt literature", "score": 0.6079308 },
+          { "key": "Clingen", "score": 0.6079308 },
+          { "key": "Europe PMC", "score": 0.025980495 }
+        ],
+        "overall_score": 0.82925504
+      },
+      {
+        "target": {
+          "name": "SQSTM1",
+          "prioritization": [
+            { "key": "Target in clinic", "score": 0.0 },
+            { "key": "Membrane protein", "score": 0.2 },
+            { "key": "Secreted protein", "score": 0.2 },
+            { "key": "Ligand binder", "score": 0.2 },
+            { "key": "Small molecule binder", "score": 0.9 },
+            { "key": "Predicted pockets", "score": 0.2 },
+            { "key": "Mouse ortholog identity", "score": 0.6 },
+            { "key": "Chemical probes", "score": 0.2 },
+            { "key": "Genetic constraint", "score": 0.8 },
+            { "key": "Mouse models", "score": 1.0 },
+            { "key": "Gene essentiality", "score": 1.0 },
+            { "key": "Known safety events", "score": 0.0 },
+            { "key": "Cancer driver gene", "score": 0.0 },
+            { "key": "Paralogues", "score": 0.2 },
+            { "key": "Tissue specificity", "score": 0.6 },
+            { "key": "Tissue distribution", "score": 1.0 }
+          ]
+        },
+        "datasourceScores": [
+          { "key": "UniProt curated variants", "score": 0.9741406 },
+          { "key": "ClinVar", "score": 0.90931076 },
+          { "key": "GEL PanelApp", "score": 0.6839222 },
+          { "key": "Orphanet", "score": 0.6079308 },
+          { "key": "UniProt literature", "score": 0.6079308 },
+          { "key": "Clingen", "score": 0.3039654 },
+          { "key": "Europe PMC", "score": 0.16275215 }
+        ],
+        "overall_score": 0.82002586
+      },
+      {
+        "target": {
+          "name": "UBQLN2",
+          "prioritization": [
+            { "key": "Target in clinic", "score": 0.9 },
+            { "key": "Membrane protein", "score": 0.2 },
+            { "key": "Secreted protein", "score": 0.2 },
+            { "key": "Ligand binder", "score": 0.2 },
+            { "key": "Small molecule binder", "score": 0.9 },
+            { "key": "Predicted pockets", "score": 0.2 },
+            { "key": "Mouse ortholog identity", "score": 0.6 },
+            { "key": "Chemical probes", "score": 0.2 },
+            { "key": "Genetic constraint", "score": 0.6 },
+            { "key": "Mouse models", "score": 1.0 },
+            { "key": "Gene essentiality", "score": 1.0 },
+            { "key": "Known safety events", "score": 0.0 },
+            { "key": "Cancer driver gene", "score": 0.0 },
+            { "key": "Paralogues", "score": 0.6 },
+            { "key": "Tissue specificity", "score": 1.0 },
+            { "key": "Tissue distribution", "score": 1.0 }
+          ]
+        },
+        "datasourceScores": [
+          { "key": "UniProt curated variants", "score": 0.94215155 },
+          { "key": "ClinVar", "score": 0.87605464 },
+          { "key": "GEL PanelApp", "score": 0.82746136 },
+          { "key": "Orphanet", "score": 0.6079308 },
+          { "key": "UniProt literature", "score": 0.6079308 },
+          { "key": "Clingen", "score": 0.6079308 },
+          { "key": "Europe PMC", "score": 0.15480956 },
+          { "key": "Expression Atlas", "score": 0.028822402 }
+        ],
+        "overall_score": 0.81038827
+      }
+    ]
+  }
+}

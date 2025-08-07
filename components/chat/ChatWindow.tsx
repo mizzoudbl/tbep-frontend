@@ -3,7 +3,6 @@
 import { LLM_MODELS } from '@/lib/data';
 import type { Message } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
-import { AnimatePresence, type PanInfo, motion, useDragControls } from 'framer-motion';
 import {
   ChevronDownIcon,
   GripHorizontalIcon,
@@ -13,7 +12,8 @@ import {
   TriangleAlertIcon,
   XIcon,
 } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import { AnimatePresence, type PanInfo, motion, useDragControls } from 'motion/react';
+import Link from 'next/link';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
 import { Markdown } from '.';

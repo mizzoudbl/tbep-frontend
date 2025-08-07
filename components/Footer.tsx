@@ -1,6 +1,6 @@
 import { collaborators, footerLinks } from '@/lib/data';
-import { Link } from 'next-view-transitions';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (

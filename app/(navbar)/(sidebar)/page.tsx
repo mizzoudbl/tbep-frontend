@@ -36,7 +36,7 @@ import type {
 import { distinct, envURL } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { AlertTriangleIcon, InfoIcon, LoaderIcon } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import React, { type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 

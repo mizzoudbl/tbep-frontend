@@ -5,3 +5,4 @@ export * from './geneVerification';
 export * from './getDiseases';
 export * from './getHeaders';
 export * from './topGenesByDisease';
+export * from './openTargetsTable';

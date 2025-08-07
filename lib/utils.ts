@@ -58,6 +58,8 @@ export enum Events {
   ALGORITHM = 'algorithm',
   ALGORITHM_RESULTS = 'algorithm-results',
   EXPORT = 'export',
+  VISIBLE_NODES = 'visible-nodes',
+  VISIBLE_NODES_RESULTS = 'visible-nodes-results',
 }
 export type EventMessage = {
   [Events.ALGORITHM]: {
@@ -80,6 +82,9 @@ export type EventMessage = {
       degreeCentralGene: string;
     }>;
     resolution: number;
+  };
+  [Events.VISIBLE_NODES_RESULTS]: {
+    visibleNodeGeneIds: Set<string>;
   };
 };
 

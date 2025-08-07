@@ -16,7 +16,7 @@ import { unparse } from 'papaparse';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
-export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: React.MutableRefObject<Set<string>> }) {
+export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: React.RefObject<Set<string>> }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

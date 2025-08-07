@@ -83,9 +83,33 @@ export const GET_HEADERS_QUERY = (bringCommon = true) => gql`
 `;
 
 export const TOP_GENES_QUERY = gql`
-  query TopGenesByDisease($diseaseId: String!, $limit: Int!) {
-    topGenesByDisease(diseaseId: $diseaseId, limit: $limit) {
+  query TopGenesByDisease($diseaseId: String!, $page: Pagination!) {
+    topGenesByDisease(diseaseId: $diseaseId, page: $page) {
       gene_name
+    }
+  }
+`;
+
+export const OPENTARGET_HEATMAP_QUERY = gql`
+  query OpenTargetsTable($diseaseId: String!, $geneIds: [String!]!, $orderBy: OrderByEnum!, $page: Pagination!) {
+    targetDiseaseAssociationTable(
+      diseaseId: $diseaseId,
+      geneIds: $geneIds,
+      orderBy: $orderBy,
+      page: $page
+    ) {
+      target {
+        name
+        prioritization {
+          key
+          score
+        }
+      }
+      datasourceScores {
+        key
+        score
+      }
+      overall_score
     }
   }
 `;

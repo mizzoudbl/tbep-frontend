@@ -1,7 +1,7 @@
 import { SideBar } from '@/components/app';
 import { databaseStats, getStartedLinks } from '@/lib/data';
-import { Link } from 'next-view-transitions';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function SideBarLayout({ children }: { children: React.ReactNode }) {
   return (

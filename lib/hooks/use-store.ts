@@ -53,7 +53,7 @@ export const useStore = create<GraphStore>(set => ({
     seedGeneProximityCutOff: 0,
     nodeDegreeProperty: 'Gene Degree',
   },
-  geneIDs: [],
+  geneNames: [],
   diseaseName: '',
   universalData: {},
   radioOptions: {
