@@ -1,7 +1,5 @@
 'use client';
 
-// MOCK DATA
-// import { data } from '@/mock-data.json';
 import { type TargetDiseaseAssociationRow, associationColumns, prioritizationColumns } from '@/lib/data';
 import { OPENTARGET_HEATMAP_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
@@ -35,7 +33,6 @@ export function OpenTargetsHeatmap() {
   const [pagination, setPagination] = useState({ page: 1, limit: 25 });
   const [selectedGeneNames, setSelectedGeneNames] = useState<Set<string>>(new Set());
 
-  /** Comment these out when mocking results to avoid API call */
   const [refetch, { loading, error, data: queryData }] = useLazyQuery<OpenTargetsTableData, OpenTargetsTableVariables>(
     OPENTARGET_HEATMAP_QUERY,
   );
@@ -79,37 +76,6 @@ export function OpenTargetsHeatmap() {
         ...prioritization,
       };
     }) || [];
-  /***** End Commenting Out API Call *****/
-
-  /***** Mock Data Fetching *****/
-  // const refetch = useCallback((variables: OpenTargetsTableVariables) => {
-  //   console.log('Refetching with variables:', variables);
-  // }, []);
-  // const loading = false; // Mock loading state
-
-  // const tableData: TargetDiseaseAssociationRow[] = Array.from({ length: 3 }, () => [
-  //   ...data.targetDiseaseAssociationTable.rows.map(row => {
-  //     const prioritization: Record<string, number> = {};
-  //     if (Array.isArray(row.target.prioritization)) {
-  //       for (const item of row.target.prioritization) {
-  //         prioritization[item.key] = item.score;
-  //       }
-  //     }
-  //     const datasources: Record<string, number> = {};
-  //     if (Array.isArray(row.datasourceScores)) {
-  //       for (const item of row.datasourceScores as { key: string; score: number }[]) {
-  //         datasources[item.key] = item.score;
-  //       }
-  //     }
-  //     return {
-  //       target: row.target.name,
-  //       'Association Score': row.overall_score,
-  //       ...datasources,
-  //       ...prioritization,
-  //     };
-  //   }),
-  // ]).flat();
-  /***** End Mock Data Fetching *****/
 
   const toggleOnlyVisible = (checked: CheckedState) => {
     if (checked !== true) {
@@ -237,7 +203,7 @@ export function OpenTargetsHeatmap() {
           </TabsTrigger>
         </TabsList>
         <TabsContent className='w-full' value='tda'>
-          <div className='flex flex-col items-center pr-12'>
+          <div className='flex flex-col items-center'>
             <HeatmapTable
               columns={associationColumns}
               data={tableData}
@@ -252,7 +218,7 @@ export function OpenTargetsHeatmap() {
           </div>
         </TabsContent>
         <TabsContent className='w-full' value='tpf'>
-          <div className='flex flex-col items-center pr-12'>
+          <div className='flex flex-col items-center'>
             <HeatmapTable
               columns={prioritizationColumns}
               data={tableData}

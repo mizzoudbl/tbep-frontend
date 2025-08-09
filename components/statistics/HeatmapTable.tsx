@@ -2,7 +2,7 @@ import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tan
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
@@ -24,6 +24,28 @@ export function HeatmapTable<T extends object>({
   onSortChange,
   loading = false,
 }: HeatmapTableProps<T>) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = React.useState<number>(800); // Default fallback
+
+  // Monitor container width changes
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const updateWidth = () => {
+      setContainerWidth(container.offsetWidth);
+    };
+    // Set initial width
+    updateWidth();
+    // Create ResizeObserver to watch for container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      updateWidth();
+    });
+    resizeObserver.observe(container);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   const table = useReactTable({
     data,
     columns,
@@ -32,23 +54,26 @@ export function HeatmapTable<T extends object>({
     manualSorting: true,
   });
 
-  // Responsive column width
-  // Squeeze columns a bit more, but allow some flexibility
-  const minColWidth = 36;
-  const maxColWidth = 60;
-  const colWidth = Math.max(minColWidth, Math.min(maxColWidth, Math.floor((window.innerWidth - 600) / columns.length)));
-  const labelColWidth = 70;
+  // Responsive column width based on container size
+  const minColWidth = 32;
+  const maxColWidth = 80;
+  const labelColWidth = Math.max(60, Math.min(120, containerWidth * 0.08)); // 8% of container width, with min/max
+  const availableWidth = containerWidth - labelColWidth - 40; // Subtract label column and padding
+  const colWidth = Math.floor(Math.max(minColWidth, Math.min(maxColWidth, availableWidth / (columns.length - 1))));
 
   return (
-    <div>
+    <div ref={containerRef} className='w-full overflow-auto'>
       <Table className='min-w-full text-sm table-fixed'>
         <colgroup>
           <col style={{ width: labelColWidth }} />
           {table
             .getAllLeafColumns()
             .slice(1)
-            .map(col => (
-              <col key={col.id} style={{ width: colWidth }} />
+            .map((col, i) => (
+              <col
+                key={col.id}
+                style={{ width: i === table.getAllLeafColumns().length - 2 ? colWidth + 45 : colWidth }}
+              />
             ))}
         </colgroup>
         <TableHeader className='h-32 sticky top-0 z-10 bg-white'>
@@ -171,7 +196,7 @@ export function HeatmapTable<T extends object>({
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className='flex justify-center items-center h-8'>
+                            <div className='flex justify-start items-center h-8'>
                               <span
                                 className={cn(
                                   'inline-block w-6 h-6 border border-gray-400',
