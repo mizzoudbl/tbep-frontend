@@ -174,8 +174,7 @@ export function VirtualizedCombobox({
                         )}
                       >
                         {option}
-                        <button
-                          type='button'
+                        <span
                           className={cn(
                             'ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2',
                           )}
@@ -188,11 +187,17 @@ export function VirtualizedCombobox({
                             e.preventDefault();
                             e.stopPropagation();
                           }}
-                          onClick={() => value instanceof Set && value.delete(option)}
+                          // onClick={() => value instanceof Set && value.delete(option)}
+                          onClick={() => {
+                            if (value instanceof Set) {
+                              value.delete(option);
+                              onChange(value);
+                            }
+                          }}
                           aria-label={`Remove ${option}`}
                         >
                           <XIcon className='h-3 w-3 text-muted hover:text-foreground' />
-                        </button>
+                        </span>
                       </Badge>
                     ))}
                   </div>

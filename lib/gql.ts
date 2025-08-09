@@ -98,18 +98,21 @@ export const OPENTARGET_HEATMAP_QUERY = gql`
       orderBy: $orderBy,
       page: $page
     ) {
-      target {
+      rows {
+        target {
         name
         prioritization {
+            key
+            score
+          }
+        }
+        datasourceScores {
           key
           score
         }
+        overall_score
       }
-      datasourceScores {
-        key
-        score
-      }
-      overall_score
+      totalCount
     }
   }
 `;

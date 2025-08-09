@@ -6,12 +6,11 @@ import { type TargetDiseaseAssociationRow, associationColumns, prioritizationCol
 import { OPENTARGET_HEATMAP_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
 import { type OpenTargetsTableData, type OpenTargetsTableVariables, OrderByEnum } from '@/lib/interface';
-import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
-import { useQuery } from '@apollo/client';
+import { type EventMessage, Events, eventEmitter, orderByStringToEnum } from '@/lib/utils';
+import { useLazyQuery } from '@apollo/client';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { AssociationScoreLegend, PrioritizationIndicatorLegend } from '../legends';
 import { Button } from '../ui/button';
@@ -23,67 +22,44 @@ import { assocColorScale, prioritizationColorScale } from './colorScales';
 
 export function OpenTargetsHeatmap() {
   const geneNames = useStore(state => state.geneNames);
+  const geneNameToID = useStore(state => state.geneNameToID);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const geneIds = useMemo(() => {
-    const geneNameToID = useStore.getState().geneNameToID;
     return geneNames.map(g => geneNameToID.get(g) ?? g);
   }, [geneNames]);
 
   const diseaseId = useStore(state => state.diseaseName);
-  const [sortingColumn, setSortingColumn] = useState<string | null>('Association Score');
-  const [pagination, setPagination] = useState({ page: 0, limit: 25 });
-  const [geneIdsToQuery, setGeneIdsToQuery] = useState<Set<string>>(new Set());
-
-  const orderByStringToEnum = useCallback((orderBy: string): OrderByEnum => {
-    const mapping: Record<string, OrderByEnum> = {
-      'Association Score': OrderByEnum.SCORE,
-      'GWAS associations': OrderByEnum.GWAS_ASSOCIATIONS,
-      'Gene Burden': OrderByEnum.GENE_BURDEN,
-      ClinVar: OrderByEnum.CLINVAR,
-      'GEL PanelApp': OrderByEnum.GEL_PANEL_APP,
-      Gene2phenotype: OrderByEnum.GENE2PHENOTYPE,
-      'UniProt literature': OrderByEnum.UNIPROT_LITERATURE,
-      'UniProt curated variants': OrderByEnum.UNIPROT_CURATED_VARIANTS,
-      Orphanet: OrderByEnum.ORPHANET,
-      ClinGen: OrderByEnum.CLINGEN,
-      'Cancer Gene Census': OrderByEnum.CANCER_GENE_CENSUS,
-      IntOGen: OrderByEnum.INTOGEN,
-      'ClinVar (somatic)': OrderByEnum.CLINVAR_SOMATIC,
-      'Cancer Biomarkers': OrderByEnum.CANCER_BIOMARKERS,
-      ChEMBL: OrderByEnum.CHEMBL,
-      'CRISPR Screens': OrderByEnum.CRISPR_SCREENS,
-      'Project Score': OrderByEnum.PROJECT_SCORE,
-      SLAPenrich: OrderByEnum.SLAPENRICH,
-      PROGENy: OrderByEnum.PROGENY,
-      Reactome: OrderByEnum.REACTOME,
-      'Gene signatures': OrderByEnum.GENE_SIGNATURES,
-      'Europe PMC': OrderByEnum.EUROPE_PMC,
-      'Expression Atlas': OrderByEnum.EXPRESSION_ATLAS,
-      IMPC: OrderByEnum.IMPC,
-    };
-    return mapping[orderBy] || OrderByEnum.SCORE;
-  }, []);
+  const [geneIdsToQuery, setGeneIdsToQuery] = useState<string[]>([]);
+  const [sortingColumn, setSortingColumn] = useState<string>('Association Score');
+  const [pagination, setPagination] = useState({ page: 1, limit: 25 });
+  const [selectedGeneNames, setSelectedGeneNames] = useState<Set<string>>(new Set());
 
   /** Comment these out when mocking results to avoid API call */
-  const {
-    loading,
-    error,
-    data: queryData,
-    refetch,
-  } = useQuery<OpenTargetsTableData, OpenTargetsTableVariables>(OPENTARGET_HEATMAP_QUERY, {
-    variables: {
-      geneIds,
-      diseaseId,
-      orderBy: OrderByEnum.SCORE,
-      page: pagination,
-    },
-    skip: !geneIds.length || !diseaseId,
-  });
+  const [refetch, { loading, error, data: queryData }] = useLazyQuery<OpenTargetsTableData, OpenTargetsTableVariables>(
+    OPENTARGET_HEATMAP_QUERY,
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    refetch({
+      variables: {
+        geneIds,
+        diseaseId,
+        orderBy: OrderByEnum.SCORE,
+        page: { page: 1, limit: 25 },
+      },
+    });
+    setGeneIdsToQuery(geneIds.sort());
+  }, [geneIds, diseaseId]);
+
+  const totalCount = queryData?.targetDiseaseAssociationTable.totalCount ?? 0;
+  const maxPage = Math.max(1, Math.ceil(totalCount / pagination.limit));
 
   if (error) console.error('Error fetching OpenTargets heatmap data:', error);
 
   const tableData: TargetDiseaseAssociationRow[] =
-    queryData?.targetDiseaseAssociationTable.map(row => {
+    queryData?.targetDiseaseAssociationTable.rows.map(row => {
       const prioritization: Record<string, number> = {};
       if (Array.isArray(row.target.prioritization)) {
         for (const item of row.target.prioritization) {
@@ -112,7 +88,7 @@ export function OpenTargetsHeatmap() {
   // const loading = false; // Mock loading state
 
   // const tableData: TargetDiseaseAssociationRow[] = Array.from({ length: 3 }, () => [
-  //   ...data.targetDiseaseAssociationTable.map(row => {
+  //   ...data.targetDiseaseAssociationTable.rows.map(row => {
   //     const prioritization: Record<string, number> = {};
   //     if (Array.isArray(row.target.prioritization)) {
   //       for (const item of row.target.prioritization) {
@@ -137,11 +113,23 @@ export function OpenTargetsHeatmap() {
 
   const toggleOnlyVisible = (checked: CheckedState) => {
     if (checked !== true) {
+      const geneIdsToQuery = selectedGeneNames.size
+        ? Array.from(selectedGeneNames)
+            .reduce<string[]>((acc, geneId) => {
+              const id = geneNameToID.get(geneId);
+              if (id) acc.push(id);
+              return acc;
+            }, [])
+            .sort()
+        : geneIds;
+      setGeneIdsToQuery(geneIdsToQuery);
       refetch({
-        geneIds: geneIdsToQuery.size ? Array.from(geneIdsToQuery).sort() : geneIds,
-        diseaseId,
-        orderBy: orderByStringToEnum(sortingColumn ?? 'Association Score'),
-        page: pagination,
+        variables: {
+          geneIds: geneIdsToQuery,
+          diseaseId,
+          orderBy: orderByStringToEnum(sortingColumn ?? 'Association Score'),
+          page: pagination,
+        },
       });
     } else {
       eventEmitter.emit(Events.VISIBLE_NODES);
@@ -149,32 +137,76 @@ export function OpenTargetsHeatmap() {
   };
 
   const handleSearchSelection = (value: Set<string>) => {
-    setGeneIdsToQuery(value);
+    setSelectedGeneNames(value);
+    const tmpGeneIdsToQuery = value.size
+      ? Array.from(value)
+          .reduce<string[]>((acc, geneId) => {
+            const id = geneNameToID.get(geneId);
+            if (id) acc.push(id);
+            return acc;
+          }, [])
+          .sort()
+      : geneIdsToQuery;
     refetch({
-      geneIds: Array.from(value).sort(),
-      diseaseId,
-      orderBy: orderByStringToEnum(sortingColumn ?? 'Association Score'),
-      page: pagination,
+      variables: {
+        geneIds: tmpGeneIdsToQuery,
+        diseaseId,
+        orderBy: orderByStringToEnum(sortingColumn ?? 'Association Score'),
+        page: pagination,
+      },
+    });
+  };
+
+  const handlePaginationChange = (pagination: { page: number; limit: number }) => {
+    setPagination(pagination);
+    refetch({
+      variables: {
+        geneIds: geneIdsToQuery,
+        diseaseId,
+        orderBy: orderByStringToEnum(sortingColumn),
+        page: pagination,
+      },
+    });
+  };
+
+  const handleSortingChange = (columnId: string) => {
+    setSortingColumn(columnId);
+    refetch({
+      variables: {
+        geneIds: geneIdsToQuery,
+        diseaseId,
+        orderBy: orderByStringToEnum(columnId) || OrderByEnum.SCORE,
+        page: pagination,
+      },
     });
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     eventEmitter.on(Events.VISIBLE_NODES_RESULTS, (data: EventMessage[Events.VISIBLE_NODES_RESULTS]) => {
+      const selectedGeneIds = new Set<string>();
+      for (const geneName of selectedGeneNames) {
+        const id = geneNameToID.get(geneName);
+        if (id) selectedGeneIds.add(id);
+      }
+      const geneIdsToQuery = Array.from(
+        selectedGeneIds.size ? selectedGeneIds.intersection(data.visibleNodeGeneIds) : data.visibleNodeGeneIds,
+      ).sort();
+      setGeneIdsToQuery(geneIdsToQuery);
       refetch({
-        geneIds: Array.from(
-          geneIdsToQuery.size ? geneIdsToQuery.intersection(data.visibleNodeGeneIds) : data.visibleNodeGeneIds,
-        ).sort(),
-        diseaseId,
-        orderBy: orderByStringToEnum(sortingColumn ?? 'Association Score'),
-        page: pagination,
+        variables: {
+          geneIds: geneIdsToQuery,
+          diseaseId,
+          orderBy: orderByStringToEnum(sortingColumn),
+          page: pagination,
+        },
       });
     });
 
     return () => {
       eventEmitter.removeAllListeners(Events.VISIBLE_NODES_RESULTS);
     };
-  }, []);
+  }, [diseaseId]);
 
   return (
     <div className='h-full'>
@@ -187,7 +219,7 @@ export function OpenTargetsHeatmap() {
           loading={geneIds.length === 0}
           data={geneNames}
           placeholder='Search genes...'
-          value={geneIdsToQuery}
+          value={selectedGeneNames}
           onChange={value => typeof value !== 'string' && handleSearchSelection(value)}
           multiselect
           showSelectedAsChip
@@ -210,7 +242,7 @@ export function OpenTargetsHeatmap() {
               columns={associationColumns}
               data={tableData}
               sortingColumn={sortingColumn}
-              onSortChange={setSortingColumn}
+              onSortChange={handleSortingChange}
               colorScale={value => assocColorScale(typeof value === 'number' ? value : 0)}
               loading={loading}
             />
@@ -225,7 +257,7 @@ export function OpenTargetsHeatmap() {
               columns={prioritizationColumns}
               data={tableData}
               sortingColumn={sortingColumn}
-              onSortChange={setSortingColumn}
+              onSortChange={handleSortingChange}
               colorScale={(value, columnId) =>
                 columnId === 'Association Score'
                   ? assocColorScale(typeof value === 'number' ? value : 0.1)
@@ -242,19 +274,29 @@ export function OpenTargetsHeatmap() {
       {/* Pagination controls */}
       <div className='flex flex-col items-center w-full mt-2 gap-2'>
         <div className='flex items-center justify-center gap-2 w-full'>
-          <Button variant='outline' size='sm' onClick={() => {}} disabled={!tableData.length}>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => handlePaginationChange({ ...pagination, page: Math.max(pagination.page - 1, 1) })}
+            disabled={pagination.page === 1 || !geneNames.length}
+          >
             <ChevronLeftIcon size={18} />
           </Button>
-          <span className='text-sm'>Page 1 of 3</span>
-          <Button variant='outline' size='sm' onClick={() => {}} disabled={!tableData.length}>
+          <span className='text-sm'>
+            Page {pagination.page} of {maxPage}
+          </span>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => handlePaginationChange({ ...pagination, page: Math.min(pagination.page + 1, maxPage) })}
+            disabled={pagination.page >= maxPage || !geneNames.length}
+          >
             <ChevronRightIcon size={18} />
           </Button>
           <div className='ml-2'>
             <Select
               defaultValue='25'
-              onValueChange={value => {
-                // Update page size
-              }}
+              onValueChange={value => handlePaginationChange({ page: 1, limit: Number.parseInt(value, 10) })}
             >
               <SelectTrigger className='w-[110px]'>
                 <SelectValue placeholder='Page size' />

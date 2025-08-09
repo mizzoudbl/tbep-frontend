@@ -11,8 +11,8 @@ interface HeatmapTableProps<T extends object> {
   columns: ColumnDef<T, string | number | undefined>[];
   data: T[];
   colorScale?: (value: number | undefined, columnId: string) => string;
-  sortingColumn: string | null;
-  onSortChange: (column: string | null) => void;
+  sortingColumn: string;
+  onSortChange: (column: string) => void;
   loading?: boolean;
 }
 
@@ -70,6 +70,7 @@ export function HeatmapTable<T extends object>({
                   // Default to 'Association Score' if no sorting column is set
                   onClick={() =>
                     !loading &&
+                    header.column.getCanSort() &&
                     onSortChange?.(header.column.id !== sortingColumn ? header.column.id : 'Association Score')
                   }
                 >

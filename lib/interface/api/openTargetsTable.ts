@@ -32,21 +32,25 @@ export interface OpenTargetsTableData {
    * Reducer for the Open Targets table data
    */
   targetDiseaseAssociationTable: {
-    /**
-     * Target Gene information
-     */
-    target: Target;
+    rows: {
+      /**
+       * Target Gene information
+       */
+      target: Target;
 
-    /**
-     * Scores from various data sources
-     */
-    datasourceScores: ScoredKeyValue[];
+      /**
+       * Scores from various data sources
+       */
+      datasourceScores: ScoredKeyValue[];
 
-    /**
-     * Overall score for the target
-     */
-    overall_score: number;
-  }[];
+      /**
+       * Overall score for the target
+       */
+      overall_score: number;
+    }[];
+
+    totalCount: number;
+  };
 }
 
 export enum OrderByEnum {
