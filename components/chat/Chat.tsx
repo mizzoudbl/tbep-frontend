@@ -84,7 +84,7 @@ export function Chat() {
   };
 
   return (
-    <div className='rounded-lg shadow-md mt-4 p-4 flex flex-col'>
+    <div className='rounded-lg border shadow-md mt-4 p-4 flex flex-col'>
       {isChatOpen && (
         <div className='p-2 space-y-2'>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

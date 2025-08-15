@@ -4,25 +4,26 @@ description: This approach is based on the interactions existing in our database
 import Image from 'next/image';
 import { Steps } from 'nextra/components'
 
-# Search By Protiens
+# Search By Multiple Genes
 
 **This approach is based on the interactions existing in our database**
 
-When you enter the main page of our website, simply click the tab "Search By Proteins" <Image width={200} height={80} src="/image/docs/search-by-protein-button.png" alt="Search By Proteins Button" className="inline aspect-auto"/> on the left panel, you will see the corresponding dashboard on the right as below:
+When you enter the main page of our website, simply click the tab "Search By Multiple Genes" on the top panel, you will see the corresponding dashboard on the right as below:
 
-![Dashboard for "Search By Proteins"](../../../public/image/docs/dashboard-search-by-protein.png)
+![Dashboard for "Search By Multiple Genes"](../../../public/image/docs/dashboard-search-by-multiple-genes.png)
 
 There are 4 different sections on the dashboard, which corresponds to 4 steps to construct your network by using gene information.&#x20;
 
 <Steps>
 ### Entering Seed Genes
 
-You can either type into the "Seed Genes" textbox or upload a txt file.&#x20;
+You can enter seed genes with any of the following methods.&#x20;
 
 * **Type into textbox**: Manually type in seed gene names or their Ensembl IDs to generate the network. You can also mix gene names and Ensembl IDs together. The format is line-separated.
 * **Upload a txt file**: The gene names or Ensembl IDs can also be uploaded as txt format. The format is the same as the "Seed Genes" textbox.
+* **Autofill Seed Genes**: Turn on the switch "Autofill Seed Genes" and enter the number of seed genes you want to include. The system will automatically populate the textbox ordered by Overall Association Score of that Gene with the selected Disease Name. This data is prepared from OpenTargets Portal.
 
-The seed genes are the foundation of the network generation, your network will be expanded based on the seed genes you provided. Once you determine the seed genes, you can proceed to [`Step 2`](search-by-proteins.mdx#clicking-submit-button) to generate your own network.
+The seed genes are the foundation of the network generation, your network will be expanded based on the seed genes you provided. Once you determine the seed genes, you may proceed to [`Step 3`](search-by-multiple-genes.mdx#clicking-submit-button) using the default options to generate your own network.
 
 ### Selecting Preferable Options
 

@@ -139,7 +139,10 @@ export function DiseaseMapCombobox({
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className={cn('w-[200px] justify-between text-ellipsis text-wrap break-words h-9', className)}
+          className={cn(
+            'w-[200px] bg-accent-foreground justify-between text-ellipsis text-wrap break-words h-9',
+            className,
+          )}
         >
           <span className='truncate'>{optionsMap.get(value)?.label || 'Search Disease...'}</span>
           <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />

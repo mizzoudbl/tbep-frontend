@@ -80,7 +80,15 @@ export function LoadGraph() {
           let fields: string[] = [];
           if (fileType === 'json') {
             fileData = JSON.parse(fileText);
-            fields = Object.keys(fileData?.[0] as object);
+            fields = Object.entries(fileData?.[0] as object).reduce(
+              (prev, curr) => {
+                if (typeof curr[1] === 'number') prev[2] = curr[0];
+                else if (!prev[0]) prev[0] = curr[0];
+                else prev[1] = curr[0];
+                return prev;
+              },
+              [] as unknown as string[],
+            );
           } else {
             const parsedResult = Papa.parse(fileText, { header: true, skipEmptyLines: true });
             fileData = parsedResult.data as Array<Record<string, string | number>>;
