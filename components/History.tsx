@@ -26,10 +26,12 @@ export default function History({
   history,
   setHistory,
   setFormData,
+  setHistoryOpen,
 }: {
   history: HistoryItem[];
   setHistory: (history: HistoryItem[]) => void;
   setFormData: (graphConfig: GraphConfigForm) => void;
+  setHistoryOpen: (open: boolean) => void;
 }) {
   const handleGenerateGraph = (index: number) => {
     const configFromHistory = history[index];
@@ -68,7 +70,13 @@ export default function History({
       <div className='flex justify-between'>
         <h3 className='text-2xl font-semibold mb-1'>History</h3>
         {(history.length || null) && (
-          <Button size='icon' className='mb-2 bg-red-700 hover:bg-red-800' onClick={() => setShowConfirmDialog(true)}>
+          <Button
+            size='icon'
+            className='mb-2 bg-red-700 hover:bg-red-800'
+            onClick={() =>
+              sessionStorage.getItem('showConfirmDialog') === 'false' ? removeHistory() : setShowConfirmDialog(true)
+            }
+          >
             <Trash2Icon size={20} />
           </Button>
         )}
@@ -146,15 +154,16 @@ export default function History({
                   <button
                     type='button'
                     className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
-                    onClick={() =>
+                    onClick={() => {
                       setFormData({
                         diseaseMap: item.diseaseMap,
                         seedGenes: item.seedGenes,
                         interactionType: item.interactionType,
                         minScore: item.minScore,
                         order: item.order,
-                      })
-                    }
+                      });
+                      setHistoryOpen(false);
+                    }}
                   >
                     <EyeIcon size={20} />
                   </button>

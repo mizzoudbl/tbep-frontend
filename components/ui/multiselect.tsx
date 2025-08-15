@@ -5,6 +5,7 @@ import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { Button } from './button';
 
 interface MultiSelectOption {
   label: string;
@@ -53,12 +54,13 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     return (
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
-          <button
+          <Button
             type='button'
+            variant={'outline'}
             ref={setRefs}
             disabled={disabled}
             className={cn(
-              'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+              'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input px-3 py-2 text-sm shadow-sm bg-accent-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
               className,
             )}
           >
@@ -71,7 +73,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                 : placeholder}
             </span>
             <ChevronsUpDownIcon className='h-4 w-4 opacity-50' />
-          </button>
+          </Button>
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content

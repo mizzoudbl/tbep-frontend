@@ -1,40 +1,15 @@
-import { SideBar } from '@/components/app';
-import { databaseStats, getStartedLinks } from '@/lib/data';
+import { getStartedLinks } from '@/lib/data';
 import { Link } from 'next-view-transitions';
-import Image from 'next/image';
 
-export default function SideBarLayout({ children }: { children: React.ReactNode }) {
+export default function HomeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className='container mx-auto'>
       <div className='flex flex-col gap-4 md:flex-row'>
-        <div className='flex flex-col gap-4 md:w-[25%] '>
-          <div className='relative shadow-teal-900 shadow-md rounded-md'>
-            <div className='absolute inset-0 bg-black/40 rounded-md z-10' />
-            <Image src='/image/sideBarBg.jpeg' alt='sideBarBg' priority className='rounded-md object-cover' fill />
-            <div className='relative z-20'>
-              <SideBar />
-            </div>
-          </div>
-          <div className='flex h-full flex-col rounded-md shadow-md p-2 border'>
-            <i className='font-semibold text-xl w-full text-center'>Database Statistics</i>
-            <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-1'>
-              {databaseStats.map(item => (
-                <div key={item.count} className='flex flex-col items-center'>
-                  <span className='bg-gradient-to-r from-teal-800 via-teal-600 to-teal-800 bg-clip-text text-transparent font-bold sm:text-sm md:text-base xl:text-2xl'>
-                    {item.count}
-                  </span>
-                  <span className='font-light text-center sm:text-sm lg:text-lg'>{item.label}</span>
-                  {item.note && <center className='text-xs font-thin'>{item.note}</center>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
         <div className='w-full flex gap-4 flex-col'>
           <div className='container'>{children}</div>
         </div>
       </div>
-      <div className='flex flex-col items-center mt-10'>
+      <section className='flex flex-col items-center mt-10'>
         <h1 className='md:text-4xl text-2xl font-semibold tracking-tight'>About The Tool</h1>
         <div className='text-center my-4 mx-12 space-y-2'>
           <p>
@@ -44,9 +19,9 @@ export default function SideBarLayout({ children }: { children: React.ReactNode 
             large-scale biological data.{' '}
           </p>
           <p>
-            Additionally, it features an independent large language model (LLM) as an exploration assistant, helping
-            researchers interpret complex biological relationships. While the LLM currently operates separately from the
-            network, future iterations will enhance its integration for deeper insights.
+            Additionally, it features a large language model (LLM) as an exploration assistant, helping researchers
+            interpret complex biological relationships. While the LLM currently operates separately from the network,
+            future iterations will enhance its integration for deeper insights.
           </p>
         </div>
         <h1 className='md:text-4xl mt-4 text-2xl font-semibold tracking-tight'>
@@ -73,7 +48,7 @@ export default function SideBarLayout({ children }: { children: React.ReactNode 
             </Link>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }
