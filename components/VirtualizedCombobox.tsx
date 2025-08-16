@@ -4,8 +4,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import type { GenePropertyMetadata } from '@/lib/interface';
 import { cn, getProperty } from '@/lib/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { CheckIcon, ChevronsUpDownIcon, InfoIcon, ListCheckIcon } from 'lucide-react';
+import { CheckIcon, ChevronsUpDownIcon, InfoIcon, ListCheckIcon, XIcon } from 'lucide-react';
 import * as React from 'react';
+import { Badge } from './ui/badge';
 import { Spinner } from './ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
@@ -133,6 +134,7 @@ interface VirtualizedComboboxProps {
   onChange: (value: string | Set<string>) => void;
   align?: 'start' | 'end' | 'center';
   multiselect?: boolean;
+  showSelectedAsChip?: boolean;
 }
 
 export function VirtualizedCombobox({
@@ -145,6 +147,7 @@ export function VirtualizedCombobox({
   onChange,
   align = 'start',
   multiselect = false,
+  showSelectedAsChip = false,
 }: VirtualizedComboboxProps) {
   const [open, setOpen] = React.useState<boolean>(false);
 
@@ -158,11 +161,55 @@ export function VirtualizedCombobox({
           className={cn('w-[200px] justify-between text-ellipsis text-wrap break-words h-9', className)}
         >
           <span className='truncate'>
-            {multiselect && value instanceof Set
-              ? value.size
-                ? `${value.size} selected`
-                : searchPlaceholder
-              : value || searchPlaceholder}
+            {multiselect && value instanceof Set ? (
+              value.size ? (
+                showSelectedAsChip ? (
+                  <div className='relative flex gap-1'>
+                    {Array.from(value).map(option => (
+                      <Badge
+                        key={option}
+                        className={cn(
+                          'data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground',
+                          'data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground',
+                        )}
+                      >
+                        {option}
+                        <span
+                          className={cn(
+                            'ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                          )}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter' && value instanceof Set) {
+                              value.delete(option);
+                            }
+                          }}
+                          onMouseDown={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          // onClick={() => value instanceof Set && value.delete(option)}
+                          onClick={() => {
+                            if (value instanceof Set) {
+                              value.delete(option);
+                              onChange(value);
+                            }
+                          }}
+                          aria-label={`Remove ${option}`}
+                        >
+                          <XIcon className='h-3 w-3 text-muted hover:text-foreground' />
+                        </span>
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  `${value.size} selected`
+                )
+              ) : (
+                searchPlaceholder
+              )
+            ) : (
+              value || searchPlaceholder
+            )}
           </span>
           <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>

@@ -88,10 +88,17 @@ export default function Explore() {
     e.preventDefault();
     if (!autofill) return;
     const fd = new FormData(e.currentTarget);
-    const num = Number.parseInt(fd.get('autofill-num') as string, 10);
     setAutofillLoading(true);
     try {
-      const { data: tg } = await fetchTopGenes({ variables: { diseaseId: formData.diseaseMap, limit: num } });
+      const { data: tg } = await fetchTopGenes({
+        variables: {
+          diseaseId: formData.diseaseMap,
+          page: {
+            page: 1,
+            limit: Number.parseInt(fd.get('autofill-num') as string, 10),
+          },
+        },
+      });
       if (tg?.topGenesByDisease) {
         const genes: string[] = tg.topGenesByDisease.map((g: { gene_name: string }) => g.gene_name);
         setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));

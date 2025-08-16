@@ -6,9 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { CheckCircle, CircleX } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import { CheckCircle, CircleX, StarIcon } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -17,11 +17,13 @@ export default function AboutPage() {
     name: '',
     email: '',
     feedback: '',
+    rating: null as number | null,
   });
   const [errors, setErrors] = useState({
     name: false,
     email: false,
     feedback: false,
+    rating: false,
   });
   const [submitted, setSubmitted] = useState<boolean | 'failed'>(false);
   const [loading, setLoading] = useState(false);
@@ -40,15 +42,16 @@ export default function AboutPage() {
       name: !formData.name,
       email: !formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
       feedback: !formData.feedback,
+      rating: formData.rating === null || formData.rating < 1 || formData.rating > 5,
     };
     setErrors(newErrors);
-    if (!newErrors.name && !newErrors.email && !newErrors.feedback) {
+    if (!newErrors.name && !newErrors.email && !newErrors.feedback && !newErrors.rating) {
       setLoading(true);
-      const { name, email, feedback } = formData;
-      const url = `https://docs.google.com/forms/d/e/1FAIpQLSfLpykHI6BM14dvcwLgz7E2B0DHyE840UlZI3HX-MZxoaDxYA/formResponse?&submit=Submit?usp=pp_url&entry.1768585926=${encodeURIComponent(name)}&entry.711917196=${encodeURIComponent(email)}&entry.2088696203=${encodeURIComponent(feedback)}`;
+      const { name, rating, email, feedback } = formData;
+      const url = `https://docs.google.com/forms/d/e/1FAIpQLSfLpykHI6BM14dvcwLgz7E2B0DHyE840UlZI3HX-MZxoaDxYA/formResponse?submit=Submit&usp=pp_url&entry.979116687=${encodeURIComponent(rating as number)}&entry.1768585926=${encodeURIComponent(name)}&entry.711917196=${encodeURIComponent(email)}&entry.2088696203=${encodeURIComponent(feedback)}`;
       fetch(url, { mode: 'no-cors', method: 'POST' })
         .then(() => {
-          setFormData({ name: '', email: '', feedback: '' });
+          setFormData({ name: '', email: '', feedback: '', rating: null });
           setLoading(false);
           setSubmitted(true);
         })
@@ -59,7 +62,7 @@ export default function AboutPage() {
             description: 'Please try again later',
             icon: <CircleX color='red' size={16} />,
           });
-          setFormData({ name: '', email: '', feedback: '' });
+          setFormData({ name: '', email: '', feedback: '', rating: null });
           setLoading(false);
         });
     }
@@ -131,6 +134,34 @@ export default function AboutPage() {
                     className={cn(errors.email ? 'border-red-500' : '')}
                   />
                   {errors.email && <p className='text-red-500 text-xs'>Valid email is required</p>}
+                </div>
+                <div className='space-y-2'>
+                  <Label htmlFor='rating'>
+                    Rating <span className='text-red-500'>*</span>
+                  </Label>
+                  <div className='flex items-center space-x-1'>
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <button
+                        key={star}
+                        type='button'
+                        aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                        onClick={() => {
+                          setFormData(prev => ({ ...prev, rating: star }));
+                          setErrors(prev => ({ ...prev, rating: false }));
+                        }}
+                        className='focus:outline-none p-1'
+                      >
+                        <StarIcon
+                          size={28}
+                          fill={formData.rating && star <= formData.rating ? '#FFD700' : 'none'}
+                          stroke='#FFD700'
+                          strokeWidth={2}
+                          className='hover:fill-yellow-500 hover:stroke-yellow-500 transition-colors duration-200'
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  {errors.rating && <p className='text-red-500 text-xs'>Rating is required (1-5)</p>}
                 </div>
                 <div className='space-y-2'>
                   <Label htmlFor='feedback'>

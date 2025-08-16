@@ -214,3 +214,93 @@ export const columnTop10ByPageRank: ColumnDef<Record<string, string>>[] = [
     meta: { textAlign: 'center' },
   },
 ];
+
+const prioritizationKeys = [
+  'Target in clinic',
+  'Membrane protein',
+  'Secreted protein',
+  'Ligand binder',
+  'Small molecule binder',
+  'Predicted pockets',
+  'Mouse ortholog identity',
+  'Chemical probes',
+  'Genetic constraint',
+  'Mouse models',
+  'Gene essentiality',
+  'Known safety events',
+  'Cancer driver gene',
+  'Paralogues',
+  'Tissue specificity',
+  'Tissue distribution',
+];
+
+const datasourceKeys = [
+  'GWAS associations',
+  'Gene Burden',
+  'ClinVar',
+  'GEL PanelApp',
+  'Gene2phenotype',
+  'UniProt literature',
+  'UniProt curated variants',
+  'Orphanet',
+  'ClinGen',
+  'Cancer Gene Census',
+  'IntOGen',
+  'ClinVar (somatic)',
+  'Cancer Biomarkers',
+  'ChEMBL',
+  'CRISPR Screens',
+  'Project Score',
+  'SLAPenrich',
+  'PROGENy',
+  'Reactome',
+  'Gene signatures',
+  'Europe PMC',
+  'Expression Atlas',
+  'IMPC',
+];
+
+export type TargetDiseaseAssociationRow = {
+  target: string;
+  [key: string]: string | number;
+};
+
+// Association columns: Target, overall_score, all datasources
+export const associationColumns: ColumnDef<TargetDiseaseAssociationRow, string | number | undefined>[] = [
+  {
+    accessorKey: 'target',
+    header: 'Target',
+    cell: info => <span className='font-semibold'>{info.getValue()}</span>,
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'Association Score',
+    header: 'Association Score',
+    enableSorting: true,
+  },
+  ...datasourceKeys.map<ColumnDef<TargetDiseaseAssociationRow, string | number | undefined>>(key => ({
+    accessorKey: key,
+    header: key,
+    enableSorting: true,
+  })),
+];
+
+// Prioritization columns: Target, overall_score, all prioritization keys
+export const prioritizationColumns: ColumnDef<TargetDiseaseAssociationRow, string | number | undefined>[] = [
+  {
+    accessorKey: 'target',
+    header: 'Target',
+    cell: info => <span className='font-semibold'>{info.getValue()}</span>,
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'Association Score',
+    header: 'Association Score',
+    enableSorting: true,
+  },
+  ...prioritizationKeys.map<ColumnDef<TargetDiseaseAssociationRow, string | number | undefined>>(key => ({
+    accessorKey: key,
+    header: key,
+    enableSorting: false,
+  })),
+];

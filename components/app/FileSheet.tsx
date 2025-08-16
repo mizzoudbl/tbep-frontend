@@ -29,7 +29,7 @@ import type { RadioOptions, UniversalData } from '@/lib/interface';
 import { LOGFC_REGEX, P_VALUE_REGEX, formatBytes, initRadioOptions, openDB } from '@/lib/utils';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Trash2Icon, UploadIcon } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import Papa from 'papaparse';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';

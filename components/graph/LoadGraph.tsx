@@ -127,7 +127,9 @@ export function LoadGraph() {
           }
           if (!result) return;
           const geneNameToID = new Map<string, string>();
+          const geneNames: string[] = [];
           for (const gene of result.data?.genes ?? []) {
+            geneNames.push(gene.Gene_name ?? gene.ID);
             if (gene.Gene_name) geneNameToID.set(gene.Gene_name, gene.ID);
             graph.addNode(gene.ID, {
               label: gene.Gene_name,
@@ -146,7 +148,7 @@ export function LoadGraph() {
           }
           loadGraph(graph);
           useStore.setState({
-            geneIDs: geneIDArray,
+            geneNames,
             geneNameToID,
             networkStatistics: {
               totalNodes: graph.order,
@@ -211,7 +213,7 @@ export function LoadGraph() {
             }
 
             useStore.setState({
-              geneIDs: transformedData.nodes?.map(node => node.key) || [],
+              geneNames: transformedData.nodes?.map(node => node.attributes?.label ?? node.key) || [],
               geneNameToID,
               networkStatistics: {
                 totalNodes: graph.order,

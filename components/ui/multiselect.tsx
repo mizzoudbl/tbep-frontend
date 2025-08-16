@@ -37,9 +37,9 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 
     const setRefs = (node: HTMLButtonElement | null) => {
       if (typeof ref === 'function') ref(node);
-      else if (ref && 'current' in ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+      else if (ref && 'current' in ref) (ref as React.RefObject<HTMLButtonElement | null>).current = node;
       if (triggerRef && 'current' in triggerRef) {
-        (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+        (triggerRef as React.RefObject<HTMLButtonElement | null>).current = node;
       }
     };
 

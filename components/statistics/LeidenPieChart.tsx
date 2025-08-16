@@ -1,6 +1,6 @@
 'use client';
-import { AnimatePresence, motion } from 'framer-motion';
 import { XSquareIcon } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import { Cell, Pie, PieChart, type TooltipProps } from 'recharts';
 import { Button } from '../ui/button';

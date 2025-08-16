@@ -18,7 +18,7 @@ export function ForceLayout() {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const nodes = useRef<NodeAttributes[]>([]);
   const edges = useRef<SimulationLinkDatum<NodeAttributes>[]>([]);
-  const simulation = useRef<Simulation<NodeAttributes, SimulationLinkDatum<NodeAttributes>>>();
+  const simulation = useRef<Simulation<NodeAttributes, SimulationLinkDatum<NodeAttributes>> | null>(null);
   const graph = sigma.getGraph();
   const settings = useStore(state => state.forceSettings);
   const defaultNodeSize = useStore(state => state.defaultNodeSize);
