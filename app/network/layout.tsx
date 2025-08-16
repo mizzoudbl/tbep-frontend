@@ -20,6 +20,12 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
 
+  React.useEffect(() => {
+    if (tab === 'Network') {
+      window.dispatchEvent(new Event('resize'));
+    }
+  }, [tab]);
+
   return (
     <Tabs value={tab} onValueChange={setTab} className='h-screen flex flex-col bg-gray-100'>
       <div className='flex justify-between bg-muted h-8 px-4'>
