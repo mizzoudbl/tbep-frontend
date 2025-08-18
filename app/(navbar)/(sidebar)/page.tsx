@@ -1,10 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import AnimatedNetworkBackground from '@/components/AnimatedNetworkBackground';
 import { Button } from '@/components/ui/button';
 import { databaseStats } from '@/lib/data';
-import Link from 'next/link';
-import React from 'react';
 
 export default function Home() {
   return (

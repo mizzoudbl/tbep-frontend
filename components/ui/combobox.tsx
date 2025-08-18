@@ -28,7 +28,7 @@ export function Combobox({
   multiselect?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
-  const val = data.find(item => getProperty(item) === value);
+  const _val = data.find(item => getProperty(item) === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

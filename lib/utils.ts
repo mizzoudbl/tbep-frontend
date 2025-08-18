@@ -1,5 +1,5 @@
-import EventEmitter from 'events';
 import { type ClassValue, clsx } from 'clsx';
+import EventEmitter from 'events';
 import { twMerge } from 'tailwind-merge';
 import { type GenePropertyMetadata, OrderByEnum } from './interface';
 

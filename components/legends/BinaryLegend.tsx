@@ -1,15 +1,9 @@
 'use client';
 
-import { useStore } from '@/lib/hooks';
 import React, { createRef } from 'react';
+import { useStore } from '@/lib/hooks';
 
-export function BinaryLegend({
-  width = 200,
-  height = 50,
-}: {
-  width?: number;
-  height?: number;
-}) {
+export function BinaryLegend({ width = 200, height = 50 }: { width?: number; height?: number }) {
   const svgRef = createRef<SVGSVGElement>();
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
 

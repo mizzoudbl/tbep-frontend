@@ -1,8 +1,8 @@
-import { links } from '@/lib/data';
-import { getLatestVersionFromChangelog } from '@/lib/getChangelogVersion';
 import { MenuIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { links } from '@/lib/data';
+import { getLatestVersionFromChangelog } from '@/lib/getChangelogVersion';
 import { Button, buttonVariants } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 

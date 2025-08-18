@@ -1,18 +1,18 @@
 'use client';
 
-import type EventEmitter from 'events';
-import { useStore } from '@/lib/hooks';
-import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { useSigma } from '@react-sigma/core';
 import {
-  type Simulation,
-  type SimulationLinkDatum,
   forceCollide,
   forceLink,
   forceManyBody,
   forceSimulation,
+  type Simulation,
+  type SimulationLinkDatum,
 } from 'd3-force';
+import type EventEmitter from 'events';
 import { useCallback, useEffect, useRef } from 'react';
+import { useStore } from '@/lib/hooks';
+import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 
 export function ForceLayout() {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
@@ -38,7 +38,7 @@ export function ForceLayout() {
     });
   }, [sigma]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!sigma) return;
     (sigma as EventEmitter).once('loaded', () => {
@@ -74,7 +74,7 @@ export function ForceLayout() {
     });
   }, [sigma, tick]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!simulation.current || !edges.current) return;
     simulation.current.force(

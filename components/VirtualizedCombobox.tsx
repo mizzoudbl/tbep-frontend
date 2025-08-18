@@ -1,11 +1,11 @@
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { CheckIcon, ChevronsUpDownIcon, InfoIcon, ListCheckIcon, XIcon } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { GenePropertyMetadata } from '@/lib/interface';
 import { cn, getProperty } from '@/lib/utils';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { CheckIcon, ChevronsUpDownIcon, InfoIcon, ListCheckIcon, XIcon } from 'lucide-react';
-import * as React from 'react';
 import { Badge } from './ui/badge';
 import { Spinner } from './ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -174,6 +174,7 @@ export function VirtualizedCombobox({
                         )}
                       >
                         {option}
+                        {/** biome-ignore lint/a11y/noStaticElementInteractions: button can't be inside button (Badge component is button) */}
                         <span
                           className={cn(
                             'ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2',
@@ -194,7 +195,6 @@ export function VirtualizedCombobox({
                               onChange(value);
                             }
                           }}
-                          aria-label={`Remove ${option}`}
                         >
                           <XIcon className='h-3 w-3 text-muted hover:text-foreground' />
                         </span>

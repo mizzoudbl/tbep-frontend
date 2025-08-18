@@ -1,5 +1,5 @@
-import aboutImage from '@/public/image/about-architecture.jpg';
 import Image from 'next/image';
+import aboutImage from '@/public/image/about-architecture.jpg';
 
 export default function AboutPage() {
   return (

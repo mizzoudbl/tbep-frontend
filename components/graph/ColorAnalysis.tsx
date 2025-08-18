@@ -1,12 +1,12 @@
 'use client';
 
+import { useSigma } from '@react-sigma/core';
+import { scaleLinear } from 'd3-scale';
+import { useEffect, useState } from 'react';
 import { DEFAULT_EDGE_COLOR } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
 import { P_VALUE_REGEX } from '@/lib/utils';
-import { useSigma } from '@react-sigma/core';
-import { scaleLinear } from 'd3-scale';
-import { useEffect, useState } from 'react';
 
 export function ColorAnalysis() {
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);

@@ -1,14 +1,13 @@
-import { type NodeSizeType, PROPERTY_LABEL_TYPE_MAPPING, nodeSize } from '@/lib/data';
-import { useStore } from '@/lib/hooks';
 import { ChevronsUpDownIcon, InfoIcon, RefreshCcwIcon } from 'lucide-react';
-import { VirtualizedCombobox } from '../VirtualizedCombobox';
+import { type NodeSizeType, nodeSize, PROPERTY_LABEL_TYPE_MAPPING } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { Slider } from '../ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
 
 export function NodeSize({ onPropChange }: { onPropChange: (prop: string | Set<string>) => void }) {
   const radioValue = useStore(state => state.selectedRadioNodeSize);

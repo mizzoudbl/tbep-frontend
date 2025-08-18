@@ -1,4 +1,7 @@
 'use client';
+import { DownloadIcon } from 'lucide-react';
+import { unparse } from 'papaparse';
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   columnTop10ByBetweenness,
   columnTop10ByCloseness,
@@ -8,10 +11,6 @@ import {
 } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { downloadFile } from '@/lib/utils';
-import { DownloadIcon } from 'lucide-react';
-import { unparse } from 'papaparse';
-import React from 'react';
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';

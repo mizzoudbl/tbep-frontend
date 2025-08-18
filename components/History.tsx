@@ -1,8 +1,8 @@
-import { graphConfig, interactionTypeMap } from '@/lib/data';
-import type { GraphConfigForm } from '@/lib/interface';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ExternalLinkIcon, EyeIcon, Trash2Icon } from 'lucide-react';
-import React from 'react';
+import React, { useId } from 'react';
+import { interactionTypeMap } from '@/lib/data';
+import type { GraphConfigForm } from '@/lib/interface';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,6 +65,8 @@ export default function History({
     }
   };
 
+  const doNotShowAgainId = useId();
+
   return (
     <div className='h-[89%]'>
       <div className='flex justify-between'>
@@ -89,9 +91,9 @@ export default function History({
               This action cannot be undone. This will permanently delete all the files.
             </AlertDialogDescription>
             <div className='flex items-center space-x-2 mt-4'>
-              <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
+              <Checkbox id={doNotShowAgainId} onCheckedChange={handleConfirmDialogChange} />
               <Label
-                htmlFor='terms'
+                htmlFor={doNotShowAgainId}
                 className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
               >
                 Do not show again

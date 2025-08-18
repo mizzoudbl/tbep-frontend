@@ -1,8 +1,5 @@
 'use client';
 
-import { LLM_MODELS } from '@/lib/data';
-import type { Message } from '@/lib/interface';
-import { envURL } from '@/lib/utils';
 import {
   ChevronDownIcon,
   GripHorizontalIcon,
@@ -12,16 +9,19 @@ import {
   TriangleAlertIcon,
   XIcon,
 } from 'lucide-react';
-import { AnimatePresence, type PanInfo, motion, useDragControls } from 'motion/react';
+import { AnimatePresence, motion, type PanInfo, useDragControls } from 'motion/react';
 import Link from 'next/link';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
-import { Markdown } from '.';
+import { LLM_MODELS } from '@/lib/data';
+import type { Message } from '@/lib/interface';
+import { envURL } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Markdown } from '.';
 
 export function ChatWindow() {
   const [messages, setMessages] = React.useState<Message[]>([]);
@@ -101,7 +101,7 @@ export function ChatWindow() {
         setIsTyping(false);
         event.close();
       };
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to fetch response from LLM');
       return;
     }
@@ -115,14 +115,14 @@ export function ChatWindow() {
   };
 
   const dragControls = useDragControls();
-  const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const newHeight = (chatHeight ?? window.innerHeight - 100) - info.delta.y;
     if (newHeight >= 150 && newHeight <= window.innerHeight - 100) {
       setChatHeight(newHeight);
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   React.useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;

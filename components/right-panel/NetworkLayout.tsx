@@ -1,9 +1,10 @@
 'use client';
 
+import { ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
+import { useId } from 'react';
 import { forceLayoutOptions } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { ForceSettings } from '@/lib/interface';
-import { ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Input } from '../ui/input';
@@ -28,6 +29,9 @@ export function NetworkLayout() {
       },
     });
   };
+
+  const networkAnimationControlId = useId();
+
   return (
     <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow'>
       <div className='flex items-center justify-between w-full'>
@@ -40,10 +44,10 @@ export function NetworkLayout() {
       </div>
       <CollapsibleContent className='flex flex-col gap-2'>
         <div className='flex items-center gap-2'>
-          <Label htmlFor='network-animation-control' className='text-xs font-semibold'>
+          <Label htmlFor={networkAnimationControlId} className='text-xs font-semibold'>
             Animation
           </Label>
-          <Switch id='network-animation-control' defaultChecked onCheckedChange={handleGraphAnimation} />
+          <Switch id={networkAnimationControlId} defaultChecked onCheckedChange={handleGraphAnimation} />
         </div>
         {forceLayoutOptions.map(option => (
           <div key={option.key} className='flex space-x-2 items-center'>

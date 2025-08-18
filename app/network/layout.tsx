@@ -1,5 +1,8 @@
 'use client';
 
+import { ChevronLeft, ChevronRight, FileTextIcon, HomeIcon } from 'lucide-react';
+import Link from 'next/link';
+import React, { Suspense } from 'react';
 import { FileName } from '@/components/app';
 import { LeftSideBar } from '@/components/left-panel';
 import { RightSideBar } from '@/components/right-panel';
@@ -11,10 +14,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useStore } from '@/lib/hooks';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, FileTextIcon, HomeIcon } from 'lucide-react';
-import Link from 'next/link';
-import React from 'react';
-import { Suspense } from 'react';
 
 export default function NetworkLayoutPage({ children }: { children: React.ReactNode }) {
   const activeTab = useStore(state => state.activeTab);

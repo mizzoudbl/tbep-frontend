@@ -1,22 +1,22 @@
 'use client';
 
-import { type TargetDiseaseAssociationRow, associationColumns, prioritizationColumns } from '@/lib/data';
-import { OPENTARGET_HEATMAP_QUERY } from '@/lib/gql';
-import { useStore } from '@/lib/hooks';
-import type { OpenTargetsTableData, OpenTargetsTableVariables } from '@/lib/interface';
-import { type EventMessage, Events, eventEmitter, orderByStringToEnum } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { VirtualizedCombobox } from '../VirtualizedCombobox';
+import { associationColumns, prioritizationColumns, type TargetDiseaseAssociationRow } from '@/lib/data';
+import { OPENTARGET_HEATMAP_QUERY } from '@/lib/gql';
+import { useStore } from '@/lib/hooks';
+import type { OpenTargetsTableData, OpenTargetsTableVariables } from '@/lib/interface';
+import { type EventMessage, Events, eventEmitter, orderByStringToEnum } from '@/lib/utils';
 import { AssociationScoreLegend, PrioritizationIndicatorLegend } from '../legends';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { HeatmapTable } from './HeatmapTable';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { assocColorScale, prioritizationColorScale } from './colorScales';
+import { HeatmapTable } from './HeatmapTable';
 
 export function OpenTargetsHeatmap() {
   const geneNames = useStore(state => state.geneNames);
@@ -63,7 +63,7 @@ export function OpenTargetsHeatmap() {
       };
     }) || [];
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     eventEmitter.on(Events.VISIBLE_NODES_RESULTS, (data: EventMessage[Events.VISIBLE_NODES_RESULTS]) => {
       const selectedGeneIds = new Set<string>();
@@ -93,7 +93,7 @@ export function OpenTargetsHeatmap() {
 
   const isFirstMount = useRef(true);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!showOnlyVisible) return;
     if (isFirstMount.current) {
@@ -107,7 +107,7 @@ export function OpenTargetsHeatmap() {
     return () => clearTimeout(timer);
   }, [candidatePrioritizationCutOff]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (showOnlyVisible) {
       eventEmitter.emit(Events.VISIBLE_NODES);

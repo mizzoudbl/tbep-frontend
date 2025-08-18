@@ -1,9 +1,9 @@
-import { useStore } from '@/lib/hooks';
-import type { PopUpDataTableProps } from '@/lib/interface';
-import { cn, downloadFile } from '@/lib/utils';
 import { DownloadIcon } from 'lucide-react';
 import { unparse } from 'papaparse';
 import React from 'react';
+import { useStore } from '@/lib/hooks';
+import type { PopUpDataTableProps } from '@/lib/interface';
+import { cn, downloadFile } from '@/lib/utils';
 import { Button } from './ui/button';
 import { DataTable } from './ui/data-table';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
@@ -29,7 +29,7 @@ export default function PopUpDataTable<E, F>({
     downloadFile(csv, `${projectTitle === 'Untitled' ? '' : `${projectTitle}_`}${fileName}.csv`);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   React.useEffect(() => {
     // esc key to close the dialog
     const handleKeyDown = (event: KeyboardEvent) => {

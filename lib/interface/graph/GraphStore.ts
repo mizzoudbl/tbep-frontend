@@ -6,8 +6,8 @@ import type {
   NodeColorType,
   NodeSizeType,
 } from '@/lib/data';
-import type { ForceSettings, RadialAnalysisSetting } from '.';
 import type { GenePropertyMetadata, SelectedNodeProperty } from '..';
+import type { ForceSettings, RadialAnalysisSetting } from '.';
 
 /**
  * Store for Zustand

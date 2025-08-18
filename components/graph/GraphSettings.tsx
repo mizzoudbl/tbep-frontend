@@ -1,11 +1,11 @@
 'use client';
 
+import { useSetSettings, useSigma } from '@react-sigma/core';
+import { useEffect, useState } from 'react';
 import { FADED_EDGE_COLOR, HIGHLIGHTED_EDGE_COLOR } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
-import { useSetSettings, useSigma } from '@react-sigma/core';
-import { useEffect, useState } from 'react';
 
 export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.RefObject<Set<string>> }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
@@ -19,8 +19,8 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
-  const activeTab = useStore(state => state.activeTab);
-  const candidatePrioritizationCutOff = useStore(state => state.radialAnalysis.candidatePrioritizationCutOff);
+  const _activeTab = useStore(state => state.activeTab);
+  const _candidatePrioritizationCutOff = useStore(state => state.radialAnalysis.candidatePrioritizationCutOff);
 
   useEffect(() => {
     sigma.on('enterNode', e => setHoveredNode({ node: e.node, ctrlKey: e.event.original.ctrlKey }));
@@ -62,7 +62,7 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
     });
   }, [defaultLabelSize, setSettings]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!sigma || !defaultNodeSize) return;
     if (selectedRadioNodeSize && selectedNodeSizeProperty) {
@@ -79,7 +79,7 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
     }
   }, [defaultNodeSize, sigma]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     const graph = sigma.getGraph();
     setSettings({
