@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
-import type { Gsea, SelectedNodeProperty } from '@/lib/interface';
 import type { CellContext, Column, ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDownIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import type { Gsea, SelectedNodeProperty } from '@/lib/interface';
 
 function headerHelper<TData>(columnName: string) {
   return ({ column }: { column: Column<TData> }) => {

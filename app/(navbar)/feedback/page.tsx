@@ -1,4 +1,9 @@
 'use client';
+import { CheckCircle, CircleX, StarIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useId, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,11 +11,6 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { CheckCircle, CircleX, StarIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
-import { toast } from 'sonner';
 
 export default function AboutPage() {
   const [formData, setFormData] = useState({
@@ -67,6 +67,11 @@ export default function AboutPage() {
         });
     }
   };
+
+  const nameId = useId();
+  const emailId = useId();
+  const feedbackId = useId();
+
   return (
     <div className='w-full max-w-5xl my-8 mx-auto'>
       <Card className='border grid md:grid-cols-2'>
@@ -107,11 +112,11 @@ export default function AboutPage() {
             ) : (
               <form onSubmit={handleSubmit} className='space-y-4'>
                 <div className='space-y-2'>
-                  <Label htmlFor='name'>
+                  <Label htmlFor={nameId}>
                     Name <span className='text-red-500'>*</span>
                   </Label>
                   <Input
-                    id='name'
+                    id={nameId}
                     name='name'
                     value={formData.name}
                     onChange={handleChange}
@@ -121,11 +126,11 @@ export default function AboutPage() {
                   {errors.name && <p className='text-red-500 text-xs'>Name is required</p>}
                 </div>
                 <div className='space-y-2'>
-                  <Label htmlFor='email'>
+                  <Label htmlFor={emailId}>
                     Email <span className='text-red-500'>*</span>
                   </Label>
                   <Input
-                    id='email'
+                    id={emailId}
                     name='email'
                     type='email'
                     value={formData.email}
@@ -136,7 +141,7 @@ export default function AboutPage() {
                   {errors.email && <p className='text-red-500 text-xs'>Valid email is required</p>}
                 </div>
                 <div className='space-y-2'>
-                  <Label htmlFor='rating'>
+                  <Label>
                     Rating <span className='text-red-500'>*</span>
                   </Label>
                   <div className='flex items-center space-x-1'>
@@ -164,11 +169,11 @@ export default function AboutPage() {
                   {errors.rating && <p className='text-red-500 text-xs'>Rating is required (1-5)</p>}
                 </div>
                 <div className='space-y-2'>
-                  <Label htmlFor='feedback'>
+                  <Label htmlFor={feedbackId}>
                     Feedback <span className='text-red-500'>*</span>
                   </Label>
                   <Textarea
-                    id='feedback'
+                    id={feedbackId}
                     name='feedback'
                     value={formData.feedback}
                     onChange={handleChange}

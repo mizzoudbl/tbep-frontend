@@ -1,8 +1,7 @@
 'use client';
-import { useStore } from '@/lib/hooks';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useStore } from '@/lib/hooks';
 import { Input } from '../ui/input';
 
 export const FileName = () => {
@@ -29,8 +28,12 @@ export const MouseControlMessage = () => {
   return (
     <>
       {visible && (
-        // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-        <span className='absolute bottom-0.5 flex size-2.5' onClick={() => setVisible(false)}>
+        // biome-ignore lint/a11y/noStaticElementInteractions: hydration error (button inside button)
+        <span
+          className='absolute bottom-0.5 flex size-2.5'
+          onClick={() => setVisible(false)}
+          onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setVisible(false)}
+        >
           <span className='absolute inline-flex h-[150%] w-[150%] z-50 animate-ping rounded-full -left-1 -bottom-3 bg-sky-400 opacity-75' />
           <span className='absolute inline-flex size-2.5 rounded-full -bottom-2 bg-sky-500' />
         </span>

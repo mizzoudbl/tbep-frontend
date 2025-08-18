@@ -1,8 +1,7 @@
 import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import * as React from 'react';
-
-import { cn } from '@/lib/utils';
 import { ChevronDownIcon } from 'lucide-react';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';

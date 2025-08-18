@@ -1,17 +1,17 @@
-import { LLM_MODELS } from '@/lib/data';
-import type { Message } from '@/lib/interface';
-import { envURL } from '@/lib/utils';
 import { SendIcon, Trash2Icon } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import React, { createRef } from 'react';
 import { toast } from 'sonner';
-import { Markdown } from '.';
+import { LLM_MODELS } from '@/lib/data';
+import type { Message } from '@/lib/interface';
+import { envURL } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Markdown } from '.';
 
 export function Chat() {
   const [inputValue, setInputValue] = React.useState('');
@@ -72,7 +72,7 @@ export function Chat() {
       event.onerror = () => {
         event.close();
       };
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to fetch response from LLM');
       return;
     }

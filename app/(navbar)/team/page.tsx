@@ -1,5 +1,5 @@
-import { team } from '@/lib/data';
 import Image from 'next/image';
+import { team } from '@/lib/data';
 
 export default function TeamPage() {
   return (
@@ -29,7 +29,7 @@ export default function TeamPage() {
                         {person.name}
                       </h3>
                     </a>
-                    {person.title.split('\n').map((title, index) => (
+                    {person.title.split('\n').map((title, _index) => (
                       <p key={title} className='text-sm text-gray-600'>
                         {title}
                       </p>

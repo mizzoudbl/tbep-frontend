@@ -2,8 +2,9 @@
 
 import { Spinner } from '@/components/ui/spinner';
 import '@react-sigma/core/lib/style.css';
-import { ChatWindow } from '@/components/chat';
 import dynamic from 'next/dynamic';
+import { ChatWindow } from '@/components/chat';
+
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {
   loading: () => (
     <div className='w-full h-full grid place-items-center'>

@@ -1,8 +1,8 @@
+import Image from 'next/image';
+import Link from 'next/link';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { buttonVariants } from '@/components/ui/button';
-import Image from 'next/image';
-import Link from 'next/link';
 
 export default function NotFound() {
   return (

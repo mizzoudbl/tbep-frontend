@@ -1,7 +1,7 @@
-import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
-import type { SelectionBox } from '@/lib/interface/graph';
 import type AbstractGraph from 'graphology-types';
 import type { Sigma } from 'sigma';
+import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
+import type { SelectionBox } from '@/lib/interface/graph';
 
 /**
  * Draw selection box on the canvas

@@ -74,4 +74,11 @@ export const useStore = create<GraphStore>(set => ({
   graphConfig: null,
   edgeOpacity: 1,
   highlightNeighborNodes: false,
+
+  activeTab: 'Network',
+  setActiveTab: tab => set({ activeTab: tab }),
+
+  heatmapPagination: { page: 1, limit: 25 },
+  heatmapSortingColumn: 'Association Score',
+  showOnlyVisible: false,
 }));

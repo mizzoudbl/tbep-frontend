@@ -1,5 +1,11 @@
 'use client';
 
+import { useSigma } from '@react-sigma/core';
+import { downloadAsImage } from '@sigma/export-image';
+import { strToU8, zipSync } from 'fflate';
+import { unparse } from 'papaparse';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   DISEASE_DEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
@@ -8,18 +14,12 @@ import {
 } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
-import { type EventMessage, Events, downloadFile, eventEmitter } from '@/lib/utils';
-import { useSigma } from '@react-sigma/core';
-import { downloadAsImage } from '@sigma/export-image';
-import { strToU8, zipSync } from 'fflate';
-import { unparse } from 'papaparse';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
+import { downloadFile, type EventMessage, Events, eventEmitter } from '@/lib/utils';
 
 export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: React.RefObject<Set<string>> }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     eventEmitter.on(Events.EXPORT, ({ format, all, csvType }: EventMessage[Events.EXPORT]) => {
       const projectTitle = useStore.getState().projectTitle;

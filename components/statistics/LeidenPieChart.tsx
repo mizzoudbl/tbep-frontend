@@ -3,8 +3,7 @@ import { XSquareIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import { Cell, Pie, PieChart, type TooltipProps } from 'recharts';
-import { Button } from '../ui/button';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
+import { ChartContainer, ChartTooltip } from '../ui/chart';
 import { ScrollArea } from '../ui/scroll-area';
 
 const CustomTooltip = ({ active, payload }: TooltipProps<string, string>) => {

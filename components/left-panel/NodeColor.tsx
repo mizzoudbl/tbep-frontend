@@ -1,13 +1,13 @@
-import { type NodeColorType, PROPERTY_LABEL_TYPE_MAPPING, nodeColor } from '@/lib/data';
-import { useStore } from '@/lib/hooks';
 import { ChevronsUpDownIcon, InfoIcon, RefreshCcwIcon } from 'lucide-react';
-import { VirtualizedCombobox } from '../VirtualizedCombobox';
+import { type NodeColorType, nodeColor, PROPERTY_LABEL_TYPE_MAPPING } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Combobox } from '../ui/combobox';
 import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
 
 export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<string>) => void }) {
   const radioValue = useStore(state => state.selectedRadioNodeColor);

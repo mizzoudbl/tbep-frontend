@@ -1,8 +1,8 @@
 'use client';
 
-import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { FolderUpIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
+import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import {
@@ -41,6 +41,9 @@ export function Export() {
     eventEmitter.emit(Events.EXPORT, { format: 'csv', all: true, csvType } satisfies EventMessage[Events.EXPORT]);
   };
 
+  const universalCheckBoxId = useId();
+  const interactionCheckBoxId = useId();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -61,19 +64,19 @@ export function Export() {
               <DropdownMenuSubContent className='z-20 w-48 bg-zinc-100 border shadow p-2 gap-2 rounded-md flex flex-col'>
                 <div className='flex items-center gap-2 px-2 py-1 cursor-pointer'>
                   <Checkbox
-                    id='universal-checkbox'
+                    id={universalCheckBoxId}
                     checked={csvSelections.universal}
                     onCheckedChange={() => handleCheckboxChange('universal')}
                   />
-                  <label htmlFor='universal-checkbox'>Universal</label>
+                  <label htmlFor={universalCheckBoxId}>Universal</label>
                 </div>
                 <div className='flex items-center gap-2 px-2 py-1 cursor-pointer'>
                   <Checkbox
-                    id='interaction-checkbox'
+                    id={interactionCheckBoxId}
                     checked={csvSelections.interaction}
                     onCheckedChange={() => handleCheckboxChange('interaction')}
                   />
-                  <label htmlFor='interaction-checkbox'>Interaction</label>
+                  <label htmlFor={interactionCheckBoxId}>Interaction</label>
                 </div>
                 <Button
                   size='sm'

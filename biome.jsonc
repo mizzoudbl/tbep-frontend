@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -7,19 +7,15 @@
     "defaultBranch": "main"
   },
   "files": {
-    "include": [
-      "app/**/*.js",
-      "app/**/*.ts",
-      "app/**/*.jsx",
-      "app/**/*.tsx",
-      "components/**/*.js",
-      "components/**/*.ts",
-      "components/**/*.jsx",
-      "components/**/*.tsx",
-      "lib/**/*.ts",
-      "lib/**/*.tsx"
-    ],
-    "ignore": ["**/*.min.js", "**/dist/**", "**/build/**", "**/node_modules/**"]
+    "includes": [
+      "app/**/*.{js,jsx,ts,tsx}",
+      "components/**/*.{js,jsx,ts,tsx}",
+      "lib/**/*.{ts,tsx}",
+      "!**/*.min.js",
+      "!**/dist",
+      "!**/build",
+      "!**/node_modules"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -29,16 +25,16 @@
     "formatWithErrors": false,
     "lineWidth": 120
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" }, "recommended": true } },
   "linter": {
     "enabled": true,
+    "domains": {
+      "next": "all"
+    },
     "rules": {
       "recommended": true,
       "style": {
         "noParameterAssign": "off",
-        "noCommaOperator": "off",
         "useSingleVarDeclarator": "off",
         "useShorthandAssign": "off",
         "noNonNullAssertion": "off",
@@ -50,9 +46,12 @@
       },
       "a11y": {
         "useMediaCaption": "off"
+      },
+      "complexity": {
+        "noCommaOperator": "off"
       }
     },
-    "ignore": ["**/node_modules/**"]
+    "includes": ["**", "!**/node_modules/**"]
   },
   "javascript": {
     "formatter": {

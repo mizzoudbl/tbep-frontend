@@ -84,19 +84,19 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             )}
           >
             {options.map(option => (
-              // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-              <div
+              <button
                 key={option.value}
+                type='button'
                 onClick={() => toggleValue(option.value)}
-                className={cn(
-                  'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground',
-                )}
+                className={
+                  'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-1 focus:ring-ring'
+                }
               >
                 <span className='absolute right-2 flex h-3.5 w-3.5 items-center justify-center'>
                   {selected.includes(option.value) && <CheckIcon className='h-4 w-4' />}
                 </span>
                 {option.label}
-              </div>
+              </button>
             ))}
           </Popover.Content>
         </Popover.Portal>

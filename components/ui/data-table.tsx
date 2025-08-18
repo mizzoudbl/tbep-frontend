@@ -1,17 +1,17 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import {
   type ColumnDef,
   type ColumnFiltersState,
-  type SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  type SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import React from 'react';
+import { cn } from '@/lib/utils';
 import { Input } from './input';
 import { Spinner } from './spinner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';

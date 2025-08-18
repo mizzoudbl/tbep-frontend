@@ -1,5 +1,14 @@
 'use client';
 
+import { useLazyQuery } from '@apollo/client';
+import { useLoadGraph } from '@react-sigma/core';
+import Graph from 'graphology';
+import type { SerializedGraph } from 'graphology-types';
+import { AlertTriangleIcon } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import Papa from 'papaparse';
+import React from 'react';
+import { toast } from 'sonner';
 import { statisticsGenerator } from '@/lib/analytics';
 /******** only for testing with sample graph **************/
 // import { data as response } from '@/lib/data/sample-graph.json';
@@ -14,15 +23,6 @@ import type {
   NodeAttributes,
 } from '@/lib/interface';
 import { openDB } from '@/lib/utils';
-import { useLazyQuery } from '@apollo/client';
-import { useLoadGraph, useSigma } from '@react-sigma/core';
-import Graph from 'graphology';
-import type { SerializedGraph } from 'graphology-types';
-import { AlertTriangleIcon } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
-import Papa from 'papaparse';
-import React from 'react';
-import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,7 +53,7 @@ export function LoadGraph() {
 
   const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
   const [showWarning, setShowWarning] = React.useState<boolean>(false);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: No need of extra deps
   React.useEffect(() => {
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
       type: 'undirected',
@@ -232,7 +232,7 @@ export function LoadGraph() {
     <>
       {loading ? (
         <div className=' absolute bottom-0 w-full h-full z-40 grid place-items-center'>
-          <div className='flex flex-col items-center' id='test'>
+          <div className='flex flex-col items-center'>
             <Spinner />
             Loading...
           </div>

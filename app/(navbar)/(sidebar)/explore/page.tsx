@@ -1,10 +1,15 @@
 'use client';
 
+import { useLazyQuery } from '@apollo/client';
+import { AlertTriangleIcon, HistoryIcon, InfoIcon, LoaderIcon } from 'lucide-react';
+import Image from 'next/image';
+import React, { type ChangeEvent, useId } from 'react';
+import { toast } from 'sonner';
 import AnimatedNetworkBackground from '@/components/AnimatedNetworkBackground';
+import { Chat } from '@/components/chat';
 import { DiseaseMapCombobox } from '@/components/DiseaseMapCombobox';
 import History, { type HistoryItem } from '@/components/History';
 import PopUpTable from '@/components/PopUpTable';
-import { Chat } from '@/components/chat';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,11 +41,6 @@ import type {
   TopGeneVariables,
 } from '@/lib/interface';
 import { distinct, envURL, openDB } from '@/lib/utils';
-import { useLazyQuery } from '@apollo/client';
-import { AlertTriangleIcon, HistoryIcon, InfoIcon, LoaderIcon } from 'lucide-react';
-import Image from 'next/image';
-import React, { type ChangeEvent } from 'react';
-import { toast } from 'sonner';
 
 export default function Explore() {
   // Shared state for Search tab
@@ -291,6 +291,12 @@ export default function Explore() {
     window.open(`/network?file=${encodeURIComponent(file?.name as string)}`, '_blank', 'noopener,noreferrer');
   };
 
+  const autoFillToggleId = useId();
+  const autoFillNumId = useId();
+  const seedGenesId = useId();
+  const uploadFileId = useId();
+  const seedFileId = useId();
+
   return (
     <div className='relative mx-auto max-w-7xl min-h-[60vh]'>
       <Tabs defaultValue='search'>
@@ -327,8 +333,8 @@ export default function Explore() {
             <div className='flex justify-between'>
               <div className='flex flex-col h-2 sm:flex-row sm:items-center'>
                 <div className='flex items-center gap-2'>
-                  <Switch checked={autofill} onCheckedChange={setAutofill} id='autofill-toggle' />
-                  <Label htmlFor='autofill-toggle' className='whitespace-nowrap'>
+                  <Switch checked={autofill} onCheckedChange={setAutofill} id={autoFillToggleId} />
+                  <Label htmlFor={autoFillToggleId} className='whitespace-nowrap'>
                     Autofill Seed Genes
                   </Label>
                   <span className='flex items-center'>
@@ -352,11 +358,11 @@ export default function Explore() {
                 </div>
                 {autofill && (
                   <form onSubmit={handleAutofill} className='flex items-center gap-2 sm:ml-4'>
-                    <Label htmlFor='autofill-num' className='text-sm'>
+                    <Label htmlFor={autoFillNumId} className='text-sm'>
                       No. of genes
                     </Label>
                     <Input
-                      id='autofill-num'
+                      id={autoFillNumId}
                       type='number'
                       inputMode='numeric'
                       required
@@ -386,7 +392,7 @@ export default function Explore() {
             </div>
             <div>
               <div className='flex justify-between'>
-                <Label htmlFor='seedGenes'>Seed Genes</Label>
+                <Label htmlFor={seedGenesId}>Seed Genes</Label>
                 <p className='text-zinc-500'>
                   (one-per-line or CSV; examples:
                   <button
@@ -443,7 +449,7 @@ export default function Explore() {
               </div>
               <Textarea
                 rows={3}
-                id='seedGenes'
+                id={seedGenesId}
                 placeholder='Type seed genes (comma or newline separated)'
                 className='mt-2'
                 value={formData.seedGenes}
@@ -456,11 +462,11 @@ export default function Explore() {
                 <span className='text-slate-400 text-xs'>OR</span>
                 <div className='h-px flex-1 bg-slate-800/70' />
               </div>
-              <Label htmlFor='seedFile' className='text-teal-900'>
+              <Label htmlFor={seedFileId} className='text-teal-900'>
                 Upload Text File
               </Label>
               <Input
-                id='seedFile'
+                id={seedFileId}
                 type='file'
                 accept='.txt'
                 className='h-10 cursor-pointer'
@@ -621,7 +627,7 @@ export default function Explore() {
               >
                 <div>
                   <div className='flex justify-between items-center mb-2'>
-                    <Label htmlFor='fileUpload'>Upload CSV or JSON</Label>
+                    <Label htmlFor={uploadFileId}>Upload CSV or JSON</Label>
                     <p className='text-zinc-500 text-sm'>
                       (CSV examples:{' '}
                       <a href={'/example1.csv'} download className='underline'>
@@ -634,7 +640,7 @@ export default function Explore() {
                     </p>
                   </div>
                   <Input
-                    id='fileUpload'
+                    id={uploadFileId}
                     type='file'
                     accept='.csv,.json'
                     onChange={handleFileChange}

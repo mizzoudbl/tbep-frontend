@@ -1,9 +1,5 @@
 'use client';
 
-import { GENE_UNIVERSAL_QUERY } from '@/lib/gql';
-import { useStore } from '@/lib/hooks';
-import type { EdgeAttributes, GeneUniversalData, GeneUniversalDataVariables, NodeAttributes } from '@/lib/interface';
-import { type EventMessage, Events, envURL, eventEmitter } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
@@ -11,6 +7,10 @@ import { scaleLinear } from 'd3-scale';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { GENE_UNIVERSAL_QUERY } from '@/lib/gql';
+import { useStore } from '@/lib/hooks';
+import type { EdgeAttributes, GeneUniversalData, GeneUniversalDataVariables, NodeAttributes } from '@/lib/interface';
+import { type EventMessage, Events, envURL, eventEmitter } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 
@@ -30,7 +30,7 @@ export function GraphAnalysis({
   );
   const { geneIDs: seedGeneIDs }: { geneIDs: string[] } = useStore(state => state.graphConfig) ?? { geneIDs: [] };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     let totalEdges = 0;
     graph.updateEachEdgeAttributes((_edge, attr) => {
@@ -50,7 +50,7 @@ export function GraphAnalysis({
 
   const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY());
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     (async () => {
       let totalNodes = 0;
@@ -105,7 +105,7 @@ export function GraphAnalysis({
     })();
   }, [radialAnalysis.candidatePrioritizationCutOff, nodeDegreeProperty]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (radialAnalysis.seedGeneProximityCutOff < 1) {
       seedProximityNodesRef.current.clear();
@@ -145,7 +145,7 @@ export function GraphAnalysis({
 
   const searchParams = useSearchParams();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     eventEmitter.on(Events.ALGORITHM, async ({ name, parameters }: EventMessage[Events.ALGORITHM]) => {
       if (name === 'None') {
@@ -317,7 +317,7 @@ export function GraphAnalysis({
     <>
       {Object.keys(communityMap).length > 0 && (
         <div className='absolute bottom-1 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
-          {Object.entries(communityMap).map(([id, val], idx) => (
+          {Object.entries(communityMap).map(([id, val], _idx) => (
             <div key={id} className='flex items-center gap-1'>
               <Checkbox
                 defaultChecked
