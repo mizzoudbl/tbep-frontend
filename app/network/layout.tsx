@@ -1,5 +1,8 @@
 'use client';
 
+import { ChevronLeft, ChevronRight, FileTextIcon, HomeIcon } from 'lucide-react';
+import Link from 'next/link';
+import React, { Suspense } from 'react';
 import { FileName } from '@/components/app';
 import { LeftSideBar } from '@/components/left-panel';
 import { RightSideBar } from '@/components/right-panel';
@@ -9,25 +12,23 @@ import { Input } from '@/components/ui/input';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useStore } from '@/lib/hooks';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, FileTextIcon, HomeIcon } from 'lucide-react';
-import Link from 'next/link';
-import React from 'react';
-import { Suspense } from 'react';
 
 export default function NetworkLayoutPage({ children }: { children: React.ReactNode }) {
-  const [tab, setTab] = React.useState('Network');
+  const activeTab = useStore(state => state.activeTab);
+  const setActiveTab = useStore(state => state.setActiveTab);
   const [leftSidebar, setLeftSidebar] = React.useState<boolean>(true);
   const [rightSidebar, setRightSidebar] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    if (tab === 'Network') {
+    if (activeTab === 'Network') {
       window.dispatchEvent(new Event('resize'));
     }
-  }, [tab]);
+  }, [activeTab]);
 
   return (
-    <Tabs value={tab} onValueChange={setTab} className='h-screen flex flex-col bg-gray-100'>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className='h-screen flex flex-col bg-gray-100'>
       <div className='flex justify-between bg-muted h-8 px-4'>
         <Button variant='hover' size='icon' className='h-full' onClick={() => setLeftSidebar(!leftSidebar)}>
           {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
@@ -74,7 +75,7 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
           <TabsContent
             forceMount
             value='Network'
-            className={cn('h-full mt-0', tab === 'Network' ? 'visible' : 'invisible fixed')}
+            className={cn('h-full mt-0', activeTab === 'Network' ? 'visible' : 'invisible fixed')}
           >
             {children}
           </TabsContent>

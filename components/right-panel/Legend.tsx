@@ -1,10 +1,10 @@
 'use client';
 
+import { ChevronsUpDownIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { PROPERTY_TYPE_LABEL_MAPPING } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import { P_VALUE_REGEX } from '@/lib/utils';
-import { ChevronsUpDownIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { BinaryLegend, HeatmapLegend } from '../legends';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';

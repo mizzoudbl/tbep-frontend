@@ -1,9 +1,9 @@
 'use client';
 
-import { useStore } from '@/lib/hooks';
-import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { SquareArrowOutUpRightIcon } from 'lucide-react';
 import React, { createRef, useEffect } from 'react';
+import { useStore } from '@/lib/hooks';
+import { type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { Textarea } from '../ui/textarea';
 
 export function GeneSearch() {
@@ -45,13 +45,13 @@ export function GeneSearch() {
   return (
     <div>
       <div className='flex justify-between my-1'>
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-        <span
+        <button
+          type='button'
           className='text-xs underline cursor-pointer text-zinc-500'
           onClick={() => useStore.setState({ nodeSearchQuery: geneIDs.join('\n') })}
         >
           #Seed Genes
-        </span>
+        </button>
         <button
           type='button'
           className='inline-flex text-xs underline cursor-pointer text-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -70,7 +70,7 @@ export function GeneSearch() {
         {suggestions.length > 0 && (
           <ul className='absolute z-10 w-full mt-0.5 bg-white border border-gray-300 rounded-md shadow-sm max-h-32 overflow-auto text-xs'>
             {suggestions.map((suggestion, index) => (
-              // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+              // biome-ignore lint/a11y/useKeyWithClickEvents: Not possible to use key events with click events
               <li
                 key={suggestion}
                 className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${index === selectedIndex ? 'bg-gray-100' : ''}`}
@@ -83,7 +83,6 @@ export function GeneSearch() {
         )}
         <Textarea
           ref={textareaRef}
-          id='nodeSearchQuery'
           placeholder='Search Genes...'
           className='min-h-20 text-xs'
           value={nodeSearchQuery}

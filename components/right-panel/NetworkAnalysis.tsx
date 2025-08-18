@@ -1,26 +1,18 @@
 'use client';
 
-import { algorithms, columnLeidenResults } from '@/lib/data';
-import { useStore } from '@/lib/hooks';
-import { type EventMessage, Events, downloadFile, eventEmitter } from '@/lib/utils';
 import { Label } from '@radix-ui/react-label';
 import { ChevronsUpDownIcon, DownloadIcon } from 'lucide-react';
 import Papa from 'papaparse';
 import { useEffect, useState } from 'react';
+import { algorithms, columnLeidenResults } from '@/lib/data';
+import { useStore } from '@/lib/hooks';
+import { downloadFile, type EventMessage, Events, eventEmitter } from '@/lib/utils';
 import { LeidenPieChart } from '../statistics';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { DataTable } from '../ui/data-table';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -164,7 +156,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                     <TabsContent value='table' className='flex flex-col max-h-[65vh]'>
                       <div className='overflow-y-scroll'>
                         <DataTable
-                          data={algorithmResults.communities.map((c, i) => ({
+                          data={algorithmResults.communities.map((c, _i) => ({
                             ...c,
                             averageDegree: c.averageDegree.toString(),
                             percentage: c.percentage.toString(),

@@ -1,12 +1,12 @@
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { GetDiseaseData } from '@/lib/interface';
 import { OptimizedMedicalSearch, type SearchItem } from '@/lib/search';
 import { cn } from '@/lib/utils';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react';
-import * as React from 'react';
 import { Spinner } from './ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 

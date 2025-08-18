@@ -1,5 +1,12 @@
 'use client';
 
+import type { CheckedState } from '@radix-ui/react-checkbox';
+import { Trash2Icon, UploadIcon } from 'lucide-react';
+import Link from 'next/link';
+import Papa from 'papaparse';
+import React, { useId } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,14 +33,7 @@ import {
 import { DISEASE_DEPENDENT_PROPERTIES, DISEASE_INDEPENDENT_PROPERTIES } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { RadioOptions, UniversalData } from '@/lib/interface';
-import { LOGFC_REGEX, P_VALUE_REGEX, formatBytes, initRadioOptions, openDB } from '@/lib/utils';
-import type { CheckedState } from '@radix-ui/react-checkbox';
-import { Trash2Icon, UploadIcon } from 'lucide-react';
-import Link from 'next/link';
-import Papa from 'papaparse';
-import React from 'react';
-import { useDropzone } from 'react-dropzone';
-import { toast } from 'sonner';
+import { formatBytes, initRadioOptions, LOGFC_REGEX, openDB, P_VALUE_REGEX } from '@/lib/utils';
 
 export function FileSheet() {
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
@@ -256,6 +256,8 @@ export function FileSheet() {
     });
   };
 
+  const doNotShowAgainId = useId();
+
   return (
     <div>
       <div className='flex flex-col lg:flex-row gap-2 justify-between'>
@@ -309,9 +311,9 @@ export function FileSheet() {
                       This action cannot be undone. This will permanently delete all the files.
                     </AlertDialogDescription>
                     <div className='flex items-center space-x-2 mt-4'>
-                      <Checkbox id='terms' onCheckedChange={handleConfirmDialogChange} />
+                      <Checkbox id={doNotShowAgainId} onCheckedChange={handleConfirmDialogChange} />
                       <Label
-                        htmlFor='terms'
+                        htmlFor={doNotShowAgainId}
                         className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                       >
                         Do not show again

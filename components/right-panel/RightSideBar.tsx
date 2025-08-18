@@ -1,6 +1,6 @@
 'use client';
-import { Legend, NetworkAnalysis, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
 import { ScrollArea } from '../ui/scroll-area';
+import { Legend, NetworkAnalysis, NetworkInfo, NetworkLayout, NetworkStyle, RadialAnalysis } from '.';
 
 export function RightSideBar() {
   return (

@@ -1,6 +1,6 @@
-import { collaborators, footerLinks } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
+import { collaborators, footerLinks } from '@/lib/data';
 
 export default function Footer() {
   return (
@@ -75,7 +75,7 @@ export default function Footer() {
             className='flex'
           >
             CC BY-NC 4.0
-            <img
+            <Image
               style={{
                 height: '22px',
                 marginLeft: '3px',
@@ -83,8 +83,10 @@ export default function Footer() {
               }}
               src='https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1'
               alt=''
+              width={22}
+              height={22}
             />
-            <img
+            <Image
               style={{
                 height: '22px',
                 marginLeft: '3px',
@@ -92,8 +94,10 @@ export default function Footer() {
               }}
               src='https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1'
               alt=''
+              width={22}
+              height={22}
             />
-            <img
+            <Image
               style={{
                 height: '22px',
                 marginLeft: '3px',
@@ -101,6 +105,8 @@ export default function Footer() {
               }}
               src='https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1'
               alt=''
+              width={22}
+              height={22}
             />
           </a>
         </p>

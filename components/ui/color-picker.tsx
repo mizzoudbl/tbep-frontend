@@ -1,13 +1,13 @@
 'use client';
 
+import { PaintbrushIcon } from 'lucide-react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useStore } from '@/lib/hooks';
 import type { GraphStore } from '@/lib/interface';
 import { cn } from '@/lib/utils';
-import { PaintbrushIcon } from 'lucide-react';
-import React from 'react';
 
 export function ColorPicker({
   color,
@@ -50,18 +50,17 @@ export function ColorPicker({
       <PopoverContent className='w-36 md:w-64' align='end'>
         <div className='flex flex-wrap'>
           {solids.map(s => (
-            // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-            <div
+            <button
+              type='button'
               key={s}
               style={{ background: s }}
-              onClick={e => handleNodeColorChange(s, property)}
-              className='rounded-md h-6 w-6 cursor-pointer hover:scale-105'
+              onClick={_e => handleNodeColorChange(s, property)}
+              className='rounded-md h-6 w-6 cursor-pointer hover:scale-105 border-0'
             />
           ))}
         </div>
 
         <Input
-          id='custom'
           value={inputValue}
           className='col-span-2 h-8 mt-4'
           onChange={e => setInputValue(e.target.value)}

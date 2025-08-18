@@ -1,5 +1,5 @@
-import { getStartedLinks } from '@/lib/data';
 import Link from 'next/link';
+import { getStartedLinks } from '@/lib/data';
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
   return (

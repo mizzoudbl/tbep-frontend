@@ -1,15 +1,15 @@
 'use client';
 
+import { InfoIcon } from 'lucide-react';
+import React from 'react';
 import { radialAnalysisOptions } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { RadialAnalysisSetting } from '@/lib/interface';
-import { InfoIcon } from 'lucide-react';
-import React from 'react';
-import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { VirtualizedCombobox } from '../VirtualizedCombobox';
 
 export function RadialAnalysis() {
   const [minScore, setMinScore] = React.useState(0);
@@ -22,7 +22,7 @@ export function RadialAnalysis() {
     useStore.setState({ radialAnalysis: { ...radialAnalysis, [key]: value } });
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   React.useEffect(() => {
     const minScore = Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0;
     setMinScore(minScore);

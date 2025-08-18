@@ -1,20 +1,20 @@
 'use client';
 
-import { DEFAULT_EDGE_COLOR } from '@/lib/data';
-import { NodeGradientProgram } from '@/lib/graph';
-import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import {
+  SigmaContainer as _SigmaContainer,
   ControlsContainer,
   FullScreenControl,
   type SigmaContainerProps,
-  SigmaContainer as _SigmaContainer,
 } from '@react-sigma/core';
-import { NodeBorderProgram, createNodeBorderProgram } from '@sigma/node-border';
+import { createNodeBorderProgram, NodeBorderProgram } from '@sigma/node-border';
 import type { Attributes } from 'graphology-types';
 import { MaximizeIcon, MinimizeIcon } from 'lucide-react';
 import React, { Suspense, useEffect } from 'react';
 import type { Sigma } from 'sigma';
-import { EdgeLineProgram, NodeCircleProgram, drawDiscNodeHover } from 'sigma/rendering';
+import { drawDiscNodeHover, EdgeLineProgram, NodeCircleProgram } from 'sigma/rendering';
+import { DEFAULT_EDGE_COLOR } from '@/lib/data';
+import { NodeGradientProgram } from '@/lib/graph';
+import type { EdgeAttributes, NodeAttributes } from '@/lib/interface';
 import {
   ColorAnalysis,
   ForceLayout,

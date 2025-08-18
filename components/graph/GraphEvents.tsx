@@ -1,5 +1,7 @@
 'use client';
 
+import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DISEASE_DEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
@@ -12,8 +14,6 @@ import { useStore } from '@/lib/hooks';
 import type { CommonSection, EdgeAttributes, NodeAttributes, OtherSection, SelectionBox } from '@/lib/interface';
 import { Trie } from '@/lib/trie';
 import { cn } from '@/lib/utils';
-import { useCamera, useRegisterEvents, useSigma } from '@react-sigma/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawSelectionBox, findNodesInSelection } from '../../lib/graph/canvas-brush';
 
 export function GraphEvents({
@@ -30,7 +30,7 @@ export function GraphEvents({
   const trieRef = useRef(new Trie<{ key: string; value: string }>());
   const totalNodes = useStore(state => state.networkStatistics.totalNodes);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     const nodeArr = sigma.getGraph().mapNodes((node, attributes) => ({
       key: attributes.label,
@@ -42,7 +42,7 @@ export function GraphEvents({
 
   const { gotoNode } = useCamera();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     const graph = sigma.getGraph();
     if (trieRef.current.size === 0) return;
@@ -176,7 +176,7 @@ export function GraphEvents({
     if (_selectedNodes.length) handleSelectedNodes(_selectedNodes);
   }, [handleSelectedNodes, _selectedNodes]);
 
-  //   biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  //   biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!canvasRef.current) canvasRef.current = sigma.getCanvases().mouse;
     const context = canvasRef.current?.getContext('2d');
@@ -222,7 +222,7 @@ export function GraphEvents({
           attr.forceLabel = false;
           return attr;
         });
-        const count = 0;
+        const _count = 0;
         for (const node of graph.extremities(e.edge)) {
           graph.updateNodeAttributes(node, attr => {
             if (highlightedNodesRef.current.has(node)) {
@@ -360,7 +360,7 @@ export function GraphEvents({
 
   const propertyResolve = useCallback(
     (node: string, selectedRadio: NodeColorType | NodeSizeType | undefined, selectedProperty: string | Set<string>) => {
-      if (!selectedRadio || !selectedProperty) return <></>;
+      if (!selectedRadio || !selectedProperty) return null;
       const diseaseNameOrCommon = DISEASE_DEPENDENT_PROPERTIES?.includes(selectedRadio as DiseaseDependentProperties)
         ? diseaseName
         : 'common';

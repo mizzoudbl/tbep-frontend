@@ -1,5 +1,11 @@
 'use client';
 
+import { useLazyQuery } from '@apollo/client';
+import { SquareDashedMousePointerIcon } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { redirect } from 'next/navigation';
+import React, { useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import {
   DISEASE_DEPENDENT_PROPERTIES,
   DISEASE_INDEPENDENT_PROPERTIES,
@@ -18,20 +24,13 @@ import type {
   RadioOptions,
 } from '@/lib/interface';
 import { envURL } from '@/lib/utils';
-import { useLazyQuery } from '@apollo/client';
-import { SquareDashedMousePointerIcon } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { redirect } from 'next/navigation';
-import React, { useEffect, useRef } from 'react';
-import { useShallow } from 'zustand/react/shallow';
-import { GeneSearch, NodeColor, NodeSize } from '.';
+import { Export, FileSheet, MouseControlMessage } from '../app';
 import { DiseaseMapCombobox } from '../DiseaseMapCombobox';
-import { FileSheet } from '../app';
-import { Export, MouseControlMessage } from '../app';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Spinner } from '../ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { GeneSearch, NodeColor, NodeSize } from '.';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);

@@ -21,7 +21,7 @@ export const PrioritizationIndicatorLegend: React.FC<{ width?: number; height?: 
   ];
   const rectWidths = [25, 24, 25, 24, 25, 25, 24, 25, 25, 24, 25, 24, 25];
   // x positions for each rect
-  const rectXs = rectWidths.reduce((acc, w, i) => {
+  const rectXs = rectWidths.reduce((acc, _w, i) => {
     acc.push((acc[i - 1] ?? 0) + (i > 0 ? rectWidths[i - 1] : 0));
     return acc;
   }, [] as number[]);

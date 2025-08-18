@@ -1,11 +1,11 @@
 'use client';
 
-import { useStore } from '@/lib/hooks';
-import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
-import { P_VALUE_REGEX } from '@/lib/utils';
 import { useSigma } from '@react-sigma/core';
 import { scaleLinear } from 'd3-scale';
 import { useEffect } from 'react';
+import { useStore } from '@/lib/hooks';
+import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
+import { P_VALUE_REGEX } from '@/lib/utils';
 
 export function SizeAnalysis() {
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
@@ -16,7 +16,7 @@ export function SizeAnalysis() {
   const diseaseName = useStore(state => state.diseaseName);
   const radioOptions = useStore(state => state.radioOptions);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!selectedRadioNodeSize && graph) {
       useStore.setState({ selectedNodeSizeProperty: '' });
@@ -27,7 +27,7 @@ export function SizeAnalysis() {
     }
   }, [selectedRadioNodeSize]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
     if (!selectedNodeSizeProperty || !graph || !selectedRadioNodeSize) return;
     const isUserProperty =
@@ -56,7 +56,7 @@ export function SizeAnalysis() {
     } else if (selectedRadioNodeSize === 'TE' && typeof selectedNodeSizeProperty !== 'string') {
       const propertyArray = Array.from(selectedNodeSizeProperty);
       if (propertyArray.length === 0) {
-        graph.updateEachNodeAttributes((node, attr) => {
+        graph.updateEachNodeAttributes((_node, attr) => {
           attr.size = defaultNodeSize;
           return attr;
         });
