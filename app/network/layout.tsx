@@ -85,10 +85,7 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
               <StatisticsTab />
             </ScrollArea>
           </TabsContent>
-          <TabsContent
-            value='Heatmap'
-            className={cn('h-full mt-0', activeTab === 'Heatmap' ? 'visible' : 'invisible fixed')}
-          >
+          <TabsContent value='Heatmap' className='h-full mt-0'>
             <ScrollArea className='h-full'>
               <OpenTargetsHeatmap />
             </ScrollArea>

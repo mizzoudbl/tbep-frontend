@@ -178,6 +178,7 @@ export interface GraphStore {
    * Show only visible nodes (for global heatmap visibility)
    */
   showOnlyVisible: boolean;
+
   /**
    * Setter function for the active tab.
    */

@@ -20,7 +20,7 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
   const activeTab = useStore(state => state.activeTab);
-  const nodeDegreeCutOff = useStore(state => state.radialAnalysis.nodeDegreeProperty);
+  const candidatePrioritizationCutOff = useStore(state => state.radialAnalysis.candidatePrioritizationCutOff);
 
   useEffect(() => {
     sigma.on('enterNode', e => setHoveredNode({ node: e.node, ctrlKey: e.event.original.ctrlKey }));
@@ -117,31 +117,6 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
       },
     });
   }, [hoveredNode, setSettings, sigma]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!sigma) return;
-
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    if (activeTab === 'Heatmap') {
-      timer = setTimeout(() => {
-        const visibleNodeGeneIds = sigma.getGraph().reduceNodes((acc, node, attr) => {
-          if (!attr.hidden) acc.add(node);
-          return acc;
-        }, new Set<string>());
-
-        eventEmitter.emit(Events.VISIBLE_NODES_RESULTS, {
-          visibleNodeGeneIds,
-        } satisfies EventMessage[Events.VISIBLE_NODES_RESULTS]);
-      }, 800);
-    }
-
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodeDegreeCutOff, sigma, activeTab]);
 
   return null;
 }

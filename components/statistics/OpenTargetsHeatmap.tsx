@@ -3,12 +3,12 @@
 import { type TargetDiseaseAssociationRow, associationColumns, prioritizationColumns } from '@/lib/data';
 import { OPENTARGET_HEATMAP_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
-import { type OpenTargetsTableData, type OpenTargetsTableVariables, OrderByEnum } from '@/lib/interface';
+import type { OpenTargetsTableData, OpenTargetsTableVariables } from '@/lib/interface';
 import { type EventMessage, Events, eventEmitter, orderByStringToEnum } from '@/lib/utils';
 import { useLazyQuery } from '@apollo/client';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { VirtualizedCombobox } from '../VirtualizedCombobox';
 import { AssociationScoreLegend, PrioritizationIndicatorLegend } from '../legends';
 import { Button } from '../ui/button';
@@ -22,89 +22,107 @@ export function OpenTargetsHeatmap() {
   const geneNames = useStore(state => state.geneNames);
   const geneNameToID = useStore(state => state.geneNameToID);
   const showOnlyVisible = useStore(state => state.showOnlyVisible);
-  const radialAnalysis = useStore(state => state.radialAnalysis);
-
+  const candidatePrioritizationCutOff = useStore(state => state.radialAnalysis.candidatePrioritizationCutOff);
   const pagination = useStore(state => state.heatmapPagination);
   const sortingColumn = useStore(state => state.heatmapSortingColumn);
-
-  const geneIds = useMemo(() => geneNames.map(g => geneNameToID.get(g) ?? g), [geneNames, geneNameToID]);
   const diseaseId = useStore(state => state.diseaseName);
+
+  const geneIds = useMemo(() => geneNames.map(g => geneNameToID.get(g) ?? g).sort(), [geneNames, geneNameToID]);
   const [geneIdsToQuery, setGeneIdsToQuery] = useState<string[]>([]);
   const [selectedGeneNames, setSelectedGeneNames] = useState<Set<string>>(new Set());
-
-  const stableGeneIds = useMemo(() => [...geneIds].sort(), [geneIds]);
-
-  const effectiveGeneIdsToQuery = showOnlyVisible
-    ? geneIdsToQuery
-    : selectedGeneNames.size
-      ? Array.from(selectedGeneNames)
-          .reduce<string[]>((acc, geneName) => {
-            const id = geneNameToID.get(geneName);
-            if (id) acc.push(id);
-            return acc;
-          }, [])
-          .sort()
-      : stableGeneIds;
 
   const [runQuery, { data: queryData, previousData, loading }] = useLazyQuery<
     OpenTargetsTableData,
     OpenTargetsTableVariables
-  >(OPENTARGET_HEATMAP_QUERY, {
-    fetchPolicy: 'cache-first',
-    nextFetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
-    returnPartialData: true,
-  });
+  >(OPENTARGET_HEATMAP_QUERY);
+
+  const maxPage = Math.max(
+    1,
+    Math.ceil(((queryData ?? previousData)?.targetDiseaseAssociationTable.totalCount ?? 0) / pagination.limit),
+  );
+
+  const tableData: TargetDiseaseAssociationRow[] =
+    queryData?.targetDiseaseAssociationTable.rows.map(row => {
+      const prioritization: Record<string, number> = {};
+      if (Array.isArray(row.target.prioritization)) {
+        for (const item of row.target.prioritization) {
+          prioritization[item.key] = item.score;
+        }
+      }
+      const datasources: Record<string, number> = {};
+      if (Array.isArray(row.datasourceScores)) {
+        for (const item of row.datasourceScores as { key: string; score: number }[]) {
+          datasources[item.key] = item.score;
+        }
+      }
+      return {
+        target: row.target.name,
+        'Association Score': row.overall_score,
+        ...datasources,
+        ...prioritization,
+      };
+    }) || [];
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (diseaseId && stableGeneIds.length > 0) {
+    eventEmitter.on(Events.VISIBLE_NODES_RESULTS, (data: EventMessage[Events.VISIBLE_NODES_RESULTS]) => {
+      const selectedGeneIds = new Set<string>();
+      for (const geneName of selectedGeneNames) {
+        const id = geneNameToID.get(geneName);
+        if (id) selectedGeneIds.add(id);
+      }
+
+      const geneIdsToQuery = Array.from(
+        selectedGeneIds.size ? selectedGeneIds.intersection(data.visibleNodeGeneIds) : data.visibleNodeGeneIds,
+      ).sort();
+
+      setGeneIdsToQuery(geneIdsToQuery);
       runQuery({
         variables: {
-          geneIds: effectiveGeneIdsToQuery,
+          geneIds: geneIdsToQuery,
           diseaseId,
-          orderBy: orderByStringToEnum(sortingColumn) || OrderByEnum.SCORE,
+          orderBy: orderByStringToEnum(sortingColumn),
           page: pagination,
         },
       });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diseaseId, stableGeneIds.length]);
-
-  const totalCount = (queryData ?? previousData)?.targetDiseaseAssociationTable.totalCount ?? 0;
-  const maxPage = Math.max(1, Math.ceil(totalCount / pagination.limit));
-
-  const tableData: TargetDiseaseAssociationRow[] = (
-    (queryData ?? previousData)?.targetDiseaseAssociationTable.rows ?? []
-  ).map(row => {
-    const prioritization: Record<string, number> = {};
-    if (Array.isArray(row.target.prioritization)) {
-      for (const item of row.target.prioritization) {
-        prioritization[item.key] = item.score;
-      }
-    }
-    const datasources: Record<string, number> = {};
-    if (Array.isArray(row.datasourceScores)) {
-      for (const item of row.datasourceScores as { key: string; score: number }[]) {
-        datasources[item.key] = item.score;
-      }
-    }
-    return {
-      target: row.target.name,
-      'Association Score': row.overall_score,
-      ...datasources,
-      ...prioritization,
+    });
+    return () => {
+      eventEmitter.removeAllListeners(Events.VISIBLE_NODES_RESULTS);
     };
-  });
+  }, [diseaseId]);
+
+  const isFirstMount = useRef(true);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!showOnlyVisible) return;
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      eventEmitter.emit(Events.VISIBLE_NODES);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [candidatePrioritizationCutOff]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (showOnlyVisible) {
-      const timer = setTimeout(() => {
-        eventEmitter.emit(Events.VISIBLE_NODES);
-      }, 500);
-      return () => clearTimeout(timer);
+      eventEmitter.emit(Events.VISIBLE_NODES);
+    } else if (diseaseId && geneIds.length) {
+      runQuery({
+        variables: {
+          geneIds,
+          diseaseId,
+          orderBy: orderByStringToEnum(sortingColumn),
+          page: pagination,
+        },
+      });
+      setGeneIdsToQuery(geneIds);
     }
-  }, [radialAnalysis, showOnlyVisible]);
+  }, [diseaseId, geneIds]);
 
   const toggleOnlyVisible = (checked: CheckedState) => {
     const value = checked === true;
@@ -113,8 +131,7 @@ export function OpenTargetsHeatmap() {
     if (value) {
       eventEmitter.emit(Events.VISIBLE_NODES);
     } else {
-      setGeneIdsToQuery([]);
-      const defaultGeneIds = selectedGeneNames.size
+      const geneIdsToQuery = selectedGeneNames.size
         ? Array.from(selectedGeneNames)
             .reduce<string[]>((acc, geneName) => {
               const id = geneNameToID.get(geneName);
@@ -122,13 +139,14 @@ export function OpenTargetsHeatmap() {
               return acc;
             }, [])
             .sort()
-        : stableGeneIds;
+        : geneIds;
+      setGeneIdsToQuery(geneIdsToQuery);
 
       runQuery({
         variables: {
-          geneIds: defaultGeneIds,
+          geneIds: geneIdsToQuery,
           diseaseId,
-          orderBy: orderByStringToEnum(sortingColumn) || OrderByEnum.SCORE,
+          orderBy: orderByStringToEnum(sortingColumn),
           page: pagination,
         },
       });
@@ -137,39 +155,33 @@ export function OpenTargetsHeatmap() {
 
   const handleSearchSelection = (value: Set<string>) => {
     setSelectedGeneNames(value);
+    const tmpGeneIdsToQuery = value.size
+      ? Array.from(value)
+          .reduce<string[]>((acc, geneName) => {
+            const id = geneNameToID.get(geneName);
+            if (id) acc.push(id);
+            return acc;
+          }, [])
+          .sort()
+      : geneIds;
 
-    if (showOnlyVisible) {
-      eventEmitter.emit(Events.VISIBLE_NODES);
-    } else {
-      const tmpGeneIdsToQuery = value.size
-        ? Array.from(value)
-            .reduce<string[]>((acc, geneName) => {
-              const id = geneNameToID.get(geneName);
-              if (id) acc.push(id);
-              return acc;
-            }, [])
-            .sort()
-        : stableGeneIds;
-
-      setGeneIdsToQuery([]);
-      runQuery({
-        variables: {
-          geneIds: tmpGeneIdsToQuery,
-          diseaseId,
-          orderBy: orderByStringToEnum(sortingColumn) || OrderByEnum.SCORE,
-          page: pagination,
-        },
-      });
-    }
+    runQuery({
+      variables: {
+        geneIds: tmpGeneIdsToQuery,
+        diseaseId,
+        orderBy: orderByStringToEnum(sortingColumn),
+        page: pagination,
+      },
+    });
   };
 
   const handlePaginationChange = (next: { page: number; limit: number }) => {
     useStore.setState({ heatmapPagination: next });
     runQuery({
       variables: {
-        geneIds: effectiveGeneIdsToQuery,
+        geneIds: geneIdsToQuery,
         diseaseId,
-        orderBy: orderByStringToEnum(sortingColumn) || OrderByEnum.SCORE,
+        orderBy: orderByStringToEnum(sortingColumn),
         page: next,
       },
     });
@@ -179,57 +191,14 @@ export function OpenTargetsHeatmap() {
     useStore.setState({ heatmapSortingColumn: columnId });
     runQuery({
       variables: {
-        geneIds: effectiveGeneIdsToQuery,
+        geneIds: geneIdsToQuery,
         diseaseId,
-        orderBy: orderByStringToEnum(columnId) || OrderByEnum.SCORE,
+        orderBy: orderByStringToEnum(columnId),
         page: pagination,
       },
     });
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const handler = (data: EventMessage[Events.VISIBLE_NODES_RESULTS]) => {
-      if (showOnlyVisible) {
-        const selectedGeneIds = new Set<string>();
-        for (const geneName of selectedGeneNames) {
-          const id = geneNameToID.get(geneName);
-          if (id) selectedGeneIds.add(id);
-        }
-
-        const nextGeneIdsToQuery = Array.from(
-          selectedGeneIds.size
-            ? new Set([...selectedGeneIds].filter(x => data.visibleNodeGeneIds.has(x)))
-            : data.visibleNodeGeneIds,
-        ).sort();
-
-        setGeneIdsToQuery(nextGeneIdsToQuery);
-        runQuery({
-          variables: {
-            geneIds: nextGeneIdsToQuery,
-            diseaseId,
-            orderBy: orderByStringToEnum(sortingColumn) || OrderByEnum.SCORE,
-            page: pagination,
-          },
-        });
-      }
-    };
-    eventEmitter.on(Events.VISIBLE_NODES_RESULTS, handler);
-    return () => {
-      eventEmitter.removeAllListeners(Events.VISIBLE_NODES_RESULTS);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diseaseId, selectedGeneNames, sortingColumn, pagination, runQuery, showOnlyVisible]);
-
-  const showLoading = loading || (!queryData && !previousData && showOnlyVisible);
-
-  const activeTab = useStore(state => state.activeTab);
-
-  useEffect(() => {
-    if (activeTab === 'Heatmap' && showOnlyVisible) {
-      eventEmitter.emit(Events.VISIBLE_NODES);
-    }
-  }, [activeTab, showOnlyVisible]);
   return (
     <div className='h-full'>
       <div className='flex items-center gap-4 p-4'>
@@ -266,7 +235,7 @@ export function OpenTargetsHeatmap() {
               sortingColumn={sortingColumn}
               onSortChange={handleSortingChange}
               colorScale={value => assocColorScale(typeof value === 'number' ? value : 0)}
-              loading={showLoading}
+              loading={loading}
             />
             <div className='mt-2'>
               <AssociationScoreLegend />
@@ -285,7 +254,7 @@ export function OpenTargetsHeatmap() {
                   ? assocColorScale(typeof value === 'number' ? value : 0.1)
                   : prioritizationColorScale(typeof value === 'number' ? value : 0.1)
               }
-              loading={showLoading}
+              loading={loading}
             />
             <div className='mt-2'>
               <PrioritizationIndicatorLegend />
