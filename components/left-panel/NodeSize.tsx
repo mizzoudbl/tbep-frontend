@@ -15,7 +15,7 @@ export function NodeSize({ onPropChange }: { onPropChange: (prop: string | Set<s
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
 
   return (
-    <Collapsible defaultOpen className='border p-2 rounded shadow'>
+    <Collapsible defaultOpen className='border p-2 rounded shadow-sm'>
       <div className='flex items-center justify-between w-full'>
         <Label className='font-bold'>Node Size</Label>
         <div className='space-x-1 flex items-center'>

@@ -300,13 +300,13 @@ export default function Explore() {
   return (
     <div className='relative mx-auto max-w-7xl min-h-[60vh]'>
       <Tabs defaultValue='search'>
-        <TabsList className='w-full h-auto grid grid-cols-1 sm:grid-cols-2 bg-white border border-teal-100 shadow-sm gap-2 sm:gap-0 p-2 sm:p-0'>
+        <TabsList className='w-full h-auto grid grid-cols-1 sm:grid-cols-2 bg-white border border-teal-100 shadow-xs gap-2 sm:gap-0 p-2 sm:p-0'>
           <TabsTrigger
             value='search'
             className='w-full justify-start text-left p-3 sm:p-4 rounded-md text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white min-h-[70px] sm:min-h-[80px]'
           >
             <div className='flex flex-col items-start w-full'>
-              <span className='text-sm sm:text-base lg:text-lg font-semibold bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text text-transparent leading-tight'>
+              <span className='text-sm sm:text-base lg:text-lg font-semibold bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text text-transparent leading-tight'>
                 Search by Multiple Genes
               </span>
               <span className='text-xs text-wrap md:text-sm text-slate-600 mt-1 leading-tight'>
@@ -319,7 +319,7 @@ export default function Explore() {
             className='w-full justify-start text-left p-3 sm:p-4 rounded-md text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white min-h-[70px] sm:min-h-[80px]'
           >
             <div className='flex flex-col items-start w-full'>
-              <span className='text-sm sm:text-base lg:text-lg font-semibold bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text text-transparent leading-tight'>
+              <span className='text-sm sm:text-base lg:text-lg font-semibold bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text text-transparent leading-tight'>
                 Build your own Network (ByoN)
               </span>
               <span className='text-xs md:text-sm text-wrap text-slate-600 mt-1 leading-tight'>
@@ -329,7 +329,7 @@ export default function Explore() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value='search' className='mt-4'>
-          <div className='space-y-5 rounded-lg border border-teal-100 bg-white p-4 sm:p-6 shadow-sm'>
+          <div className='space-y-5 rounded-lg border border-teal-100 bg-white p-4 sm:p-6 shadow-xs'>
             <div className='flex justify-between'>
               <div className='flex flex-col h-2 sm:flex-row sm:items-center'>
                 <div className='flex items-center gap-2'>

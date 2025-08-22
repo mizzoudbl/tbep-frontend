@@ -154,7 +154,7 @@ export default function AboutPage() {
                           setFormData(prev => ({ ...prev, rating: star }));
                           setErrors(prev => ({ ...prev, rating: false }));
                         }}
-                        className='focus:outline-none p-1'
+                        className='focus:outline-hidden p-1'
                       >
                         <StarIcon
                           size={28}

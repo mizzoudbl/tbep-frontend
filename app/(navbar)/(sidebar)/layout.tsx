@@ -25,7 +25,7 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
           </p>
         </div>
         <h1 className='md:text-4xl mt-4 text-2xl font-semibold tracking-tight'>
-          <b className='bg-gradient-to-r from-teal-800 via-teal-600 to-teal-800 bg-clip-text text-transparent'>
+          <b className='bg-linear-to-r from-teal-800 via-teal-600 to-teal-800 bg-clip-text text-transparent'>
             Get Started
           </b>{' '}
           with the Tool

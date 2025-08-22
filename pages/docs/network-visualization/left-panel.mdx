@@ -1,7 +1,7 @@
 ---
 description: Basic functions related to network analysis
 ---
-import Image from 'next/image';
+import { Image } from 'nextra/components';
 
 # Left panel
 
@@ -31,7 +31,7 @@ Sometimes you may want to switch to another disease after generating the network
 You can change the node color by selecting different features.
 
 1. Choose a feature.
-   > **Note**: You can hover on the info icon <Image width={30} height={30} src="/image/docs/info-tooltip.png" alt="Info Button" className="inline aspect-square"/> to check the explanation.
+   > **Note**: You can hover on the info icon <Image width={30} height={30} src="/image/docs/info-tooltip.png" alt="Info Button" style={{ display: 'inline', aspectRatio: '1/1' }}/> to check the explanation.
 2. Select the preferred option for that feature in the dropdown list. You can type the keyword in the search bar to help locate the data name.
    > **Note**: You can check the [Legends](right-panel.mdx#legends) section on the [Right panel](right-panel.mdx) to get the legend of each feature.
 
@@ -42,7 +42,7 @@ You can change the node color by selecting different features.
 You can change the node size by selecting a feature.
 
 1. Choose a feature.
-   > **Note**: You can hover on the info icon <Image width={30} height={30} src="/image/docs/info-tooltip.png" alt="Info Button" className="inline aspect-square"/> to check the explanation.
+   > **Note**: You can hover on the info icon <Image width={30} height={30} src="/image/docs/info-tooltip.png" alt="Info Button" style={{ display: 'inline', aspectRatio: '1/1' }}/> to check the explanation.
 2. Select the preferred data for that feature in the dropdown list. You can type the keyword in the search bar to help locate the data name.
 
 ![Change node size](../../../public/image/docs/change-node-size-property.png)

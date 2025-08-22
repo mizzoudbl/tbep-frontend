@@ -15,7 +15,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
 
   return (
-    <Collapsible defaultOpen className='my-2 border p-2 rounded shadow'>
+    <Collapsible defaultOpen className='my-2 border p-2 rounded shadow-sm'>
       <div className='flex items-center justify-between w-full'>
         <Label className='font-bold'>Node Color</Label>
         <div className='space-x-1 flex items-center'>

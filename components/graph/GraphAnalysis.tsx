@@ -316,7 +316,7 @@ export function GraphAnalysis({
   return (
     <>
       {Object.keys(communityMap).length > 0 && (
-        <div className='absolute bottom-1 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow rounded-md backdrop-blur p-2'>
+        <div className='absolute bottom-1 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow-sm rounded-md backdrop-blur-sm p-2'>
           {Object.entries(communityMap).map(([id, val], _idx) => (
             <div key={id} className='flex items-center gap-1'>
               <Checkbox

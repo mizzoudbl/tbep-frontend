@@ -39,7 +39,7 @@ export function ColorPicker({
         >
           <div className='w-full flex items-center gap-2'>
             {color ? (
-              <div className='h-4 w-4 rounded !bg-center !bg-cover transition-all' style={{ background: color }} />
+              <div className='h-4 w-4 rounded bg-center! bg-cover! transition-all' style={{ background: color }} />
             ) : (
               <PaintbrushIcon className='h-4 w-4' />
             )}

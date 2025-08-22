@@ -1,13 +1,16 @@
 'use client';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
+import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 import { envURL } from './utils';
 
-const client = new ApolloClient({
-  uri: `${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/graphql`,
+const httpLink = new HttpLink({
   credentials: 'include',
-  cache: new InMemoryCache({
-    addTypename: false,
-  }),
+  uri: `${envURL(process.env.NEXT_PUBLIC_BACKEND_URL)}/graphql`,
+});
+
+const client = new ApolloClient({
+  link: ApolloLink.from([removeTypenameFromVariables(), httpLink]),
+  cache: new InMemoryCache(),
   assumeImmutableResults: true,
 });
 

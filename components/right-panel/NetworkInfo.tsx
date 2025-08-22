@@ -34,7 +34,7 @@ export function NetworkInfo() {
   }, [selectedNodes]);
 
   return (
-    <div className='mb-2 border p-2 rounded shadow text-xs'>
+    <div className='mb-2 border p-2 rounded shadow-sm text-xs'>
       <p className='font-bold mb-2'>Network Info</p>
       <div className='flex justify-between'>
         <div className='flex flex-col gap-1'>
