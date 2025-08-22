@@ -6,7 +6,7 @@ import type { PopUpDataTableProps } from '@/lib/interface';
 import { cn, downloadFile } from '@/lib/utils';
 import { Button } from './ui/button';
 import { DataTable } from './ui/data-table';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from './ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
@@ -41,9 +41,15 @@ export default function PopUpDataTable<E, F>({
 
   return (
     <Dialog open={open}>
-      <DialogContent className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'>
+      <DialogContent
+        aria-describedby='dialog-description'
+        className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'
+      >
         <DialogTitle>{dialogTitle}</DialogTitle>
-        <div className='flex-grow overflow-y-scroll'>
+        <DialogDescription>
+          View the selected genes and their details. Switch to "GSEA Analysis" for gene set enrichment analysis results.
+        </DialogDescription>
+        <div className='grow overflow-y-scroll'>
           <Tabs defaultValue={tabsTitle?.[0]}>
             <TabsList className={cn('w-full grid', `grid-cols-${tabsTitle?.length}`)}>
               {tabsTitle?.map(title => (

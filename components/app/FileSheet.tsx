@@ -330,7 +330,7 @@ export function FileSheet() {
                 {uploadedFiles.map(file => (
                   <div
                     key={file.name}
-                    className='flex justify-between items-center mb-2 p-2 bg-primary-foreground shadow rounded'
+                    className='flex justify-between items-center mb-2 p-2 bg-primary-foreground shadow-sm rounded'
                   >
                     <div>
                       <div className='text-sm font-medium flex gap-4'>

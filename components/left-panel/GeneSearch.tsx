@@ -68,7 +68,7 @@ export function GeneSearch() {
       </div>
       <div className='relative w-full'>
         {suggestions.length > 0 && (
-          <ul className='absolute z-10 w-full mt-0.5 bg-white border border-gray-300 rounded-md shadow-sm max-h-32 overflow-auto text-xs'>
+          <ul className='absolute z-10 w-full mt-0.5 bg-white border border-gray-300 rounded-md shadow-xs max-h-32 overflow-auto text-xs'>
             {suggestions.map((suggestion, index) => (
               // biome-ignore lint/a11y/useKeyWithClickEvents: Not possible to use key events with click events
               <li

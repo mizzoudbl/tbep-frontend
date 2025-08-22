@@ -40,7 +40,7 @@ export function NetworkStyle() {
   const highlightNeighborNodesId = useId();
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
+    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm text-xs'>
       <div className='flex items-center justify-between w-full'>
         <p className='font-bold'>Network Style</p>
         <CollapsibleTrigger asChild>

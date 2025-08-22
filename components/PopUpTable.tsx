@@ -4,7 +4,7 @@ import { useStore } from '@/lib/hooks';
 import type { PopUpTableProps } from '@/lib/interface';
 import { downloadFile } from '@/lib/utils';
 import { Button } from './ui/button';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from './ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from './ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -46,7 +46,10 @@ export default function PopUpTable({
     <Dialog open={tableOpen}>
       <DialogContent className='max-w-5xl w-11/12 max-h-[90vh] min-h-[60vh] flex flex-col'>
         <DialogTitle>Results Preview</DialogTitle>
-        <div className='flex-grow overflow-y-scroll'>
+        <DialogDescription>
+          Preview the results before submitting for network generation. You can also download the results as a CSV file.
+        </DialogDescription>
+        <div className='grow overflow-y-scroll'>
           <Tabs defaultValue='found'>
             <TabsList className='grid w-full grid-cols-2'>
               <TabsTrigger value='found'>Found</TabsTrigger>

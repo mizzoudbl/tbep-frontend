@@ -60,7 +60,7 @@ const VirtualizedCommand = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className='bg-transparent  hover:bg-muted cursor-pointer p-2 rounded border shadow'
+                className='bg-transparent  hover:bg-muted cursor-pointer p-2 rounded border shadow-sm'
                 onClick={() => onSelectOption?.(filteredOptions.slice(0, 50).map(getProperty))}
               >
                 <ListCheckIcon className='h-4 w-4 text-black' />
@@ -169,15 +169,15 @@ export function VirtualizedCombobox({
                       <Badge
                         key={option}
                         className={cn(
-                          'data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground',
-                          'data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground',
+                          'data-disabled:bg-muted-foreground data-disabled:text-muted data-disabled:hover:bg-muted-foreground',
+                          'data-fixed:bg-muted-foreground data-fixed:text-muted data-fixed:hover:bg-muted-foreground',
                         )}
                       >
                         {option}
                         {/** biome-ignore lint/a11y/noStaticElementInteractions: button can't be inside button (Badge component is button) */}
                         <span
                           className={cn(
-                            'ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                            'ml-1 rounded-full outline-hidden ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2',
                           )}
                           onKeyDown={e => {
                             if (e.key === 'Enter' && value instanceof Set) {

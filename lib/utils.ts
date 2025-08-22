@@ -89,7 +89,7 @@ export type EventMessage = {
 };
 
 export function envURL(env?: string) {
-  return (env || 'https://pdnet.missouri.edu').replace(/\/$/, '');
+  return (env || 'https://tbep.missouri.edu').replace(/\/$/, '');
 }
 
 export function initRadioOptions() {

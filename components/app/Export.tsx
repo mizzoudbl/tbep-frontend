@@ -56,12 +56,12 @@ export function Export() {
           Export
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='z-10 w-36 bg-zinc-100 border shadow p-1 gap-1 rounded-md'>
+      <DropdownMenuContent className='z-10 w-36 bg-zinc-100 border shadow-sm p-1 gap-1 rounded-md'>
         {exportOptions.map(opt =>
           opt.hasSubmenu ? (
             <DropdownMenuSub key={opt.label}>
               <DropdownMenuSubTrigger className='cursor-pointer'>{opt.label.toUpperCase()}</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className='z-20 w-48 bg-zinc-100 border shadow p-2 gap-2 rounded-md flex flex-col'>
+              <DropdownMenuSubContent className='z-20 w-48 bg-zinc-100 border shadow-sm p-2 gap-2 rounded-md flex flex-col'>
                 <div className='flex items-center gap-2 px-2 py-1 cursor-pointer'>
                   <Checkbox
                     id={universalCheckBoxId}

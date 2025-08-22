@@ -12,7 +12,7 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { DataTable } from '../ui/data-table';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '../ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -62,7 +62,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow text-xs'>
+    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm text-xs'>
       <div className='flex items-center justify-between w-full'>
         <p className='font-bold'>Network Analysis</p>
         <CollapsibleTrigger asChild>
@@ -142,6 +142,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
               <Dialog open={showTable}>
                 <DialogContent className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'>
                   <DialogTitle>Leiden Communities</DialogTitle>
+                  <DialogDescription>View the identified communities and their characteristics.</DialogDescription>
                   <Tabs defaultValue='table' className='w-full'>
                     <div className='flex justify-center'>
                       <TabsList className='w-1/2 gap-2'>

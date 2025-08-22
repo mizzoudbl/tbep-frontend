@@ -60,7 +60,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             ref={setRefs}
             disabled={disabled}
             className={cn(
-              'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input px-3 py-2 text-sm shadow-sm bg-accent-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+              'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input px-3 py-2 text-sm shadow-xs bg-accent-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
               className,
             )}
           >
@@ -89,7 +89,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                 type='button'
                 onClick={() => toggleValue(option.value)}
                 className={
-                  'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-1 focus:ring-ring'
+                  'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-hidden focus:ring-1 focus:ring-ring'
                 }
               >
                 <span className='absolute right-2 flex h-3.5 w-3.5 items-center justify-center'>

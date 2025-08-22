@@ -141,7 +141,7 @@ export function Chat() {
         <Select value={model} onValueChange={value => setModel(value as typeof model)}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <SelectTrigger className='w-[110px] flex-shrink-0'>
+              <SelectTrigger className='w-[110px] shrink-0'>
                 <SelectValue placeholder='Select model' />
               </SelectTrigger>
             </TooltipTrigger>

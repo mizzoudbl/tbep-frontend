@@ -33,7 +33,7 @@ export function NetworkLayout() {
   const networkAnimationControlId = useId();
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow'>
+    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm'>
       <div className='flex items-center justify-between w-full'>
         <p className='font-bold'>Network Layout</p>
         <CollapsibleTrigger asChild>

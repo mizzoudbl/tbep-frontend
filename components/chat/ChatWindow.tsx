@@ -140,7 +140,7 @@ export function ChatWindow() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             style={{ height: chatHeight ?? '85vh' }}
-            className='absolute bottom-[10vh] m-1 backdrop-blur rounded-lg shadow-lg overflow-hidden w-[98%]'
+            className='absolute bottom-[10vh] m-1 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden w-[98%]'
           >
             <motion.div
               drag='y'
@@ -150,7 +150,7 @@ export function ChatWindow() {
               dragElastic={0}
               className='cursor-ns-resize h-4 w-full bg-gray-200 flex items-center justify-center'
             >
-              <GripHorizontalIcon className='w-4 h-4 text-gray-400' />
+              <GripHorizontalIcon className='size-4 text-gray-400' />
             </motion.div>
             <div className='flex justify-between items-center p-4 bg-gray-100 border-b'>
               <div className='flex items-center gap-4'>
@@ -240,7 +240,7 @@ export function ChatWindow() {
           <Select value={model} onValueChange={value => setModel(value as typeof model)}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <SelectTrigger className='w-[110px] backdrop-blur-sm absolute -top-10 right-5 flex-shrink-0'>
+                <SelectTrigger className='w-[110px] backdrop-blur-xs absolute -top-10 right-5 shrink-0'>
                   <SelectValue placeholder='Select model' />
                 </SelectTrigger>
               </TooltipTrigger>

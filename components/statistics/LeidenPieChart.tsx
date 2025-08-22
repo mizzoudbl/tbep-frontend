@@ -80,7 +80,7 @@ export function LeidenPieChart({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className='p-4 border rounded shadow bg-white'
+            className='p-4 border rounded shadow-sm bg-white'
           >
             <div className='flex gap-2'>
               <h3 className='font-bold mb-2'>Genes in {data[selectedClusterIndex].name}:</h3>
