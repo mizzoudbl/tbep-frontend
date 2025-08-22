@@ -55,7 +55,7 @@ export function ChatWindow() {
     try {
       const response = await fetch(`${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/chat`, {
         method: 'POST',
-        body: JSON.stringify({ question: inputValue, model }),
+        body: JSON.stringify({ question: inputValue, model, prevMessages: messages }),
         headers: {
           'Content-Type': 'application/json',
         },
