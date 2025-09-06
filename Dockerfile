@@ -2,13 +2,15 @@
 FROM node:22.15-alpine AS builder
 WORKDIR /app
 
+ARG GIT_BRANCH=saipuram
+
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 
 ### STAGE 2: Run ###
-FROM nginx:1.28-alpine
+FROM nginx:1.29-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf

@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ApolloWrapper } from '@/lib/apolloWrapper';
 import { envURL } from '@/lib/utils';
 import './globals.css';
+import { DocsThemeHead, DocsThemeLayout } from '@/theme.config';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -22,7 +23,18 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Target & Biomarker Exploration Portal',
+  title: {
+    default: 'Target & Biomarker Exploration Portal',
+    template: '%s | Docs - TBEP',
+  },
+  applicationName: 'Target & Biomarker Exploration Portal',
+  generator: 'Next.js',
+  appleWebApp: {
+    capable: true,
+    title: 'Target & Biomarker Exploration Portal',
+    statusBarStyle: 'black-translucent',
+  },
+  metadataBase: new URL(envURL(process.env.NEXT_PUBLIC_SITE_URL)),
   description: 'Drug Target Discovery Platform for Homosapiens',
   creator: 'Bhupesh Dewangan',
   keywords: 'TBEP, Drug Target, Biomarker, Homosapiens, Drug Discovery, Target Discovery, Biomarker Discovery',
@@ -48,15 +60,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en' dir='ltr' suppressHydrationWarning>
+      <DocsThemeHead />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ApolloWrapper>
           <NextTopLoader showSpinner={false} color='teal' />
-          <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
           <Toaster />
           {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
           )}
+          <TooltipProvider delayDuration={100}>
+            <DocsThemeLayout>{children}</DocsThemeLayout>
+          </TooltipProvider>
         </ApolloWrapper>
       </body>
     </html>

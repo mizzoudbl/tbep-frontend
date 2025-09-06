@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 export function getLatestVersionFromChangelog(): string | null {
-  const filePath = path.join(process.cwd(), 'pages/docs/CHANGELOG.mdx');
+  const filePath = path.join(process.cwd(), 'content/CHANGELOG.mdx');
   const fileContent = fs.readFileSync(filePath, 'utf-8');
   const lines = fileContent.split('\n');
   for (const line of lines) {

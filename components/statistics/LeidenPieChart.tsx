@@ -2,11 +2,11 @@
 import { XSquareIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import { Cell, Pie, PieChart, type TooltipProps } from 'recharts';
+import { Cell, Pie, PieChart, type TooltipContentProps } from 'recharts';
 import { ChartContainer, ChartTooltip } from '../ui/chart';
 import { ScrollArea } from '../ui/scroll-area';
 
-const CustomTooltip = ({ active, payload }: TooltipProps<string, string>) => {
+const CustomTooltip = ({ active, payload }: TooltipContentProps<string, string>) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -49,7 +49,7 @@ export function LeidenPieChart({
         }, {})}
       >
         <PieChart>
-          <ChartTooltip content={<CustomTooltip />} />
+          <ChartTooltip content={CustomTooltip} />
           <Pie
             data={data.map(c => ({
               name: c.name,
@@ -64,7 +64,7 @@ export function LeidenPieChart({
             cx='50%'
             cy='50%'
             outerRadius={150}
-            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            label={({ name, percent }) => `${name}: ${((percent ?? Number.NaN) * 100).toFixed(0)}%`}
             onClick={(_, idx) => setSelectedClusterIndex(idx)}
           >
             {data.map(entry => (
@@ -76,11 +76,10 @@ export function LeidenPieChart({
       <AnimatePresence>
         {selectedClusterIndex !== null && (
           <motion.div
-            key='gene-list'
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className='p-4 border rounded shadow-sm bg-white'
+            className='p-2 border rounded shadow-sm bg-white'
           >
             <div className='flex gap-2'>
               <h3 className='font-bold mb-2'>Genes in {data[selectedClusterIndex].name}:</h3>
@@ -92,8 +91,8 @@ export function LeidenPieChart({
                 <XSquareIcon size={20} />
               </button>
             </div>
-            <ScrollArea className='h-[55vh] border rounded'>
-              <ul className='list-disc pl-6'>
+            <ScrollArea className='h-[53vh] border rounded'>
+              <ul className='list-disc ml-6'>
                 {data[selectedClusterIndex].genes.map(gene => (
                   <li key={gene}>{gene}</li>
                 ))}
