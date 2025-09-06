@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Large Video Files
 /public/video/*.mp4
+
+# Nextra
+_pagefind

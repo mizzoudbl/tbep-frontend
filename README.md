@@ -34,22 +34,11 @@ Dependencies not to upgrade:
 
 ```
 @radix-ui/react-scroll-area past v1.2.0
-next past v15.4.5
-nextra past v3.3.1
-nextra-theme-docs past v3.3.1
-inquirer past v9.3.7
-recharts past v2.15.1
-@apollo/client past v3.14.0
+@apollo/client to v4.x.x
 ```
 
 - Don't use the latest version of @radix-ui/react-scroll-area as it messes up with the scroll position in the left side bar. v1.2.0 is the latest version that works fine with the current codebase.
 **Hours wasted:** 3hr
-
-- Don't upgrade the next dependency past 15.4.5 as it fails to type lint successfully pages/_meta.ts as it doesn't respect nextra v3 metadata. Migrating to Nextra v4 will take a lot of time and changes, so it is on hold.
-
-- Don't upgrade the inquirer dependency past v9.3.7 as it doesn't mask the password input correctly without code change.
-
-- Don't upgrade the recharts dependency past v2.15.1 as it may introduce potential API changes. All of it has to be validated and migrated before upgrading.
 
 - Don't upgrade the @apollo/client dependency past v3.14.0 as it doesn't allow changing query on a hook which is needed in [LeftSideBar.tsx](components/left-panel/LeftSideBar.tsx) to change the query based on which execution of that query.
 

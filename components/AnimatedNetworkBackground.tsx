@@ -33,7 +33,6 @@ export default function AnimatedNetworkBackground({
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const rafRef = React.useRef<number | null>(null);
   const nodesRef = React.useRef<Node[]>([]);
-  const _mouseRef = React.useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
   const reduceMotionRef = React.useRef<boolean>(false);
 
   const initNodes = React.useCallback(

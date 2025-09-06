@@ -3,21 +3,16 @@ title: Differential Expression
 description: Differential expression in Log2 fold change, value ranging from -Inf to +Inf
 ---
 
-import { Callout } from 'nextra/components';
-
 # Differential Expression
 
 **Differential expression in Log2 fold change, value ranging from `-Inf` to `+Inf`**
 
 Differential expression results for disease vs control are calculated based on transcriptomic and Proteomic data and is available from knowledge base in the form of log2-fold change.
 
-<Callout type="warning" emoji='⚠️'>
-    <h3 className='font-bold underline'> Disclaimer </h3>
-    <p>
-    We include various different diseases for Differential Expression data, however, we don't provide the data for all diseases and it is encouraged to use Custom Upload to analyze the files.
-    </p>
-    <p> The data is available for PSP, ALS and FTD diseases only. </p>
-</Callout>
+> [!WARNING]
+>
+> **Disclaimer**: We include various different diseases for Differential Expression data, however, we don't provide the data for all diseases and it is encouraged to use Custom Upload to analyze the files.
+> The data is available for PSP & ALS diseases only.
 
 Let's go through them one by one.
 
@@ -43,7 +38,7 @@ The summary of AD data is listed below:
 
 You can use the AD data to color or resize the nodes in the network. The name in the dropdown list of Differential Expression AD data follows the format of **\{contrast annotation}\_\{brain bank}\_\{brain region}**, for example, "ADvsCtrl\_MSBB\_FP", shown as below:
 
-![PSP AD data naming convention](../../../public/image/docs/psp-ad-data-naming-convention.png)
+![PSP AD data naming convention](../../public/image/docs/psp-ad-data-naming-convention.png)
 
 ## ALS
 
@@ -51,7 +46,7 @@ The Differential Expression data of ALS is from [this paper](differential-expres
 
 You can use the ALS data to color or resize the nodes in the network. The name in the dropdown list of the data follows the format of **\{"rnaseq"}\_\{"PMID37080969."}\_\{mutant}\_\{"fold\_change"}**, for example, "rnaseq\_PMID37080969.tardbp\_fold\_change", shown as below:
 
-![ALS Differential Expression data naming convention](../../../public/image/docs/als-differential-expression-data-naming-convention.png)
+![ALS Differential Expression data naming convention](../../public/image/docs/als-differential-expression-data-naming-convention.png)
 
 ## FTD
 
