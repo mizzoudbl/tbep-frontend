@@ -373,7 +373,7 @@ export function GraphEvents({
         )?.[selectedRadio]?.[selectedProperty];
         return (
           <div>
-            <h3 className='font-bold break-words'>{selectedProperty}</h3>
+            <h3 className='break-words font-bold'>{selectedProperty}</h3>
             <p className={cn(value ? 'italic' : '')}>{value || 'N/A'}</p>
           </div>
         );
@@ -386,7 +386,7 @@ export function GraphEvents({
             )?.[selectedRadio]?.[prop];
             return (
               <div key={prop}>
-                <h3 className='font-bold break-words'>{prop}</h3>
+                <h3 className='break-words font-bold'>{prop}</h3>
                 <p className={cn(value ? 'italic' : '')}>{value || 'N/A'}</p>
               </div>
             );
@@ -400,7 +400,7 @@ export function GraphEvents({
   return (
     <>
       {clickedNode && (
-        <div className='absolute top-0 right-0 space-y-1 text-xs shadow-sm rounded border backdrop-blur-sm p-1 m-1 w-80 max-h-[80vh] overflow-y-auto'>
+        <div className='absolute top-0 right-0 m-1 max-h-[80vh] w-80 space-y-1 overflow-y-auto rounded border p-1 text-xs shadow-sm backdrop-blur-sm'>
           <div>
             <h3 className='font-bold'>Ensembl ID</h3>
             <p>{clickedNode}</p>

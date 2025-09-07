@@ -1,6 +1,5 @@
 'use client';
-
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import { useLoadGraph } from '@react-sigma/core';
 import Graph from 'graphology';
 import type { SerializedGraph } from 'graphology-types';
@@ -39,22 +38,13 @@ export function LoadGraph() {
   const searchParams = useSearchParams();
   const loadGraph = useLoadGraph<NodeAttributes, EdgeAttributes>();
   const variable = JSON.parse(localStorage.getItem('graphConfig') || '{}');
-  const [fetchData, { data: response, loading, error }] = useLazyQuery<GeneGraphData, GeneGraphVariables>(
-    GENE_GRAPH_QUERY,
-    {
-      variables: {
-        geneIDs: variable.geneIDs,
-        interactionType: variable.interactionType,
-        minScore: variable.minScore,
-        order: variable.order,
-      },
-    },
-  );
+  const [fetchData, { loading }] = useLazyQuery<GeneGraphData, GeneGraphVariables>(GENE_GRAPH_QUERY);
 
   const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
   const [showWarning, setShowWarning] = React.useState<boolean>(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: No need of extra deps
   React.useEffect(() => {
+    const abortController = new AbortController();
     const graph = new Graph<NodeAttributes, EdgeAttributes>({
       type: 'undirected',
     });
@@ -75,6 +65,7 @@ export function LoadGraph() {
         }
         const req = store.get(fileName);
         req.onsuccess = async () => {
+          if (abortController.signal.aborted) return;
           const fileText = await (req.result as File).text();
           let fileData: Array<Record<string, string | number>>;
           let fields: string[] = [];
@@ -159,14 +150,21 @@ export function LoadGraph() {
           });
         };
       } else {
-        await fetchData();
-        if (error) {
-          console.error(error);
+        const result = await fetchData({
+          variables: {
+            geneIDs: variable.geneIDs,
+            interactionType: variable.interactionType,
+            minScore: variable.minScore,
+            order: variable.order,
+          },
+        });
+        if (result.error) {
+          console.error(result.error);
           alert('Error loading graph! Check console for errors');
           return;
         }
-        if (response) {
-          const { genes, links, graphName, averageClusteringCoefficient } = response.getGeneInteractions;
+        if (result.data) {
+          const { genes, links, graphName, averageClusteringCoefficient } = result.data.getGeneInteractions;
           if (genes.length > 5000 || links.length > 50000) {
             toast.warning('Large graph detected!', {
               description: 'Computation is stopped. Auto closing the graph in 3 seconds to prevent browser crash',
@@ -225,13 +223,21 @@ export function LoadGraph() {
           }
         }
       }
-    })();
-  }, [loading]);
+    })().catch(err => {
+      if (!abortController.signal.aborted) {
+        console.error('Error in LoadGraph:', err);
+      }
+    });
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
 
   return (
     <>
       {loading ? (
-        <div className=' absolute bottom-0 w-full h-full z-40 grid place-items-center'>
+        <div className='absolute bottom-0 z-40 grid h-full w-full place-items-center'>
           <div className='flex flex-col items-center'>
             <Spinner />
             Loading...
@@ -242,7 +248,7 @@ export function LoadGraph() {
           <AlertDialog open={showWarning}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className='text-red-500 flex items-center'>
+                <AlertDialogTitle className='flex items-center text-red-500'>
                   <AlertTriangleIcon size={24} className='mr-2' />
                   Warning!
                 </AlertDialogTitle>
@@ -250,7 +256,7 @@ export function LoadGraph() {
                   You are about to generate a graph with a large number of nodes/edges. You may face difficulties in
                   analyzing the graph.
                 </AlertDialogDescription>
-                <p className='text-black font-semibold'>Are you sure you want to proceed?</p>
+                <p className='font-semibold text-black'>Are you sure you want to proceed?</p>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel

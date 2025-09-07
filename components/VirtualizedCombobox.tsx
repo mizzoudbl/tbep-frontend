@@ -60,10 +60,10 @@ const VirtualizedCommand = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className='bg-transparent  hover:bg-muted cursor-pointer p-2 rounded border shadow-sm'
+                className='cursor-pointer rounded border bg-transparent p-2 shadow-sm hover:bg-muted'
                 onClick={() => onSelectOption?.(filteredOptions.slice(0, 50).map(getProperty))}
               >
-                <ListCheckIcon className='h-4 w-4 text-black' />
+                <ListCheckIcon className='size-4 text-black' />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Select all (only first 50 items are selected at max)</TooltipContent>
@@ -85,7 +85,7 @@ const VirtualizedCommand = ({
               const value = getProperty(option);
               return (
                 <CommandItem
-                  className='absolute flex justify-between w-full overflow-visible'
+                  className='absolute flex w-full justify-between overflow-visible'
                   style={{
                     transform: `translateY(${virtualOption.start}px)`,
                   }}
@@ -93,10 +93,10 @@ const VirtualizedCommand = ({
                   value={value}
                   onSelect={onSelectOption}
                 >
-                  <div className='flex item-center'>
+                  <div className='item-center flex'>
                     <CheckIcon
                       className={cn(
-                        'mr-2 h-4 w-4',
+                        'mr-2 size-4',
                         (selectedOption instanceof Set ? selectedOption.has(value) : selectedOption === value)
                           ? 'opacity-100'
                           : 'opacity-0',
@@ -107,7 +107,7 @@ const VirtualizedCommand = ({
                   {typeof option !== 'string' && option.description && (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <InfoIcon className='h-4 w-4 ml-2 cursor-pointer' />
+                        <InfoIcon className='ml-2 size-4 cursor-pointer' />
                       </TooltipTrigger>
                       <TooltipContent side='left' align='start' className='max-w-48'>
                         {option.description}
@@ -158,7 +158,7 @@ export function VirtualizedCombobox({
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className={cn('w-[200px] justify-between text-ellipsis text-wrap break-words h-9', className)}
+          className={cn('h-9 w-[200px] justify-between text-ellipsis text-wrap break-words', className)}
         >
           <span className='truncate'>
             {multiselect && value instanceof Set ? (
@@ -196,7 +196,7 @@ export function VirtualizedCombobox({
                             }
                           }}
                         >
-                          <XIcon className='h-3 w-3 text-muted hover:text-foreground' />
+                          <XIcon className='size-3 text-muted hover:text-foreground' />
                         </span>
                       </Badge>
                     ))}
@@ -211,7 +211,7 @@ export function VirtualizedCombobox({
               value || searchPlaceholder
             )}
           </span>
-          <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <ChevronsUpDownIcon className='ml-2 size-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className={cn(`w-[${width || '200px'}] p-0`, className)}>

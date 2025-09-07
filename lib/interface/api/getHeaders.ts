@@ -46,4 +46,9 @@ export interface GetHeadersVariables {
    * Disease to search for
    */
   disease: string;
+
+  /**
+   * Whether to skip common field
+   */
+  skipCommon: boolean;
 }

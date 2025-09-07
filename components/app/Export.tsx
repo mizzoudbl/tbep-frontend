@@ -50,19 +50,19 @@ export function Export() {
         <Button
           variant='outline'
           size='sm'
-          className='w-[calc(100%-1.5rem)] mb-2 mr-2 text-xs hover:bg-zinc-300 border-none bg-zinc-200 hover:text-black rounded-sm '
+          className='mr-2 mb-2 w-[calc(100%-1.5rem)] rounded-sm border-none bg-zinc-200 text-xs hover:bg-zinc-300 hover:text-black'
         >
-          <FolderUpIcon className='h-3 w-3 mr-1' />
+          <FolderUpIcon className='mr-1 size-3' />
           Export
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='z-10 w-36 bg-zinc-100 border shadow-sm p-1 gap-1 rounded-md'>
+      <DropdownMenuContent className='z-10 w-36 gap-1 rounded-md border bg-zinc-100 p-1 shadow-sm'>
         {exportOptions.map(opt =>
           opt.hasSubmenu ? (
             <DropdownMenuSub key={opt.label}>
               <DropdownMenuSubTrigger className='cursor-pointer'>{opt.label.toUpperCase()}</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className='z-20 w-48 bg-zinc-100 border shadow-sm p-2 gap-2 rounded-md flex flex-col'>
-                <div className='flex items-center gap-2 px-2 py-1 cursor-pointer'>
+              <DropdownMenuSubContent className='z-20 flex w-48 flex-col gap-2 rounded-md border bg-zinc-100 p-2 shadow-sm'>
+                <div className='flex cursor-pointer items-center gap-2 px-2 py-1'>
                   <Checkbox
                     id={universalCheckBoxId}
                     checked={csvSelections.universal}
@@ -70,7 +70,7 @@ export function Export() {
                   />
                   <label htmlFor={universalCheckBoxId}>Universal</label>
                 </div>
-                <div className='flex items-center gap-2 px-2 py-1 cursor-pointer'>
+                <div className='flex cursor-pointer items-center gap-2 px-2 py-1'>
                   <Checkbox
                     id={interactionCheckBoxId}
                     checked={csvSelections.interaction}

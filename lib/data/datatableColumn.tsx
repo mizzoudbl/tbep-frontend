@@ -8,7 +8,7 @@ function headerHelper<TData>(columnName: string) {
     return (
       <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         {columnName}
-        <ArrowUpDownIcon className='ml-2 h-4 w-4' />
+        <ArrowUpDownIcon className='ml-2 size-4' />
       </Button>
     );
   };
@@ -19,9 +19,9 @@ export const columnLeidenResults: ColumnDef<Record<string, string>>[] = [
     accessorKey: 'name',
     header: headerHelper('Cluster'),
     cell: ({ cell }: CellContext<Record<string, string>, string>) => (
-      <div className='inline-flex gap-2 items-center'>
+      <div className='inline-flex items-center gap-2'>
         <span
-          className='rounded-full w-4 h-4 border'
+          className='size-4 rounded-full border'
           style={{ backgroundColor: cell.row.original.color, borderColor: cell.row.original.color }}
         />
         {cell.getValue()}

@@ -62,11 +62,11 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm text-xs'>
-      <div className='flex items-center justify-between w-full'>
+    <Collapsible defaultOpen className='mb-2 rounded border p-2 text-xs shadow-sm'>
+      <div className='flex w-full items-center justify-between'>
         <p className='font-bold'>Network Analysis</p>
         <CollapsibleTrigger asChild>
-          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+          <Button type='button' variant='outline' size='icon' className='size-6'>
             <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
@@ -85,7 +85,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
               </div>
               {parameters.length > 0 && (
                 <PopoverContent className='w-52'>
-                  <form key={name} className='space-y-2 flex flex-col' action={f => handleAlgoQuery(name, f)}>
+                  <form key={name} className='flex flex-col space-y-2' action={f => handleAlgoQuery(name, f)}>
                     {parameters.map(({ name, displayName, type, defaultValue, min, max, step }) => {
                       if (type === 'slider') {
                         return (
@@ -107,7 +107,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                         <div
                           key={name}
                           style={{ gridTemplateColumns: '1fr 2fr' }}
-                          className='grid grid-cols-2 w-full items-center gap-2'
+                          className='grid w-full grid-cols-2 items-center gap-2'
                         >
                           <Label key={name} htmlFor={name} className='font-semibold text-xs'>
                             {displayName}
@@ -128,19 +128,19 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
         {algorithmResults && (
           <>
             <hr className='mb-1' />
-            <p className='underline font-semibold text-sm'>Results:</p>
+            <p className='font-semibold text-sm underline'>Results:</p>
             <p>
               <b>Modularity:</b> {algorithmResults.modularity}
             </p>
             <p>
               <b>Resolution:</b> {algorithmResults.resolution}
             </p>
-            <div className='flex justify-center my-1'>
+            <div className='my-1 flex justify-center'>
               <Button size='sm' variant='outline' onClick={() => setShowTable(true)}>
                 Show Details ({algorithmResults.communities.length})
               </Button>
               <Dialog open={showTable}>
-                <DialogContent className='max-w-7xl max-h-[92vh] min-h-[60vh] flex flex-col'>
+                <DialogContent className='flex max-h-[92vh] min-h-[60vh] max-w-7xl flex-col'>
                   <DialogTitle>Leiden Communities</DialogTitle>
                   <DialogDescription>View the identified communities and their characteristics.</DialogDescription>
                   <Tabs defaultValue='table' className='w-full'>
@@ -154,7 +154,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                         </TabsTrigger>
                       </TabsList>
                     </div>
-                    <TabsContent value='table' className='flex flex-col max-h-[65vh]'>
+                    <TabsContent value='table' className='flex max-h-[65vh] flex-col'>
                       <div className='overflow-y-scroll'>
                         <DataTable
                           data={algorithmResults.communities.map((c, _i) => ({
@@ -183,7 +183,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                       <LeidenPieChart data={algorithmResults.communities} />
                     </TabsContent>
                   </Tabs>
-                  <DialogFooter className='gap-2 w-full'>
+                  <DialogFooter className='w-full gap-2'>
                     <Button
                       size={'icon'}
                       variant={'outline'}

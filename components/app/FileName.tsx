@@ -15,7 +15,7 @@ export const FileName = () => {
 
   return (
     <Input
-      className='text-sm font-semibold max-w-fit h-8'
+      className='h-8 max-w-fit font-semibold text-sm'
       value={projectTitle}
       onChange={e => useStore.setState({ projectTitle: e.target.value })}
     />
@@ -34,8 +34,8 @@ export const MouseControlMessage = () => {
           onClick={() => setVisible(false)}
           onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setVisible(false)}
         >
-          <span className='absolute inline-flex h-[150%] w-[150%] z-50 animate-ping rounded-full -left-1 -bottom-3 bg-sky-400 opacity-75' />
-          <span className='absolute inline-flex size-2.5 rounded-full -bottom-2 bg-sky-500' />
+          <span className='-left-1 -bottom-3 absolute z-50 inline-flex h-[150%] w-[150%] animate-ping rounded-full bg-sky-400 opacity-75' />
+          <span className='-bottom-2 absolute inline-flex size-2.5 rounded-full bg-sky-500' />
         </span>
       )}
     </>

@@ -60,9 +60,9 @@ export function StatisticsTab() {
   };
 
   return (
-    <div className='flex flex-col my-6 pb-6 gap-4 mx-4'>
-      <h1 className='text-center text-4xl font-bold w-full'>Network Info</h1>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2'>
+    <div className='mx-4 my-6 flex flex-col gap-4 pb-6'>
+      <h1 className='w-full text-center font-bold text-4xl'>Network Info</h1>
+      <div className='grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6'>
         <Card>
           <CardHeader>
             <CardTitle className='pb-4'>Total Genes</CardTitle>
@@ -113,9 +113,9 @@ export function StatisticsTab() {
           <CardTitle>Gene Degree Distribution</CardTitle>
           <CardDescription>Histogram showing the frequency of node degrees</CardDescription>
         </CardHeader>
-        <CardContent className='justify-center flex'>
+        <CardContent className='flex justify-center'>
           {networkStatistics.degreeDistribution ? (
-            <ChartContainer className='max-h-[400px] w-full safari-only-svg-fix' config={{}}>
+            <ChartContainer className='safari-only-svg-fix max-h-[400px] w-full' config={{}}>
               <BarChart data={networkStatistics.degreeDistribution}>
                 <CartesianGrid strokeDasharray='3 3' />
                 <XAxis
@@ -146,7 +146,7 @@ export function StatisticsTab() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue='degree'>
-            <TabsList className='flex w-full mb-4'>
+            <TabsList className='mb-4 flex w-full'>
               {CENTRALITY_CONFIGS.map(config => (
                 <TabsTrigger key={config.value} className='w-full' value={config.value}>
                   {config.label}
@@ -158,22 +158,22 @@ export function StatisticsTab() {
               return (
                 <TabsContent key={config.value} value={config.value}>
                   <Tabs defaultValue='chart'>
-                    <div className='flex justify-between items-center mb-4'>
-                      <div className='flex-1 flex justify-end' />
+                    <div className='mb-4 flex items-center justify-between'>
+                      <div className='flex flex-1 justify-end' />
                       <div className='flex justify-center'>
                         <TabsList>
                           <TabsTrigger value='chart'>Chart View</TabsTrigger>
                           <TabsTrigger value='table'>Table View</TabsTrigger>
                         </TabsList>
                       </div>
-                      <div className='flex-1 flex justify-end'>
+                      <div className='flex flex-1 justify-end'>
                         <Button
                           variant='outline'
                           size={'icon'}
                           className='hover:bg-muted hover:text-muted-foreground'
                           onClick={() => handleDownload(config.value, data)}
                         >
-                          <DownloadIcon className='w-5 h-5' />
+                          <DownloadIcon className='size-5' />
                         </Button>
                       </div>
                     </div>
@@ -187,7 +187,7 @@ export function StatisticsTab() {
                     </TabsContent>
                     <TabsContent value='chart'>
                       {data ? (
-                        <ChartContainer className='max-h-[400px] w-full safari-only-svg-fix' config={{}}>
+                        <ChartContainer className='safari-only-svg-fix max-h-[400px] w-full' config={{}}>
                           <BarChart data={data}>
                             <CartesianGrid strokeDasharray='3 3' />
                             <XAxis dataKey='geneName' label={{ value: 'Gene', position: 'insideBottom', offset: -5 }} />
@@ -210,7 +210,7 @@ export function StatisticsTab() {
               );
             })}
           </Tabs>
-          <p className='text-xs text-muted-foreground'>
+          <p className='text-muted-foreground text-xs'>
             * If 10 nodes are not available, it means the network has less than 10 nodes.
           </p>
         </CardContent>
@@ -225,9 +225,9 @@ export function StatisticsTab() {
             greater than or equal to a certain value.
           </CardDescription>
         </CardHeader>
-        <CardContent className='justify-center flex'>
+        <CardContent className='flex justify-center'>
           {networkStatistics.edgeScoreDistribution ? (
-            <ChartContainer className='max-h-[400px] w-full safari-only-svg-fix' config={{}}>
+            <ChartContainer className='safari-only-svg-fix max-h-[400px] w-full' config={{}}>
               <AreaChart data={networkStatistics.edgeScoreDistribution}>
                 <CartesianGrid strokeDasharray='3 3' />
                 <XAxis dataKey='score' label={{ value: 'Interaction Score', position: 'insideBottom', offset: -5 }} />

@@ -1,6 +1,5 @@
 'use client';
-
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { redirect } from 'next/navigation';
@@ -35,7 +34,7 @@ import { GeneSearch, NodeColor, NodeSize } from '.';
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
   const geneIDs = useStore(useShallow(state => state.geneNames.map(g => state.geneNameToID.get(g) ?? g)));
-  const bringCommon = useRef<boolean>(true);
+  const skipCommon = useRef<boolean>(false);
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
   const [diseaseMap, setDiseaseMap] = React.useState<string>('MONDO_0004976');
 
@@ -54,18 +53,17 @@ export function LeftSideBar() {
     })();
   }, []);
 
-  const [fetchHeader, { loading, called }] = useLazyQuery<GetHeadersData, GetHeadersVariables>(
-    GET_HEADERS_QUERY(bringCommon.current),
-    { returnPartialData: true },
-  );
+  const [fetchHeader, { loading, called }] = useLazyQuery<GetHeadersData, GetHeadersVariables>(GET_HEADERS_QUERY, {
+    returnPartialData: true,
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Fetchdata dependency is redundant
   useEffect(() => {
     if (!diseaseName) return;
     fetchHeader({
-      query: GET_HEADERS_QUERY(bringCommon.current),
       variables: {
         disease: diseaseName,
+        skipCommon: skipCommon.current,
       },
     })
       .then(val => {
@@ -79,7 +77,7 @@ export function LeftSideBar() {
           },
           user: useStore.getState().radioOptions.user,
         };
-        if (bringCommon.current) {
+        if (!skipCommon.current) {
           for (const { name, description } of data.common ?? []) {
             for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
               if (new RegExp(`^${field}_`, 'i').test(name)) {
@@ -91,7 +89,7 @@ export function LeftSideBar() {
             }
           }
         }
-        bringCommon.current = false;
+        skipCommon.current = true;
         for (const { name, description } of data.disease ?? []) {
           for (const field of DISEASE_DEPENDENT_PROPERTIES) {
             if (field === 'OpenTargets') continue;
@@ -138,7 +136,7 @@ export function LeftSideBar() {
   }, [geneIDs]);
 
   const [fetchUniversal, { loading: universalLoading }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
-    GENE_UNIVERSAL_QUERY(),
+    GENE_UNIVERSAL_QUERY,
   );
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
@@ -211,12 +209,12 @@ export function LeftSideBar() {
   }
 
   return (
-    <ScrollArea className='border-r p-2 flex flex-col h-[calc(96vh-1.5px)]'>
+    <ScrollArea className='flex h-[calc(96vh-1.5px)] flex-col border-r p-2'>
       <Export />
       <Tooltip>
         <TooltipTrigger className='relative'>
           <MouseControlMessage />
-          <SquareDashedMousePointerIcon className='h-4 w-4' />
+          <SquareDashedMousePointerIcon className='size-4' />
         </TooltipTrigger>
         <TooltipContent align='start' className='max-w-96 text-sm'>
           <ol>
@@ -226,7 +224,7 @@ export function LeftSideBar() {
               <b>
                 <i>Shortcut: </i>
               </b>
-              <kbd className='border rounded-md px-1'> Shift(⇧) + Click</kbd> & Drag
+              <kbd className='rounded-md border px-1'> Shift(⇧) + Click</kbd> & Drag
             </li>
             <br />
             <li>
@@ -236,7 +234,7 @@ export function LeftSideBar() {
               <b>
                 <i>Shortcut: </i>
               </b>
-              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Hover</kbd>
+              <kbd className='rounded-md border px-1'>Cmd/Ctrl(⌘) + Hover</kbd>
             </li>
             <br />
             <li>
@@ -245,13 +243,13 @@ export function LeftSideBar() {
               <b>
                 <i>Shortcut: </i>
               </b>
-              <kbd className='border rounded-md px-1'>Cmd/Ctrl(⌘) + Click</kbd>
+              <kbd className='rounded-md border px-1'>Cmd/Ctrl(⌘) + Click</kbd>
             </li>
           </ol>
         </TooltipContent>
       </Tooltip>
       <div className='flex flex-col'>
-        <Label className='font-bold mb-2'>Disease Map</Label>
+        <Label className='mb-2 font-bold'>Disease Map</Label>
         <div className='flex items-center gap-2'>
           <motion.div layout transition={{ duration: 0.1, ease: 'easeInOut' }} initial={{ width: '100%' }} animate>
             <DiseaseMapCombobox
@@ -277,7 +275,7 @@ export function LeftSideBar() {
       </div>
       <NodeColor onPropChange={val => handlePropChange(val, 'color')} />
       <NodeSize onPropChange={val => handlePropChange(val, 'size')} />
-      <div className='flex flex-col space-y-2 mb-2'>
+      <div className='mb-2 flex flex-col space-y-2'>
         <GeneSearch />
         <FileSheet />
       </div>

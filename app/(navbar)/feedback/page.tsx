@@ -73,8 +73,8 @@ export default function AboutPage() {
   const feedbackId = useId();
 
   return (
-    <div className='w-full max-w-5xl my-8 mx-auto'>
-      <Card className='border grid md:grid-cols-2'>
+    <div className='mx-auto my-8 w-full max-w-5xl'>
+      <Card className='grid border md:grid-cols-2'>
         <div>
           <CardHeader>
             <CardTitle className='text-lg'>We Value Your Feedback</CardTitle>
@@ -83,26 +83,26 @@ export default function AboutPage() {
           <CardContent className='pt-6'>
             {submitted ? (
               submitted !== 'failed' ? (
-                <div className='flex flex-col items-center justify-center py-6 text-center space-y-4'>
+                <div className='flex flex-col items-center justify-center space-y-4 py-6 text-center'>
                   <div className='rounded-full bg-teal-100 p-3 dark:bg-teal-900/30'>
-                    <CheckCircle className='h-8 w-8 text-teal-600 dark:text-teal-400' />
+                    <CheckCircle className='size-8 text-teal-600 dark:text-teal-400' />
                   </div>
-                  <h3 className='text-xl font-medium'>Thank You!</h3>
+                  <h3 className='font-medium text-xl'>Thank You!</h3>
                   <p className='text-muted-foreground'>Your feedback has been submitted successfully.</p>
                   <Button
                     variant='outline'
-                    className='mt-4 border hover:text-gray-600 text-teal-700 hover:bg-teal-50 dark:text-teal-300 dark:hover:bg-teal-900/20'
+                    className='mt-4 border text-teal-700 hover:bg-teal-50 hover:text-gray-600 dark:text-teal-300 dark:hover:bg-teal-900/20'
                     onClick={() => setSubmitted(false)}
                   >
                     Submit Another Response
                   </Button>
                 </div>
               ) : (
-                <div className='flex flex-col items-center justify-center py-6 text-center space-y-4'>
+                <div className='flex flex-col items-center justify-center space-y-4 py-6 text-center'>
                   <div className='rounded-full bg-red-100 p-3 dark:bg-red-900/30'>
-                    <CircleX className='h-8 w-8 text-red-600 dark:text-red-400' />
+                    <CircleX className='size-8 text-red-600 dark:text-red-400' />
                   </div>
-                  <h3 className='text-xl font-medium'>Submission Failed</h3>
+                  <h3 className='font-medium text-xl'>Submission Failed</h3>
                   <p>Please try submitting your feedback using the alternative form.</p>
                   <Link href='https://forms.gle/qtNssDeVEW24gRVg8' target='_blank' className='text-accent underline'>
                     Open Alternative Form
@@ -154,14 +154,14 @@ export default function AboutPage() {
                           setFormData(prev => ({ ...prev, rating: star }));
                           setErrors(prev => ({ ...prev, rating: false }));
                         }}
-                        className='focus:outline-hidden p-1'
+                        className='p-1 focus:outline-hidden'
                       >
                         <StarIcon
                           size={28}
                           fill={formData.rating && star <= formData.rating ? '#FFD700' : 'none'}
                           stroke='#FFD700'
                           strokeWidth={2}
-                          className='hover:fill-yellow-500 hover:stroke-yellow-500 transition-colors duration-200'
+                          className='transition-colors duration-200 hover:fill-yellow-500 hover:stroke-yellow-500'
                         />
                       </button>
                     ))}
@@ -188,7 +188,7 @@ export default function AboutPage() {
           {!submitted && (
             <CardFooter>
               <Button onClick={handleSubmit} className='w-full'>
-                {loading && <Spinner variant={1} className='text-white mr-2' size={'small'} />}
+                {loading && <Spinner variant={1} className='mr-2 text-white' size={'small'} />}
                 Submit Feedback
               </Button>
             </CardFooter>
@@ -200,7 +200,7 @@ export default function AboutPage() {
           width={500}
           height={500}
           priority
-          className='hidden md:block object-cover rounded-r-lg w-full h-full'
+          className='hidden h-full w-full rounded-r-lg object-cover md:block'
         />
       </Card>
     </div>

@@ -21,16 +21,16 @@ export function Legend() {
   }, []);
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm text-xs'>
-      <div className='flex items-center justify-between w-full'>
+    <Collapsible defaultOpen className='mb-2 rounded border p-2 text-xs shadow-sm'>
+      <div className='flex w-full items-center justify-between'>
         <p className='font-bold'>Legends</p>
         <CollapsibleTrigger asChild>
-          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+          <Button type='button' variant='outline' size='icon' className='size-6'>
             <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>
-      <CollapsibleContent className='flex flex-col gap-2 p-1 items-center'>
+      <CollapsibleContent className='flex flex-col items-center gap-2 p-1'>
         {selectedRadioNodeColor ? (
           selectedRadioNodeColor === 'Pathway' ? (
             <BinaryLegend />

@@ -34,13 +34,10 @@ Dependencies not to upgrade:
 
 ```
 @radix-ui/react-scroll-area past v1.2.0
-@apollo/client to v4.x.x
 ```
 
 - Don't use the latest version of @radix-ui/react-scroll-area as it messes up with the scroll position in the left side bar. v1.2.0 is the latest version that works fine with the current codebase.
 **Hours wasted:** 3hr
-
-- Don't upgrade the @apollo/client dependency past v3.14.0 as it doesn't allow changing query on a hook which is needed in [LeftSideBar.tsx](components/left-panel/LeftSideBar.tsx) to change the query based on which execution of that query.
 
 - While building this project in Dockerized form or publishing the website in production, I encourage you to upload videos (as maintaining it in `git lfs` is going to cost it), please keep all the related videos in [this folder](/public/video/). All the videos are currently uploaded in this [gdrive folder](https://drive.google.com/drive/folders/1LvPTY8Z559shYoWTaSOHFuWOFKGG8QHv), you can download them from there and upload them in the above-mentioned folder.
 

@@ -132,7 +132,7 @@ export function ChatWindow() {
   const textAreaRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <form onSubmit={handleSubmit} className='w-full mx-auto h-[10%] relative flex flex-col items-center'>
+    <form onSubmit={handleSubmit} className='relative mx-auto flex h-[10%] w-full flex-col items-center'>
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -140,7 +140,7 @@ export function ChatWindow() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             style={{ height: chatHeight ?? '85vh' }}
-            className='absolute bottom-[10vh] m-1 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden w-[98%]'
+            className='absolute bottom-[10vh] m-1 w-[98%] overflow-hidden rounded-lg shadow-lg backdrop-blur-sm'
           >
             <motion.div
               drag='y'
@@ -148,35 +148,35 @@ export function ChatWindow() {
               onDrag={handleDrag}
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0}
-              className='cursor-ns-resize h-4 w-full bg-gray-200 flex items-center justify-center'
+              className='flex h-4 w-full cursor-ns-resize items-center justify-center bg-gray-200'
             >
               <GripHorizontalIcon className='size-4 text-gray-400' />
             </motion.div>
-            <div className='flex justify-between items-center p-4 bg-gray-100 border-b'>
+            <div className='flex items-center justify-between border-b bg-gray-100 p-4'>
               <div className='flex items-center gap-4'>
-                <h2 className='text-lg font-semibold'>Chat with LLM </h2>
+                <h2 className='font-semibold text-lg'>Chat with LLM </h2>
               </div>
               <div className='flex items-center space-x-8'>
                 <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
-                  <Trash2Icon className='w-5 h-5' />
+                  <Trash2Icon className='size-5' />
                 </button>
                 <button
                   type='button'
                   onClick={() => setIsChatOpen(false)}
                   className='text-gray-500 hover:text-gray-700'
                 >
-                  <ChevronDownIcon className='w-6 h-6' />
+                  <ChevronDownIcon className='size-6' />
                 </button>
               </div>
             </div>
-            <div ref={chatRef} className='max-h-[87%] overflow-y-scroll p-2 space-y-2'>
+            <div ref={chatRef} className='max-h-[87%] space-y-2 overflow-y-scroll p-2'>
               {messages.map(message => (
                 <div
                   key={`${message.content}-${message.role}`}
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-full px-4 py-1 rounded-lg ${
+                    className={`max-w-full rounded-lg px-4 py-1 ${
                       message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   >
@@ -186,9 +186,9 @@ export function ChatWindow() {
               ))}
               {isLoading && (
                 <div className='flex justify-start'>
-                  <div className='bg-gray-200 rounded-lg p-4 max-w-xs w-full'>
-                    <Skeleton className='h-4 bg-gray-300 w-3/4 mb-2 ' />
-                    <Skeleton className='h-4 bg-gray-300 w-1/2 ' />
+                  <div className='w-full max-w-xs rounded-lg bg-gray-200 p-4'>
+                    <Skeleton className='mb-2 h-4 w-3/4 bg-gray-300' />
+                    <Skeleton className='h-4 w-1/2 bg-gray-300' />
                   </div>
                 </div>
               )}
@@ -197,11 +197,11 @@ export function ChatWindow() {
               <center>
                 <Alert className='w-3/4'>
                   <TriangleAlertIcon size={20} />
-                  <AlertTitle className='font-bold flex w-full justify-between items-center'>
+                  <AlertTitle className='flex w-full items-center justify-between font-bold'>
                     Disclaimer{' '}
                     <XIcon
                       size={15}
-                      className='hover:border rounded m-2'
+                      className='m-2 rounded hover:border'
                       onClick={() => {
                         setShowAlert(false);
                         localStorage.setItem('showAlert', 'false');
@@ -209,7 +209,7 @@ export function ChatWindow() {
                     />
                   </AlertTitle>
                   <AlertDescription>
-                    <p className='text-sm items-center'>
+                    <p className='items-center text-sm'>
                       This AI assistant may occasionally generate incorrect or misleading information. We are not
                       responsible for any decisions made based on the generated content. By using this service, you
                       agree to our{' '}
@@ -235,12 +235,12 @@ export function ChatWindow() {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className='flex w-full h-full mb-4' ref={textAreaRef}>
+      <div className='mb-4 flex h-full w-full' ref={textAreaRef}>
         <div className='relative flex w-[97%]'>
           <Select value={model} onValueChange={value => setModel(value as typeof model)}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <SelectTrigger className='w-[110px] backdrop-blur-xs absolute -top-10 right-5 shrink-0'>
+                <SelectTrigger className='-top-10 absolute right-5 w-[110px] shrink-0 backdrop-blur-xs'>
                   <SelectValue placeholder='Select model' />
                 </SelectTrigger>
               </TooltipTrigger>
@@ -259,10 +259,10 @@ export function ChatWindow() {
             onChange={e => setInputValue(e.target.value)}
             placeholder='To chat with LLM, Type your message...'
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSubmit(e)}
-            className='px-4 py-2 rounded-md resize-none ml-2'
+            className='ml-2 resize-none rounded-md px-4 py-2'
           />
-          <button type='submit' className='relative right-8  text-blue-500 hover:text-blue-600'>
-            <SendIcon className='w-5 h-5' />
+          <button type='submit' className='relative right-8 text-blue-500 hover:text-blue-600'>
+            <SendIcon className='size-5' />
           </button>
         </div>
         {!isChatOpen && isChatInitiated && (
@@ -271,9 +271,9 @@ export function ChatWindow() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setIsChatOpen(true)}
-            className='relative self-end h-10 bg-blue-500 text-white rounded-full p-2 right-4 shadow-lg hover:bg-blue-600 transition-colors duration-200'
+            className='relative right-4 h-10 self-end rounded-full bg-blue-500 p-2 text-white shadow-lg transition-colors duration-200 hover:bg-blue-600'
           >
-            <MessageCircleIcon className='w-6 h-6' />
+            <MessageCircleIcon className='size-6' />
           </motion.button>
         )}
       </div>

@@ -3,9 +3,9 @@ import aboutImage from '@/public/image/about-architecture.jpg';
 
 export default function AboutPage() {
   return (
-    <div className='flex flex-col space-y-8 items-center'>
+    <div className='flex flex-col items-center space-y-8'>
       <div>
-        <h1 className='text-2xl font-bold mb-2'>About The Tool</h1>
+        <h1 className='mb-2 font-bold text-2xl'>About The Tool</h1>
         <p>
           We present a novel web-based bioinformatics tool designed to facilitate the identification of novel
           therapeutic targets and biomarkers for drug discovery. The tool integrates multi-omics datasets rooted in
@@ -20,7 +20,7 @@ export default function AboutPage() {
         </p>
       </div>
       <div>
-        <h1 className='text-2xl font-bold mb-2'>Tool Architecture</h1>
+        <h1 className='mb-2 font-bold text-2xl'>Tool Architecture</h1>
         <p>
           The tool consists of three core components: a <span className='font-semibold underline'>knowledge graph</span>
           , which maps relationships between pathways, targets, and diseases; a{' '}
@@ -31,7 +31,7 @@ export default function AboutPage() {
           diagram, explaining the same:
         </p>
       </div>
-      <Image src={aboutImage} alt='about-architecture' className='w-2/3 shadow-md border rounded-md' />
+      <Image src={aboutImage} alt='about-architecture' className='w-2/3 rounded-md border shadow-md' />
     </div>
   );
 }

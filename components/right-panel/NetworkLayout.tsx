@@ -33,26 +33,26 @@ export function NetworkLayout() {
   const networkAnimationControlId = useId();
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm'>
-      <div className='flex items-center justify-between w-full'>
+    <Collapsible defaultOpen className='mb-2 rounded border p-2 shadow-sm'>
+      <div className='flex w-full items-center justify-between'>
         <p className='font-bold'>Network Layout</p>
         <CollapsibleTrigger asChild>
-          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+          <Button type='button' variant='outline' size='icon' className='size-6'>
             <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent className='flex flex-col gap-2'>
         <div className='flex items-center gap-2'>
-          <Label htmlFor={networkAnimationControlId} className='text-xs font-semibold'>
+          <Label htmlFor={networkAnimationControlId} className='font-semibold text-xs'>
             Animation
           </Label>
           <Switch id={networkAnimationControlId} defaultChecked onCheckedChange={handleGraphAnimation} />
         </div>
         {forceLayoutOptions.map(option => (
-          <div key={option.key} className='flex space-x-2 items-center'>
-            <div className='flex flex-col space-y-2 w-full'>
-              <Label htmlFor={option.key} className='text-xs font-semibold flex gap-1 items-center'>
+          <div key={option.key} className='flex items-center space-x-2'>
+            <div className='flex w-full flex-col space-y-2'>
+              <Label htmlFor={option.key} className='flex items-center gap-1 font-semibold text-xs'>
                 {option.label}
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -75,7 +75,7 @@ export function NetworkLayout() {
             </div>
             <Input
               type='number'
-              className='w-16 h-8'
+              className='h-8 w-16'
               min={option.min}
               max={option.max}
               step={option.step}

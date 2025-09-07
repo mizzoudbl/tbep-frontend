@@ -44,17 +44,17 @@ export function GeneSearch() {
 
   return (
     <div>
-      <div className='flex justify-between my-1'>
+      <div className='my-1 flex justify-between'>
         <button
           type='button'
-          className='text-xs underline cursor-pointer text-zinc-500'
+          className='cursor-pointer text-xs text-zinc-500 underline'
           onClick={() => useStore.setState({ nodeSearchQuery: geneIDs.join('\n') })}
         >
           #Seed Genes
         </button>
         <button
           type='button'
-          className='inline-flex text-xs underline cursor-pointer text-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed'
+          className='inline-flex cursor-pointer text-xs text-zinc-500 underline disabled:cursor-not-allowed disabled:opacity-50'
           disabled={nodeSearchQuery.length === 0}
           onClick={() =>
             eventEmitter.emit(Events.EXPORT, {
@@ -68,12 +68,12 @@ export function GeneSearch() {
       </div>
       <div className='relative w-full'>
         {suggestions.length > 0 && (
-          <ul className='absolute z-10 w-full mt-0.5 bg-white border border-gray-300 rounded-md shadow-xs max-h-32 overflow-auto text-xs'>
+          <ul className='absolute z-10 mt-0.5 max-h-32 w-full overflow-auto rounded-md border border-gray-300 bg-white text-xs shadow-xs'>
             {suggestions.map((suggestion, index) => (
               // biome-ignore lint/a11y/useKeyWithClickEvents: Not possible to use key events with click events
               <li
                 key={suggestion}
-                className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${index === selectedIndex ? 'bg-gray-100' : ''}`}
+                className={`cursor-pointer px-2 py-1 hover:bg-gray-100 ${index === selectedIndex ? 'bg-gray-100' : ''}`}
                 onClick={() => appendSuggestion(suggestion)}
               >
                 {suggestion}

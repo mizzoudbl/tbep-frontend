@@ -49,7 +49,7 @@ export function DataTable<TData>({
 
   return (
     <div>
-      <div className={cn('flex items-center py-4 p-2', filterColumnName ? 'justify-between' : 'justify-end')}>
+      <div className={cn('flex items-center p-2 py-4', filterColumnName ? 'justify-between' : 'justify-end')}>
         {filterColumnName && (
           <Input
             placeholder={placeholder ?? `Filter ${filterColumnName.replace('_', ' ')}s...`}

@@ -4,27 +4,27 @@ import { collaborators, footerLinks } from '@/lib/data';
 
 export default function Footer() {
   return (
-    <footer className='bg-teal-800 text-white p-4 relative bottom-0'>
+    <footer className='relative bottom-0 bg-teal-800 p-4 text-white'>
       <div className='container mx-auto px-4'>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+        <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
           <div className='flex flex-col'>
-            <h3 className='text-lg font-semibold mb-4 '>Quick Links</h3>
+            <h3 className='mb-4 font-semibold text-lg'>Quick Links</h3>
             <div className='grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2'>
               {footerLinks.map(link => (
-                <Link key={link.href} href={link.href} className='hover:text-teal-200 mb-2'>
+                <Link key={link.href} href={link.href} className='mb-2 hover:text-teal-200'>
                   {link.text}
                 </Link>
               ))}
             </div>
           </div>
           <div className='flex flex-col'>
-            <h3 className='text-lg font-semibold mb-4'>Collaborating Institutions</h3>
+            <h3 className='mb-4 font-semibold text-lg'>Collaborating Institutions</h3>
             {collaborators.map(institution => (
               <Link
                 key={institution.href}
                 href={institution.href}
                 target='_blank'
-                className='flex items-center mb-2 hover:text-teal-200 cursor-pointer'
+                className='mb-2 flex cursor-pointer items-center hover:text-teal-200'
               >
                 <Image
                   src={institution.logo}
@@ -38,10 +38,10 @@ export default function Footer() {
             ))}
           </div>
           <div className='flex flex-col gap-2'>
-            <h3 className='text-lg font-semibold'>Contact</h3>
+            <h3 className='font-semibold text-lg'>Contact</h3>
             <p>
               For any usage queries, please refer to documentation or contact our team via email
-              <Link href='/team' className='text-teal-300 hover:text-teal-200 ml-1 underline'>
+              <Link href='/team' className='ml-1 text-teal-300 underline hover:text-teal-200'>
                 here.
               </Link>
             </p>
