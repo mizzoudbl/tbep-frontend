@@ -17,7 +17,7 @@ const navbar = (
 );
 
 const footer = (
-  <Footer className='flex-col border-t  items-center md:items-start'>
+  <Footer className='flex-col items-center border-t md:items-start'>
     <p>
       <a href='/' className='hover:underline'>
         Target & Biomarker Exploration Portal
@@ -32,19 +32,19 @@ const footer = (
         CC BY-NC 4.0
         <Image
           width={22}
-          className='align-text-bottom ml-1'
+          className='ml-1 align-text-bottom'
           src='https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1'
           alt=''
         />
         <Image
           width={22}
-          className='align-text-bottom ml-1'
+          className='ml-1 align-text-bottom'
           src='https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1'
           alt=''
         />
         <Image
           width={22}
-          className='align-text-bottom ml-1'
+          className='ml-1 align-text-bottom'
           src='https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1'
           alt=''
         />

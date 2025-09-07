@@ -1,8 +1,8 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @import "tw-animate-css";
 
 /* Optional: import Nextra theme styles */
-@import 'nextra-theme-docs/style.css';
+@import "nextra-theme-docs/style.css";
 
 @variant dark (&:is(.dark *));
 
@@ -132,8 +132,8 @@
 
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
     margin: 0;
+    -webkit-appearance: none;
   }
 
   input[type="number"] {

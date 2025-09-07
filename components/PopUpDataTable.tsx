@@ -43,7 +43,7 @@ export default function PopUpDataTable<E, F>({
     <Dialog open={open}>
       <DialogContent
         aria-describedby='dialog-description'
-        className='max-w-7xl max-h-[90vh] min-h-[60vh] flex flex-col'
+        className='flex max-h-[90vh] min-h-[60vh] max-w-7xl flex-col'
       >
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogDescription>
@@ -51,7 +51,7 @@ export default function PopUpDataTable<E, F>({
         </DialogDescription>
         <div className='grow overflow-y-scroll'>
           <Tabs defaultValue={tabsTitle?.[0]}>
-            <TabsList className={cn('w-full grid', `grid-cols-${tabsTitle?.length}`)}>
+            <TabsList className={cn('grid w-full', `grid-cols-${tabsTitle?.length}`)}>
               {tabsTitle?.map(title => (
                 <TabsTrigger key={title} value={title}>
                   {title}
@@ -76,7 +76,7 @@ export default function PopUpDataTable<E, F>({
             </TabsContent>
           </Tabs>
         </div>
-        <DialogFooter className='gap-2 w-full'>
+        <DialogFooter className='w-full gap-2'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size={'icon'} variant={'outline'}>

@@ -1,6 +1,7 @@
 'use client';
-import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
-import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
+import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-typename';
+import { ApolloProvider } from '@apollo/client/react';
 import { envURL } from './utils';
 
 const httpLink = new HttpLink({
@@ -9,7 +10,7 @@ const httpLink = new HttpLink({
 });
 
 const client = new ApolloClient({
-  link: ApolloLink.from([removeTypenameFromVariables(), httpLink]),
+  link: ApolloLink.from([new RemoveTypenameFromVariablesLink(), httpLink]),
   cache: new InMemoryCache(),
   assumeImmutableResults: true,
 });

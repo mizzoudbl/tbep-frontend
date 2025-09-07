@@ -28,15 +28,15 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
   }, [activeTab]);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className='h-screen flex flex-col bg-gray-100'>
-      <div className='flex justify-between bg-muted h-8 px-4'>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className='flex h-screen flex-col bg-gray-100'>
+      <div className='flex h-8 justify-between bg-muted px-4'>
         <Button variant='hover' size='icon' className='h-full' onClick={() => setLeftSidebar(!leftSidebar)}>
-          {leftSidebar ? <ChevronLeft className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
+          {leftSidebar ? <ChevronLeft className='size-4' /> : <ChevronRight className='size-4' />}
         </Button>
-        <Suspense fallback={<Input className='text-sm font-semibold max-w-fit h-8' value={'Untitled'} />}>
+        <Suspense fallback={<Input className='h-8 max-w-fit font-semibold text-sm' value={'Untitled'} />}>
           <FileName />
         </Suspense>
-        <TabsList className='flex items-center gap-4 h-8 w-1/2'>
+        <TabsList className='flex h-8 w-1/2 items-center gap-4'>
           <TabsTrigger className='w-full' value='Network'>
             Network Visualization
           </TabsTrigger>
@@ -50,20 +50,20 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
         <div className='flex items-center gap-4'>
           <Link
             href={'/'}
-            className='hidden md:inline-flex p-2 items-center h-full transition-colors text-xs border-none rounded-sm hover:bg-opacity-20 hover:text-black hover:underline'
+            className='hidden h-full items-center rounded-sm border-none p-2 text-xs transition-colors hover:bg-opacity-20 hover:text-black hover:underline md:inline-flex'
           >
-            <HomeIcon className='h-3 w-3 mr-1 inline' /> Home
+            <HomeIcon className='mr-1 inline size-3' /> Home
           </Link>
           <Link
             href={'/docs'}
             target='_blank'
-            className='hidden md:inline-flex p-2 items-center h-full transition-colors text-xs border-none rounded-sm hover:bg-opacity-20 hover:text-black hover:underline'
+            className='hidden h-full items-center rounded-sm border-none p-2 text-xs transition-colors hover:bg-opacity-20 hover:text-black hover:underline md:inline-flex'
           >
-            <FileTextIcon className='h-3 w-3 mr-1 inline' /> Docs
+            <FileTextIcon className='mr-1 inline size-3' /> Docs
           </Link>
         </div>
         <Button variant='hover' size='icon' className='h-full' onClick={() => setRightSidebar(!rightSidebar)}>
-          {rightSidebar ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
+          {rightSidebar ? <ChevronRight className='size-4' /> : <ChevronLeft className='size-4' />}
         </Button>
       </div>
       <ResizablePanelGroup direction='horizontal' className='flex flex-1'>
@@ -75,16 +75,16 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
           <TabsContent
             forceMount
             value='Network'
-            className={cn('h-full mt-0', activeTab === 'Network' ? 'visible' : 'invisible fixed')}
+            className={cn('mt-0 h-full', activeTab === 'Network' ? 'visible' : 'invisible fixed')}
           >
             {children}
           </TabsContent>
-          <TabsContent value='Statistics' className='h-full mt-0'>
+          <TabsContent value='Statistics' className='mt-0 h-full'>
             <ScrollArea className='h-full'>
               <StatisticsTab />
             </ScrollArea>
           </TabsContent>
-          <TabsContent value='Heatmap' className='h-full mt-0'>
+          <TabsContent value='Heatmap' className='mt-0 h-full'>
             <ScrollArea className='h-full'>
               <OpenTargetsHeatmap />
             </ScrollArea>

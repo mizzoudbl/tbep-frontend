@@ -70,7 +70,7 @@ export default function History({
   return (
     <div className='h-[89%]'>
       <div className='flex justify-between'>
-        <h3 className='text-2xl font-semibold mb-1'>History</h3>
+        <h3 className='mb-1 font-semibold text-2xl'>History</h3>
         {(history.length || null) && (
           <Button
             size='icon'
@@ -90,11 +90,11 @@ export default function History({
             <AlertDialogDescription className='text-black'>
               This action cannot be undone. This will permanently delete all the files.
             </AlertDialogDescription>
-            <div className='flex items-center space-x-2 mt-4'>
+            <div className='mt-4 flex items-center space-x-2'>
               <Checkbox id={doNotShowAgainId} onCheckedChange={handleConfirmDialogChange} />
               <Label
                 htmlFor={doNotShowAgainId}
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                className='font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
               >
                 Do not show again
               </Label>
@@ -108,7 +108,7 @@ export default function History({
       </AlertDialog>
       {history.length > 0 ? (
         <ScrollArea className='h-full'>
-          <div className='space-y-4 pr-2 flex flex-col'>
+          <div className='flex flex-col space-y-4 pr-2'>
             {history.map((item, index) => (
               <Card key={`${item.title}-${item.createdAt ?? index}`}>
                 <CardHeader className='p-2'>
@@ -116,7 +116,7 @@ export default function History({
                     <Input
                       type='text'
                       name='title'
-                      className='h-fit w-fit border-none shadow-none p-1 underline'
+                      className='h-fit w-fit border-none p-1 underline shadow-none'
                       defaultValue={item.title}
                       onBlur={e => {
                         const newHistory = history.map(historyItem =>
@@ -127,7 +127,7 @@ export default function History({
                       }}
                     />
                   </CardTitle>
-                  <div className='pl-1 text-xs text-muted-foreground'>
+                  <div className='pl-1 text-muted-foreground text-xs'>
                     <p>{item.seedGenes.length > 30 ? `${item.seedGenes.slice(0, 30)}...` : item.seedGenes}</p>
                     <p>
                       {item.diseaseMap} : Order - {item.order} :{' '}
@@ -138,24 +138,24 @@ export default function History({
                     </p>
                   </div>
                 </CardHeader>
-                <CardFooter className='p-1 flex flex-row-reverse'>
+                <CardFooter className='flex flex-row-reverse p-1'>
                   <button
                     type='button'
-                    className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
+                    className='rounded p-1 transition-colors hover:bg-zinc-300 hover:text-black'
                     onClick={() => removeHistory(item.title)}
                   >
                     <Trash2Icon size={20} />
                   </button>
                   <button
                     type='button'
-                    className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
+                    className='rounded p-1 transition-colors hover:bg-zinc-300 hover:text-black'
                     onClick={() => handleGenerateGraph(index)}
                   >
                     <ExternalLinkIcon size={20} />
                   </button>
                   <button
                     type='button'
-                    className='hover:bg-zinc-300 hover:text-black p-1 rounded transition-colors'
+                    className='rounded p-1 transition-colors hover:bg-zinc-300 hover:text-black'
                     onClick={() => {
                       setFormData({
                         diseaseMap: item.diseaseMap,
@@ -175,7 +175,7 @@ export default function History({
           </div>
         </ScrollArea>
       ) : (
-        <p className='text-center h-full italic grid place-items-center text-lg'>No history available</p>
+        <p className='grid h-full place-items-center text-center text-lg italic'>No history available</p>
       )}
     </div>
   );

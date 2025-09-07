@@ -33,9 +33,9 @@ export function RadialAnalysis() {
     <div className='flex flex-col gap-1'>
       {radialAnalysisOptions.map((option, idx) => (
         <div key={option.key} className='space-y-1'>
-          <div className='flex space-x-2 items-center'>
-            <div className='flex flex-col space-y-2 w-full'>
-              <Label htmlFor={option.key} className='text-xs font-semibold flex gap-1 items-center'>
+          <div className='flex items-center space-x-2'>
+            <div className='flex w-full flex-col space-y-2'>
+              <Label htmlFor={option.key} className='flex items-center gap-1 font-semibold text-xs'>
                 {option.label}
                 <Tooltip>
                   <TooltipTrigger asChild>

@@ -1,10 +1,10 @@
 import { FileTextIcon, HelpCircleIcon, InfoIcon, MessageSquareMore, TvMinimalPlayIcon, Users2Icon } from 'lucide-react';
 
 export const links = [
-  { href: '/docs', text: 'Docs', icon: <HelpCircleIcon className='mr-2 h-4 w-4' /> },
-  { href: '/about', text: 'About', icon: <InfoIcon className='mr-2 h-4 w-4' /> },
-  { href: '/team', text: 'Team', icon: <Users2Icon className='mr-2 h-4 w-4' /> },
-  { href: '/feedback', text: 'Feedback', icon: <MessageSquareMore className='mr-2 h-4 w-4' /> },
+  { href: '/docs', text: 'Docs', icon: <HelpCircleIcon className='mr-2 size-4' /> },
+  { href: '/about', text: 'About', icon: <InfoIcon className='mr-2 size-4' /> },
+  { href: '/team', text: 'Team', icon: <Users2Icon className='mr-2 size-4' /> },
+  { href: '/feedback', text: 'Feedback', icon: <MessageSquareMore className='mr-2 size-4' /> },
 ];
 
 export const databaseStats = [
@@ -19,19 +19,19 @@ export const databaseStats = [
 export const getStartedLinks = [
   {
     href: '/docs',
-    icon: <HelpCircleIcon className='w-8 h-8' />,
+    icon: <HelpCircleIcon className='size-8' />,
     title: 'Documentation',
     description: 'Browse detailed guides and documentation',
   },
   {
     href: '/docs/CHANGELOG',
-    icon: <FileTextIcon className='w-8 h-8' />,
+    icon: <FileTextIcon className='size-8' />,
     title: 'Latest Updates',
     description: 'Stay current with our newest features and changes',
   },
   {
     href: '/docs/use-cases-and-short-help-videos',
-    icon: <TvMinimalPlayIcon className='w-8 h-8' />,
+    icon: <TvMinimalPlayIcon className='size-8' />,
     title: 'Tutorial Videos',
     description: 'Watch our video tutorials to get started',
   },

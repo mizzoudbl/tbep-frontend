@@ -84,24 +84,24 @@ export function Chat() {
   };
 
   return (
-    <div className='rounded-lg border shadow-md mt-4 p-4 flex flex-col'>
+    <div className='mt-4 flex flex-col rounded-lg border p-4 shadow-md'>
       {isChatOpen && (
-        <div className='p-2 space-y-2'>
+        <div className='space-y-2 p-2'>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className='flex justify-between pb-2 border-b'>
+            <div className='flex justify-between border-b pb-2'>
               Chat with LLM
               <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
-                <Trash2Icon className='w-5 h-5' />
+                <Trash2Icon className='size-5' />
               </button>
             </div>
-            <div ref={chatRef} className='max-h-[70vh] overflow-y-scroll p-2 space-y-2'>
+            <div ref={chatRef} className='max-h-[70vh] space-y-2 overflow-y-scroll p-2'>
               {messages.map(message => (
                 <div
                   key={`${message.content}-${message.role}`}
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-full px-4 py-1 rounded-lg ${
+                    className={`max-w-full rounded-lg px-4 py-1 ${
                       message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   >
@@ -115,9 +115,9 @@ export function Chat() {
               ))}
               {isLoading && (
                 <div className='flex justify-start'>
-                  <div className='bg-gray-200 rounded-lg p-4 max-w-xs w-full'>
-                    <Skeleton className='h-4 bg-gray-300 w-3/4 mb-2 ' />
-                    <Skeleton className='h-4 bg-gray-300 w-1/2 ' />
+                  <div className='w-full max-w-xs rounded-lg bg-gray-200 p-4'>
+                    <Skeleton className='mb-2 h-4 w-3/4 bg-gray-300' />
+                    <Skeleton className='h-4 w-1/2 bg-gray-300' />
                   </div>
                 </div>
               )}
@@ -131,13 +131,13 @@ export function Chat() {
           onChange={e => setInputValue(e.target.value)}
           placeholder='To chat with LLM, Type your message...'
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSubmit(e)}
-          className='px-4 py-2 min-h-10 rounded-md'
+          className='min-h-10 rounded-md px-4 py-2'
         />
         <Button type='submit' size='icon' disabled={isLoading || inputValue.trim() === ''} onClick={handleSubmit}>
-          <SendIcon className='w-5 h-5' />
+          <SendIcon className='size-5' />
         </Button>
       </div>
-      <div className='flex mt-2'>
+      <div className='mt-2 flex'>
         <Select value={model} onValueChange={value => setModel(value as typeof model)}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -155,7 +155,7 @@ export function Chat() {
             ))}
           </SelectContent>
         </Select>
-        <center className='text-sm ml-0.5 text-gray-500'>
+        <center className='ml-0.5 text-gray-500 text-sm'>
           This AI assistant may occasionally generate incorrect or misleading information. We are not responsible for
           any decisions made based on the generated content. By using this service, you agree to our{' '}
           <Link href='/docs/terms-of-use' className='font-medium underline underline-offset-4 hover:text-primary'>

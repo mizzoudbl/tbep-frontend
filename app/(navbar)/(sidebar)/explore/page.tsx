@@ -1,6 +1,6 @@
 'use client';
 
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import { AlertTriangleIcon, HistoryIcon, InfoIcon, LoaderIcon } from 'lucide-react';
 import Image from 'next/image';
 import React, { type ChangeEvent, useId } from 'react';
@@ -298,40 +298,40 @@ export default function Explore() {
   const seedFileId = useId();
 
   return (
-    <div className='relative mx-auto max-w-7xl min-h-[60vh]'>
+    <div className='relative mx-auto min-h-[60vh] max-w-7xl'>
       <Tabs defaultValue='search'>
-        <TabsList className='w-full h-auto grid grid-cols-1 sm:grid-cols-2 bg-white border border-teal-100 shadow-xs gap-2 sm:gap-0 p-2 sm:p-0'>
+        <TabsList className='grid h-auto w-full grid-cols-1 gap-2 border border-teal-100 bg-white p-2 shadow-xs sm:grid-cols-2 sm:gap-0 sm:p-0'>
           <TabsTrigger
             value='search'
-            className='w-full justify-start text-left p-3 sm:p-4 rounded-md text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white min-h-[70px] sm:min-h-[80px]'
+            className='min-h-[70px] w-full justify-start rounded-md p-3 text-left text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white sm:min-h-[80px] sm:p-4'
           >
-            <div className='flex flex-col items-start w-full'>
-              <span className='text-sm sm:text-base lg:text-lg font-semibold bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text text-transparent leading-tight'>
+            <div className='flex w-full flex-col items-start'>
+              <span className='bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text font-semibold text-sm text-transparent leading-tight sm:text-base lg:text-lg'>
                 Search by Multiple Genes
               </span>
-              <span className='text-xs text-wrap md:text-sm text-slate-600 mt-1 leading-tight'>
+              <span className='mt-1 text-wrap text-slate-600 text-xs leading-tight md:text-sm'>
                 Paste genes/ENSG IDs and verify before building a network
               </span>
             </div>
           </TabsTrigger>
           <TabsTrigger
             value='upload'
-            className='w-full justify-start text-left p-3 sm:p-4 rounded-md text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white min-h-[70px] sm:min-h-[80px]'
+            className='min-h-[70px] w-full justify-start rounded-md p-3 text-left text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white sm:min-h-[80px] sm:p-4'
           >
-            <div className='flex flex-col items-start w-full'>
-              <span className='text-sm sm:text-base lg:text-lg font-semibold bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text text-transparent leading-tight'>
+            <div className='flex w-full flex-col items-start'>
+              <span className='bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text font-semibold text-sm text-transparent leading-tight sm:text-base lg:text-lg'>
                 Build your own Network (ByoN)
               </span>
-              <span className='text-xs md:text-sm text-wrap text-slate-600 mt-1 leading-tight'>
+              <span className='mt-1 text-wrap text-slate-600 text-xs leading-tight md:text-sm'>
                 Upload CSV/JSON to create a custom interaction network
               </span>
             </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value='search' className='mt-4'>
-          <div className='space-y-5 rounded-lg border border-teal-100 bg-white p-4 sm:p-6 shadow-xs'>
+          <div className='space-y-5 rounded-lg border border-teal-100 bg-white p-4 shadow-xs sm:p-6'>
             <div className='flex justify-between'>
-              <div className='flex flex-col h-2 sm:flex-row sm:items-center'>
+              <div className='flex h-2 flex-col sm:flex-row sm:items-center'>
                 <div className='flex items-center gap-2'>
                   <Switch checked={autofill} onCheckedChange={setAutofill} id={autoFillToggleId} />
                   <Label htmlFor={autoFillToggleId} className='whitespace-nowrap'>
@@ -368,15 +368,15 @@ export default function Explore() {
                       required
                       name='autofill-num'
                       min={1}
-                      className='w-20 h-8'
+                      className='h-8 w-20'
                       placeholder='e.g. 25'
                       defaultValue={25}
                       disabled={autofillLoading || topGenesLoading}
                     />
-                    <Button type='submit' disabled={autofillLoading || topGenesLoading} className='h-8 text-sm px-3'>
+                    <Button type='submit' disabled={autofillLoading || topGenesLoading} className='h-8 px-3 text-sm'>
                       {autofillLoading || topGenesLoading ? (
                         <>
-                          <LoaderIcon className='animate-spin mr-1' size={14} /> Auto-filling...
+                          <LoaderIcon className='mr-1 animate-spin' size={14} /> Auto-filling...
                         </>
                       ) : (
                         'Autofill'
@@ -385,7 +385,7 @@ export default function Explore() {
                   </form>
                 )}
               </div>
-              <Button variant='outline' size='sm' className='h-8 text-sm px-3' onClick={() => setHistoryOpen(true)}>
+              <Button variant='outline' size='sm' className='h-8 px-3 text-sm' onClick={() => setHistoryOpen(true)}>
                 <HistoryIcon size={16} className='mr-1' />
                 History
               </Button>
@@ -397,7 +397,7 @@ export default function Explore() {
                   (one-per-line or CSV; examples:
                   <button
                     type='button'
-                    className='underline cursor-pointer ml-1'
+                    className='ml-1 cursor-pointer underline'
                     onClick={() => setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' })}
                     onKeyDown={e => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -410,7 +410,7 @@ export default function Explore() {
                   </button>
                   <button
                     type='button'
-                    className='underline cursor-pointer ml-2'
+                    className='ml-2 cursor-pointer underline'
                     onClick={() =>
                       setFormData({
                         ...formData,
@@ -433,7 +433,7 @@ export default function Explore() {
                   </button>
                   <button
                     type='button'
-                    className='underline cursor-pointer ml-2'
+                    className='ml-2 cursor-pointer underline'
                     onClick={() => setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' })}
                     onKeyDown={e => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -483,7 +483,7 @@ export default function Explore() {
                 disabled={autofillLoading}
               />
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
               <div className='space-y-1'>
                 <div className='flex items-end gap-1'>
                   <Label htmlFor='diseaseMap'>Disease Map</Label>
@@ -546,18 +546,18 @@ export default function Explore() {
               <Button
                 type='button'
                 onClick={handleSubmit}
-                className='relative overflow-hidden w-3/4 font-semibold hover:opacity-90'
+                className='relative w-3/4 overflow-hidden font-semibold hover:opacity-90'
               >
                 {/* Animated background inside the button */}
                 <AnimatedNetworkBackground
-                  className='absolute inset-0 w-full h-full pointer-events-none opacity-40'
+                  className='pointer-events-none absolute inset-0 h-full w-full opacity-40'
                   moving={loading}
                   speedMultiplier={10}
                 />
                 <span className='relative z-10 flex items-center justify-center'>
                   {loading ? (
                     <>
-                      <LoaderIcon className='animate-spin mr-2' size={20} /> Checking {geneIDs.length} Genes...
+                      <LoaderIcon className='mr-2 animate-spin' size={20} /> Checking {geneIDs.length} Genes...
                     </>
                   ) : (
                     'Submit'
@@ -576,14 +576,14 @@ export default function Explore() {
           <AlertDialog open={showAlert}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className='text-red-500 flex items-center'>
+                <AlertDialogTitle className='flex items-center text-red-500'>
                   <AlertTriangleIcon size={24} className='mr-2' /> Warning!
                 </AlertDialogTitle>
                 <AlertDialogDescription className='text-black'>
                   You are about to generate a graph with a large number of nodes/edges. This may take a long time to
                   complete.
                 </AlertDialogDescription>
-                <p className='text-black font-semibold'>Are you sure you want to proceed?</p>
+                <p className='font-semibold text-black'>Are you sure you want to proceed?</p>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel onClick={() => setShowAlert(false)}>Cancel</AlertDialogCancel>
@@ -616,8 +616,8 @@ export default function Explore() {
           </Sheet>
         </TabsContent>
         <TabsContent value='upload' className='mt-4'>
-          <div className='mx-auto rounded-lg shadow-md p-4 border border-teal-100 bg-white'>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 items-start'>
+          <div className='mx-auto rounded-lg border border-teal-100 bg-white p-4 shadow-md'>
+            <div className='grid grid-cols-1 items-start gap-4 lg:grid-cols-2'>
               <form
                 onSubmit={e => {
                   e.preventDefault();
@@ -626,9 +626,9 @@ export default function Explore() {
                 className='space-y-4'
               >
                 <div>
-                  <div className='flex justify-between items-center mb-2'>
+                  <div className='mb-2 flex items-center justify-between'>
                     <Label htmlFor={uploadFileId}>Upload CSV or JSON</Label>
-                    <p className='text-zinc-500 text-sm'>
+                    <p className='text-sm text-zinc-500'>
                       (CSV examples:{' '}
                       <a href={'/example1.csv'} download className='underline'>
                         #1
@@ -645,35 +645,35 @@ export default function Explore() {
                     accept='.csv,.json'
                     onChange={handleFileChange}
                     required
-                    className='border-2 border-dashed cursor-pointer h-12'
+                    className='h-12 cursor-pointer border-2 border-dashed'
                   />
-                  <p className='text-xs text-zinc-500 mt-2'>
+                  <p className='mt-2 text-xs text-zinc-500'>
                     • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
                     <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
                   </p>
                 </div>
                 <Button
                   type='submit'
-                  className='relative overflow-hidden w-full bg-teal-600 hover:bg-teal-700 text-white'
+                  className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
                 >
                   <AnimatedNetworkBackground
-                    className='absolute inset-0 w-full h-full pointer-events-none opacity-35'
+                    className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
                     moving={uploadLoading}
                     speedMultiplier={2.2}
                   />
                   <span className='relative z-10 flex items-center justify-center'>
-                    {uploadLoading && <LoaderIcon className='animate-spin mr-2' size={20} />} Submit
+                    {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
                   </span>
                 </Button>
               </form>
-              <div className='mt-2 lg:mt-0 border-l-2 pl-4'>
-                <h3 className='text-lg font-semibold mb-3'>File Format Preview</h3>
+              <div className='mt-2 border-l-2 pl-4 lg:mt-0'>
+                <h3 className='mb-3 font-semibold text-lg'>File Format Preview</h3>
                 <Image
                   src={'/image/uploadFormat.svg'}
                   width={400}
                   height={400}
                   alt='CSV file format example'
-                  className='w-full max-w-3xl mx-auto mix-blend-multiply'
+                  className='mx-auto w-full max-w-3xl mix-blend-multiply'
                 />
               </div>
             </div>

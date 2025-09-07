@@ -37,7 +37,7 @@ export function Combobox({
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className={cn('w-[200px] justify-between text-wrap break-words h-8', className)}
+          className={cn('h-8 w-[200px] justify-between text-wrap break-words', className)}
         >
           <span className='truncate'>
             {multiselect && value instanceof Set
@@ -46,7 +46,7 @@ export function Combobox({
                 : placeholder
               : value || placeholder}
           </span>
-          <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <ChevronsUpDownIcon className='ml-2 size-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className={cn('w-[200px] p-0', className)}>
@@ -69,12 +69,12 @@ export function Combobox({
                         setOpen(false);
                       }
                     }}
-                    className='flex justify-between w-full'
+                    className='flex w-full justify-between'
                   >
                     <div className='flex items-center'>
                       <CheckIcon
                         className={cn(
-                          'mr-2 h-4 w-4',
+                          'mr-2 size-4',
                           (multiselect && value instanceof Set ? value.has(propertyName) : value === propertyName)
                             ? 'opacity-100'
                             : 'opacity-0',
@@ -85,7 +85,7 @@ export function Combobox({
                     {typeof item !== 'string' && item.description && (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <InfoIcon className='h-4 w-4 ml-4 cursor-pointer' />
+                          <InfoIcon className='ml-4 size-4 cursor-pointer' />
                         </TooltipTrigger>
                         <TooltipContent side='right' align='start' className='max-w-80'>
                           {item.description}

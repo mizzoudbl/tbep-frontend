@@ -40,19 +40,19 @@ export function NetworkStyle() {
   const highlightNeighborNodesId = useId();
 
   return (
-    <Collapsible defaultOpen className='mb-2 border p-2 rounded shadow-sm text-xs'>
-      <div className='flex items-center justify-between w-full'>
+    <Collapsible defaultOpen className='mb-2 rounded border p-2 text-xs shadow-sm'>
+      <div className='flex w-full items-center justify-between'>
         <p className='font-bold'>Network Style</p>
         <CollapsibleTrigger asChild>
-          <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+          <Button type='button' variant='outline' size='icon' className='size-6'>
             <ChevronsUpDownIcon size={15} />
           </Button>
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent className='flex flex-col gap-2'>
-        <div className='flex space-x-2 items-center'>
-          <div className='flex flex-col space-y-1 w-full'>
-            <Label htmlFor={defaultNodeSizeId} className='text-xs font-semibold'>
+        <div className='flex items-center space-x-2'>
+          <div className='flex w-full flex-col space-y-1'>
+            <Label htmlFor={defaultNodeSizeId} className='font-semibold text-xs'>
               Node Size
             </Label>
             <Slider
@@ -67,7 +67,7 @@ export function NetworkStyle() {
           </div>
           <Input
             type='number'
-            className='w-16 h-8'
+            className='h-8 w-16'
             min={1}
             max={50}
             step={1}
@@ -75,9 +75,9 @@ export function NetworkStyle() {
             onChange={e => handleDefaultChange(Number.parseInt(e.target.value, 10), 'defaultNodeSize')}
           />
         </div>
-        <div className='flex space-x-2 items-center'>
-          <div className='flex flex-col space-y-1 w-full'>
-            <Label htmlFor={defaultLabelSizeId} className='text-xs font-semibold'>
+        <div className='flex items-center space-x-2'>
+          <div className='flex w-full flex-col space-y-1'>
+            <Label htmlFor={defaultLabelSizeId} className='font-semibold text-xs'>
               Node Label Size
             </Label>
             <Slider
@@ -92,7 +92,7 @@ export function NetworkStyle() {
           </div>
           <Input
             type='number'
-            className='w-16 h-8'
+            className='h-8 w-16'
             min={1}
             max={50}
             step={1}
@@ -100,9 +100,9 @@ export function NetworkStyle() {
             onChange={e => handleDefaultChange(Number.parseInt(e.target.value, 10), 'defaultLabelSize')}
           />
         </div>
-        <div className='flex space-x-2 items-center'>
-          <div className='flex flex-col space-y-1 w-full'>
-            <Label htmlFor={defaultLabelDensityId} className='text-xs font-semibold flex gap-1 items-center'>
+        <div className='flex items-center space-x-2'>
+          <div className='flex w-full flex-col space-y-1'>
+            <Label htmlFor={defaultLabelDensityId} className='flex items-center gap-1 font-semibold text-xs'>
               Label Density
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -125,7 +125,7 @@ export function NetworkStyle() {
           </div>
           <Input
             type='number'
-            className='w-16 h-8'
+            className='h-8 w-16'
             min={1}
             max={50}
             step={1}
@@ -141,7 +141,7 @@ export function NetworkStyle() {
               checked={showEdgeColor}
               onCheckedChange={checked => handleCheckBox(checked, 'showEdgeColor')}
             />
-            <Label htmlFor={showEdgeColorId} className='text-xs font-semibold'>
+            <Label htmlFor={showEdgeColorId} className='font-semibold text-xs'>
               Show Edge Color
             </Label>
           </div>
@@ -151,7 +151,7 @@ export function NetworkStyle() {
               checked={highlightNeighborNodes}
               onCheckedChange={checked => handleCheckBox(checked, 'highlightNeighborNodes')}
             />
-            <Label htmlFor={highlightNeighborNodesId} className='text-xs font-semibold flex gap-1 items-center'>
+            <Label htmlFor={highlightNeighborNodesId} className='flex items-center gap-1 font-semibold text-xs'>
               Highlight Neighbor Genes
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -165,10 +165,10 @@ export function NetworkStyle() {
           </div>
         </div>
         <div>
-          <Label htmlFor={edgeOpacityId} className='text-xs font-semibold'>
+          <Label htmlFor={edgeOpacityId} className='font-semibold text-xs'>
             Edge Opacity
           </Label>
-          <div className='flex items-center text-xs space-x-2'>
+          <div className='flex items-center space-x-2 text-xs'>
             <Slider
               min={0}
               max={1}
@@ -189,7 +189,7 @@ export function NetworkStyle() {
           </div>
         </div>
         <div>
-          <Label htmlFor='defaultNodeColor' className='text-xs font-semibold'>
+          <Label htmlFor='defaultNodeColor' className='font-semibold text-xs'>
             Node Color
           </Label>
           <ColorPicker color={defaultNodeColor} property='defaultNodeColor' className='w-full' />

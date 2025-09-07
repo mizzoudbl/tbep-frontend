@@ -15,10 +15,10 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
   const selectedNodeColorProperty = useStore(state => state.selectedNodeColorProperty);
 
   return (
-    <Collapsible defaultOpen className='my-2 border p-2 rounded shadow-sm'>
-      <div className='flex items-center justify-between w-full'>
+    <Collapsible defaultOpen className='my-2 rounded border p-2 shadow-sm'>
+      <div className='flex w-full items-center justify-between'>
         <Label className='font-bold'>Node Color</Label>
-        <div className='space-x-1 flex items-center'>
+        <div className='flex items-center space-x-1'>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -26,7 +26,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
                 type='button'
                 variant='outline'
                 size='icon'
-                className='w-6 h-6'
+                className='size-6'
               >
                 <RefreshCcwIcon size={15} />
               </Button>
@@ -36,7 +36,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
             </TooltipContent>
           </Tooltip>
           <CollapsibleTrigger asChild>
-            <Button type='button' variant='outline' size='icon' className='w-6 h-6'>
+            <Button type='button' variant='outline' size='icon' className='size-6'>
               <ChevronsUpDownIcon size={15} />
             </Button>
           </CollapsibleTrigger>
@@ -71,7 +71,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
             <VirtualizedCombobox
               key={radioValue}
               data={[...radioOptions.database[radioValue], ...radioOptions.user[radioValue]]}
-              className='w-full mt-2'
+              className='mt-2 w-full'
               value={selectedNodeColorProperty}
               onChange={onPropChange}
               width={radioValue === 'TE' ? '550px' : '800px'}
@@ -81,7 +81,7 @@ export function NodeColor({ onPropChange }: { onPropChange: (prop: string | Set<
             <Combobox
               key={radioValue}
               data={[...radioOptions.database[radioValue], ...radioOptions.user[radioValue]]}
-              className='w-full mt-2'
+              className='mt-2 w-full'
               value={selectedNodeColorProperty}
               onChange={onPropChange}
             />

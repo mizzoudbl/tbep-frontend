@@ -10,12 +10,12 @@ const CustomTooltip = ({ active, payload }: TooltipContentProps<string, string>)
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className='p-2 bg-white border border-gray-200 shadow-md rounded-md'>
+      <div className='rounded-md border border-gray-200 bg-white p-2 shadow-md'>
         <p className='font-bold text-primary'>{data.name}</p>
         <p>Percentage: {data.percentage}%</p>
         <p>Gene Count: {data.count}</p>
         <p>Average Degree: {data.averageDegree}</p>
-        <p className='italic mt-1 text-sm'>Click to view genes</p>
+        <p className='mt-1 text-sm italic'>Click to view genes</p>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export function LeidenPieChart({
   return (
     <>
       <ChartContainer
-        className='max-h-[65vh] w-[70%] aspect-square [&_.recharts-pie-label-text]:fill-foreground'
+        className='aspect-square max-h-[65vh] w-[70%] [&_.recharts-pie-label-text]:fill-foreground'
         config={data.reduce<Record<string, { label: string; color: string }>>((acc, c) => {
           acc[c.name] = {
             label: c.name,
@@ -79,10 +79,10 @@ export function LeidenPieChart({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className='p-2 border rounded shadow-sm bg-white'
+            className='rounded border bg-white p-2 shadow-sm'
           >
             <div className='flex gap-2'>
-              <h3 className='font-bold mb-2'>Genes in {data[selectedClusterIndex].name}:</h3>
+              <h3 className='mb-2 font-bold'>Genes in {data[selectedClusterIndex].name}:</h3>
               <button
                 type='button'
                 onClick={() => setSelectedClusterIndex(null)}
@@ -91,8 +91,8 @@ export function LeidenPieChart({
                 <XSquareIcon size={20} />
               </button>
             </div>
-            <ScrollArea className='h-[53vh] border rounded'>
-              <ul className='list-disc ml-6'>
+            <ScrollArea className='h-[53vh] rounded border'>
+              <ul className='ml-6 list-disc'>
                 {data[selectedClusterIndex].genes.map(gene => (
                   <li key={gene}>{gene}</li>
                 ))}

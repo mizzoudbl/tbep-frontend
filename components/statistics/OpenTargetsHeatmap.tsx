@@ -1,6 +1,5 @@
 'use client';
-
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -164,13 +163,14 @@ export function OpenTargetsHeatmap() {
           }, [])
           .sort()
       : geneIds;
-
+    const updatedPagination = { ...pagination, page: 1 };
+    useStore.setState({ heatmapPagination: updatedPagination });
     runQuery({
       variables: {
         geneIds: tmpGeneIdsToQuery,
         diseaseId,
         orderBy: orderByStringToEnum(sortingColumn),
-        page: pagination,
+        page: updatedPagination,
       },
     });
   };
@@ -202,7 +202,7 @@ export function OpenTargetsHeatmap() {
   return (
     <div className='h-full'>
       <div className='flex items-center gap-4 p-4'>
-        <div className='flex text-nowrap font-semibold items-center gap-2'>
+        <div className='flex items-center gap-2 text-nowrap font-semibold'>
           <Checkbox checked={showOnlyVisible} onCheckedChange={toggleOnlyVisible} className='shrink-0' />
           Show only visible
         </div>
@@ -262,8 +262,8 @@ export function OpenTargetsHeatmap() {
           </div>
         </TabsContent>
       </Tabs>
-      <div className='flex flex-col items-center w-full mt-2 gap-2'>
-        <div className='flex items-center justify-center gap-2 w-full'>
+      <div className='mt-2 flex w-full flex-col items-center gap-2'>
+        <div className='flex w-full items-center justify-center gap-2'>
           <Button
             variant='outline'
             size='sm'

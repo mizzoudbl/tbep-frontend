@@ -62,7 +62,7 @@ export function HeatmapTable<T extends object>({
 
   return (
     <div ref={containerRef} className='w-full overflow-auto'>
-      <Table className='min-w-full text-sm table-fixed'>
+      <Table className='min-w-full table-fixed text-sm'>
         <colgroup>
           <col style={{ width: labelColWidth }} />
           {table
@@ -75,14 +75,14 @@ export function HeatmapTable<T extends object>({
               />
             ))}
         </colgroup>
-        <TableHeader className='h-32 sticky top-0 z-10 bg-white'>
+        <TableHeader className='sticky top-0 z-10 h-32 bg-white'>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id} className='hover:bg-transparent'>
               {headerGroup.headers.map((header, j) => (
                 <TableHead
                   key={header.id}
                   className={cn(
-                    'px-1 py-2 border-b font-semibold text-left align-bottom cursor-pointer text-xs md:text-sm',
+                    'cursor-pointer border-b px-1 py-2 text-left align-bottom font-semibold text-xs md:text-sm',
                     header.column.getCanSort() && 'hover:font-extrabold',
                     loading && 'pointer-events-none opacity-50',
                   )}
@@ -144,13 +144,13 @@ export function HeatmapTable<T extends object>({
                       <Skeleton className='h-4 w-16' />
                     ) : colIndex === 1 ? (
                       // Association score column gets a square skeleton
-                      <div className='flex justify-center items-center h-8'>
-                        <Skeleton className='w-6 h-6 rounded-md' />
+                      <div className='flex h-8 items-center justify-center'>
+                        <Skeleton className='size-6 rounded-md' />
                       </div>
                     ) : (
                       // Other columns get circular skeletons
-                      <div className='flex justify-center items-center h-8'>
-                        <Skeleton className='w-6 h-6 rounded-full' />
+                      <div className='flex h-8 items-center justify-center'>
+                        <Skeleton className='size-6 rounded-full' />
                       </div>
                     )}
                   </TableCell>
@@ -160,7 +160,7 @@ export function HeatmapTable<T extends object>({
           ) : data.length === 0 ? (
             // No data state
             <TableRow>
-              <TableCell colSpan={columns.length} className='text-center py-8 text-muted-foreground'>
+              <TableCell colSpan={columns.length} className='py-8 text-center text-muted-foreground'>
                 No data available
               </TableCell>
             </TableRow>
@@ -195,10 +195,10 @@ export function HeatmapTable<T extends object>({
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className='flex justify-start items-center h-8'>
+                            <div className='flex h-8 items-center justify-start'>
                               <span
                                 className={cn(
-                                  'inline-block w-6 h-6 border border-gray-400',
+                                  'inline-block size-6 border border-gray-400',
                                   cell.column.id === 'Association Score' ? 'rounded-md' : 'rounded-full',
                                 )}
                                 style={{ background: colorScale?.(value, cell.column.id) ?? '#e3f0fa' }}

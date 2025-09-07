@@ -7,7 +7,7 @@ import { ChatWindow } from '@/components/chat';
 
 const SigmaContainer = dynamic(() => import('@/components/graph').then(module => module.SigmaContainer), {
   loading: () => (
-    <div className='w-full h-full grid place-items-center'>
+    <div className='grid h-full w-full place-items-center'>
       <div className='flex flex-col items-center'>
         <Spinner />
         Loading...

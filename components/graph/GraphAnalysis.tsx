@@ -1,6 +1,5 @@
 'use client';
-
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import { useSigma } from '@react-sigma/core';
 import { fitViewportToNodes } from '@sigma/utils';
 import { scaleLinear } from 'd3-scale';
@@ -48,7 +47,7 @@ export function GraphAnalysis({
   const nodeDegreeProperty = useStore(state => state.radialAnalysis.nodeDegreeProperty);
   const universalData = useStore(state => state.universalData);
 
-  const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY());
+  const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
@@ -60,7 +59,10 @@ export function GraphAnalysis({
       const isNodeDegree = nodeDegreeProperty === 'Gene Degree';
       if (!isNodeDegree) {
         await fetchUniversal({
-          variables: { geneIDs: graph.nodes(), config: [{ properties: [`TE_${nodeDegreeProperty}`] }] },
+          variables: {
+            geneIDs: graph.nodes(),
+            config: [{ properties: [`TE_${nodeDegreeProperty}`] }],
+          },
         }).then(({ data }) => {
           const minMax = [Number.POSITIVE_INFINITY, 0];
           for (const gene of data?.genes ?? []) {
@@ -316,7 +318,7 @@ export function GraphAnalysis({
   return (
     <>
       {Object.keys(communityMap).length > 0 && (
-        <div className='absolute bottom-1 left-2 space-y-1 flex flex-col max-h-56 overflow-scroll border shadow-sm rounded-md backdrop-blur-sm p-2'>
+        <div className='absolute bottom-1 left-2 flex max-h-56 flex-col space-y-1 overflow-scroll rounded-md border p-2 shadow-sm backdrop-blur-sm'>
           {Object.entries(communityMap).map(([id, val], _idx) => (
             <div key={id} className='flex items-center gap-1'>
               <Checkbox

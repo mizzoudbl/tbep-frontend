@@ -34,15 +34,15 @@ export function NetworkInfo() {
   }, [selectedNodes]);
 
   return (
-    <div className='mb-2 border p-2 rounded shadow-sm text-xs'>
-      <p className='font-bold mb-2'>Network Info</p>
+    <div className='mb-2 rounded border p-2 text-xs shadow-sm'>
+      <p className='mb-2 font-bold'>Network Info</p>
       <div className='flex justify-between'>
         <div className='flex flex-col gap-1'>
           <span>Total Nodes: {totalNodes}</span>
           <span>Total Edges: {totalEdges}</span>
         </div>
         {(selectedNodes.length || null) && (
-          <Button variant='outline' size='sm' className='font-semibold text-wrap' onClick={() => setShowTable(true)}>
+          <Button variant='outline' size='sm' className='text-wrap font-semibold' onClick={() => setShowTable(true)}>
             Selected Genes Details ({selectedNodes.length})
           </Button>
         )}

@@ -4,7 +4,7 @@ import { Legend, NetworkAnalysis, NetworkInfo, NetworkLayout, NetworkStyle, Radi
 
 export function RightSideBar() {
   return (
-    <ScrollArea className='border-l p-2 text-xs flex flex-col h-[calc(96vh-1.5px)]'>
+    <ScrollArea className='flex h-[calc(96vh-1.5px)] flex-col border-l p-2 text-xs'>
       <NetworkAnalysis>
         <RadialAnalysis />
       </NetworkAnalysis>
