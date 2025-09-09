@@ -1,7 +1,6 @@
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { ExternalLinkIcon, EyeIcon, Trash2Icon } from 'lucide-react';
 import React, { useId } from 'react';
-import { interactionTypeMap } from '@/lib/data';
 import type { GraphConfigForm } from '@/lib/interface';
 import {
   AlertDialog,
@@ -130,11 +129,7 @@ export default function History({
                   <div className='pl-1 text-muted-foreground text-xs'>
                     <p>{item.seedGenes.length > 30 ? `${item.seedGenes.slice(0, 30)}...` : item.seedGenes}</p>
                     <p>
-                      {item.diseaseMap} : Order - {item.order} :{' '}
-                      {Array.isArray(item.interactionType)
-                        ? item.interactionType.map(type => interactionTypeMap[type] || type).join(', ')
-                        : interactionTypeMap[item.interactionType] || item.interactionType}{' '}
-                      : {item.minScore}
+                      {item.diseaseMap} : Order - {item.order} : : {item.minScore}
                     </p>
                   </div>
                 </CardHeader>

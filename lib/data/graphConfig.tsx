@@ -33,59 +33,24 @@ export type GeneProperties = DiseaseDependentProperties | DiseaseIndependentProp
 
 export const graphConfig = [
   {
-    name: 'Order',
+    name: 'Network Type',
     id: 'order',
     tooltipContent: (
       <>
         <u>Control how graph is created</u> <br />
-        <b>0 order:</b> only interconnections between seed genes
+        <b>Base Network:</b> only interconnections between seed genes
         <br />
-        <b>1st order:</b> connections between seed genes and their first neighbors
-        <br />
-        <b>2nd order:</b> interconnections between seed genes and their first neighbors
+        <b>Expanded Network:</b> interconnections between seed genes and their first neighbors
       </>
     ),
     options: [
       {
-        label: 'Zero',
+        label: 'Base Network',
         value: '0',
       },
       {
-        label: 'First',
-        value: '1',
-      },
-      {
-        label: 'Second',
+        label: 'Expanded Network',
         value: '2',
-      },
-    ],
-  },
-  {
-    name: 'Interaction Type',
-    id: 'interactionType',
-    tooltipContent: (
-      <>
-        <u>Interaction Database to generate the graph</u>
-        <br />
-        <b>STRING:</b> Protein-Protein Interactions
-        <br />
-        <b>IntAct:</b> Molecular Interaction Database
-        <br />
-        <b>BioGrid:</b> Biological General Repository for Interaction Datasets
-      </>
-    ),
-    options: [
-      {
-        value: 'PPI',
-        label: 'STRING',
-      },
-      {
-        value: 'INT_ACT',
-        label: 'IntAct',
-      },
-      {
-        value: 'BIO_GRID',
-        label: 'BioGrid',
       },
     ],
   },
@@ -102,15 +67,13 @@ export const graphConfig = [
       </>
     ),
     options: [
-      { label: 'Highest (0.9)', value: '0.9' },
-      { label: 'High (0.7)', value: '0.7' },
-      { label: 'Medium (0.4)', value: '0.4' },
-      { label: 'Low (0.15)', value: '0.15' },
+      { label: 'High (0.9)', value: '0.9' },
+      { label: 'Medium (0.7)', value: '0.7' },
+      { label: 'Low (0.4)', value: '0.4' },
     ],
   },
 ] as const;
 
-export type GeneInteractionType = (typeof graphConfig)[1]['options'][number]['value'];
 export interface GraphConfig {
   geneIDs: string[];
   diseaseMap: string;
@@ -120,6 +83,9 @@ export interface GraphConfig {
   graphName: string;
 }
 
-export const interactionTypeMap = Object.fromEntries(
-  (graphConfig.find(cfg => cfg.id === 'interactionType')?.options || []).map(opt => [opt.value, opt.label]),
-);
+export const interactionTypeMap: Record<string, string> = {
+  PPI: 'STRING',
+  INT_ACT: 'IntAct',
+  BIO_GRID: 'BioGrid',
+} as const;
+export type GeneInteractionType = 'PPI' | 'INT_ACT' | 'BIO_GRID';

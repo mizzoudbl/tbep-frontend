@@ -1,7 +1,7 @@
 'use client';
 
 import { useLazyQuery } from '@apollo/client/react';
-import { AlertTriangleIcon, HistoryIcon, InfoIcon, LoaderIcon } from 'lucide-react';
+import { AlertTriangleIcon, CheckCircleIcon, HistoryIcon, InfoIcon, LoaderIcon, UploadIcon, XIcon } from 'lucide-react';
 import Image from 'next/image';
 import React, { type ChangeEvent, useId } from 'react';
 import { toast } from 'sonner';
@@ -23,10 +23,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MultiSelect } from '@/components/ui/multiselect';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -62,7 +60,7 @@ export default function Explore() {
     seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
     diseaseMap: 'MONDO_0004976',
     order: '0',
-    interactionType: ['PPI'],
+    interactionType: ['PPI', 'INT_ACT', 'BIO_GRID'],
     minScore: '0.9',
   });
   const [history, setHistory] = React.useState<HistoryItem[]>([]);
@@ -70,7 +68,6 @@ export default function Explore() {
   const [geneIDs, setGeneIDs] = React.useState<string[]>([]);
   const [showAlert, setShowAlert] = React.useState(false);
   const [historyOpen, setHistoryOpen] = React.useState(false);
-  const [autofill, setAutofill] = React.useState(false);
   const [autofillLoading, setAutofillLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -86,7 +83,6 @@ export default function Explore() {
 
   const handleAutofill = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!autofill) return;
     const fd = new FormData(e.currentTarget);
     setAutofillLoading(true);
     try {
@@ -148,7 +144,6 @@ export default function Explore() {
   };
 
   const handleSelect = (val: string, key: string) => setFormData({ ...formData, [key]: val });
-  const handleMultiSelect = (vals: string[], key: string) => setFormData({ ...formData, [key]: vals });
 
   const handleFileRead = async (event: ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({ ...formData, seedGenes: event.target.value });
@@ -203,6 +198,7 @@ export default function Explore() {
   const [uploadTableOpen, setUploadTableOpen] = React.useState(false);
   const [uploadGeneIDs, setUploadGeneIDs] = React.useState<string[]>([]);
   const [uploadLoading, setUploadLoading] = React.useState(false);
+  const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -291,7 +287,6 @@ export default function Explore() {
     window.open(`/network?file=${encodeURIComponent(file?.name as string)}`, '_blank', 'noopener,noreferrer');
   };
 
-  const autoFillToggleId = useId();
   const autoFillNumId = useId();
   const seedGenesId = useId();
   const uploadFileId = useId();
@@ -329,164 +324,11 @@ export default function Explore() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value='search' className='mt-4'>
-          <div className='space-y-5 rounded-lg border border-teal-100 bg-white p-4 shadow-xs sm:p-6'>
-            <div className='flex justify-between'>
-              <div className='flex h-2 flex-col sm:flex-row sm:items-center'>
-                <div className='flex items-center gap-2'>
-                  <Switch checked={autofill} onCheckedChange={setAutofill} id={autoFillToggleId} />
-                  <Label htmlFor={autoFillToggleId} className='whitespace-nowrap'>
-                    Autofill Seed Genes
-                  </Label>
-                  <span className='flex items-center'>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon size={12} />
-                      </TooltipTrigger>
-                      <TooltipContent className='max-w-s'>
-                        <div>
-                          <div>
-                            <b>Autofill</b> the seed genes box with the top <b>n</b> genes for the selected disease.
-                          </div>
-                          <div>Genes are ranked by overall association score from the OpenTargets platform.</div>
-                          <div>
-                            <b>Note:</b> Autofill uses only one type of gene identifier as returned by the API.
-                          </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </span>
-                </div>
-                {autofill && (
-                  <form onSubmit={handleAutofill} className='flex items-center gap-2 sm:ml-4'>
-                    <Label htmlFor={autoFillNumId} className='text-sm'>
-                      No. of genes
-                    </Label>
-                    <Input
-                      id={autoFillNumId}
-                      type='number'
-                      inputMode='numeric'
-                      required
-                      name='autofill-num'
-                      min={1}
-                      className='h-8 w-20'
-                      placeholder='e.g. 25'
-                      defaultValue={25}
-                      disabled={autofillLoading || topGenesLoading}
-                    />
-                    <Button type='submit' disabled={autofillLoading || topGenesLoading} className='h-8 px-3 text-sm'>
-                      {autofillLoading || topGenesLoading ? (
-                        <>
-                          <LoaderIcon className='mr-1 animate-spin' size={14} /> Auto-filling...
-                        </>
-                      ) : (
-                        'Autofill'
-                      )}
-                    </Button>
-                  </form>
-                )}
-              </div>
-              <Button variant='outline' size='sm' className='h-8 px-3 text-sm' onClick={() => setHistoryOpen(true)}>
-                <HistoryIcon size={16} className='mr-1' />
-                History
-              </Button>
-            </div>
-            <div>
-              <div className='flex justify-between'>
-                <Label htmlFor={seedGenesId}>Seed Genes</Label>
-                <p className='text-zinc-500'>
-                  (one-per-line or CSV; examples:
-                  <button
-                    type='button'
-                    className='ml-1 cursor-pointer underline'
-                    onClick={() => setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' })}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' });
-                      }
-                    }}
-                  >
-                    #1
-                  </button>
-                  <button
-                    type='button'
-                    className='ml-2 cursor-pointer underline'
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        seedGenes:
-                          'ENSG00000185013\nENSG00000076685\nENSG00000166548\nENSG00000156136\nENSG00000114956\nENSG00000116981',
-                      })
-                    }
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setFormData({
-                          ...formData,
-                          seedGenes:
-                            'ENSG00000185013\nENSG00000076685\nENSG00000166548\nENSG00000156136\nENSG00000114956\nENSG00000116981',
-                        });
-                      }
-                    }}
-                  >
-                    #2
-                  </button>
-                  <button
-                    type='button'
-                    className='ml-2 cursor-pointer underline'
-                    onClick={() => setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' })}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' });
-                      }
-                    }}
-                  >
-                    #3
-                  </button>
-                  )
-                </p>
-              </div>
-              <Textarea
-                rows={3}
-                id={seedGenesId}
-                placeholder='Type seed genes (comma or newline separated)'
-                className='mt-2'
-                value={formData.seedGenes}
-                onChange={handleFileRead}
-                disabled={autofillLoading}
-                required
-              />
-              <div className='flex items-center gap-3 py-1'>
-                <div className='h-px flex-1 bg-slate-800/70' />
-                <span className='text-slate-400 text-xs'>OR</span>
-                <div className='h-px flex-1 bg-slate-800/70' />
-              </div>
-              <Label htmlFor={seedFileId} className='text-teal-900'>
-                Upload Text File
-              </Label>
-              <Input
-                id={seedFileId}
-                type='file'
-                accept='.txt'
-                className='h-10 cursor-pointer'
-                onChange={async e => {
-                  const f = e.target.files?.[0];
-                  if (!f) return;
-                  if (f?.type !== 'text/plain') {
-                    toast.error('Invalid file type', { cancel: { label: 'Close', onClick() {} } });
-                    return;
-                  }
-                  const text = await f.text();
-                  setFormData({ ...formData, seedGenes: text });
-                }}
-                disabled={autofillLoading}
-              />
-            </div>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
-              <div className='space-y-1'>
+          <div className='space-y-4 rounded-lg border border-teal-100 bg-white p-4 shadow-xs sm:space-y-5 sm:p-6 sm:py-4'>
+            <div className='flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between'>
+              <div className='w-1/2 space-y-1'>
                 <div className='flex items-end gap-1'>
-                  <Label htmlFor='diseaseMap'>Disease Map</Label>
+                  <Label htmlFor='diseaseMap'>Disease</Label>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <InfoIcon size={12} />
@@ -504,6 +346,211 @@ export default function Explore() {
                   className='w-full'
                 />
               </div>
+              <div className='flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-end xl:flex-row xl:items-center'>
+                <div className='mr-4 flex flex-col gap-3 sm:flex-row sm:items-center'>
+                  <div className='flex items-center gap-2'>
+                    <Label className='whitespace-nowrap text-sm'>Autofill Seed Genes</Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon size={12} />
+                      </TooltipTrigger>
+                      <TooltipContent className='max-w-xs'>
+                        <div>
+                          <div>
+                            <b>Autofill</b> the seed genes box with the top <b>n</b> genes for the selected disease.
+                          </div>
+                          <div>Genes are ranked by overall association score from the OpenTargets platform.</div>
+                          <div>
+                            <b>Note:</b> Autofill uses only one type of gene identifier as returned by the API.
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+
+                  <form onSubmit={handleAutofill} className='flex items-center gap-2'>
+                    <Label htmlFor={autoFillNumId} className='text-sm'>
+                      No. of genes
+                    </Label>
+                    <Input
+                      id={autoFillNumId}
+                      type='number'
+                      inputMode='numeric'
+                      required
+                      name='autofill-num'
+                      min={1}
+                      className='h-8 w-16 sm:w-20'
+                      placeholder='25'
+                      defaultValue={25}
+                      disabled={autofillLoading || topGenesLoading}
+                    />
+                    <Button
+                      type='submit'
+                      disabled={autofillLoading || topGenesLoading}
+                      className='h-8 px-2 text-xs sm:px-3 sm:text-sm'
+                    >
+                      {autofillLoading || topGenesLoading ? (
+                        <>
+                          <LoaderIcon className='mr-1 animate-spin' size={14} />
+                          <span className='hidden sm:inline'>Auto-filling...</span>
+                          <span className='sm:hidden'>Loading...</span>
+                        </>
+                      ) : (
+                        'Autofill'
+                      )}
+                    </Button>
+                  </form>
+                </div>
+
+                <Button variant='outline' size='sm' className='h-8 px-3 text-sm' onClick={() => setHistoryOpen(true)}>
+                  <HistoryIcon size={16} className='mr-1' />
+                  History
+                </Button>
+              </div>
+            </div>
+            <div className='flex flex-col lg:flex-row'>
+              <div className='flex-1'>
+                <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                  <Label htmlFor={seedGenesId} className='font-medium'>
+                    Seed Genes
+                  </Label>
+                  <p className='text-xs text-zinc-500 sm:text-sm'>
+                    (one-per-line or CSV; examples:
+                    <button
+                      type='button'
+                      className='ml-1 cursor-pointer underline hover:text-zinc-700'
+                      onClick={() => setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' })}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' });
+                        }
+                      }}
+                    >
+                      #1
+                    </button>
+                    <button
+                      type='button'
+                      className='ml-2 cursor-pointer underline hover:text-zinc-700'
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          seedGenes:
+                            'ENSG00000185013\nENSG00000076685\nENSG00000166548\nENSG00000156136\nENSG00000114956\nENSG00000116981',
+                        })
+                      }
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setFormData({
+                            ...formData,
+                            seedGenes:
+                              'ENSG00000185013\nENSG00000076685\nENSG00000166548\nENSG00000156136\nENSG00000114956\nENSG00000116981',
+                          });
+                        }
+                      }}
+                    >
+                      #2
+                    </button>
+                    <button
+                      type='button'
+                      className='ml-2 cursor-pointer underline hover:text-zinc-700'
+                      onClick={() => setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' })}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' });
+                        }
+                      }}
+                    >
+                      #3
+                    </button>
+                    )
+                  </p>
+                </div>
+                <Textarea
+                  id={seedGenesId}
+                  placeholder='Type seed genes (comma or newline separated)'
+                  className='mt-2 h-33'
+                  value={formData.seedGenes}
+                  onChange={handleFileRead}
+                  disabled={autofillLoading}
+                  required
+                />
+              </div>
+
+              <div className='flex flex-row items-center justify-center py-2 lg:flex-col lg:px-4'>
+                <div className='h-px w-full bg-slate-800/70 lg:hidden' />
+                <div className='hidden w-px flex-1 bg-slate-800/70 lg:block' />
+                <span className='px-2 py-1 text-slate-400 text-xs lg:py-2'>OR</span>
+                <div className='h-px w-full bg-slate-800/70 lg:hidden' />
+                <div className='hidden w-px flex-1 bg-slate-800/70 lg:block' />
+              </div>
+
+              <div className='flex-1'>
+                <Label htmlFor={seedFileId} className='mb-3 block font-medium text-sm text-teal-900'>
+                  Upload Text File
+                </Label>
+                <div className='relative'>
+                  <Input
+                    id={seedFileId}
+                    type='file'
+                    accept='.txt'
+                    className='absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0'
+                    onChange={async e => {
+                      const f = e.target.files?.[0];
+                      if (!f) return;
+                      if (f?.type !== 'text/plain') {
+                        toast.error('Invalid file type', { cancel: { label: 'Close', onClick() {} } });
+                        return;
+                      }
+                      const text = await f.text();
+                      setFormData({ ...formData, seedGenes: text });
+                      setUploadedFile(f);
+                    }}
+                    disabled={autofillLoading}
+                  />
+                  <div
+                    className={`cursor-pointer rounded-lg border-2 border-dashed p-3 text-center transition-all sm:p-4 ${
+                      uploadedFile
+                        ? 'border-green-300 bg-green-50 hover:bg-green-100'
+                        : 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-gray-100'
+                    }`}
+                  >
+                    {uploadedFile ? (
+                      <div className='flex flex-col items-center justify-center gap-2 p-4 sm:flex-row sm:gap-3 sm:p-6'>
+                        <CheckCircleIcon className='size-6 text-green-600 sm:size-8' />
+                        <div className='text-center sm:text-left'>
+                          <p className='font-medium text-green-800 text-sm'>{uploadedFile.name}</p>
+                          <p className='text-green-600 text-xs'>File uploaded successfully</p>
+                        </div>
+                        <Button
+                          type='button'
+                          variant='ghost'
+                          size='sm'
+                          className='z-10 text-green-600 hover:bg-green-200 hover:text-green-800'
+                          onClick={e => {
+                            e.stopPropagation();
+                            setUploadedFile(null);
+                          }}
+                        >
+                          <XIcon className='size-4' />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <UploadIcon className='mx-auto mb-2 size-8 text-gray-400 sm:mb-3 sm:size-10' />
+                        <p className='mb-1 text-gray-600 text-sm'>Browse... No file selected.</p>
+                        <p className='text-gray-400 text-xs'>
+                          Click to upload or drag and drop your gene list (.txt files only)
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               {graphConfig.map(config => (
                 <div key={config.id} className='space-y-1'>
                   <div className='flex items-end gap-1'>
@@ -515,38 +562,29 @@ export default function Explore() {
                       <TooltipContent>{config.tooltipContent}</TooltipContent>
                     </Tooltip>
                   </div>
-                  {config.id === 'interactionType' ? (
-                    <MultiSelect
-                      options={[...config.options]}
-                      selectedValues={formData[config.id] || []}
-                      onChange={values => handleMultiSelect(values, config.id)}
-                      placeholder='Select...'
-                    />
-                  ) : (
-                    <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
-                      <SelectTrigger
-                        className='bg-accent-foreground hover:bg-accent hover:text-accent-foreground'
-                        id={config.id}
-                      >
-                        <SelectValue placeholder='Select...' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {config.options.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
+                    <SelectTrigger
+                      className='bg-accent-foreground hover:bg-accent hover:text-accent-foreground'
+                      id={config.id}
+                    >
+                      <SelectValue placeholder='Select...' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {config.options.map(option => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               ))}
             </div>
-            <center>
+            <div className='flex justify-center'>
               <Button
                 type='button'
                 onClick={handleSubmit}
-                className='relative w-3/4 overflow-hidden font-semibold hover:opacity-90'
+                className='relative w-full overflow-hidden font-semibold hover:opacity-90 sm:w-3/4 lg:w-1/2'
               >
                 {/* Animated background inside the button */}
                 <AnimatedNetworkBackground
@@ -557,14 +595,16 @@ export default function Explore() {
                 <span className='relative z-10 flex items-center justify-center'>
                   {loading ? (
                     <>
-                      <LoaderIcon className='mr-2 animate-spin' size={20} /> Checking {geneIDs.length} Genes...
+                      <LoaderIcon className='mr-2 animate-spin' size={20} />
+                      <span className='hidden sm:inline'>Checking {geneIDs.length} Genes...</span>
+                      <span className='sm:hidden'>Checking Genes...</span>
                     </>
                   ) : (
                     'Submit'
                   )}
                 </span>
               </Button>
-            </center>
+            </div>
             <PopUpTable
               setTableOpen={setTableOpen}
               tableOpen={tableOpen}
@@ -616,8 +656,8 @@ export default function Explore() {
           </Sheet>
         </TabsContent>
         <TabsContent value='upload' className='mt-4'>
-          <div className='mx-auto rounded-lg border border-teal-100 bg-white p-4 shadow-md'>
-            <div className='grid grid-cols-1 items-start gap-4 lg:grid-cols-2'>
+          <div className='mx-auto rounded-lg border border-teal-100 bg-white p-4 shadow-md sm:p-6'>
+            <div className='grid grid-cols-1 items-start gap-6 xl:grid-cols-2'>
               <form
                 onSubmit={e => {
                   e.preventDefault();
@@ -626,14 +666,16 @@ export default function Explore() {
                 className='space-y-4'
               >
                 <div>
-                  <div className='mb-2 flex items-center justify-between'>
-                    <Label htmlFor={uploadFileId}>Upload CSV or JSON</Label>
+                  <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                    <Label htmlFor={uploadFileId} className='font-medium'>
+                      Upload CSV or JSON
+                    </Label>
                     <p className='text-sm text-zinc-500'>
                       (CSV examples:{' '}
-                      <a href={'/example1.csv'} download className='underline'>
+                      <a href={'/example1.csv'} download className='underline hover:text-zinc-700'>
                         #1
                       </a>{' '}
-                      <a href={'/example2.csv'} download className='underline'>
+                      <a href={'/example2.csv'} download className='underline hover:text-zinc-700'>
                         #2
                       </a>
                       )
@@ -645,9 +687,9 @@ export default function Explore() {
                     accept='.csv,.json'
                     onChange={handleFileChange}
                     required
-                    className='h-12 cursor-pointer border-2 border-dashed'
+                    className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
                   />
-                  <p className='mt-2 text-xs text-zinc-500'>
+                  <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
                     • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
                     <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
                   </p>
@@ -666,14 +708,14 @@ export default function Explore() {
                   </span>
                 </Button>
               </form>
-              <div className='mt-2 border-l-2 pl-4 lg:mt-0'>
+              <div className='border-t pt-4 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6'>
                 <h3 className='mb-3 font-semibold text-lg'>File Format Preview</h3>
                 <Image
                   src={'/image/uploadFormat.svg'}
                   width={400}
                   height={400}
                   alt='CSV file format example'
-                  className='mx-auto w-full max-w-3xl mix-blend-multiply'
+                  className='mx-auto w-full max-w-md mix-blend-multiply xl:max-w-full'
                 />
               </div>
             </div>

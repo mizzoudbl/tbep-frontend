@@ -7,7 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ApolloWrapper } from '@/lib/apolloWrapper';
 import { envURL } from '@/lib/utils';
 import './globals.css';
-import { DocsThemeHead, DocsThemeLayout } from '@/theme.config';
+import { DocsThemeHead } from '@/theme.config';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -69,9 +69,7 @@ export default function RootLayout({
           {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
           )}
-          <TooltipProvider delayDuration={100}>
-            <DocsThemeLayout>{children}</DocsThemeLayout>
-          </TooltipProvider>
+          <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
         </ApolloWrapper>
       </body>
     </html>
