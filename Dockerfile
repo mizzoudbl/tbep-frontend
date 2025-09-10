@@ -2,7 +2,7 @@
 FROM node:22.15-alpine AS builder
 WORKDIR /app
 
-ARG GIT_BRANCH=saipuram
+ARG GIT_BRANCH=main
 
 COPY package*.json ./
 RUN npm install
