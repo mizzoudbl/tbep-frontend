@@ -116,7 +116,7 @@ export interface GraphStore {
   /**
    * ENSG IDs of all the nodes in Graph
    */
-  geneIDs: string[];
+  geneNames: string[];
 
   /**
    * Disease Name

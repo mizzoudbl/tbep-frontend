@@ -4,7 +4,6 @@ import { ApolloWrapper } from '@/lib/apolloWrapper';
 import { envURL } from '@/lib/utils';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
-import { ViewTransitions } from 'next-view-transitions';
 import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
@@ -51,18 +50,9 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-          dangerouslySetInnerHTML={{
-            __html:
-              '<script async src="https://tally.so/widgets/embed.js"></script><script>window.TallyConfig = {"formId": "wLvX0J","popup":{"open":{"trigger": "exit"},"showOnce": true,"doNotShowAfterSubmit": true,"autoClose": 0}};</script>',
-          }}
-        />
         <ApolloWrapper>
           <NextTopLoader showSpinner={false} color='teal' />
-          <ViewTransitions>
-            <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
-          </ViewTransitions>
+          <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
           <Toaster />
           {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />

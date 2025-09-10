@@ -18,8 +18,8 @@ export function GraphAnalysis({
   highlightedNodesRef,
   seedProximityNodesRef,
 }: {
-  highlightedNodesRef?: React.MutableRefObject<Set<string>>;
-  seedProximityNodesRef: React.MutableRefObject<Set<string>>;
+  highlightedNodesRef?: React.RefObject<Set<string>>;
+  seedProximityNodesRef: React.RefObject<Set<string>>;
 }) {
   const sigma = useSigma<NodeAttributes, EdgeAttributes>();
   const graph = sigma.getGraph();
