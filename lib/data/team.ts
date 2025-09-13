@@ -69,25 +69,4 @@ export const team = [
       },
     ],
   },
-  {
-    heading: 'Bioinformatics Team',
-    members: [
-      {
-        name: 'Dr. Shilpi Chaurasia',
-        title: `Senior Scientific Manager
-        Excelra Knowledge Solutions, Hyderabad, India`,
-        email: 'shilpi.chaurasia@excelra.com',
-        link: 'https://www.linkedin.com/in/shilpi-chaurasia-phd-238651b/',
-        image: '/image/team/shilpichaurasia.jpg',
-      },
-      {
-        name: 'Devulapalli Krishna Sameera',
-        title: `Senior Scientific Specialist
-        Excelra Knowledge Solutions, Hyderabad, India`,
-        email: 'sameera.devulapalli@excelra.com',
-        link: 'https://www.linkedin.com/in/sameeradevulapalli/',
-        image: '/image/team/sameeradevulapalli.jpg',
-      },
-    ],
-  },
 ];
