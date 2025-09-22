@@ -24,7 +24,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -100,7 +99,9 @@ export default function Explore() {
         setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));
       }
     } catch {
-      toast.error('Failed to autofill genes from API', { cancel: { label: 'Close', onClick() {} } });
+      toast.error('Failed to autofill genes from API', {
+        cancel: { label: 'Close', onClick() {} },
+      });
     } finally {
       setAutofillLoading(false);
     }
@@ -157,7 +158,9 @@ export default function Explore() {
       const warningThreshold = orderNum === 0 ? 1000 : 25;
       if (seedCount > maxGenes) {
         toast.error('Too many seed genes', {
-          description: `Maximum ${maxGenes} genes allowed for ${orderNum === 0 ? 'zero' : 'first/second'} order networks`,
+          description: `Maximum ${maxGenes} genes allowed for ${
+            orderNum === 0 ? 'zero' : 'first/second'
+          } order networks`,
           cancel: { label: 'Close', onClick() {} },
         });
         return;
@@ -217,7 +220,9 @@ export default function Explore() {
 
   const handleUploadSubmit = async () => {
     if (!file) {
-      toast.error('Please upload a file', { cancel: { label: 'Close', onClick() {} } });
+      toast.error('Please upload a file', {
+        cancel: { label: 'Close', onClick() {} },
+      });
       return;
     }
     setUploadLoading(true);
@@ -257,7 +262,9 @@ export default function Explore() {
         });
         return;
       }
-      const { error } = await verifyGenes({ variables: { geneIDs: distinctSeedGenes } });
+      const { error } = await verifyGenes({
+        variables: { geneIDs: distinctSeedGenes },
+      });
       if (error) {
         console.error(error);
         toast.error('Error fetching data', {
@@ -283,7 +290,9 @@ export default function Explore() {
       return;
     }
     store.put(file, file?.name);
-    toast.success('File uploaded successfully', { cancel: { label: 'Close', onClick() {} } });
+    toast.success('File uploaded successfully', {
+      cancel: { label: 'Close', onClick() {} },
+    });
     window.open(`/network?file=${encodeURIComponent(file?.name as string)}`, '_blank', 'noopener,noreferrer');
   };
 
@@ -419,11 +428,19 @@ export default function Explore() {
                     <button
                       type='button'
                       className='ml-1 cursor-pointer underline hover:text-zinc-700'
-                      onClick={() => setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' })}
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
+                        })
+                      }
                       onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          setFormData({ ...formData, seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2' });
+                          setFormData({
+                            ...formData,
+                            seedGenes: 'MAPT, STX6, EIF2AK3, MOBP, DCTN1, LRRK2',
+                          });
                         }
                       }}
                     >
@@ -455,11 +472,19 @@ export default function Explore() {
                     <button
                       type='button'
                       className='ml-2 cursor-pointer underline hover:text-zinc-700'
-                      onClick={() => setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' })}
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A',
+                        })
+                      }
                       onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          setFormData({ ...formData, seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A' });
+                          setFormData({
+                            ...formData,
+                            seedGenes: 'NT5C1B\nNT5C2\nTK2\nDCK\nDGUOK\nNT5C1A',
+                          });
                         }
                       }}
                     >
@@ -501,7 +526,9 @@ export default function Explore() {
                       const f = e.target.files?.[0];
                       if (!f) return;
                       if (f?.type !== 'text/plain') {
-                        toast.error('Invalid file type', { cancel: { label: 'Close', onClick() {} } });
+                        toast.error('Invalid file type', {
+                          cancel: { label: 'Close', onClick() {} },
+                        });
                         return;
                       }
                       const text = await f.text();
@@ -639,21 +666,13 @@ export default function Explore() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <Sheet open={historyOpen} onOpenChange={setHistoryOpen}>
-            <SheetContent side='right' className='w-[380px] sm:w-[420px]'>
-              <SheetHeader>
-                <SheetTitle>History</SheetTitle>
-              </SheetHeader>
-              <div className='mt-4'>
-                <History
-                  history={history}
-                  setHistoryOpen={setHistoryOpen}
-                  setHistory={setHistory}
-                  setFormData={setFormData}
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
+          <History
+            history={history}
+            historyOpen={historyOpen}
+            setHistoryOpen={setHistoryOpen}
+            setHistory={setHistory}
+            setFormData={setFormData}
+          />
         </TabsContent>
         <TabsContent value='upload' className='mt-4'>
           <div className='mx-auto rounded-lg border border-teal-100 bg-white p-4 shadow-md sm:p-6'>

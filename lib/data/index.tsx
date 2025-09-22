@@ -21,11 +21,11 @@ export const FADED_EDGE_COLOR = 'rgb(204, 204, 204)';
 export const LLM_MODELS = [
   {
     name: 'Llama 3.1',
-    value: 'meta/llama-3.1-405b-instruct',
+    value: 'nvidia:meta/llama-3.1-405b-instruct',
   },
   {
     name: 'GPT-4o',
-    value: 'gpt-4o',
+    value: 'openai:gpt-4o',
   },
 ] as const;
 

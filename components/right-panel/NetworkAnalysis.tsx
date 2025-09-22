@@ -140,7 +140,7 @@ export function NetworkAnalysis({ children }: { children: React.ReactNode }) {
                 Show Details ({algorithmResults.communities.length})
               </Button>
               <Dialog open={showTable}>
-                <DialogContent className='flex max-h-[92vh] min-h-[60vh] max-w-7xl flex-col'>
+                <DialogContent className='flex max-h-[92vh] min-h-[60vh] max-w-7xl flex-col gap-2'>
                   <DialogTitle>Leiden Communities</DialogTitle>
                   <DialogDescription>View the identified communities and their characteristics.</DialogDescription>
                   <Tabs defaultValue='table' className='w-full'>
