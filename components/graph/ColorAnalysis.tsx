@@ -2,7 +2,7 @@
 
 import { useSigma } from '@react-sigma/core';
 import { scaleLinear } from 'd3-scale';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { DEFAULT_EDGE_COLOR } from '@/lib/data';
 import { useStore } from '@/lib/hooks';
 import type { EdgeAttributes, NodeAttributes, OtherSection } from '@/lib/interface';
@@ -17,12 +17,10 @@ export function ColorAnalysis() {
   const diseaseName = useStore(state => state.diseaseName);
   const showEdgeColor = useStore(state => state.showEdgeColor);
   const radioOptions = useStore(state => state.radioOptions);
-  const [minScore, setMinScore] = useState(0);
   const edgeOpacity = useStore(state => state.edgeOpacity);
 
-  useEffect(() => {
-    setMinScore(Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0);
-  }, []);
+  const minScore =
+    typeof window !== 'undefined' ? (Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0) : 0;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {

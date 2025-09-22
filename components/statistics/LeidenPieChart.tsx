@@ -64,7 +64,7 @@ export function LeidenPieChart({
             cx='50%'
             cy='50%'
             outerRadius={150}
-            label={({ name, percent }) => `${name}: ${((percent ?? Number.NaN) * 100).toFixed(0)}%`}
+            label={({ name, percent }) => `${name}: ${(Number(percent ?? Number.NaN) * 100).toFixed(0)}%`}
             onClick={(_, idx) => setSelectedClusterIndex(idx)}
           >
             {data.map(entry => (

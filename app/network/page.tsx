@@ -20,7 +20,7 @@ const SigmaContainer = dynamic(() => import('@/components/graph').then(module =>
 export default function NetworkPage() {
   return (
     <>
-      <div className='h-[90%]'>
+      <div className='h-[87%]'>
         <SigmaContainer />
       </div>
       <ChatWindow />
