@@ -45,12 +45,16 @@ export const GENE_GRAPH_QUERY = gql`
   }
 `;
 
-export const GENE_UNIVERSAL_QUERY = gql`
-  query GeneUniversalData($config: [DataRequired!], $geneIDs: [String!]!) {
-    genes(geneIDs: $geneIDs, config: $config) {
+export const GENE_PROPERTIES_QUERY = gql`
+  query GenePropertiesData($config: [DataRequired!]!, $geneIds: [String!]!) {
+    geneProperties(geneIds: $geneIds, config: $config) {
       ID
-      disease
-      common
+      data {
+        diseaseId
+        category
+        key
+        score
+      }
     }
   }
 `;

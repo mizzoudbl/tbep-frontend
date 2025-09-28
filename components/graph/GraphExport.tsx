@@ -53,7 +53,7 @@ export function GraphExport({ highlightedNodesRef }: { highlightedNodesRef?: Rea
           const nodeIds = all ? sigma.getGraph().nodes() : Array.from(highlightedNodesRef?.current ?? []);
           const universalCsv = unparse(
             nodeIds.map(nodeId => {
-              const universalProperties: Record<string, string> = {};
+              const universalProperties: Record<string, string | number> = {};
               if (selectedRadioNodeColor) {
                 if (typeof selectedNodeColorProperty === 'string') {
                   universalProperties[selectedNodeColorProperty] = (

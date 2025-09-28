@@ -9,20 +9,19 @@ import {
   DISEASE_DEPENDENT_PROPERTIES,
   DISEASE_INDEPENDENT_PROPERTIES,
   type DiseaseDependentProperties,
-  type DiseaseIndependentProperties,
 } from '@/lib/data';
-import { GENE_UNIVERSAL_QUERY, GET_HEADERS_QUERY } from '@/lib/gql';
+import { GENE_PROPERTIES_QUERY, GET_HEADERS_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
 import type {
-  GeneUniversalData,
-  GeneUniversalDataVariables,
+  GenePropertiesData,
+  GenePropertiesDataVariables,
   GetDiseaseData,
   GetHeadersData,
   GetHeadersVariables,
   OtherSection,
   RadioOptions,
 } from '@/lib/interface';
-import { envURL } from '@/lib/utils';
+import { envURL, genePropertyCategoryEnumToString, selectedRadioStringToEnum } from '@/lib/utils';
 import { Export, FileSheet, MouseControlMessage } from '../app';
 import { DiseaseMapCombobox } from '../DiseaseMapCombobox';
 import { Label } from '../ui/label';
@@ -33,7 +32,7 @@ import { GeneSearch, NodeColor, NodeSize } from '.';
 
 export function LeftSideBar() {
   const diseaseName = useStore(state => state.diseaseName);
-  const geneIDs = useStore(useShallow(state => state.geneNames.map(g => state.geneNameToID.get(g) ?? g)));
+  const geneIds = useStore(useShallow(state => state.geneNames.map(g => state.geneNameToID.get(g) ?? g)));
   const skipCommon = useRef<boolean>(false);
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
   const [diseaseMap, setDiseaseMap] = React.useState<string>('MONDO_0004976');
@@ -109,9 +108,9 @@ export function LeftSideBar() {
   }, [diseaseName]);
 
   useEffect(() => {
-    if (!geneIDs) return;
+    if (!geneIds) return;
     const universalData = useStore.getState().universalData;
-    for (const gene of geneIDs) {
+    for (const gene of geneIds) {
       if (universalData[gene] === undefined) {
         universalData[gene] = {
           common: {
@@ -133,10 +132,10 @@ export function LeftSideBar() {
         };
       }
     }
-  }, [geneIDs]);
+  }, [geneIds]);
 
-  const [fetchUniversal, { loading: universalLoading }] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(
-    GENE_UNIVERSAL_QUERY,
+  const [fetchUniversal, { loading: universalLoading }] = useLazyQuery<GenePropertiesData, GenePropertiesDataVariables>(
+    GENE_PROPERTIES_QUERY,
   );
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedRadioNodeColor = useStore(state => state.selectedRadioNodeColor);
@@ -147,25 +146,26 @@ export function LeftSideBar() {
     const selectedRadio = type === 'color' ? selectedRadioNodeColor : selectedRadioNodeSize;
     if (!selectedRadio) return;
     const ddp = DISEASE_DEPENDENT_PROPERTIES.includes(selectedRadio as DiseaseDependentProperties);
-    const keys = (val instanceof Set ? Array.from(val) : [val]).reduce<string[]>((acc, v) => {
-      const key = `${ddp ? `${diseaseName}_` : ''}${selectedRadio}_${v}`;
-      if (!queriedFieldSet.current.has(key) && !radioOptions.user[selectedRadio].includes(key)) {
-        acc.push(ddp ? key.slice(diseaseName.length + 1) : key);
+    const properties = (val instanceof Set ? Array.from(val) : [val]).reduce<string[]>((acc, property) => {
+      const key = `${ddp ? `${diseaseName}_` : ''}${selectedRadio}_${property}`;
+      if (!queriedFieldSet.current.has(key) && !radioOptions.user[selectedRadio].includes(property)) {
+        acc.push(property);
       }
       return acc;
     }, []);
-    if (keys.length === 0) {
+    if (properties.length === 0) {
       useStore.setState({
         [type === 'color' ? 'selectedNodeColorProperty' : 'selectedNodeSizeProperty']: val,
       });
     } else {
       const result = await fetchUniversal({
         variables: {
-          geneIDs,
+          geneIds,
           config: [
             {
-              properties: keys,
-              ...(ddp && { disease: diseaseName }),
+              category: selectedRadioStringToEnum(selectedRadio),
+              properties: properties,
+              ...(ddp && { diseaseId: diseaseName }),
             },
           ],
         },
@@ -174,26 +174,28 @@ export function LeftSideBar() {
         console.error(result.error);
         return;
       }
-      const data = result.data?.genes;
-      queriedFieldSet.current = new Set([...queriedFieldSet.current, ...keys]);
+      properties.forEach(p => {
+        queriedFieldSet.current.add(`${ddp ? `${diseaseName}_` : ''}${selectedRadio}_${p}`);
+      });
       const universalData = useStore.getState().universalData;
-      for (const gene of data ?? []) {
-        for (const prop in gene.common) {
-          universalData[gene.ID].common[selectedRadio as DiseaseIndependentProperties][
-            prop.replace(new RegExp(`^${selectedRadio}_`), '')
-          ] = gene.common[prop];
-        }
-        for (const prop in gene.disease?.[diseaseName]) {
-          const geneRecord = universalData[gene.ID];
-          if (geneRecord[diseaseName] === undefined) {
-            geneRecord[diseaseName] = {
-              DEG: {},
-              OpenTargets: {},
-            } as OtherSection;
+      for (const { ID, data } of result.data?.geneProperties ?? []) {
+        const geneRecord = universalData[ID];
+
+        for (const { key, score, category: categoryEnum, diseaseId } of data) {
+          const category = genePropertyCategoryEnumToString(categoryEnum);
+          if (diseaseId) {
+            if (category !== 'DEG' && category !== 'OpenTargets') continue;
+            if (geneRecord[diseaseId] === undefined) {
+              geneRecord[diseaseId] = {
+                DEG: {},
+                OpenTargets: {},
+              } as OtherSection;
+            }
+            (geneRecord[diseaseId] as OtherSection)[category][key] = score;
+          } else {
+            if (category === 'DEG' || category === 'OpenTargets') continue;
+            geneRecord.common[category][key] = score;
           }
-          (universalData[gene.ID][diseaseName] as OtherSection)[selectedRadio as DiseaseDependentProperties][
-            prop.replace(new RegExp(`^${selectedRadio}_`), '')
-          ] = gene.disease[diseaseName][prop];
         }
       }
       useStore.setState({

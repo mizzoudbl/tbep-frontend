@@ -38,18 +38,16 @@ export function SizeAnalysis() {
     if (selectedRadioNodeSize === 'Druggability' && typeof selectedNodeSizeProperty === 'string') {
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
-          const valString = cur[userOrCommonIdentifier].Druggability[selectedNodeSizeProperty];
-          if (!valString) return acc;
-          const value = +valString;
-          if (Number.isNaN(value)) return acc;
+          const value = cur[userOrCommonIdentifier]?.[selectedRadioNodeSize][selectedNodeSizeProperty];
+          if (value === null || value === undefined || Number.isNaN(value)) return acc;
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [1, 0],
       );
       const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = universalData[node]?.[userOrCommonIdentifier].Druggability[selectedNodeSizeProperty];
-        if (val != null && !Number.isNaN(+val)) attr.size = sizeScale(+val);
+        const val = universalData[node]?.[userOrCommonIdentifier]?.[selectedRadioNodeSize][selectedNodeSizeProperty];
+        if (val !== null && val !== undefined && !Number.isNaN(val)) attr.size = sizeScale(val);
         else attr.size = 0.5;
         return attr;
       });
@@ -66,8 +64,8 @@ export function SizeAnalysis() {
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
           const value = propertyArray.reduce((acc2, property) => {
-            const val = cur[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
-            if (val == null || Number.isNaN(val)) return acc2;
+            const val = cur[userTEArray.includes(property) ? 'user' : 'common']?.[selectedRadioNodeSize][property];
+            if (val === null || val === undefined || Number.isNaN(val)) return acc2;
             return Math.max(acc2, +val);
           }, 0);
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
@@ -77,8 +75,11 @@ export function SizeAnalysis() {
       const sizeScale = scaleLinear<number, number>(minMax, [3, defaultNodeSize + 10]);
       graph.updateEachNodeAttributes((node, attr) => {
         const val = propertyArray.reduce((acc, property) => {
-          const value = universalData[node]?.[userTEArray.includes(property) ? 'user' : 'common'].TE[property];
-          if (value == null || Number.isNaN(+value)) return acc;
+          const value =
+            universalData[node]?.[userTEArray.includes(property) ? 'user' : 'common']?.[selectedRadioNodeSize][
+              property
+            ];
+          if (value === null || value === undefined || Number.isNaN(+value)) return acc;
           return Math.max(acc, +value);
         }, Number.NEGATIVE_INFINITY);
         if (Number.isFinite(val)) attr.size = sizeScale(val);
@@ -88,9 +89,9 @@ export function SizeAnalysis() {
     } else if (selectedRadioNodeSize === 'DEG' && typeof selectedNodeSizeProperty === 'string') {
       const isPValue = P_VALUE_REGEX.test(selectedNodeSizeProperty);
       const max = Object.values(universalData).reduce((acc, cur) => {
-        const valString = (cur[userOrDiseaseIdentifier] as OtherSection).DEG?.[selectedNodeSizeProperty];
-        if (!valString) return acc;
-        const value = isPValue ? -Math.log10(+valString) : Math.abs(+valString);
+        const val = (cur[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeSize][selectedNodeSizeProperty];
+        if (!val) return acc;
+        const value = isPValue ? -Math.log10(val) : Math.abs(val);
         if (Number.isNaN(value)) return acc;
         return Math.max(acc, value);
       }, 0);
@@ -99,17 +100,18 @@ export function SizeAnalysis() {
         const val = (universalData[node]?.[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeSize][
           selectedNodeSizeProperty
         ];
-        if (val != null && !Number.isNaN(+val)) attr.size = sizeScale(isPValue ? -Math.log10(+val) : Math.abs(+val));
+        if (val !== null && val !== undefined && !Number.isNaN(val))
+          attr.size = sizeScale(isPValue ? -Math.log10(val) : Math.abs(val));
         else attr.size = 0.5;
         return attr;
       });
     } else if (selectedRadioNodeSize === 'OpenTargets' && typeof selectedNodeSizeProperty === 'string') {
       const minMax = Object.values(universalData).reduce(
         (acc, cur) => {
-          const valString = (cur[userOrDiseaseIdentifier] as OtherSection).OpenTargets?.[selectedNodeSizeProperty];
-          if (!valString) return acc;
-          const value = +valString;
-          if (Number.isNaN(value)) return acc;
+          const value = (cur[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeSize][
+            selectedNodeSizeProperty
+          ];
+          if (value === null || value === undefined || Number.isNaN(value)) return acc;
           return [Math.min(acc[0], value), Math.max(acc[1], value)];
         },
         [1, 0],
@@ -119,7 +121,7 @@ export function SizeAnalysis() {
         const val = (universalData[node]?.[userOrDiseaseIdentifier] as OtherSection)?.[selectedRadioNodeSize][
           selectedNodeSizeProperty
         ];
-        if (val != null && !Number.isNaN(+val)) attr.size = sizeScale(+val);
+        if (val != null && val !== undefined && !Number.isNaN(val)) attr.size = sizeScale(val);
         else attr.size = 0.5;
         return attr;
       });
@@ -129,8 +131,8 @@ export function SizeAnalysis() {
         [defaultNodeSize - 10, defaultNodeSize, defaultNodeSize + 10],
       );
       graph.updateEachNodeAttributes((node, attr) => {
-        const val = universalData[node]?.[userOrCommonIdentifier].OT_Prioritization[selectedNodeSizeProperty];
-        if (val != null && !Number.isNaN(+val)) attr.size = sizeScale(+val);
+        const val = universalData[node]?.[userOrCommonIdentifier]?.[selectedRadioNodeSize][selectedNodeSizeProperty];
+        if (val != null && val !== undefined && !Number.isNaN(val)) attr.size = sizeScale(val);
         else attr.size = 0.5;
         return attr;
       });

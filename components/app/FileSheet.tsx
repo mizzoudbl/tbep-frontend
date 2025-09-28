@@ -178,20 +178,21 @@ export function FileSheet() {
 
               // LogFC alias of DEG
               if (LOGFC_REGEX.test(prop)) {
-                universalData[geneID].user.DEG[prop.replace(LOGFC_REGEX, '')] = row[prop];
+                universalData[geneID].user.DEG[prop.replace(LOGFC_REGEX, '')] = Number.parseFloat(row[prop]);
                 continue;
               }
 
               // P_Val alias of DEG
               if (P_VALUE_REGEX.test(prop)) {
-                universalData[geneID].user.DEG[prop] = row[prop];
+                universalData[geneID].user.DEG[prop] = Number.parseFloat(row[prop]);
                 continue;
               }
 
               for (const field of [...DISEASE_DEPENDENT_PROPERTIES, ...DISEASE_INDEPENDENT_PROPERTIES]) {
                 const fieldRegex = new RegExp(`^${field}_`, 'i');
                 if (fieldRegex.test(prop)) {
-                  universalData[geneID].user[field][prop.replace(fieldRegex, '')] = row[prop];
+                  universalData[geneID].user[field][prop.replace(fieldRegex, '')] =
+                    field === 'Custom_Color' ? row[prop] : Number.parseFloat(row[prop]);
                   break;
                 }
               }

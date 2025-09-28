@@ -29,6 +29,7 @@ export default function TeamPage() {
                         {person.name}
                       </h3>
                     </a>
+                    {person.role && <h4 className='text-md text-primary'>{person.role}</h4>}
                     {person.title.split('\n').map((title, _index) => (
                       <p key={title} className='text-gray-600 text-sm'>
                         {title}
