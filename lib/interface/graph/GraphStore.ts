@@ -206,5 +206,7 @@ export type UniversalData = Record<
   }
 >;
 
-export type CommonSection = Record<DiseaseIndependentProperties, Record<string, string>>;
-export type OtherSection = Record<DiseaseDependentProperties, Record<string, string>>;
+export type CommonSection = {
+  [K in DiseaseIndependentProperties]: Record<string, K extends 'Custom_Color' ? string : number>;
+};
+export type OtherSection = Record<DiseaseDependentProperties, Record<string, number>>;

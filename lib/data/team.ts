@@ -1,4 +1,18 @@
-export const team = [
+type TeamMember = {
+  name: string;
+  role?: string;
+  title: string;
+  email: string;
+  link?: string;
+  image: string;
+};
+
+type TeamCategory = {
+  heading: string;
+  members: TeamMember[];
+};
+
+export const team: TeamCategory[] = [
   {
     heading: 'Principal Investigator',
     members: [
@@ -38,6 +52,7 @@ export const team = [
     members: [
       {
         name: 'Bhupesh Dewangan',
+        role: 'Platform Development Engineer',
         title: `B.Tech
         Indian Institute of Information Technology, Allahabad`,
         email: 'bhupesh.it.iiita@gmail.com',
@@ -46,6 +61,7 @@ export const team = [
       },
       {
         name: 'Debjyoti Ray',
+        role: 'AI Chatbot Developer',
         title: `B.Tech
         Indian Institute of Information Technology, Allahabad`,
         email: 'iec2022111@iiita.ac.in',
@@ -54,6 +70,7 @@ export const team = [
       },
       {
         name: 'Yijie Ren',
+        role: 'Project Manager',
         title: `Manager
         Jianna Consulting, LLC`,
         email: 'manager@jianna.net',
@@ -62,10 +79,20 @@ export const team = [
       },
       {
         name: 'Lei Jiang',
+        role: 'Platform Deployment Engineer',
         title: `PhD
         University of Missouri, Columbia`,
         email: 'leijiang@missouri.edu',
         image: '/image/team/leijiang.jpg',
+      },
+      {
+        name: 'Shraddha Srivastava',
+        role: 'Data Management',
+        title: `Bioinformatics Consultant
+        Crecientech Infosystem, Bangalore`,
+        email: 'shraddha.srivastava@crecientech.com',
+        link: 'https://www.linkedin.com/in/shraddha-srivastava-898024212/',
+        image: '/image/team/shraddhasrivastava.jpg',
       },
     ],
   },

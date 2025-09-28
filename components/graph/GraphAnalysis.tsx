@@ -6,9 +6,15 @@ import { scaleLinear } from 'd3-scale';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { GENE_UNIVERSAL_QUERY } from '@/lib/gql';
+import { GENE_PROPERTIES_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
-import type { EdgeAttributes, GeneUniversalData, GeneUniversalDataVariables, NodeAttributes } from '@/lib/interface';
+import {
+  type EdgeAttributes,
+  type GenePropertiesData,
+  type GenePropertiesDataVariables,
+  GenePropertyCategoryEnum,
+  type NodeAttributes,
+} from '@/lib/interface';
 import { type EventMessage, Events, envURL, eventEmitter } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -47,7 +53,7 @@ export function GraphAnalysis({
   const nodeDegreeProperty = useStore(state => state.radialAnalysis.nodeDegreeProperty);
   const universalData = useStore(state => state.universalData);
 
-  const [fetchUniversal] = useLazyQuery<GeneUniversalData, GeneUniversalDataVariables>(GENE_UNIVERSAL_QUERY);
+  const [fetchUniversal] = useLazyQuery<GenePropertiesData, GenePropertiesDataVariables>(GENE_PROPERTIES_QUERY);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   useEffect(() => {
@@ -60,21 +66,26 @@ export function GraphAnalysis({
       if (!isNodeDegree) {
         await fetchUniversal({
           variables: {
-            geneIDs: graph.nodes(),
-            config: [{ properties: [`TE_${nodeDegreeProperty}`] }],
+            geneIds: graph.nodes(),
+            config: [{ category: GenePropertyCategoryEnum.TISSUE_EXPRESSION, properties: [nodeDegreeProperty] }],
           },
         }).then(({ data }) => {
           const minMax = [Number.POSITIVE_INFINITY, 0];
-          for (const gene of data?.genes ?? []) {
-            const value = gene.common?.[`TE_${nodeDegreeProperty}`]!;
-            if (value) {
-              universalData[gene.ID][userOrCommonIdentifier].TE[nodeDegreeProperty] = value;
-              const num = +value;
-              if (!Number.isNaN(num)) {
-                minMax[0] = Math.min(minMax[0], num);
-                minMax[1] = Math.max(minMax[1], num);
-              }
-            }
+          for (const gene of data?.geneProperties ?? []) {
+            // const value = gene.common?.[`TE_${nodeDegreeProperty}`]!;
+            // if (value) {
+            //   universalData[gene.ID][userOrCommonIdentifier].TE[nodeDegreeProperty] = value;
+            //   const num = +value;
+            //   if (!Number.isNaN(num)) {
+            //     minMax[0] = Math.min(minMax[0], num);
+            //     minMax[1] = Math.max(minMax[1], num);
+            //   }
+            // }
+            const score = gene.data[0].score;
+            if (score === null || score === undefined || Number.isNaN(score)) continue;
+            universalData[gene.ID][userOrCommonIdentifier].TE[nodeDegreeProperty] = score;
+            minMax[0] = Math.min(minMax[0], score);
+            minMax[1] = Math.max(minMax[1], score);
           }
           const sizeScale = scaleLinear<number, number>(minMax, [0, 1]);
           graph.updateEachNodeAttributes((node, attr) => {
