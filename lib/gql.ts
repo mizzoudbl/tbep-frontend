@@ -60,13 +60,29 @@ export const GENE_PROPERTIES_QUERY = gql`
 `;
 
 export const GET_HEADERS_QUERY = gql`
-  query GetHeaders($disease: String!, $skipCommon: Boolean!) {
-    headers(disease: $disease) {
-      common @skip(if: $skipCommon) {
+  query GetHeaders($diseaseId: String!, $skipCommon: Boolean!) {
+    headers(diseaseId: $diseaseId) {
+      differentialExpression {
         name
         description
       }
-      disease {
+      openTargets @skip(if: $skipCommon) {
+        name
+        description
+      }
+      targetPrioritization @skip(if: $skipCommon) {
+        name
+        description
+      }
+      druggability @skip(if: $skipCommon) {
+        name
+        description
+      }
+      pathway @skip(if: $skipCommon) {
+        name
+        description
+      }
+      tissueSpecificity @skip(if: $skipCommon) {
         name
         description
       }

@@ -72,15 +72,6 @@ export function GraphAnalysis({
         }).then(({ data }) => {
           const minMax = [Number.POSITIVE_INFINITY, 0];
           for (const gene of data?.geneProperties ?? []) {
-            // const value = gene.common?.[`TE_${nodeDegreeProperty}`]!;
-            // if (value) {
-            //   universalData[gene.ID][userOrCommonIdentifier].TE[nodeDegreeProperty] = value;
-            //   const num = +value;
-            //   if (!Number.isNaN(num)) {
-            //     minMax[0] = Math.min(minMax[0], num);
-            //     minMax[1] = Math.max(minMax[1], num);
-            //   }
-            // }
             const score = gene.data[0].score;
             if (score === null || score === undefined || Number.isNaN(score)) continue;
             universalData[gene.ID][userOrCommonIdentifier].TE[nodeDegreeProperty] = score;
