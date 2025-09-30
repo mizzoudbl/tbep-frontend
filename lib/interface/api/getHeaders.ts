@@ -25,14 +25,12 @@ export interface GetHeadersData {
    * Headers for the dropdowns
    */
   headers: {
-    /**
-     * Diseases independent properties
-     */
-    common?: GenePropertyMetadata[];
-    /**
-     * Diseases dependent properties
-     */
-    disease?: GenePropertyMetadata[];
+    differentialExpression: GenePropertyMetadata[];
+    openTargets: GenePropertyMetadata[];
+    targetPrioritization: GenePropertyMetadata[];
+    druggability: GenePropertyMetadata[];
+    pathway: GenePropertyMetadata[];
+    tissueSpecificity: GenePropertyMetadata[];
   };
 }
 
@@ -45,7 +43,7 @@ export interface GetHeadersVariables {
   /**
    * Disease to search for
    */
-  disease: string;
+  diseaseId: string;
 
   /**
    * Whether to skip common field

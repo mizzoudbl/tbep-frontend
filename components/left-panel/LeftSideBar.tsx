@@ -5,11 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import {
-  DISEASE_DEPENDENT_PROPERTIES,
-  DISEASE_INDEPENDENT_PROPERTIES,
-  type DiseaseDependentProperties,
-} from '@/lib/data';
+import { DISEASE_DEPENDENT_PROPERTIES, type DiseaseDependentProperties } from '@/lib/data';
 import { GENE_PROPERTIES_QUERY, GET_HEADERS_QUERY } from '@/lib/gql';
 import { useStore } from '@/lib/hooks';
 import type {
@@ -61,7 +57,7 @@ export function LeftSideBar() {
     if (!diseaseName) return;
     fetchHeader({
       variables: {
-        disease: diseaseName,
+        diseaseId: diseaseName,
         skipCommon: skipCommon.current,
       },
     })
@@ -77,29 +73,17 @@ export function LeftSideBar() {
           user: useStore.getState().radioOptions.user,
         };
         if (!skipCommon.current) {
-          for (const { name, description } of data.common ?? []) {
-            for (const field of DISEASE_INDEPENDENT_PROPERTIES) {
-              if (new RegExp(`^${field}_`, 'i').test(name)) {
-                radioOptions.database[field].push({
-                  description,
-                  name: name.replace(new RegExp(`^${field}_`, 'i'), ''),
-                });
-              }
-            }
-          }
+          radioOptions.database.OpenTargets = data.openTargets ?? [];
+          radioOptions.database.OT_Prioritization = data.targetPrioritization ?? [];
+          radioOptions.database.Druggability = data.druggability ?? [];
+          radioOptions.database.Pathway = data.pathway ?? [];
+          radioOptions.database.TE = data.tissueSpecificity ?? [];
         }
         skipCommon.current = true;
-        for (const { name, description } of data.disease ?? []) {
-          for (const field of DISEASE_DEPENDENT_PROPERTIES) {
-            if (field === 'OpenTargets') continue;
-            if (new RegExp(`^${diseaseName}_${field}_`, 'i').test(name)) {
-              radioOptions.database[field].push({
-                description,
-                name: name.replace(new RegExp(`^${diseaseName}_${field}_`, 'i'), ''),
-              });
-            }
-          }
-        }
+
+        // Currently all of it is same for OpenTargets
+        // radioOptions.database.OpenTargets = data.openTargets ?? [];
+        radioOptions.database.DEG = data.differentialExpression ?? [];
         useStore.setState({ radioOptions });
       })
       .catch(err => {
