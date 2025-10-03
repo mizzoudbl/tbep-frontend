@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import React from 'react';
 import { toast } from 'sonner';
 import { LLM_MODELS } from '@/lib/data';
+import { generateSessionId, getUserId } from '@/lib/langfuse-tracking';
 import { cn, envURL } from '@/lib/utils';
 import { Action, Actions, CopyAction } from '../ai-elements/actions';
 import { Conversation, ConversationContent, ConversationScrollButton } from '../ai-elements/conversation';
@@ -59,10 +60,12 @@ export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
   const [inputValue, setInputValue] = React.useState('');
   const [model, setModel] = React.useState<(typeof LLM_MODELS)[number]['value']>(LLM_MODELS[0].value);
 
+  // Generate unique IDs for Langfuse session tracking
+  const sessionId = React.useMemo(() => generateSessionId(), []);
+
   const { messages, setMessages, sendMessage, status, regenerate, stop, clearError } = useChat({
     transport: new DefaultChatTransport({
       api: `${envURL(process.env.NEXT_PUBLIC_LLM_BACKEND_URL)}/chat`,
-      body: { model },
     }),
     onError(error) {
       toast.error('Failed to fetch response from LLM', {
@@ -77,7 +80,7 @@ export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
 
     setInputValue('');
     onChatOpen?.(true);
-    sendMessage({ text: message.text }, { body: { model } });
+    sendMessage({ text: message.text }, { body: { model, sessionId, userId: getUserId() } });
   };
 
   const handleDeleteMessages = () => {

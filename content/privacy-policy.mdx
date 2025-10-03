@@ -21,17 +21,50 @@ We collect Device Information using the following technologies:
 
 We also collect information of your feedback ratings, that you voluntarily provide to us.
 
+Additionally, when you interact with our AI-powered chat assistant, we collect the following information for service improvement and quality assurance:
+
+- `"Chat Interactions"`: Your questions and the AI-generated responses
+- `"Session Information"`: A unique identifier for each conversation session
+- `"Usage Metrics"`: Token usage, response times, and model performance data
+- `"Anonymous User ID"`: A randomly generated identifier stored in your browser to track usage patterns (not linked to any personal information)
+
 > Please note that we **do not** collect or analyse any of the **uploaded files** that you use for building networks or adding additional information to the network.
 
 ### How Do We Use Your Personal Information?
 
 We use the Device Information that we collect to help improve and optimize our Site (for example, by generating analytics about how our users browse and interact with the Site). We typically use the feedback ratings to improve our services.
 
+We use the Chat Interaction data to:
+
+- Monitor and improve the quality and accuracy of AI-generated responses
+- Analyze usage patterns to enhance the user experience
+- Debug technical issues and optimize performance
+- Calculate operational costs and resource usage
+- Train and fine-tune AI models (only in aggregated, anonymized form)
+
+All chat interactions are processed in production environments only and are stored securely with industry-standard encryption.
+
 ### Sharing Your Personal Information
 
-We share your Personal Information with third parties to help us use your Personal Information, as described above. For example, we use Google Analytics to help us understand how our customers use the Site--you can read more about how Google uses your Personal Information here: [https://www.google.com/intl/en/policies/privacy/](https://www.google.com/intl/en/policies/privacy/). You can also opt-out of Google Analytics here: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout).
+We share your Personal Information with third parties to help us use your Personal Information, as described above. For example:
+
+- We use **Google Analytics** to help us understand how our customers use the Site. You can read more about how Google uses your Personal Information here: [https://www.google.com/intl/en/policies/privacy/](https://www.google.com/intl/en/policies/privacy/). You can also opt-out of Google Analytics here: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout).
+
+- We use **Langfuse** (a third-party service) for LLM observability and tracing in production environments. Chat interactions are transmitted to Langfuse servers for analysis and monitoring purposes. Langfuse adheres to strict data protection standards and processes data in accordance with GDPR and other applicable privacy regulations. You can learn more about Langfuse's privacy practices here: [https://langfuse.com/docs/data-security-privacy](https://langfuse.com/docs/data-security-privacy).
 
 Finally, we may also share your Personal Information to comply with applicable laws and regulations, to respond to a subpoena, search warrant or other lawful request for information we receive, or to otherwise protect our rights.
+
+### AI Chat Assistant and LLM Services
+
+Our site includes an AI-powered chat assistant feature. When you use this feature:
+
+- **Third-Party AI Providers**: Your questions are sent to third-party AI service providers (OpenAI, NVIDIA) to generate responses. These providers have their own privacy policies and data handling practices.
+- **No Personal Health Information**: Please do not share personal health information, patient data, or any sensitive identifiable information through the chat assistant.
+- **Research and Educational Use**: The AI assistant is designed for research and educational purposes related to bioinformatics and should not be used for clinical decision-making.
+- **Conversation Privacy**: Each chat session is identified by a unique session ID. Conversations are not shared with other users.
+- **Production Only**: LLM interaction tracking is only active in production environments. Development and testing environments do not send data to third-party services.
+
+### Your Rights and Data Control
 
 ### Do Not Track
 
