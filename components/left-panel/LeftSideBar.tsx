@@ -1,7 +1,6 @@
 'use client';
 import { useLazyQuery } from '@apollo/client/react';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -236,27 +235,20 @@ export function LeftSideBar() {
       </Tooltip>
       <div className='flex flex-col'>
         <Label className='mb-2 font-bold'>Disease Map</Label>
-        <div className='flex items-center gap-2'>
-          <motion.div layout transition={{ duration: 0.1, ease: 'easeInOut' }} initial={{ width: '100%' }} animate>
+        <div className='flex w-full items-center'>
+          <div className='min-w-0 flex-grow px-2'>
             <DiseaseMapCombobox
               value={diseaseMap}
               onChange={d => typeof d === 'string' && handleDiseaseChange(d)}
               data={diseaseData}
               className='w-full'
             />
-          </motion.div>
-          <AnimatePresence>
-            {(!called || (called && loading) || diseaseData === undefined || universalLoading) && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ duration: 0.1 }}
-              >
-                <Spinner size='small' />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </div>
+          {(!called || (called && loading) || diseaseData === undefined || universalLoading) && (
+            <div className='fade-in zoom-in mr-1 animate-in duration-100'>
+              <Spinner size='small' />
+            </div>
+          )}
         </div>
       </div>
       <NodeColor onPropChange={val => handlePropChange(val, 'color')} />

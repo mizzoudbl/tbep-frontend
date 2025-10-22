@@ -81,7 +81,11 @@ export function LoadGraph() {
               [] as unknown as string[],
             );
           } else {
-            const parsedResult = Papa.parse(fileText, { header: true, skipEmptyLines: true });
+            const parsedResult = Papa.parse(fileText, {
+              header: true,
+              skipEmptyLines: true,
+              dynamicTyping: { score: true },
+            });
             fileData = parsedResult.data as Array<Record<string, string | number>>;
             fields = parsedResult.meta.fields || [];
           }

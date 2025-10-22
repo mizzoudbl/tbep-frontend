@@ -222,7 +222,6 @@ export function GraphEvents({
           attr.forceLabel = false;
           return attr;
         });
-        const _count = 0;
         for (const node of graph.extremities(e.edge)) {
           graph.updateNodeAttributes(node, attr => {
             if (highlightedNodesRef.current.has(node)) {

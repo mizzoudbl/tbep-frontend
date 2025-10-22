@@ -19,8 +19,6 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
   const selectedRadioNodeSize = useStore(state => state.selectedRadioNodeSize);
   const selectedNodeSizeProperty = useStore(state => state.selectedNodeSizeProperty);
   const highlightNeighborNodes = useStore(state => state.highlightNeighborNodes);
-  const _activeTab = useStore(state => state.activeTab);
-  const _candidatePrioritizationCutOff = useStore(state => state.radialAnalysis.candidatePrioritizationCutOff);
 
   useEffect(() => {
     sigma.on('enterNode', e => setHoveredNode({ node: e.node, ctrlKey: e.event.original.ctrlKey }));
