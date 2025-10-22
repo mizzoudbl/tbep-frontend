@@ -8,6 +8,7 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
   },
   turbopack: {},
+  transpilePackages: ["shiki"]
 };
 
 const withNextra = nextra({

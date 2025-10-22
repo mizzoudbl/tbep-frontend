@@ -3,7 +3,6 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { RefreshCcwIcon } from 'lucide-react';
-import { motion } from 'motion/react';
 import React from 'react';
 import { toast } from 'sonner';
 import { LLM_MODELS } from '@/lib/data';
@@ -98,15 +97,10 @@ export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
   };
 
   const renderMessages = (alert?: { component: React.ReactNode; show: boolean }) => (
-    <Conversation className='max-h-[75vh]'>
+    <Conversation className='h-full'>
       <ConversationContent>
         {messages.map((message, messageIndex) => (
-          <motion.div
-            key={message.id}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          >
+          <div key={message.id} className='fade-in slide-in-from-bottom-10 animate-in duration-300'>
             {message.parts.map((part, i) => {
               switch (part.type) {
                 case 'text':
@@ -138,7 +132,7 @@ export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
                   return null;
               }
             })}
-          </motion.div>
+          </div>
         ))}
         {alert?.show && alert?.component}
       </ConversationContent>

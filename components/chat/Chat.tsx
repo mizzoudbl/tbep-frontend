@@ -1,5 +1,4 @@
 import { Trash2Icon } from 'lucide-react';
-import { motion } from 'motion/react';
 import Link from 'next/link';
 import React from 'react';
 import { ChatBase } from './ChatBase';
@@ -13,7 +12,7 @@ export function Chat() {
         <div className='mt-4 flex flex-col rounded-lg border p-4 shadow-md'>
           {isChatOpen && (
             <div className='space-y-2 p-2'>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <div className='fade-in animate-in duration-200'>
                 <div className='flex justify-between border-b pb-2'>
                   Chat with TBEP Assistant
                   <button type='button' onClick={handleDeleteMessages} className='text-gray-500 hover:text-gray-700'>
@@ -21,7 +20,7 @@ export function Chat() {
                   </button>
                 </div>
                 {renderMessages()}
-              </motion.div>
+              </div>
             </div>
           )}
           <div className='mt-2 flex'>{renderPromptInput()}</div>

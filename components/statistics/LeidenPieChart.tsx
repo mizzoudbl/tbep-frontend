@@ -1,6 +1,5 @@
 'use client';
 import { XSquareIcon } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import { Cell, Pie, PieChart, type TooltipContentProps } from 'recharts';
 import { ChartContainer, ChartTooltip } from '../ui/chart';
@@ -73,34 +72,27 @@ export function LeidenPieChart({
           </Pie>
         </PieChart>
       </ChartContainer>
-      <AnimatePresence>
-        {selectedClusterIndex !== null && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className='rounded border bg-white p-2 shadow-sm'
-          >
-            <div className='flex gap-2'>
-              <h3 className='mb-2 font-bold'>Genes in {data[selectedClusterIndex].name}:</h3>
-              <button
-                type='button'
-                onClick={() => setSelectedClusterIndex(null)}
-                className='flex text-gray-500 hover:text-gray-700'
-              >
-                <XSquareIcon size={20} />
-              </button>
-            </div>
-            <ScrollArea className='h-[53vh] rounded border'>
-              <ul className='ml-6 list-disc'>
-                {data[selectedClusterIndex].genes.map(gene => (
-                  <li key={gene}>{gene}</li>
-                ))}
-              </ul>
-            </ScrollArea>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {selectedClusterIndex !== null && (
+        <div className='fade-in slide-in-from-bottom-2 animate-in rounded border bg-white p-2 shadow-sm duration-200'>
+          <div className='flex gap-2'>
+            <h3 className='mb-2 font-bold'>Genes in {data[selectedClusterIndex].name}:</h3>
+            <button
+              type='button'
+              onClick={() => setSelectedClusterIndex(null)}
+              className='flex text-gray-500 hover:text-gray-700'
+            >
+              <XSquareIcon size={20} />
+            </button>
+          </div>
+          <ScrollArea className='h-[53vh] rounded border'>
+            <ul className='ml-6 list-disc'>
+              {data[selectedClusterIndex].genes.map(gene => (
+                <li key={gene}>{gene}</li>
+              ))}
+            </ul>
+          </ScrollArea>
+        </div>
+      )}
     </>
   );
 }
