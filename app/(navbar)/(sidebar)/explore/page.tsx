@@ -246,7 +246,8 @@ export default function Explore() {
             .split('\n')
             .slice(1)
             .flatMap(line => line.split(',').slice(0, 2))
-            .map(gene => gene.trim().toUpperCase()),
+            .map(gene => gene.trim().toUpperCase())
+            .filter(Boolean),
         );
       } else {
         toast.error('Unsupported file type', {
@@ -307,7 +308,7 @@ export default function Explore() {
         <TabsList className='grid h-auto w-full grid-cols-1 gap-2 border border-teal-100 bg-white p-2 shadow-xs sm:grid-cols-2 sm:gap-0 sm:p-0'>
           <TabsTrigger
             value='search'
-            className='min-h-[70px] w-full justify-start rounded-md p-3 text-left text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white sm:min-h-[80px] sm:p-4'
+            className='min-h-[70px] w-full justify-start rounded-md p-3 text-left text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white sm:min-h-20 sm:p-4'
           >
             <div className='flex w-full flex-col items-start'>
               <span className='bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text font-semibold text-sm text-transparent leading-tight sm:text-base lg:text-lg'>
@@ -320,7 +321,7 @@ export default function Explore() {
           </TabsTrigger>
           <TabsTrigger
             value='upload'
-            className='min-h-[70px] w-full justify-start rounded-md p-3 text-left text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white sm:min-h-[80px] sm:p-4'
+            className='min-h-[70px] w-full justify-start rounded-md p-3 text-left text-teal-900 data-[state=active]:bg-secondary data-[state=active]:text-white sm:min-h-20 sm:p-4'
           >
             <div className='flex w-full flex-col items-start'>
               <span className='bg-linear-to-r from-emerald-500 via-teal-600 to-cyan-600 bg-clip-text font-semibold text-sm text-transparent leading-tight sm:text-base lg:text-lg'>

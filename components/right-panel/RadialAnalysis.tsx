@@ -24,6 +24,7 @@ export function RadialAnalysis() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: I won't write reason
   React.useEffect(() => {
+    if (new URLSearchParams(window.location.search).has('file')) return;
     const minScore = Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0;
     setMinScore(minScore);
     updateRadialAnalysis(minScore, 'edgeWeightCutOff');

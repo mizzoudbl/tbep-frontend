@@ -140,7 +140,7 @@ export function DiseaseMapCombobox({
           role='combobox'
           aria-expanded={open}
           className={cn(
-            'h-9 w-[200px] justify-between text-ellipsis text-wrap break-words bg-accent-foreground',
+            'wrap-break-word h-9 w-[200px] justify-between text-ellipsis text-wrap bg-accent-foreground',
             className,
           )}
         >

@@ -155,6 +155,7 @@ export function StatisticsTab() {
             </TabsList>
             {CENTRALITY_CONFIGS.map(config => {
               const data = networkStatistics[config.data];
+              const hasData = data && data.length > 0;
               return (
                 <TabsContent key={config.value} value={config.value}>
                   <Tabs defaultValue='chart'>
@@ -172,21 +173,26 @@ export function StatisticsTab() {
                           size={'icon'}
                           className='hover:bg-muted hover:text-muted-foreground'
                           onClick={() => handleDownload(config.value, data)}
+                          disabled={!hasData}
                         >
                           <DownloadIcon className='size-5' />
                         </Button>
                       </div>
                     </div>
                     <TabsContent value='table'>
-                      {data ? (
+                      {hasData ? (
                         // biome-ignore lint/suspicious/noExplicitAny: Typescript error
                         <DataTable data={data as any[]} columns={config.columns} />
+                      ) : data ? (
+                        <div className='flex justify-center text-center text-muted-foreground'>
+                          Calculation failed for large graph. Try with a smaller network.
+                        </div>
                       ) : (
-                        <Skeleton className='h-[450px] w-full' />
+                        <Skeleton className='h-[400px] w-full' />
                       )}
                     </TabsContent>
                     <TabsContent value='chart'>
-                      {data ? (
+                      {hasData ? (
                         <ChartContainer className='safari-only-svg-fix max-h-[400px] w-full' config={{}}>
                           <BarChart data={data}>
                             <CartesianGrid strokeDasharray='3 3' />
@@ -201,6 +207,12 @@ export function StatisticsTab() {
                             <Bar dataKey={config.dataKey} fill='hsl(var(--primary))' />
                           </BarChart>
                         </ChartContainer>
+                      ) : data ? (
+                        <div className='flex items-center justify-center'>
+                          <p className='text-muted-foreground'>
+                            Calculation failed for large graph. Try with a smaller network.
+                          </p>
+                        </div>
                       ) : (
                         <Skeleton className='h-[400px] w-full' />
                       )}

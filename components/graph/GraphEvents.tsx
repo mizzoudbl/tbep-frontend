@@ -372,7 +372,7 @@ export function GraphEvents({
         )?.[selectedRadio]?.[selectedProperty];
         return (
           <div>
-            <h3 className='break-words font-bold'>{selectedProperty}</h3>
+            <h3 className='wrap-break-word font-bold'>{selectedProperty}</h3>
             <p className={cn(value ? 'italic' : '')}>{value || 'N/A'}</p>
           </div>
         );
@@ -385,7 +385,7 @@ export function GraphEvents({
             )?.[selectedRadio]?.[prop];
             return (
               <div key={prop}>
-                <h3 className='break-words font-bold'>{prop}</h3>
+                <h3 className='wrap-break-word font-bold'>{prop}</h3>
                 <p className={cn(value ? 'italic' : '')}>{value || 'N/A'}</p>
               </div>
             );

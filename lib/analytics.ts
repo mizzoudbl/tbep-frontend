@@ -72,16 +72,22 @@ export function statisticsGenerator(
   }
 
   /** Top 10 By PageRank */
-  const pagerankCentrality = pagerank(graph, { getEdgeWeight: 'score' });
-  const top10ByPageRank = Object.entries(pagerankCentrality)
-    .map(([node, value]) => ({
-      ID: node,
-      geneName: graph.getNodeAttribute(node, 'label')!,
-      description: graph.getNodeAttribute(node, 'description')!,
-      pagerank: value.toFixed(3),
-    }))
-    .sort((a, b) => +b.pagerank - +a.pagerank)
-    .slice(0, 10);
+  let pagerankCentrality: Record<string, number> = {};
+  let top10ByPageRank: Array<{ ID: string; geneName: string; description: string; pagerank: string }> = [];
+  try {
+    pagerankCentrality = pagerank(graph, { getEdgeWeight: 'score', tolerance: 1e-6, maxIterations: 100 });
+    top10ByPageRank = Object.entries(pagerankCentrality)
+      .map(([node, value]) => ({
+        ID: node,
+        geneName: graph.getNodeAttribute(node, 'label')!,
+        description: graph.getNodeAttribute(node, 'description')!,
+        pagerank: value.toFixed(3),
+      }))
+      .sort((a, b) => +b.pagerank - +a.pagerank)
+      .slice(0, 10);
+  } catch (error) {
+    console.warn('PageRank centrality calculation failed:', error);
+  }
 
   /** Edge Interaction Score Cumulative Distribution */
   // Like score > 0.9, count 10; score > 0.8, count 20; score > 0.7, count 30; ...
