@@ -37,7 +37,7 @@ import { Spinner } from '../ui/spinner';
 export function LoadGraph() {
   const searchParams = useSearchParams();
   const loadGraph = useLoadGraph<NodeAttributes, EdgeAttributes>();
-  const variable = JSON.parse(localStorage.getItem('graphConfig') || '{}');
+  const graphConfig = JSON.parse(localStorage.getItem('graphConfig') || '{}');
   const [fetchData, { loading }] = useLazyQuery<GeneGraphData, GeneGraphVariables>(GENE_GRAPH_QUERY);
 
   const [fetchFileData] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(GENE_VERIFICATION_QUERY);
@@ -81,12 +81,12 @@ export function LoadGraph() {
               [] as unknown as string[],
             );
           } else {
-            const parsedResult = Papa.parse(fileText, {
+            const parsedResult = Papa.parse<(typeof fileData)[0]>(fileText, {
               header: true,
               skipEmptyLines: true,
-              dynamicTyping: { score: true },
+              dynamicTyping: true,
             });
-            fileData = parsedResult.data as Array<Record<string, string | number>>;
+            fileData = parsedResult.data;
             fields = parsedResult.meta.fields || [];
           }
           if (fields.length < 3) {
@@ -101,8 +101,8 @@ export function LoadGraph() {
           }
           const geneIDs = new Set<string>();
           for (const gene of fileData) {
-            geneIDs.add(gene[fields?.[0]] as string);
-            geneIDs.add(gene[fields?.[1]] as string);
+            if (gene[fields?.[0]]) geneIDs.add(gene[fields?.[0]] as string);
+            if (gene[fields?.[1]]) geneIDs.add(gene[fields?.[1]] as string);
           }
           const geneIDArray = Array.from(geneIDs);
           const result = await fetchFileData({
@@ -132,9 +132,19 @@ export function LoadGraph() {
               description: gene.Description,
             });
           }
+
+          const getGeneID = (value: string | null) => {
+            if (!value) return null;
+            if (value.toLowerCase().startsWith('ensg')) {
+              return value;
+            }
+            return geneNameToID.get(value);
+          };
+
           for (const gene of fileData) {
-            const source = geneNameToID.get(gene[fields?.[0]] as string);
-            const target = geneNameToID.get(gene[fields?.[1]] as string);
+            const source = getGeneID(gene[fields?.[0]] as string);
+            const target = getGeneID(gene[fields?.[1]] as string);
+
             if (!source || !target) continue;
             graph.mergeEdgeWithKey(`${source}-${target}`, source, target, {
               score: gene[fields?.[2]] as number,
@@ -156,10 +166,10 @@ export function LoadGraph() {
       } else {
         const result = await fetchData({
           variables: {
-            geneIDs: variable.geneIDs,
-            interactionType: variable.interactionType,
-            minScore: variable.minScore,
-            order: variable.order,
+            geneIDs: graphConfig.geneIDs,
+            interactionType: graphConfig.interactionType,
+            minScore: graphConfig.minScore,
+            order: graphConfig.order,
           },
         });
         if (result.error) {
@@ -184,8 +194,8 @@ export function LoadGraph() {
             setShowWarning(true);
           }
           // store graphName in JSON in graphConfig key in localStorage
-          localStorage.setItem('graphConfig', JSON.stringify({ ...variable, graphName }));
-          useStore.setState({ graphConfig: { ...variable, graphName } });
+          localStorage.setItem('graphConfig', JSON.stringify({ ...graphConfig, graphName }));
+          useStore.setState({ graphConfig: { ...graphConfig, graphName } });
           const transformedData: Partial<SerializedGraph<NodeAttributes, EdgeAttributes>> = {
             nodes: genes.map(gene => ({
               key: gene.ID,

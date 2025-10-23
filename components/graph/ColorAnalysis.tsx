@@ -20,8 +20,11 @@ export function ColorAnalysis() {
   const edgeOpacity = useStore(state => state.edgeOpacity);
 
   const minScore =
-    typeof window !== 'undefined' ? (Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0) : 0;
-
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).has('file')
+        ? 0
+        : (Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0)
+      : 0;
   // biome-ignore lint/correctness/useExhaustiveDependencies: not required
   useEffect(() => {
     if (!graph) return;

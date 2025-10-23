@@ -36,7 +36,8 @@
     "theme.config.jsx",
     "pages/_error.jsx",
     "mdx-components.tsx",
-    ".next\\dev/types/**/*.ts"
+    ".next\\dev/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

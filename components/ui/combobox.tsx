@@ -36,7 +36,7 @@ export function Combobox({
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className={cn('h-8 w-[200px] justify-between text-wrap break-words', className)}
+          className={cn('wrap-break-word h-8 w-[200px] justify-between text-wrap', className)}
         >
           <span className='truncate'>
             {multiselect && value instanceof Set

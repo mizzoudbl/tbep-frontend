@@ -15,7 +15,11 @@ export function Legend() {
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
 
   const minScore =
-    typeof window !== 'undefined' ? (Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0) : 0;
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).has('file')
+        ? 0
+        : (Number(JSON.parse(localStorage.getItem('graphConfig') ?? '{}').minScore) ?? 0)
+      : 0;
 
   return (
     <Collapsible defaultOpen className='mb-2 rounded border p-2 text-xs shadow-sm'>

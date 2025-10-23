@@ -158,7 +158,7 @@ export function VirtualizedCombobox({
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className={cn('h-9 w-[200px] justify-between text-ellipsis text-wrap break-words', className)}
+          className={cn('wrap-break-word h-9 w-[200px] justify-between text-ellipsis text-wrap', className)}
         >
           <span className='truncate'>
             {multiselect && value instanceof Set ? (

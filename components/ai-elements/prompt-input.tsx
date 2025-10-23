@@ -511,7 +511,7 @@ export const PromptInputEditable = ({
         'resize-none rounded-none border-none shadow-none outline-none ring-0',
         'bg-transparent dark:bg-transparent',
         'focus-visible:ring-0',
-        'whitespace-pre-wrap break-words',
+        'wrap-break-word whitespace-pre-wrap',
         'before:pointer-events-none before:absolute before:text-muted-foreground before:opacity-50 before:content-[attr(data-placeholder)]',
         isEmpty ? 'relative before:block' : 'before:hidden',
         className,
@@ -618,7 +618,7 @@ export const PromptInputModelSelectTrigger = ({ className, ...props }: PromptInp
   <SelectTrigger
     className={cn(
       'border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors',
-      'hover:bg-accent hover:text-foreground [&[aria-expanded="true"]]:bg-accent [&[aria-expanded="true"]]:text-foreground',
+      'hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground',
       className,
     )}
     {...props}

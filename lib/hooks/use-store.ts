@@ -48,7 +48,7 @@ export const useStore = create<GraphStore>(set => ({
     }));
   },
   radialAnalysis: {
-    edgeWeightCutOff: 0.4,
+    edgeWeightCutOff: 0,
     candidatePrioritizationCutOff: 0,
     seedGeneProximityCutOff: 0,
     nodeDegreeProperty: 'Gene Degree',
