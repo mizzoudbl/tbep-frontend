@@ -52,7 +52,7 @@ export function Export() {
           size='sm'
           className='mr-2 mb-2 w-[calc(100%-1.5rem)] rounded-sm border-none bg-zinc-200 text-xs hover:bg-zinc-300 hover:text-black'
         >
-          <FolderUpIcon className='mr-1 size-3' />
+          <FolderUpIcon className='size-3' />
           Export
         </Button>
       </DropdownMenuTrigger>

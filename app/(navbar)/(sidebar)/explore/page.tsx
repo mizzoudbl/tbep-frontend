@@ -401,7 +401,7 @@ export default function Explore() {
                     >
                       {autofillLoading || topGenesLoading ? (
                         <>
-                          <LoaderIcon className='mr-1 animate-spin' size={14} />
+                          <LoaderIcon className='animate-spin' size={14} />
                           <span className='hidden sm:inline'>Auto-filling...</span>
                           <span className='sm:hidden'>Loading...</span>
                         </>
@@ -413,7 +413,7 @@ export default function Explore() {
                 </div>
 
                 <Button variant='outline' size='sm' className='h-8 px-3 text-sm' onClick={() => setHistoryOpen(true)}>
-                  <HistoryIcon size={16} className='mr-1' />
+                  <HistoryIcon size={16} />
                   History
                 </Button>
               </div>

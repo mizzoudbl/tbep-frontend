@@ -147,7 +147,7 @@ export function LeftSideBar() {
           config: [
             {
               category: selectedRadioStringToEnum(selectedRadio),
-              properties: properties,
+              properties,
               ...(ddp && { diseaseId: diseaseName }),
             },
           ],

@@ -33,7 +33,7 @@ export default function NetworkLayoutPage({ children }: { children: React.ReactN
         <Button variant='hover' size='icon' className='h-full' onClick={() => setLeftSidebar(!leftSidebar)}>
           {leftSidebar ? <ChevronLeft className='size-4' /> : <ChevronRight className='size-4' />}
         </Button>
-        <Suspense fallback={<Input className='h-8 max-w-fit font-semibold text-sm' value={'Untitled'} />}>
+        <Suspense fallback={<Input className='h-8 max-w-fit font-semibold text-sm' defaultValue='Untitled' />}>
           <FileName />
         </Suspense>
         <TabsList className='flex h-8 w-1/2 items-center gap-4'>

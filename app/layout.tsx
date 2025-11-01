@@ -22,6 +22,7 @@ const geistMono = localFont({
   preload: true,
 });
 
+// biome-ignore lint/style/useComponentExportOnlyModules: Next.js convention for metadata export
 export const metadata: Metadata = {
   title: {
     default: 'Target & Biomarker Exploration Portal',

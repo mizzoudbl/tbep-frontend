@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useComponentExportOnlyModules: Written as recommended by nextra */
 import { generateStaticParamsFor, importPage } from 'nextra/pages';
 import { useMDXComponents as getMDXComponents } from '../../../mdx-components';
 

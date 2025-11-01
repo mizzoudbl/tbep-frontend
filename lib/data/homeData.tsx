@@ -1,10 +1,10 @@
 import { FileTextIcon, HelpCircleIcon, InfoIcon, MessageSquareMore, TvMinimalPlayIcon, Users2Icon } from 'lucide-react';
 
 export const links = [
-  { href: '/docs', text: 'Docs', icon: <HelpCircleIcon className='mr-2 size-4' /> },
-  { href: '/about', text: 'About', icon: <InfoIcon className='mr-2 size-4' /> },
-  { href: '/team', text: 'Team', icon: <Users2Icon className='mr-2 size-4' /> },
-  { href: '/feedback', text: 'Feedback', icon: <MessageSquareMore className='mr-2 size-4' /> },
+  { href: '/docs', text: 'Docs', icon: <HelpCircleIcon className='size-4' /> },
+  { href: '/about', text: 'About', icon: <InfoIcon className='size-4' /> },
+  { href: '/team', text: 'Team', icon: <Users2Icon className='size-4' /> },
+  { href: '/feedback', text: 'Feedback', icon: <MessageSquareMore className='size-4' /> },
 ];
 
 export const databaseStats = [

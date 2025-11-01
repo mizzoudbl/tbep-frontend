@@ -129,8 +129,10 @@ export function GraphAnalysis({
           seedProximityNodesRef.current.add(node);
         } else if (highlightedNodesRef?.current.has(node)) {
           attr.type = 'highlight';
+          seedProximityNodesRef.current.delete(node);
         } else {
           attr.type = 'circle';
+          seedProximityNodesRef.current.delete(node);
         }
         return attr;
       });
