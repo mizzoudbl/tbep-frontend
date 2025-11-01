@@ -52,7 +52,6 @@ export interface ChatBaseRenderProps {
   // Components
   renderMessages: (alert?: { component: React.ReactNode; show: boolean }) => React.ReactNode;
   renderPromptInput: (compact?: boolean) => React.ReactNode;
-  renderModelSelect: (className?: string) => React.ReactNode;
 }
 
 export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
@@ -158,7 +157,7 @@ export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
             }}
             value={model}
           >
-            <PromptInputModelSelectTrigger className={compact ? 'h-7' : ''}>
+            <PromptInputModelSelectTrigger size={compact ? 'sm' : 'default'}>
               <PromptInputModelSelectValue />
             </PromptInputModelSelectTrigger>
             <PromptInputModelSelectContent>
@@ -200,25 +199,6 @@ export function ChatBase({ onChatOpen, children }: ChatBaseProps) {
           regenerate,
           renderMessages,
           renderPromptInput,
-          renderModelSelect: (className?: string) => (
-            <PromptInputModelSelect
-              onValueChange={value => {
-                setModel(value as typeof model);
-              }}
-              value={model}
-            >
-              <PromptInputModelSelectTrigger className={className}>
-                <PromptInputModelSelectValue />
-              </PromptInputModelSelectTrigger>
-              <PromptInputModelSelectContent>
-                {LLM_MODELS.map(modelOption => (
-                  <PromptInputModelSelectItem className={className} key={modelOption.value} value={modelOption.value}>
-                    {modelOption.name}
-                  </PromptInputModelSelectItem>
-                ))}
-              </PromptInputModelSelectContent>
-            </PromptInputModelSelect>
-          ),
         })}
       </>
     );

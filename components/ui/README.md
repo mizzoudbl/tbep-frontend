@@ -12,9 +12,11 @@ Components Used:
 
 - [alert](./alert.tsx)
 - [alert-dialog](./alert-dialog.tsx.tsx)
+- [avatar](./avatar.tsx)
 - [badge](./badge.tsx)
 - [button](./button.tsx)
 - [card](./card.tsx)
+- [chart](./chart.tsx)
 - [checkbox](./checkbox.tsx)
 - [collapsible](./collapsible.tsx)
 - [combobox](./combobox.tsx)

@@ -2,10 +2,11 @@
 import { XSquareIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Cell, Pie, PieChart, type TooltipContentProps } from 'recharts';
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import { ChartContainer, ChartTooltip } from '../ui/chart';
 import { ScrollArea } from '../ui/scroll-area';
 
-const CustomTooltip = ({ active, payload }: TooltipContentProps<string, string>) => {
+const CustomTooltip = ({ active, payload }: TooltipContentProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (

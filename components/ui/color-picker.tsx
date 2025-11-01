@@ -18,7 +18,7 @@ export function ColorPicker({
   property: keyof GraphStore;
   className?: string;
 }) {
-  const solids = ['black', 'hotpink', 'orange', 'yellow', 'limegreen', 'aquamarine', 'darkorchid', 'red', 'blue'];
+  const solids = ['black', 'hotpink', 'orange', 'yellow', 'limegreen', 'aquamarine', 'skyblue', 'darkorchid', 'blue'];
 
   const handleNodeColorChange = (e: React.KeyboardEvent<HTMLInputElement> | string, key: keyof GraphStore) => {
     if (typeof e === 'string') {
@@ -35,7 +35,11 @@ export function ColorPicker({
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
-          className={cn('w-[220px] justify-start text-left font-normal', !color && 'text-muted-foreground', className)}
+          className={cn(
+            'w-[220px] justify-start border text-left font-normal',
+            !color && 'text-muted-foreground',
+            className,
+          )}
         >
           <div className='flex w-full items-center gap-2'>
             {color ? (
@@ -54,8 +58,8 @@ export function ColorPicker({
               type='button'
               key={s}
               style={{ background: s }}
-              onClick={_e => handleNodeColorChange(s, property)}
-              className='size-6 cursor-pointer rounded-md border-0 hover:scale-105'
+              onClick={() => handleNodeColorChange(s, property)}
+              className='size-6 cursor-pointer rounded-md hover:scale-105'
             />
           ))}
         </div>

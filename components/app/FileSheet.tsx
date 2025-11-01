@@ -264,8 +264,8 @@ export function FileSheet() {
       <div className='flex flex-col justify-between gap-2 lg:flex-row'>
         <Sheet>
           <SheetTrigger asChild>
-            <Button size='sm' className='w-full text-xs'>
-              <UploadIcon className='mr-1 size-3' />
+            <Button size='sm' className='w-[48%] text-xs'>
+              <UploadIcon className='size-3' />
               Upload Files
             </Button>
           </SheetTrigger>
@@ -362,7 +362,7 @@ export function FileSheet() {
             </SheetFooter>
           </SheetContent>
         </Sheet>
-        <Button variant={'destructive'} size={'sm'} className='text-xs' onClick={handleReset}>
+        <Button variant={'destructive'} size={'sm'} className='w-[48%] text-xs' onClick={handleReset}>
           Reset Uploads
         </Button>
       </div>

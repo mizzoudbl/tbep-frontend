@@ -117,7 +117,7 @@ export default function History({
           <ScrollArea>
             <div className='flex flex-col space-y-4 pr-2'>
               {history.map((item, index) => (
-                <Card key={`${item.title}-${item.createdAt ?? index}`}>
+                <Card key={`${item.title}-${item.createdAt ?? index}`} className='gap-0 py-0'>
                   <CardHeader className='p-2'>
                     <CardTitle>
                       <Input

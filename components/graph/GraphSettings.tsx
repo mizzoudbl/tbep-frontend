@@ -91,7 +91,9 @@ export function GraphSettings({ clickedNodesRef }: { clickedNodesRef?: React.Ref
             data.type = 'circle';
           } else if (
             clickedNodesRef?.current.has(node) ||
-            ((highlightNeighborNodes || hoveredNode.ctrlKey) && graph.neighbors(hoveredNode.node).includes(node))
+            ((highlightNeighborNodes || hoveredNode.ctrlKey) &&
+              !data.hidden &&
+              graph.neighbors(hoveredNode.node).includes(node))
           ) {
             data.highlighted = true;
             data.type = 'border';

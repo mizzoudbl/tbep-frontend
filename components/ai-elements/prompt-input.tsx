@@ -45,6 +45,7 @@ type AttachmentsContext = {
 
 const AttachmentsContext = createContext<AttachmentsContext | null>(null);
 
+// biome-ignore lint/style/useComponentExportOnlyModules: it's a hook
 export const usePromptInputAttachments = () => {
   const context = useContext(AttachmentsContext);
 
@@ -64,7 +65,7 @@ export function PromptInputAttachment({ data, className, ...props }: PromptInput
   const attachments = usePromptInputAttachments();
 
   return (
-    <div className={cn('group relative h-14 w-14 rounded-md border', className)} key={data.id} {...props}>
+    <div className={cn('group relative size-14 rounded-md border', className)} key={data.id} {...props}>
       {data.mediaType?.startsWith('image/') && data.url ? (
         <Image
           alt={data.filename || 'attachment'}
@@ -80,13 +81,13 @@ export function PromptInputAttachment({ data, className, ...props }: PromptInput
       )}
       <Button
         aria-label='Remove attachment'
-        className='-right-1.5 -top-1.5 absolute h-6 w-6 rounded-full opacity-0 group-hover:opacity-100'
+        className='-right-1.5 -top-1.5 absolute size-6 rounded-full opacity-0 group-hover:opacity-100'
         onClick={() => attachments.remove(data.id)}
         size='icon'
         type='button'
         variant='outline'
       >
-        <XIcon className='h-3 w-3' />
+        <XIcon className='size-3' />
       </Button>
     </div>
   );

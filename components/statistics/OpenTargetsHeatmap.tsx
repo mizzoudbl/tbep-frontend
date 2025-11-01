@@ -262,43 +262,41 @@ export function OpenTargetsHeatmap() {
           </div>
         </TabsContent>
       </Tabs>
-      <div className='mt-2 flex w-full flex-col items-center gap-2'>
-        <div className='flex w-full items-center justify-center gap-2'>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => handlePaginationChange({ ...pagination, page: Math.max(pagination.page - 1, 1) })}
-            disabled={pagination.page === 1 || !geneNames.length}
+      <div className='mt-2 mb-4 flex w-full items-center justify-center gap-2'>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => handlePaginationChange({ ...pagination, page: Math.max(pagination.page - 1, 1) })}
+          disabled={pagination.page === 1 || !geneNames.length}
+        >
+          <ChevronLeftIcon size={18} />
+        </Button>
+        <span className='text-sm'>
+          Page {pagination.page} of {maxPage}
+        </span>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => handlePaginationChange({ ...pagination, page: Math.min(pagination.page + 1, maxPage) })}
+          disabled={pagination.page >= maxPage || !geneNames.length}
+        >
+          <ChevronRightIcon size={18} />
+        </Button>
+        <div className='ml-2'>
+          <Select
+            defaultValue='25'
+            onValueChange={value => handlePaginationChange({ page: 1, limit: Number.parseInt(value, 10) })}
           >
-            <ChevronLeftIcon size={18} />
-          </Button>
-          <span className='text-sm'>
-            Page {pagination.page} of {maxPage}
-          </span>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => handlePaginationChange({ ...pagination, page: Math.min(pagination.page + 1, maxPage) })}
-            disabled={pagination.page >= maxPage || !geneNames.length}
-          >
-            <ChevronRightIcon size={18} />
-          </Button>
-          <div className='ml-2'>
-            <Select
-              defaultValue='25'
-              onValueChange={value => handlePaginationChange({ page: 1, limit: Number.parseInt(value, 10) })}
-            >
-              <SelectTrigger className='w-[110px]'>
-                <SelectValue placeholder='Page size' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='10'>Show 10</SelectItem>
-                <SelectItem value='25'>Show 25</SelectItem>
-                <SelectItem value='100'>Show 100</SelectItem>
-                <SelectItem value='500'>Show 500</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+            <SelectTrigger className='w-[110px]'>
+              <SelectValue placeholder='Page size' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='10'>Show 10</SelectItem>
+              <SelectItem value='25'>Show 25</SelectItem>
+              <SelectItem value='100'>Show 100</SelectItem>
+              <SelectItem value='500'>Show 500</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>

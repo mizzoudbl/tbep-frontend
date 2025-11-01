@@ -74,13 +74,13 @@ export default function AboutPage() {
 
   return (
     <div className='mx-auto my-8 w-full max-w-5xl'>
-      <Card className='grid border md:grid-cols-2'>
-        <div>
+      <Card className='grid gap-0 border py-0 md:grid-cols-2'>
+        <div className='py-6'>
           <CardHeader>
             <CardTitle className='text-lg'>We Value Your Feedback</CardTitle>
             <CardDescription>Help us improve our tools by sharing your thoughts</CardDescription>
           </CardHeader>
-          <CardContent className='pt-6'>
+          <CardContent className='py-6'>
             {submitted ? (
               submitted !== 'failed' ? (
                 <div className='flex flex-col items-center justify-center space-y-4 py-6 text-center'>
@@ -188,7 +188,7 @@ export default function AboutPage() {
           {!submitted && (
             <CardFooter>
               <Button onClick={handleSubmit} className='w-full'>
-                {loading && <Spinner variant={1} className='mr-2 text-white' size={'small'} />}
+                {loading && <Spinner variant={1} className='text-white' size={'small'} />}
                 Submit Feedback
               </Button>
             </CardFooter>
