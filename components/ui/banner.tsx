@@ -1,6 +1,6 @@
 'use client';
 
-import { X } from 'lucide-react';
+import { XIcon } from 'lucide-react';
 import React, { useEffect } from 'react';
 
 export function Banner({ children }: { children: React.ReactNode }) {
@@ -15,17 +15,17 @@ export function Banner({ children }: { children: React.ReactNode }) {
   return (
     <>
       {show && (
-        <div className='bg-teal-600 text-center py-0.5'>
+        <div className='bg-teal-600 py-0.5 text-center'>
           {children}
           <button
             type='button'
-            className='float-right mr-4 mt-0.5 hover:scale-125 transition-transform text-white'
+            className='float-right mt-0.5 mr-4 text-white transition-transform hover:scale-125'
             onClick={() => {
               localStorage.setItem('banner', 'false');
               setShow(false);
             }}
           >
-            <X className='w-5 h-5' />
+            <XIcon className='size-5' />
           </button>
         </div>
       )}

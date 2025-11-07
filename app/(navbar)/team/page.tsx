@@ -12,7 +12,7 @@ export default function TeamPage() {
               {category.members.map(person => (
                 <div
                   key={person.name}
-                  className='flex min-h-80 w-80 flex-col items-center rounded-lg border p-4 transition-shadow hover:shadow-lg'
+                  className='flex min-h-81 w-85 flex-col items-center rounded-lg border p-4 transition-shadow hover:shadow-lg'
                 >
                   <Image
                     src={person.image}
@@ -29,7 +29,6 @@ export default function TeamPage() {
                         {person.name}
                       </h3>
                     </a>
-                    {person.role && <h4 className='text-md text-primary'>{person.role}</h4>}
                     {person.title.split('\n').map((title, _index) => (
                       <p key={title} className='text-gray-600 text-sm'>
                         {title}

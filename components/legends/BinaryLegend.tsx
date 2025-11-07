@@ -1,10 +1,10 @@
 'use client';
 
-import React, { createRef } from 'react';
+import React from 'react';
 import { useStore } from '@/lib/hooks';
 
 export function BinaryLegend({ width = 200, height = 50 }: { width?: number; height?: number }) {
-  const svgRef = createRef<SVGSVGElement>();
+  const svgRef = React.useRef<SVGSVGElement>(null);
   const defaultNodeColor = useStore(state => state.defaultNodeColor);
 
   React.useEffect(() => {
@@ -41,7 +41,7 @@ export function BinaryLegend({ width = 200, height = 50 }: { width?: number; hei
     svg.appendChild(circleNotPresent);
     svg.appendChild(textPresent);
     svg.appendChild(textNotPresent);
-  }, [defaultNodeColor, width, height, svgRef]);
+  }, [defaultNodeColor, width, height]);
 
   return (
     <div>

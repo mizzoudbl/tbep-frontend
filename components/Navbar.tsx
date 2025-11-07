@@ -14,11 +14,11 @@ export default function Navbar() {
     <header className='bg-teal-800 text-white'>
       <Banner>
         This website is for <b className='font-semibold'>academic use</b> only. Please refer to the
-        <Link href='/docs/LICENSE' className='underline ml-1'>
+        <Link href='/docs/LICENSE' className='ml-1 underline'>
           LICENSE
         </Link>
       </Banner>
-      <div className='container mx-auto flex justify-between items-center p-4'>
+      <div className='container mx-auto flex items-center justify-between p-4'>
         <div className='flex'>
           <Link href={'/'} className='flex items-center gap-2'>
             <Image src='/image/logo.svg' alt='TBEP logo' width={50} height={50} className='aspect-square' />

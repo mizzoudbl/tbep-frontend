@@ -52,8 +52,7 @@ export const team: TeamCategory[] = [
     members: [
       {
         name: 'Bhupesh Dewangan',
-        role: 'Platform Development Engineer',
-        title: `B.Tech
+        title: `Artificial Intelligence and Multiagent Systems Lab
         Indian Institute of Information Technology, Allahabad`,
         email: 'bhupesh.it.iiita@gmail.com',
         link: 'https://www.linkedin.com/in/bhupesh-dewangan/',
@@ -61,38 +60,34 @@ export const team: TeamCategory[] = [
       },
       {
         name: 'Debjyoti Ray',
-        role: 'AI Chatbot Developer',
-        title: `B.Tech
+        title: `Artificial Intelligence and Multiagent Systems Lab
         Indian Institute of Information Technology, Allahabad`,
         email: 'iec2022111@iiita.ac.in',
         link: 'https://www.linkedin.com/in/debjyotiray5811/',
         image: '/image/team/debjyotiray.jpg',
       },
       {
+        name: 'Shraddha Srivastava',
+        title: `Artificial Intelligence and Multiagent Systems Lab
+        Indian Institute of Information Technology, Allahabad`,
+        email: '	shraddhasrivas14@gmail.com',
+        link: 'https://www.linkedin.com/in/shraddha-srivastava-898024212/',
+        image: '/image/team/shraddhasrivastava.jpg',
+      },
+      {
         name: 'Yijie Ren',
-        role: 'Project Manager',
-        title: `Manager
-        Jianna Consulting, LLC`,
-        email: 'manager@jianna.net',
+        title: `Digital Biology Lab
+        University of Missouri, Columbia`,
+        email: 'yry7d@mail.missouri.edu',
         link: 'https://www.linkedin.com/in/yijie-ren-851a61141/',
         image: '/image/team/yijieren.jpg',
       },
       {
         name: 'Lei Jiang',
-        role: 'Platform Deployment Engineer',
-        title: `PhD
+        title: `Digital Biology Lab
         University of Missouri, Columbia`,
         email: 'leijiang@missouri.edu',
         image: '/image/team/leijiang.jpg',
-      },
-      {
-        name: 'Shraddha Srivastava',
-        role: 'Data Management',
-        title: `Bioinformatics Consultant
-        Crecientech Infosystem, Bangalore`,
-        email: 'shraddha.srivastava@crecientech.com',
-        link: 'https://www.linkedin.com/in/shraddha-srivastava-898024212/',
-        image: '/image/team/shraddhasrivastava.jpg',
       },
     ],
   },

@@ -1,7 +1,7 @@
 'use client';
 
 import { scaleLinear } from 'd3-scale';
-import { createRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function HeatmapLegend({
   height = 50,
@@ -22,7 +22,7 @@ export function HeatmapLegend({
   endLabel?: string;
   divisions?: number;
 }) {
-  const svgRef = createRef<SVGSVGElement>();
+  const svgRef = useRef<SVGSVGElement>(null);
   const colorScale = scaleLinear(domain, range);
 
   useEffect(() => {
@@ -112,7 +112,7 @@ export function HeatmapLegend({
     titleElement.setAttribute('text-anchor', 'middle');
     titleElement.textContent = title ?? null;
     svg.appendChild(titleElement);
-  }, [height, range, title, domain, divisions, formatLabel, colorScale, svgRef, startLabel, endLabel]);
+  }, [height, range, title, domain, divisions, formatLabel, colorScale, startLabel, endLabel]);
 
   return <svg key={title} ref={svgRef} width={'100%'} height={height} />;
 }
