@@ -35,6 +35,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -59,6 +60,8 @@ export default function Explore() {
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [seedInputMode, setSeedInputMode] = React.useState<'type' | 'upload'>('type');
   const [interactionType, setInteractionType] = React.useState<string[]>(['PPI']);
+  const [autoFillEnabled, setAutoFillEnabled] = React.useState(true);
+  const [autoFillNum, setAutoFillNum] = React.useState(25);
 
   React.useEffect(() => {
     (async () => {
@@ -93,32 +96,35 @@ export default function Explore() {
     return () => document.removeEventListener('keydown', escapeListener);
   }, []);
 
-  const handleAutofill = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    setAutofillLoading(true);
-    try {
-      const { data: tg } = await fetchTopGenes({
-        variables: {
-          diseaseId: formData.diseaseMap,
-          page: {
-            page: 1,
-            limit: Number.parseInt(fd.get('autofill-num') as string, 10),
-          },
-        },
-      });
-      if (tg?.topGenesByDisease) {
-        const genes: string[] = tg.topGenesByDisease.map((g: { gene_name: string }) => g.gene_name);
-        setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));
-      }
-    } catch {
-      toast.error('Failed to autofill genes from API', {
-        cancel: { label: 'Close', onClick() {} },
-      });
-    } finally {
-      setAutofillLoading(false);
+  // Auto-fill seeds on load and when disease changes
+  React.useEffect(() => {
+    if (autoFillEnabled && formData.diseaseMap) {
+      const runAutofill = async () => {
+        setAutofillLoading(true);
+        try {
+          const { data: tg } = await fetchTopGenes({
+            variables: {
+              diseaseId: formData.diseaseMap,
+              page: {
+                page: 1,
+                limit: autoFillNum,
+              },
+            },
+          });
+          if (tg?.topGenesByDisease) {
+            const genes: string[] = tg.topGenesByDisease.map((g: { gene_name: string }) => g.gene_name);
+            setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));
+          }
+        } catch {
+          // Silently fail on autofill
+          console.error('Failed to autofill genes from API');
+        } finally {
+          setAutofillLoading(false);
+        }
+      };
+      runAutofill();
     }
-  };
+  }, [autoFillEnabled, formData.diseaseMap, autoFillNum, fetchTopGenes]);
 
   const handleSubmit = async () => {
     const { seedGenes, interactionType } = formData;
@@ -445,20 +451,17 @@ export default function Explore() {
                       </div>
                     </AlertDialogHeader>
                     <div className='mt-4 space-y-4'>
-                      <div>
-                        <p className='font-semibold text-gray-900 text-sm'>Autofill Seed Genes</p>
-                        <p className='mt-0.5 text-gray-500 text-sm'>
-                          Automatically populate seed genes based on the selected disease
-                        </p>
+                      <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4'>
+                        <div className='flex-1'>
+                          <p className='font-semibold text-gray-900 text-sm'>Autofill Seed Genes</p>
+                          <p className='mt-0.5 text-gray-500 text-sm'>
+                            Automatically populate genes on page load and disease change
+                          </p>
+                        </div>
+                        <Switch checked={autoFillEnabled} onCheckedChange={setAutoFillEnabled} className='ml-4' />
                       </div>
-                      <form
-                        onSubmit={async e => {
-                          await handleAutofill(e);
-                          setAdvancedOpen(false);
-                        }}
-                        className='space-y-4'
-                      >
-                        <div className='flex items-center gap-3'>
+                      {autoFillEnabled && (
+                        <div className='flex items-center gap-3 rounded-lg bg-teal-50 p-4'>
                           <Label htmlFor={autoFillNumId} className='text-sm text-gray-700 whitespace-nowrap'>
                             No. of genes
                           </Label>
@@ -466,33 +469,15 @@ export default function Explore() {
                             id={autoFillNumId}
                             type='number'
                             inputMode='numeric'
-                            required
-                            name='autofill-num'
                             min={1}
                             className='h-9 w-24 rounded-lg border-teal-400 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100'
                             placeholder='25'
-                            defaultValue={25}
+                            value={autoFillNum}
+                            onChange={e => setAutoFillNum(Math.max(1, Number.parseInt(e.target.value, 10) || 1))}
                             disabled={autofillLoading || topGenesLoading}
                           />
                         </div>
-                        <Button
-                          type='submit'
-                          disabled={autofillLoading || topGenesLoading}
-                          className='w-full bg-teal-600 text-white hover:bg-teal-700 rounded-lg h-11 font-semibold text-sm'
-                        >
-                          {autofillLoading || topGenesLoading ? (
-                            <>
-                              <LoaderIcon className='mr-2 animate-spin' size={16} />
-                              Auto-filling...
-                            </>
-                          ) : (
-                            <>
-                              <Settings2Icon className='mr-2' size={16} />
-                              Autofill
-                            </>
-                          )}
-                        </Button>
-                      </form>
+                      )}
                     </div>
 
                     <div className='space-y-1'>
