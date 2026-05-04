@@ -363,7 +363,7 @@ export default function Explore() {
             </TabsList>
 
             <TabsContent value='search' className='mt-4 flex-1'>
-              <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4 shadow-xs sm:space-y-5 sm:p-6 sm:py-4'>
+              <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4  sm:space-y-5 sm:p-6 sm:py-4'>
                 <div className='flex flex-col gap-4'>
                   <div className='flex items-end justify-between gap-4'>
                     <div className='flex-1 space-y-1'>
@@ -775,71 +775,74 @@ export default function Explore() {
                 setFormData={setFormData}
               />
             </TabsContent>
-
             <TabsContent value='upload' className='mt-4 flex-1'>
-              <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 shadow-md sm:p-6'>
-                <div className='grid grid-cols-1 items-start gap-6 xl:grid-cols-2'>
-                  <form
-                    onSubmit={e => {
-                      e.preventDefault();
-                      void handleUploadSubmit();
-                    }}
-                    className='space-y-4'
-                  >
-                    <div>
-                      <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-                        <Label htmlFor={uploadFileId} className='font-medium'>
-                          Upload CSV or JSON
-                        </Label>
-                        <p className='text-sm text-zinc-500'>
-                          (CSV examples:{' '}
-                          <a href='/example1.csv' download className='underline hover:text-zinc-700'>
-                            #1
-                          </a>{' '}
-                          <a href='/example2.csv' download className='underline hover:text-zinc-700'>
-                            #2
-                          </a>
-                          )
-                        </p>
-                      </div>
-                      <Input
-                        id={uploadFileId}
-                        type='file'
-                        accept='.csv,.json'
-                        onChange={handleFileChange}
-                        required
-                        className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
-                      />
-                      <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
-                        • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
-                        <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
+              <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 sm:p-6'>
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    void handleUploadSubmit();
+                  }}
+                  className='space-y-4'
+                >
+                  <div>
+                    <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                      <Label htmlFor={uploadFileId} className='font-medium'>
+                        Upload CSV or JSON
+                      </Label>
+                      <p className='text-sm text-zinc-500'>
+                        (CSV examples:{' '}
+                        <a href='/example1.csv' download className='underline hover:text-zinc-700'>
+                          #1
+                        </a>{' '}
+                        <a href='/example2.csv' download className='underline hover:text-zinc-700'>
+                          #2
+                        </a>
+                        )
                       </p>
                     </div>
-                    <Button
-                      type='submit'
-                      className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
-                    >
-                      <AnimatedNetworkBackground
-                        className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
-                        moving={uploadLoading}
-                        speedMultiplier={2.2}
-                      />
-                      <span className='relative z-10 flex items-center justify-center'>
-                        {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
-                      </span>
-                    </Button>
-                  </form>
-                  <div className='border-t pt-4 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6'>
-                    <h3 className='mb-3 font-semibold text-lg'>File Format Preview</h3>
+                    <Input
+                      id={uploadFileId}
+                      type='file'
+                      accept='.csv,.json'
+                      onChange={handleFileChange}
+                      required
+                      className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
+                    />
+                    <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
+                      • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
+                      <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
+                    </p>
+                  </div>
+
+                  {/* File Format Preview — now between the file input and submit */}
+                  <div className='rounded-lg border border-teal-100 bg-teal-50/40 p-4'>
+                    <h3 className='mb-3 text-center font-semibold text-sm text-teal-700 uppercase tracking-wide'>
+                      File Format Preview
+                    </h3>
                     <Image
                       src='/image/uploadFormat.svg'
-                      width={400}
-                      height={400}
+                      width={600}
+                      height={300}
                       alt='CSV file format example'
-                      className='mx-auto w-full max-w-md mix-blend-multiply xl:max-w-full'
+                      className='mx-auto w-full max-w-lg mix-blend-multiply'
                     />
                   </div>
-                </div>
+
+                  <Button
+                    type='submit'
+                    className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
+                  >
+                    <AnimatedNetworkBackground
+                      className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
+                      moving={uploadLoading}
+                      speedMultiplier={2.2}
+                    />
+                    <span className='relative z-10 flex items-center justify-center'>
+                      {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
+                    </span>
+                  </Button>
+                </form>
+
                 <PopUpTable
                   geneIDs={uploadGeneIDs}
                   tableOpen={uploadTableOpen}
@@ -856,8 +859,10 @@ export default function Explore() {
           </div>
         </div>
 
-        <div className='hidden xl:flex xl:flex-col'>
-          <Chat />
+        <div className='hidden xl:flex xl:flex-col' style={{ height: 'calc(107vh - 8rem)' }}>
+          <div className='sticky top-4 h-full min-h-0'>
+            <Chat />
+          </div>
         </div>
       </div>
     </div>

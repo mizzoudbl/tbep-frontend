@@ -16,9 +16,8 @@ import {
 import { ChatBase } from './ChatBase';
 
 export function Chat() {
-  const [isChatOpen, setIsChatOpen] = React.useState(false);
   return (
-    <ChatBase onChatOpen={setIsChatOpen}>
+    <ChatBase onChatOpen={() => {}}>
       {({
         messages,
         handleDeleteMessages,
@@ -31,19 +30,17 @@ export function Chat() {
         handleSubmit,
         handleSubmitAction,
       }) => (
-        <div className='flex h-full flex-col rounded-lg border border-gray-200 bg-white shadow-sm'>
+        <div className='flex h-full min-h-0 flex-col rounded-lg border border-gray-200 bg-white shadow-sm'>
           <div className='flex shrink-0 items-center gap-3 border-b border-gray-100 px-5 py-4'>
             <div className='flex size-10 shrink-0 items-center justify-center rounded-md border border-teal-100 bg-teal-50'>
               <BotIcon className='size-5 text-teal-600' />
             </div>
-
             <div className='min-w-0'>
-              <p className='text-sm font-semibold text-gray-900'>AI Assistant</p>
-              <p className='truncate text-xs text-gray-500'>
+              <p className='font-semibold text-gray-900 text-sm'>AI Assistant</p>
+              <p className='truncate text-gray-500 text-xs'>
                 Ask questions about your gene network and get instant insights
               </p>
             </div>
-
             {messages.length > 0 && (
               <button
                 type='button'
@@ -58,13 +55,12 @@ export function Chat() {
           <div className='min-h-0 flex-1 overflow-y-auto'>
             {messages.length === 0 ? (
               <div className='flex h-full flex-col items-center justify-center gap-4 px-6 text-center'>
-                <div className='flex size-14 xl:mt-0 mt-2  items-center justify-center rounded-full bg-teal-600/10'>
+                <div className='flex size-14 items-center justify-center rounded-full bg-teal-600/10'>
                   <Lightbulb className='size-6 text-teal-600' />
                 </div>
-
                 <div>
-                  <p className='text-base font-semibold text-gray-900'>Ask me anything</p>
-                  <p className='mt-1 text-sm text-gray-500'>Get insights about your gene interactions and network</p>
+                  <p className='font-semibold text-gray-900 text-base'>Ask me anything</p>
+                  <p className='mt-1 text-gray-500 text-sm'>Get insights about your gene interactions and network</p>
                 </div>
               </div>
             ) : (
@@ -87,9 +83,8 @@ export function Chat() {
                 }}
                 placeholder='What would you like to know?'
                 disabled={status === 'error'}
-                className='min-h-12 resize-none border-0 bg-transparent px-4 pt-3 pb-2 text-sm shadow-none focus-visible:ring-0 placeholder:text-teal-700/50 text-gray-800'
+                className='min-h-12 resize-none border-0 bg-transparent px-4 pb-2 pt-3 text-sm shadow-none placeholder:text-teal-700/50 focus-visible:ring-0'
               />
-
               <div className='flex items-center justify-between border-t border-teal-100 px-3 py-2'>
                 <PromptInputModelSelect
                   value={model}
@@ -101,7 +96,6 @@ export function Chat() {
                   >
                     <PromptInputModelSelectValue />
                   </PromptInputModelSelectTrigger>
-
                   <PromptInputModelSelectContent>
                     {LLM_MODELS.map(modelOption => (
                       <PromptInputModelSelectItem key={modelOption.value} value={modelOption.value}>
@@ -120,17 +114,15 @@ export function Chat() {
                       handleSubmitAction();
                     } else if (status === 'error') {
                       handleSubmitAction();
-                    } else {
-                      if (inputValue.trim()) {
-                        handleSubmit({ text: inputValue });
-                      }
+                    } else if (inputValue.trim()) {
+                      handleSubmit({ text: inputValue });
                     }
                   }}
                 />
               </div>
             </div>
 
-            <p className='mt-2 text-center text-xs text-gray-400 leading-relaxed'>
+            <p className='mt-2 text-center text-gray-400 text-xs leading-relaxed'>
               This AI may generate incorrect information. By using this service, you agree to our{' '}
               <Link href='/docs/terms-of-use' className='underline underline-offset-2 hover:text-gray-600'>
                 Terms of Use
