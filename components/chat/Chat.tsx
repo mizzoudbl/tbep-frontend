@@ -2,7 +2,6 @@
 
 import { BotIcon, Lightbulb, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
 import { LLM_MODELS } from '@/lib/data';
 import {
   PromptInputModelSelect,
@@ -31,7 +30,7 @@ export function Chat() {
         handleSubmitAction,
       }) => (
         <div className='flex h-full min-h-0 flex-col rounded-lg border border-gray-200 bg-white shadow-sm'>
-          <div className='flex shrink-0 items-center gap-3 border-b border-gray-100 px-5 py-4'>
+          <div className='flex shrink-0 items-center gap-3 border-gray-100 border-b px-5 py-4'>
             <div className='flex size-10 shrink-0 items-center justify-center rounded-md border border-teal-100 bg-teal-50'>
               <BotIcon className='size-5 text-teal-600' />
             </div>
@@ -59,7 +58,7 @@ export function Chat() {
                   <Lightbulb className='size-6 text-teal-600' />
                 </div>
                 <div>
-                  <p className='font-semibold text-gray-900 text-base'>Ask me anything</p>
+                  <p className='font-semibold text-base text-gray-900'>Ask me anything</p>
                   <p className='mt-1 text-gray-500 text-sm'>Get insights about your gene interactions and network</p>
                 </div>
               </div>
@@ -68,7 +67,7 @@ export function Chat() {
             )}
           </div>
 
-          <div className='shrink-0 border-t border-gray-100 px-4 pb-4 pt-3'>
+          <div className='shrink-0 border-gray-100 border-t px-4 pt-3 pb-4'>
             <div className='overflow-hidden rounded-lg border border-teal-500 bg-teal-50/40'>
               <PromptInputTextarea
                 value={inputValue}
@@ -83,9 +82,9 @@ export function Chat() {
                 }}
                 placeholder='What would you like to know?'
                 disabled={status === 'error'}
-                className='min-h-12 resize-none border-0 bg-transparent px-4 pb-2 pt-3 text-sm shadow-none placeholder:text-teal-700/50 focus-visible:ring-0'
+                className='min-h-12 resize-none border-0 bg-transparent px-4 pt-3 pb-2 text-sm shadow-none placeholder:text-teal-700/50 focus-visible:ring-0'
               />
-              <div className='flex items-center justify-between border-t border-teal-100 px-3 py-2'>
+              <div className='flex items-center justify-between border-teal-100 border-t px-3 py-2'>
                 <PromptInputModelSelect
                   value={model}
                   onValueChange={value => setModel(value as (typeof LLM_MODELS)[number]['value'])}

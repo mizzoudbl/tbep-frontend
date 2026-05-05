@@ -66,6 +66,10 @@ export const GET_HEADERS_QUERY = gql`
         name
         description
       }
+      genetics {
+        name
+        description
+      }
       openTargets @skip(if: $skipCommon) {
         name
         description
@@ -108,8 +112,9 @@ export const OPENTARGET_HEATMAP_QUERY = gql`
     ) {
       rows {
         target {
-        name
-        prioritization {
+          id
+          name
+          prioritization {
             key
             score
           }
@@ -117,6 +122,20 @@ export const OPENTARGET_HEATMAP_QUERY = gql`
         datasourceScores {
           key
           score
+        }
+        overall_score
+      }
+      totalCount
+    }
+    targetPrioritizationTable(diseaseId: $diseaseId, geneIds: $geneIds, orderBy: $orderBy, page: $page) {
+      rows {
+        target {
+          id
+          name
+          prioritization {
+            key
+            score
+          }
         }
         overall_score
       }

@@ -329,12 +329,9 @@ export default function Explore() {
             <TabsList className='grid h-auto w-full grid-cols-1 gap-0 bg-teal-700/10 p-2 sm:grid-cols-2 sm:gap-2'>
               <TabsTrigger
                 value='search'
-                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg p-3 text-left
-                bg-transparent text-gray-700
-                data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm
-                transition-all sm:min-h-20 sm:p-4'
+                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg bg-transparent p-3 text-left text-gray-700 transition-all data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm sm:min-h-20 sm:p-4'
               >
-                <div className='flex shrink-0 items-center justify-center size-8 rounded-md text-gray-400'>
+                <div className='flex size-8 shrink-0 items-center justify-center rounded-md text-gray-400'>
                   <SearchIcon size={18} />
                 </div>
                 <div className='flex flex-col items-start'>
@@ -349,12 +346,9 @@ export default function Explore() {
 
               <TabsTrigger
                 value='upload'
-                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg p-3 text-left
-                bg-transparent text-gray-700
-                data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm
-                transition-all sm:min-h-20 sm:p-4'
+                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg bg-transparent p-3 text-left text-gray-700 transition-all data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm sm:min-h-20 sm:p-4'
               >
-                <div className='flex shrink-0 items-center justify-center size-8 rounded-md text-gray-400'>
+                <div className='flex size-8 shrink-0 items-center justify-center rounded-md text-gray-400'>
                   <NetworkIcon size={18} />
                 </div>
                 <div className='flex flex-col items-start'>
@@ -369,7 +363,7 @@ export default function Explore() {
             </TabsList>
 
             <TabsContent value='search' className='mt-4 flex-1'>
-              <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4  sm:space-y-5 sm:p-6 sm:py-4'>
+              <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4 shadow-xs sm:space-y-5 sm:p-6 sm:py-4'>
                 <div className='flex flex-col gap-4'>
                   <div className='flex items-end justify-between gap-4'>
                     <div className='flex-1 space-y-1'>
@@ -391,7 +385,7 @@ export default function Explore() {
                         data={diseaseData}
                         value={formData.diseaseMap}
                         onChange={val => typeof val === 'string' && handleSelect(val, 'diseaseMap')}
-                        className='w-full mt-1'
+                        className='mt-1 w-full'
                       />
                     </div>
                     <div className='flex items-center gap-2 pb-1'>
@@ -432,10 +426,10 @@ export default function Explore() {
                     <AlertDialogHeader>
                       <div className='flex items-start justify-between'>
                         <div>
-                          <AlertDialogTitle className='text-xl font-bold text-gray-900'>
+                          <AlertDialogTitle className='font-bold text-gray-900 text-xl'>
                             Advanced Settings
                           </AlertDialogTitle>
-                          <AlertDialogDescription className='mt-1 text-sm text-gray-500'>
+                          <AlertDialogDescription className='mt-1 text-gray-500 text-sm'>
                             Customize network generation parameters
                           </AlertDialogDescription>
                         </div>
@@ -462,7 +456,7 @@ export default function Explore() {
                       </div>
                       {autoFillEnabled && (
                         <div className='flex items-center gap-3 rounded-lg bg-teal-50 p-4'>
-                          <Label htmlFor={autoFillNumId} className='text-sm text-gray-700 whitespace-nowrap'>
+                          <Label htmlFor={autoFillNumId} className='whitespace-nowrap text-gray-700 text-sm'>
                             No. of genes
                           </Label>
                           <Input
@@ -488,7 +482,7 @@ export default function Explore() {
                       </p>
 
                       <Select value={interactionType[0]} onValueChange={val => setInteractionType([val])}>
-                        <SelectTrigger className='mt-2 border border-teal-600 bg-teal-50 hover:bg-teal-600 hover:text-white text-gray-800'>
+                        <SelectTrigger className='mt-2 border border-teal-600 bg-teal-50 text-gray-800 hover:bg-teal-600 hover:text-white'>
                           <SelectValue placeholder='Select...' />
                         </SelectTrigger>
 
@@ -578,14 +572,14 @@ export default function Explore() {
                     <button
                       type='button'
                       onClick={() => setSeedInputMode('type')}
-                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${seedInputMode === 'type' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`rounded-md px-4 py-1.5 font-medium text-sm transition-all ${seedInputMode === 'type' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                       Type Genes
                     </button>
                     <button
                       type='button'
                       onClick={() => setSeedInputMode('upload')}
-                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${seedInputMode === 'upload' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`rounded-md px-4 py-1.5 font-medium text-sm transition-all ${seedInputMode === 'upload' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                       Upload File
                     </button>
@@ -674,7 +668,7 @@ export default function Explore() {
                       </div>
                       <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
                         <SelectTrigger
-                          className='bg-accent-foreground hover:bg-accent mt-2 hover:text-accent-foreground'
+                          className='mt-2 bg-accent-foreground hover:bg-accent hover:text-accent-foreground'
                           id={config.id}
                         >
                           <SelectValue placeholder='Select...' />
@@ -760,74 +754,71 @@ export default function Explore() {
                 setFormData={setFormData}
               />
             </TabsContent>
+
             <TabsContent value='upload' className='mt-4 flex-1'>
-              <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 sm:p-6'>
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                    void handleUploadSubmit();
-                  }}
-                  className='space-y-4'
-                >
-                  <div>
-                    <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-                      <Label htmlFor={uploadFileId} className='font-medium'>
-                        Upload CSV or JSON
-                      </Label>
-                      <p className='text-sm text-zinc-500'>
-                        (CSV examples:{' '}
-                        <a href='/example1.csv' download className='underline hover:text-zinc-700'>
-                          #1
-                        </a>{' '}
-                        <a href='/example2.csv' download className='underline hover:text-zinc-700'>
-                          #2
-                        </a>
-                        )
+              <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 shadow-md sm:p-6'>
+                <div className='grid grid-cols-1 items-start gap-6 xl:grid-cols-2'>
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault();
+                      void handleUploadSubmit();
+                    }}
+                    className='space-y-4'
+                  >
+                    <div>
+                      <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                        <Label htmlFor={uploadFileId} className='font-medium'>
+                          Upload CSV or JSON
+                        </Label>
+                        <p className='text-sm text-zinc-500'>
+                          (CSV examples:{' '}
+                          <a href='/example1.csv' download className='underline hover:text-zinc-700'>
+                            #1
+                          </a>{' '}
+                          <a href='/example2.csv' download className='underline hover:text-zinc-700'>
+                            #2
+                          </a>
+                          )
+                        </p>
+                      </div>
+                      <Input
+                        id={uploadFileId}
+                        type='file'
+                        accept='.csv,.json'
+                        onChange={handleFileChange}
+                        required
+                        className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
+                      />
+                      <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
+                        • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
+                        <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
                       </p>
                     </div>
-                    <Input
-                      id={uploadFileId}
-                      type='file'
-                      accept='.csv,.json'
-                      onChange={handleFileChange}
-                      required
-                      className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
-                    />
-                    <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
-                      • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
-                      <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
-                    </p>
-                  </div>
-
-                  {/* File Format Preview — now between the file input and submit */}
-                  <div className='rounded-lg border border-teal-100 bg-teal-50/40 p-4'>
-                    <h3 className='mb-3 text-center font-semibold text-sm text-teal-700 uppercase tracking-wide'>
-                      File Format Preview
-                    </h3>
+                    <Button
+                      type='submit'
+                      className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
+                    >
+                      <AnimatedNetworkBackground
+                        className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
+                        moving={uploadLoading}
+                        speedMultiplier={2.2}
+                      />
+                      <span className='relative z-10 flex items-center justify-center'>
+                        {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
+                      </span>
+                    </Button>
+                  </form>
+                  <div className='border-t pt-4 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6'>
+                    <h3 className='mb-3 font-semibold text-lg'>File Format Preview</h3>
                     <Image
                       src='/image/uploadFormat.svg'
-                      width={600}
-                      height={300}
+                      width={400}
+                      height={400}
                       alt='CSV file format example'
-                      className='mx-auto w-full max-w-lg mix-blend-multiply'
+                      className='mx-auto w-full max-w-md mix-blend-multiply xl:max-w-full'
                     />
                   </div>
-
-                  <Button
-                    type='submit'
-                    className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
-                  >
-                    <AnimatedNetworkBackground
-                      className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
-                      moving={uploadLoading}
-                      speedMultiplier={2.2}
-                    />
-                    <span className='relative z-10 flex items-center justify-center'>
-                      {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
-                    </span>
-                  </Button>
-                </form>
-
+                </div>
                 <PopUpTable
                   geneIDs={uploadGeneIDs}
                   tableOpen={uploadTableOpen}
@@ -844,10 +835,8 @@ export default function Explore() {
           </div>
         </div>
 
-        <div className='hidden xl:flex xl:flex-col' style={{ height: 'calc(107vh - 8rem)' }}>
-          <div className='sticky top-4 h-full min-h-0'>
-            <Chat />
-          </div>
+        <div className='hidden xl:flex xl:flex-col'>
+          <Chat />
         </div>
       </div>
     </div>

@@ -51,6 +51,21 @@ export interface OpenTargetsTableData {
 
     totalCount: number;
   };
+  targetPrioritizationTable: {
+    rows: {
+      /**
+       * Target Gene information
+       */
+      target: Target;
+
+      /**
+       * Overall score for the target-disease association
+       */
+      overall_score: number | null;
+    }[];
+
+    totalCount: number;
+  };
 }
 
 export enum OrderByEnum {

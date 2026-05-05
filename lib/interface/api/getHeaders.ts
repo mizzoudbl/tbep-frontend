@@ -26,6 +26,7 @@ export interface GetHeadersData {
    */
   headers: {
     differentialExpression: GenePropertyMetadata[];
+    genetics: GenePropertyMetadata[];
     openTargets: GenePropertyMetadata[];
     targetPrioritization: GenePropertyMetadata[];
     druggability: GenePropertyMetadata[];

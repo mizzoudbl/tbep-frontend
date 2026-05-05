@@ -49,6 +49,14 @@ export function LoadGraph() {
       type: 'undirected',
     });
     const fileName = searchParams?.get('file');
+
+    if (!fileName && graphConfig?.geneIDs?.length) {
+      useStore.setState({
+        graphConfig,
+        diseaseName: graphConfig.diseaseMap ?? '',
+      });
+    }
+
     (async () => {
       if (fileName) {
         const fileType = fileName.split('.').pop();
@@ -195,7 +203,10 @@ export function LoadGraph() {
           }
           // store graphName in JSON in graphConfig key in localStorage
           localStorage.setItem('graphConfig', JSON.stringify({ ...graphConfig, graphName }));
-          useStore.setState({ graphConfig: { ...graphConfig, graphName } });
+          useStore.setState({
+            graphConfig: { ...graphConfig, graphName },
+            diseaseName: graphConfig.diseaseMap ?? '',
+          });
           const transformedData: Partial<SerializedGraph<NodeAttributes, EdgeAttributes>> = {
             nodes: genes.map(gene => ({
               key: gene.ID,
@@ -227,6 +238,7 @@ export function LoadGraph() {
             useStore.setState({
               geneNames: transformedData.nodes?.map(node => node.attributes?.label ?? node.key) || [],
               geneNameToID,
+              diseaseName: graphConfig.diseaseMap ?? '',
               networkStatistics: {
                 totalNodes: graph.order,
                 totalEdges: graph.size,
