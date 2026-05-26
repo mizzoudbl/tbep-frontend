@@ -12,6 +12,8 @@ import {
   Settings2Icon,
   UploadIcon,
   XIcon,
+  ChevronDownIcon, 
+  CheckIcon
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { type ChangeEvent, useId } from 'react';
@@ -39,7 +41,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { graphConfig } from '@/lib/data';
+import { type GeneInteractionType, graphConfig } from '@/lib/data';
 import { GENE_VERIFICATION_QUERY, TOP_GENES_QUERY } from '@/lib/gql';
 import type {
   GeneVerificationData,
@@ -51,6 +53,8 @@ import type {
 } from '@/lib/interface';
 import { distinct, envURL, openDB } from '@/lib/utils';
 
+const INTERACTION_OPTIONS: GeneInteractionType[] = ['PPI', 'INT_ACT', 'BIO_GRID'];
+
 export default function Explore() {
   const [verifyGenes, { data, loading }] = useLazyQuery<GeneVerificationData, GeneVerificationVariables>(
     GENE_VERIFICATION_QUERY,
@@ -59,9 +63,12 @@ export default function Explore() {
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [seedInputMode, setSeedInputMode] = React.useState<'type' | 'upload'>('type');
-  const [interactionType, setInteractionType] = React.useState<string[]>(['PPI']);
+ const [interactionType, setInteractionType] = React.useState<GeneInteractionType[]>(['PPI']);
   const [autoFillEnabled, setAutoFillEnabled] = React.useState(true);
   const [autoFillNum, setAutoFillNum] = React.useState(25);
+  const [interactionDropdownOpen, setInteractionDropdownOpen] = React.useState(false);
+
+
 
   React.useEffect(() => {
     (async () => {
@@ -85,6 +92,11 @@ export default function Explore() {
   const [historyOpen, setHistoryOpen] = React.useState(false);
   const [autofillLoading, setAutofillLoading] = React.useState(false);
 
+
+  React.useEffect(() => {
+    setFormData(f => ({ ...f, interactionType }));
+  }, [interactionType]);
+
   React.useEffect(() => {
     setHistory(JSON.parse(localStorage.getItem('history') ?? '[]'));
     const escapeListener = (event: KeyboardEvent) => {
@@ -96,7 +108,7 @@ export default function Explore() {
     return () => document.removeEventListener('keydown', escapeListener);
   }, []);
 
-  // Auto-fill seeds on load and when disease changes
+
   React.useEffect(() => {
     if (autoFillEnabled && formData.diseaseMap) {
       const runAutofill = async () => {
@@ -116,7 +128,6 @@ export default function Explore() {
             setFormData(f => ({ ...f, seedGenes: genes.join(', ') }));
           }
         } catch {
-          // Silently fail on autofill
           console.error('Failed to autofill genes from API');
         } finally {
           setAutofillLoading(false);
@@ -315,6 +326,23 @@ export default function Explore() {
     window.open(`/network?file=${encodeURIComponent(file?.name as string)}`, '_blank', 'noopener,noreferrer');
   };
 
+
+const toggleInteractionType = (type: GeneInteractionType) => {
+  setInteractionType(prev =>
+    prev.includes(type)
+      ? (prev.filter(t => t !== type) as GeneInteractionType[])  
+      : [...prev, type],
+  );
+};
+
+  
+  const interactionTypeLabel =
+    interactionType.length === 0
+      ? 'None selected'
+      : interactionType.length === INTERACTION_OPTIONS.length
+        ? 'All selected'
+        : interactionType.join(', ');
+
   const autoFillNumId = useId();
   const seedGenesId = useId();
   const uploadFileId = useId();
@@ -329,9 +357,12 @@ export default function Explore() {
             <TabsList className='grid h-auto w-full grid-cols-1 gap-0 bg-teal-700/10 p-2 sm:grid-cols-2 sm:gap-2'>
               <TabsTrigger
                 value='search'
-                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg bg-transparent p-3 text-left text-gray-700 transition-all data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm sm:min-h-20 sm:p-4'
+                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg p-3 text-left
+                bg-transparent text-gray-700
+                data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm
+                transition-all sm:min-h-20 sm:p-4'
               >
-                <div className='flex size-8 shrink-0 items-center justify-center rounded-md text-gray-400'>
+                <div className='flex shrink-0 items-center justify-center size-8 rounded-md text-gray-400'>
                   <SearchIcon size={18} />
                 </div>
                 <div className='flex flex-col items-start'>
@@ -346,9 +377,12 @@ export default function Explore() {
 
               <TabsTrigger
                 value='upload'
-                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg bg-transparent p-3 text-left text-gray-700 transition-all data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm sm:min-h-20 sm:p-4'
+                className='flex min-h-[70px] w-full items-center justify-start gap-3 rounded-lg p-3 text-left
+                bg-transparent text-gray-700
+                data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm
+                transition-all sm:min-h-20 sm:p-4'
               >
-                <div className='flex size-8 shrink-0 items-center justify-center rounded-md text-gray-400'>
+                <div className='flex shrink-0 items-center justify-center size-8 rounded-md text-gray-400'>
                   <NetworkIcon size={18} />
                 </div>
                 <div className='flex flex-col items-start'>
@@ -363,7 +397,7 @@ export default function Explore() {
             </TabsList>
 
             <TabsContent value='search' className='mt-4 flex-1'>
-              <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4 shadow-xs sm:space-y-5 sm:p-6 sm:py-4'>
+              <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4  sm:space-y-5 sm:p-6 sm:py-4'>
                 <div className='flex flex-col gap-4'>
                   <div className='flex items-end justify-between gap-4'>
                     <div className='flex-1 space-y-1'>
@@ -385,7 +419,7 @@ export default function Explore() {
                         data={diseaseData}
                         value={formData.diseaseMap}
                         onChange={val => typeof val === 'string' && handleSelect(val, 'diseaseMap')}
-                        className='mt-1 w-full'
+                        className='w-full mt-1'
                       />
                     </div>
                     <div className='flex items-center gap-2 pb-1'>
@@ -421,15 +455,16 @@ export default function Explore() {
                   </div>
                 </div>
 
+                {/* ── Advanced Settings Dialog ── */}
                 <AlertDialog open={advancedOpen}>
                   <AlertDialogContent className='max-w-md rounded-2xl p-6'>
                     <AlertDialogHeader>
                       <div className='flex items-start justify-between'>
                         <div>
-                          <AlertDialogTitle className='font-bold text-gray-900 text-xl'>
+                          <AlertDialogTitle className='text-xl font-bold text-gray-900'>
                             Advanced Settings
                           </AlertDialogTitle>
-                          <AlertDialogDescription className='mt-1 text-gray-500 text-sm'>
+                          <AlertDialogDescription className='mt-1 text-sm text-gray-500'>
                             Customize network generation parameters
                           </AlertDialogDescription>
                         </div>
@@ -444,7 +479,9 @@ export default function Explore() {
                         </Button>
                       </div>
                     </AlertDialogHeader>
+
                     <div className='mt-4 space-y-4'>
+                      {/* Autofill toggle */}
                       <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4'>
                         <div className='flex-1'>
                           <p className='font-semibold text-gray-900 text-sm'>Autofill Seed Genes</p>
@@ -454,9 +491,10 @@ export default function Explore() {
                         </div>
                         <Switch checked={autoFillEnabled} onCheckedChange={setAutoFillEnabled} className='ml-4' />
                       </div>
+
                       {autoFillEnabled && (
                         <div className='flex items-center gap-3 rounded-lg bg-teal-50 p-4'>
-                          <Label htmlFor={autoFillNumId} className='whitespace-nowrap text-gray-700 text-sm'>
+                          <Label htmlFor={autoFillNumId} className='text-sm text-gray-700 whitespace-nowrap'>
                             No. of genes
                           </Label>
                           <Input
@@ -472,26 +510,58 @@ export default function Explore() {
                           />
                         </div>
                       )}
-                    </div>
 
-                    <div className='space-y-1'>
-                      <Label>Interaction Type</Label>
+                    
+    <div className='space-y-2'>
+  <Label className='text-sm font-semibold text-gray-900'>Interaction Type</Label>
+  <p className='text-gray-500 text-sm'>
+    Select one or more interaction datasets for network generation
+  </p>
 
-                      <p className='text-gray-500 text-sm'>
-                        Select the interaction dataset to use for network generation
-                      </p>
 
-                      <Select value={interactionType[0]} onValueChange={val => setInteractionType([val])}>
-                        <SelectTrigger className='mt-2 border border-teal-600 bg-teal-50 text-gray-800 hover:bg-teal-600 hover:text-white'>
-                          <SelectValue placeholder='Select...' />
-                        </SelectTrigger>
+  <div className='relative'>
+    <button
+      type='button'
+      onClick={() => setInteractionDropdownOpen(prev => !prev)}
+      className='flex w-full items-center justify-between rounded-lg border border-teal-600 bg-teal-50 px-3 py-2 text-sm text-gray-800 hover:bg-teal-100 transition-colors'
+    >
+      <span className='truncate'>
+        {interactionType.length === 0
+          ? 'Select...'
+          : interactionType.join(', ')}
+      </span>
+    <ChevronDownIcon
+  className={`ml-2 size-4 shrink-0 text-gray-500 transition-transform ${interactionDropdownOpen ? 'rotate-180' : ''}`}
+/>
+    </button>
 
-                        <SelectContent>
-                          <SelectItem value='PPI'>PPI</SelectItem>
-                          <SelectItem value='INT_ACT'>INT_ACT</SelectItem>
-                          <SelectItem value='BIO_GRID'>BIO_GRID</SelectItem>
-                        </SelectContent>
-                      </Select>
+  
+    {interactionDropdownOpen && (
+      <div className='absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-md'>
+        {INTERACTION_OPTIONS.map(type => {
+          const checked = interactionType.includes(type);
+          return (
+            <button
+              key={type}
+              type='button'
+              onClick={() => toggleInteractionType(type)}
+              className='flex w-full items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors'
+            >
+              <span>{type}</span>
+              {checked && (
+             <CheckIcon className='size-4 text-teal-600' />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    )}
+  </div>
+
+  {interactionType.length === 0 && (
+    <p className='text-xs text-red-500'>Please select at least one interaction type.</p>
+  )}
+</div>
                     </div>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -572,14 +642,14 @@ export default function Explore() {
                     <button
                       type='button'
                       onClick={() => setSeedInputMode('type')}
-                      className={`rounded-md px-4 py-1.5 font-medium text-sm transition-all ${seedInputMode === 'type' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${seedInputMode === 'type' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                       Type Genes
                     </button>
                     <button
                       type='button'
                       onClick={() => setSeedInputMode('upload')}
-                      className={`rounded-md px-4 py-1.5 font-medium text-sm transition-all ${seedInputMode === 'upload' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${seedInputMode === 'upload' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                       Upload File
                     </button>
@@ -668,7 +738,7 @@ export default function Explore() {
                       </div>
                       <Select required value={formData[config.id]} onValueChange={val => handleSelect(val, config.id)}>
                         <SelectTrigger
-                          className='mt-2 bg-accent-foreground hover:bg-accent hover:text-accent-foreground'
+                          className='bg-accent-foreground hover:bg-accent mt-2 hover:text-accent-foreground'
                           id={config.id}
                         >
                           <SelectValue placeholder='Select...' />
@@ -756,69 +826,72 @@ export default function Explore() {
             </TabsContent>
 
             <TabsContent value='upload' className='mt-4 flex-1'>
-              <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 shadow-md sm:p-6'>
-                <div className='grid grid-cols-1 items-start gap-6 xl:grid-cols-2'>
-                  <form
-                    onSubmit={e => {
-                      e.preventDefault();
-                      void handleUploadSubmit();
-                    }}
-                    className='space-y-4'
-                  >
-                    <div>
-                      <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-                        <Label htmlFor={uploadFileId} className='font-medium'>
-                          Upload CSV or JSON
-                        </Label>
-                        <p className='text-sm text-zinc-500'>
-                          (CSV examples:{' '}
-                          <a href='/example1.csv' download className='underline hover:text-zinc-700'>
-                            #1
-                          </a>{' '}
-                          <a href='/example2.csv' download className='underline hover:text-zinc-700'>
-                            #2
-                          </a>
-                          )
-                        </p>
-                      </div>
-                      <Input
-                        id={uploadFileId}
-                        type='file'
-                        accept='.csv,.json'
-                        onChange={handleFileChange}
-                        required
-                        className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
-                      />
-                      <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
-                        • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
-                        <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
+              <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 sm:p-6'>
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    void handleUploadSubmit();
+                  }}
+                  className='space-y-4'
+                >
+                  <div>
+                    <div className='mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                      <Label htmlFor={uploadFileId} className='font-medium'>
+                        Upload CSV or JSON
+                      </Label>
+                      <p className='text-sm text-zinc-500'>
+                        (CSV examples:{' '}
+                        <a href='/example1.csv' download className='underline hover:text-zinc-700'>
+                          #1
+                        </a>{' '}
+                        <a href='/example2.csv' download className='underline hover:text-zinc-700'>
+                          #2
+                        </a>
+                        )
                       </p>
                     </div>
-                    <Button
-                      type='submit'
-                      className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
-                    >
-                      <AnimatedNetworkBackground
-                        className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
-                        moving={uploadLoading}
-                        speedMultiplier={2.2}
-                      />
-                      <span className='relative z-10 flex items-center justify-center'>
-                        {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
-                      </span>
-                    </Button>
-                  </form>
-                  <div className='border-t pt-4 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6'>
-                    <h3 className='mb-3 font-semibold text-lg'>File Format Preview</h3>
+                    <Input
+                      id={uploadFileId}
+                      type='file'
+                      accept='.csv,.json'
+                      onChange={handleFileChange}
+                      required
+                      className='h-12 cursor-pointer border-2 border-dashed transition-colors hover:border-gray-400'
+                    />
+                    <p className='mt-2 text-xs text-zinc-500 leading-relaxed'>
+                      • CSV: first two columns are ENSG IDs or Gene names; third column is interaction score.
+                      <br />• JSON: array of records; non-numeric string values are treated as gene identifiers.
+                    </p>
+                  </div>
+
+                  <div className='rounded-lg border border-teal-100 bg-teal-50/40 p-4'>
+                    <h3 className='mb-3 text-center font-semibold text-sm text-teal-700 uppercase tracking-wide'>
+                      File Format Preview
+                    </h3>
                     <Image
                       src='/image/uploadFormat.svg'
-                      width={400}
-                      height={400}
+                      width={600}
+                      height={300}
                       alt='CSV file format example'
-                      className='mx-auto w-full max-w-md mix-blend-multiply xl:max-w-full'
+                      className='mx-auto w-full max-w-lg mix-blend-multiply'
                     />
                   </div>
-                </div>
+
+                  <Button
+                    type='submit'
+                    className='relative w-full overflow-hidden bg-teal-600 text-white hover:bg-teal-700'
+                  >
+                    <AnimatedNetworkBackground
+                      className='pointer-events-none absolute inset-0 h-full w-full opacity-35'
+                      moving={uploadLoading}
+                      speedMultiplier={2.2}
+                    />
+                    <span className='relative z-10 flex items-center justify-center'>
+                      {uploadLoading && <LoaderIcon className='mr-2 animate-spin' size={20} />} Submit
+                    </span>
+                  </Button>
+                </form>
+
                 <PopUpTable
                   geneIDs={uploadGeneIDs}
                   tableOpen={uploadTableOpen}
@@ -835,8 +908,10 @@ export default function Explore() {
           </div>
         </div>
 
-        <div className='hidden xl:flex xl:flex-col'>
-          <Chat />
+        <div className='hidden xl:flex xl:flex-col' style={{ height: 'calc(107vh - 8rem)' }}>
+          <div className='sticky top-4 h-full min-h-0'>
+            <Chat />
+          </div>
         </div>
       </div>
     </div>
