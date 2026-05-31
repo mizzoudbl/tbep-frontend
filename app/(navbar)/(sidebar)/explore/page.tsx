@@ -4,6 +4,8 @@ import { useLazyQuery } from '@apollo/client/react';
 import {
   AlertTriangleIcon,
   CheckCircleIcon,
+  CheckIcon,
+  ChevronDownIcon,
   HistoryIcon,
   InfoIcon,
   LoaderIcon,
@@ -12,8 +14,6 @@ import {
   Settings2Icon,
   UploadIcon,
   XIcon,
-  ChevronDownIcon, 
-  CheckIcon
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { type ChangeEvent, useId } from 'react';
@@ -63,12 +63,11 @@ export default function Explore() {
   const [diseaseData, setDiseaseData] = React.useState<GetDiseaseData | undefined>(undefined);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [seedInputMode, setSeedInputMode] = React.useState<'type' | 'upload'>('type');
- const [interactionType, setInteractionType] = React.useState<GeneInteractionType[]>(['PPI']);
+  const [interactionType, setInteractionType] = React.useState<GeneInteractionType[]>(['PPI']);
   const [autoFillEnabled, setAutoFillEnabled] = React.useState(true);
   const [autoFillNum, setAutoFillNum] = React.useState(25);
+  const [appliedAutoFillNum, setAppliedAutoFillNum] = React.useState(25);
   const [interactionDropdownOpen, setInteractionDropdownOpen] = React.useState(false);
-
-
 
   React.useEffect(() => {
     (async () => {
@@ -92,7 +91,6 @@ export default function Explore() {
   const [historyOpen, setHistoryOpen] = React.useState(false);
   const [autofillLoading, setAutofillLoading] = React.useState(false);
 
-
   React.useEffect(() => {
     setFormData(f => ({ ...f, interactionType }));
   }, [interactionType]);
@@ -108,7 +106,6 @@ export default function Explore() {
     return () => document.removeEventListener('keydown', escapeListener);
   }, []);
 
-
   React.useEffect(() => {
     if (autoFillEnabled && formData.diseaseMap) {
       const runAutofill = async () => {
@@ -119,7 +116,7 @@ export default function Explore() {
               diseaseId: formData.diseaseMap,
               page: {
                 page: 1,
-                limit: autoFillNum,
+                limit: appliedAutoFillNum,
               },
             },
           });
@@ -135,7 +132,11 @@ export default function Explore() {
       };
       runAutofill();
     }
-  }, [autoFillEnabled, formData.diseaseMap, autoFillNum, fetchTopGenes]);
+  }, [autoFillEnabled, appliedAutoFillNum, formData.diseaseMap, fetchTopGenes]);
+
+  const handleApplyAutoFill = () => {
+    setAppliedAutoFillNum(autoFillNum);
+  };
 
   const handleSubmit = async () => {
     const { seedGenes, interactionType } = formData;
@@ -326,16 +327,12 @@ export default function Explore() {
     window.open(`/network?file=${encodeURIComponent(file?.name as string)}`, '_blank', 'noopener,noreferrer');
   };
 
+  const toggleInteractionType = (type: GeneInteractionType) => {
+    setInteractionType(prev =>
+      prev.includes(type) ? (prev.filter(t => t !== type) as GeneInteractionType[]) : [...prev, type],
+    );
+  };
 
-const toggleInteractionType = (type: GeneInteractionType) => {
-  setInteractionType(prev =>
-    prev.includes(type)
-      ? (prev.filter(t => t !== type) as GeneInteractionType[])  
-      : [...prev, type],
-  );
-};
-
-  
   const interactionTypeLabel =
     interactionType.length === 0
       ? 'None selected'
@@ -497,71 +494,74 @@ const toggleInteractionType = (type: GeneInteractionType) => {
                           <Label htmlFor={autoFillNumId} className='text-sm text-gray-700 whitespace-nowrap'>
                             No. of genes
                           </Label>
-                          <Input
-                            id={autoFillNumId}
-                            type='number'
-                            inputMode='numeric'
-                            min={1}
-                            className='h-9 w-24 rounded-lg border-teal-400 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100'
-                            placeholder='25'
-                            value={autoFillNum}
-                            onChange={e => setAutoFillNum(Math.max(1, Number.parseInt(e.target.value, 10) || 1))}
-                            disabled={autofillLoading || topGenesLoading}
-                          />
+                          <div className='flex items-center gap-2'>
+                            <Input
+                              id={autoFillNumId}
+                              type='number'
+                              inputMode='numeric'
+                              min={1}
+                              className='h-9 w-24 rounded-lg border-teal-400 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100'
+                              placeholder='25'
+                              value={autoFillNum}
+                              onChange={e => setAutoFillNum(Math.max(1, Number.parseInt(e.target.value, 10) || 1))}
+                              disabled={autofillLoading || topGenesLoading}
+                            />
+                            <Button
+                              type='button'
+                              onClick={handleApplyAutoFill}
+                              disabled={autofillLoading || topGenesLoading || autoFillNum === appliedAutoFillNum}
+                              className='h-9 rounded-lg bg-teal-600 px-3 text-white hover:bg-teal-700'
+                            >
+                              Apply
+                            </Button>
+                          </div>
                         </div>
                       )}
 
-                    
-    <div className='space-y-2'>
-  <Label className='text-sm font-semibold text-gray-900'>Interaction Type</Label>
-  <p className='text-gray-500 text-sm'>
-    Select one or more interaction datasets for network generation
-  </p>
+                      <div className='space-y-2'>
+                        <Label className='text-sm font-semibold text-gray-900'>Interaction Type</Label>
+                        <p className='text-gray-500 text-sm'>
+                          Select one or more interaction datasets for network generation
+                        </p>
 
+                        <div className='relative'>
+                          <button
+                            type='button'
+                            onClick={() => setInteractionDropdownOpen(prev => !prev)}
+                            className='flex w-full items-center justify-between rounded-lg border border-teal-600 bg-teal-50 px-3 py-2 text-sm text-gray-800 hover:bg-teal-100 transition-colors'
+                          >
+                            <span className='truncate'>
+                              {interactionType.length === 0 ? 'Select...' : interactionType.join(', ')}
+                            </span>
+                            <ChevronDownIcon
+                              className={`ml-2 size-4 shrink-0 text-gray-500 transition-transform ${interactionDropdownOpen ? 'rotate-180' : ''}`}
+                            />
+                          </button>
 
-  <div className='relative'>
-    <button
-      type='button'
-      onClick={() => setInteractionDropdownOpen(prev => !prev)}
-      className='flex w-full items-center justify-between rounded-lg border border-teal-600 bg-teal-50 px-3 py-2 text-sm text-gray-800 hover:bg-teal-100 transition-colors'
-    >
-      <span className='truncate'>
-        {interactionType.length === 0
-          ? 'Select...'
-          : interactionType.join(', ')}
-      </span>
-    <ChevronDownIcon
-  className={`ml-2 size-4 shrink-0 text-gray-500 transition-transform ${interactionDropdownOpen ? 'rotate-180' : ''}`}
-/>
-    </button>
+                          {interactionDropdownOpen && (
+                            <div className='absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-md'>
+                              {INTERACTION_OPTIONS.map(type => {
+                                const checked = interactionType.includes(type);
+                                return (
+                                  <button
+                                    key={type}
+                                    type='button'
+                                    onClick={() => toggleInteractionType(type)}
+                                    className='flex w-full items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors'
+                                  >
+                                    <span>{type}</span>
+                                    {checked && <CheckIcon className='size-4 text-teal-600' />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
 
-  
-    {interactionDropdownOpen && (
-      <div className='absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-md'>
-        {INTERACTION_OPTIONS.map(type => {
-          const checked = interactionType.includes(type);
-          return (
-            <button
-              key={type}
-              type='button'
-              onClick={() => toggleInteractionType(type)}
-              className='flex w-full items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors'
-            >
-              <span>{type}</span>
-              {checked && (
-             <CheckIcon className='size-4 text-teal-600' />
-              )}
-            </button>
-          );
-        })}
-      </div>
-    )}
-  </div>
-
-  {interactionType.length === 0 && (
-    <p className='text-xs text-red-500'>Please select at least one interaction type.</p>
-  )}
-</div>
+                        {interactionType.length === 0 && (
+                          <p className='text-xs text-red-500'>Please select at least one interaction type.</p>
+                        )}
+                      </div>
                     </div>
                   </AlertDialogContent>
                 </AlertDialog>
