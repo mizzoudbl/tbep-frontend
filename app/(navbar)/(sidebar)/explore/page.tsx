@@ -347,10 +347,10 @@ export default function Explore() {
 
   return (
     <div className='relative mx-auto min-h-[60vh] max-w-7xl'>
-      <div className='flex flex-col gap-4 xl:grid xl:grid-cols-2'>
+      <div className='flex flex-col gap-4 xl:grid xl:grid-cols-2 xl:items-stretch'>
         {/* Left column — tabs + form */}
-        <div className='flex flex-col'>
-          <Tabs defaultValue='search' className='flex flex-1 flex-col'>
+        <div className='flex h-full flex-col'>
+          <Tabs defaultValue='search' className='flex h-full flex-1 flex-col'>
             <TabsList className='grid h-auto w-full grid-cols-1 gap-0 bg-teal-700/10 p-2 sm:grid-cols-2 sm:gap-2'>
               <TabsTrigger
                 value='search'
@@ -393,7 +393,7 @@ export default function Explore() {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value='search' className='mt-4 flex-1'>
+            <TabsContent value='search' className='mt-4 flex flex-1 flex-col'>
               <div className='flex h-full flex-col space-y-4 rounded-lg border border-teal-100 bg-white p-4  sm:space-y-5 sm:p-6 sm:py-4'>
                 <div className='flex flex-col gap-4'>
                   <div className='flex items-end justify-between gap-4'>
@@ -755,7 +755,7 @@ export default function Explore() {
                   ))}
                 </div>
 
-                <div className='mt-auto flex justify-center pt-2'>
+                <div className='flex justify-center pt-4'>
                   <Button
                     type='button'
                     onClick={handleSubmit}
@@ -825,7 +825,7 @@ export default function Explore() {
               />
             </TabsContent>
 
-            <TabsContent value='upload' className='mt-4 flex-1'>
+            <TabsContent value='upload' className='mt-4 flex flex-1 flex-col'>
               <div className='flex h-full flex-col rounded-lg border border-teal-100 bg-white p-4 sm:p-6'>
                 <form
                   onSubmit={e => {
@@ -908,8 +908,8 @@ export default function Explore() {
           </div>
         </div>
 
-        <div className='hidden xl:flex xl:flex-col' style={{ height: 'calc(107vh - 8rem)' }}>
-          <div className='sticky top-4 h-full min-h-0'>
+        <div className='hidden xl:flex xl:h-full xl:min-h-0 xl:flex-col'>
+          <div className='h-full min-h-0'>
             <Chat />
           </div>
         </div>
